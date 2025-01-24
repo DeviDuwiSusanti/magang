@@ -16,20 +16,16 @@
             <div class="row">
                 <div class="col-md-6 side-image">
                     <div class="text">
-                        <p><b>Welcome <i>- Admin</i></b></p>
+                        <p><b>Welcome <i></i></b></p>
                     </div>
                 </div>
                 <div class="col-md-6 right">
                     <div class="input-box">
                         <header>Log In</header>
-                        <form action="" method="POST">
+                        <form action="kode_otp.php" method="POST">
                             <div class="input-field">
                                 <input type="email" class="input" name="email" required>
                                 <label for="email">Email</label>
-                            </div>
-                            <div class="input-field">
-                                <input type="password" class="input" name="password" required>
-                                <label for="pass">Password</label>
                             </div>
                             <div class="input-field">
                                 <input type="submit" class="submit" name="login" value="Sign Up">
