@@ -6,7 +6,7 @@
 }
 
 .wrapper {
-    background-image: url("../img/bromo4.jpg");
+    background-image: url("../img/login.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
     padding: 0 20px 0 20px;
@@ -183,3 +183,5 @@ span a:hover {
         width: 100%;
     }
 }
+
+
