@@ -1,4 +1,3 @@
-/* POPPINS FONT */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 * {
@@ -6,73 +5,52 @@
 }
 
 .wrapper {
-    background: #f5f5f5;
+    background: #e2ecf4;
     padding: 0 20px;
-    height: 100vh; /* Memastikan wrapper mengambil seluruh tinggi layar */
+    height: 130vh;
 }
 
 .main {
     display: flex;
-    justify-content: center; /* Untuk memusatkan secara horizontal */
-    align-items: center; /* Untuk memusatkan secara vertikal */
-    min-height: 100vh; /* Memastikan elemen ini setinggi layar */
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .row {
     width: 900px;
-    min-height: 650px;
-    border-radius: 10px;
     background: #fff;
-    box-shadow: 5px 5px 10px 1px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: row;
-    padding: 0;
-    justify-content: space-between; /* Menyusun konten kiri dan kanan */
-}
-
-.left,
-.right {
-    flex: 1;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    flex-direction: column;
 }
 
-.left {
-    background-color: #ececec;
-    border-radius: 10px 0 0 10px;
-}
-
-.text {
+header {
+    font-size: 36px;
+    font-weight: bold;
     text-align: center;
+    color: #007bff;
+    margin-bottom: 30px;
 }
 
-.text p {
-    color: #40414a;
-    font-size: 24px;
-    font-weight: 600;
-}
-
-.input-box {
+form {
+    display: flex;
     width: 100%;
-    max-width: 380px;
-    box-sizing: border-box;
-    margin-bottom: 20px;
+    gap: 20px; /* Jarak antar kolom */
 }
 
-.input-box header {
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 25px;
+.col-md-6 {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Jarak antar input */
 }
 
 .input-field {
-    display: flex;
-    flex-direction: column;
     position: relative;
-    padding: 0 10px;
+    width: 100%;
 }
 
 .input {
@@ -82,89 +60,81 @@
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     outline: none;
-    margin-bottom: 20px;
     color: #40414a;
 }
 
-.input-box .input-field label {
+.input-field label {
     position: absolute;
     top: 10px;
     left: 10px;
     pointer-events: none;
-    transition: 0.5s;
+    transition: 0.3s;
 }
 
-.input-field input:focus~label,
-.input-field select:focus~label,
-.input-field input:valid~label {
+.input:focus~label,
+.input:valid~label {
     top: -10px;
     font-size: 13px;
-    color: #5d5076;
-}
-
-.input-field .input:focus,
-.input-field .input:valid {
-    border-bottom: 1px solid #743ae1;
+    color: #007bff;
 }
 
 .submit {
-    border: none;
-    outline: none;
     height: 45px;
-    background: #007bff; /* Blue button */
-    color: #fff;
+    background: #007bff;
+    color: white;
+    border: none;
     border-radius: 5px;
-    transition: 0.4s;
-    width: 100%;
+    cursor: pointer;
     margin-top: 20px;
 }
 
 .submit:hover {
     background: #0056b3;
 }
-
-.signin {
-    text-align: center;
-    font-size: small;
-    margin-top: 25px;
+/* Gaya untuk pratinjau gambar */
+.image-preview {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 15px; /* Spasi lebih besar dari label */
+    background-color: #f8f9fa;
+    position: relative;
 }
 
-span a {
-    text-decoration: none;
-    font-weight: 700;
-    color: #000;
-    transition: 0.5s;
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-span a:hover {
-    text-decoration: underline;
-    color: #000;
+/* Ikon default jika belum ada foto */
+.image-preview::before {
+    content: "\f2bd"; /* Unicode untuk ikon user */
+    font-family: "Font Awesome 5 Free"; /* Font Awesome */
+    font-weight: 900;
+    font-size: calc(1000%); /* Ikon akan menyesuaikan ukuran lingkaran (50% dari tinggi elemen) */
+    color: #ccc;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-@media only screen and (max-width: 768px) {
-    .row {
-        flex-direction: column;
-        max-width: 420px;
-        width: 100%;
-    }
+.image-preview img {
+    display: block;
+}
 
-    .left {
-        border-radius: 10px 10px 0 0;
-        padding: 20px;
-    }
+.image-preview img[src=""] {
+    display: none;
+}
 
-    .right {
-        padding: 20px;
-    }
-
-    .text p {
-        font-size: 18px;
-    }
-
-    /* Memastikan tombol Sign Up tetap di tengah */
-    .submit {
-        width: auto;
-        margin: 0 auto;
-        display: block;
-    }
+/* Gaya untuk label foto profil */
+.file-label {
+    margin-bottom: 5px;
 }
