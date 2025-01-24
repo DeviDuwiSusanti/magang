@@ -22,7 +22,7 @@
                 <div class="col-md-6 right">
                     <div class="input-box">
                         <header>Log In</header>
-                        <form action="kode_otp.php" method="POST">
+                        <form action="otp.php" method="POST">
                             <div class="input-field">
                                 <input type="email" class="input" name="email" required>
                                 <label for="email">Email</label>
