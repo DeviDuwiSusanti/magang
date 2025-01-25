@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -13,7 +13,7 @@
         <div class="container main">
             <div class="row">
                 <header>Register</header>
-                <form action="" method="POST" enctype="multipart/form-data" class="d-flex">
+                <form action="login.php" method="POST" enctype="multipart/form-data" class="d-flex">
                     <!-- Left Column -->
                     <div class="col-md-6">
                         <div class="input-field">
@@ -63,7 +63,7 @@
                         <div class="input-field">
                             <label for="image">Upload Foto Profil</label><br><br>
                             <div class="image-preview" id="imagePreview">
-                                <img src="" alt="Image Preview" id="previewImage" class="draggable">
+                                <img src="" id="previewImage">
                             </div>
                             <input type="file" class="input" id="image" name="image" accept="image/*" onchange="previewFile()" required>
                         </div>

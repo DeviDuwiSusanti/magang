@@ -7,5 +7,12 @@
 </head>
 <body>
     <?php include "assets/layout/navbarUser.php" ?>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <?php include "assets/layout/footerUser.php" ?>
 </body>
 </html>
