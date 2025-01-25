@@ -6,39 +6,40 @@
         <div class="nav__menu">
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="index.html" class="nav__link active-link">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'index.php' : '../index.php'; ?>" 
+                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-home-alt"></i>
                         <span>Home</span>
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="package-travel.php" class="nav__link">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'lowongan.php' ? 'lowongan.php' : 'user/lowongan.php'; ?>" 
+                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'lowongan.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-building-house"></i>
-                        <span>Package Travel</span>
+                        <span>Lowongan</span>
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="blog.php" class="nav__link">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'pengajuan.php' ? 'pengajuan.php' : 'user/pengajuan.php'; ?>" 
+                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'pengajuan.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-award"></i>
-                        <span>Blog</span>
-                    </a>
-                </li>
-                <li class="nav__item">
-                    <a href="contact.php" class="nav__link">
-                        <i class="bx bx-phone"></i>
-                        <span>Contact</span>
+                        <span>Pengajuan</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <i class="bx bx-moon change-theme" id="theme-button"></i>
                 </li>
-                <li class="nav__item">
-                    <a class="navbar-brand" href="#">
-                        <img src="assets/img/avatar1.png" alt="Logo" style="width:40px;" class="rounded-pill">
-                    </a>
-                </li>
             </ul>
         </div>
 
+        <!-- Kondisi untuk mengatur jalur gambar -->
+        <a class="navbar-brand" href="#">
+            <img 
+                src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/img/avatar1.png' : '../assets/img/avatar1.png'; ?>" 
+                alt="Logo" 
+                style="width:40px;" 
+                class="rounded-pill"
+            >
+        </a>
     </nav>
 </header>
