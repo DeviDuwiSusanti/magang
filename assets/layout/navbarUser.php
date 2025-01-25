@@ -1,7 +1,7 @@
 <!--==================== HEADER ====================-->
 <header class="header" id="header">
     <nav class="nav container">
-        <a href="#home" class="nav__logo">ACALA BR<i class="bx bxs-map"></i>MO</a>
+        <a href="#home" class="nav__logo">S M<i class="bx bxs-map"></i>TCH</a>
 
         <div class="nav__menu">
             <ul class="nav__list">
