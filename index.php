@@ -30,6 +30,15 @@
 
 <body>
     <?php include "assets/layout/navbarUser.php" ?>
+<<<<<<< HEAD
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <br><br><br><br>
+    <?php include "assets/layout/footerUser.php" ?>
+=======
 
     <!--==================== MAIN ====================-->
     <main class="main">
@@ -249,6 +258,7 @@
 
         <!--=============== MAIN JS ===============-->
         <script src="./assets/js/main.js"></script>
+>>>>>>> 9c4e56209ab245d3061264412f7b5f0c6991c4b4
 </body>
 
 </html>
