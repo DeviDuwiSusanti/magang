@@ -28,7 +28,7 @@
                                 <label for="email">Email</label>
                             </div>
                             <div class="input-field">
-                                <input type="submit" class="submit" name="login" value="Sign Up">
+                                <input type="submit" class="submit" name="login" value="Sign In">
                             </div>
                         </form>
                     </div>
