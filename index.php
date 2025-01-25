@@ -7,6 +7,8 @@
 
     <!--=============== BOXICONS ===============-->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!--=============== SWIPER CSS ===============-->
     <link rel="stylesheet" href="./assets/libraries/swiper-bundle.min.css" />
@@ -20,6 +22,7 @@
             flex-wrap: wrap;
             gap: 20px;
         }
+
     </style>
 
     <title>Home</title>
