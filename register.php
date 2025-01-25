@@ -6,7 +6,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/register.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <title>Register</title>
 </head>
 <body>
@@ -62,9 +61,9 @@
 
                         <!-- Upload Foto Profil -->
                         <div class="input-field">
-                            <label for="image" class="file-label">Foto Profil</label><br><br>
+                            <label for="image">Upload Foto Profil</label><br><br>
                             <div class="image-preview" id="imagePreview">
-                                <img src="" alt="Image Preview" id="previewImage">
+                                <img src="" alt="Image Preview" id="previewImage" class="draggable">
                             </div>
                             <input type="file" class="input" id="image" name="image" accept="image/*" onchange="previewFile()" required>
                         </div>
@@ -79,6 +78,7 @@
         // Fungsi untuk menampilkan pratinjau gambar
         function previewFile() {
             const fileInput = document.getElementById('image');
+            const previewContainer = document.getElementById('imagePreview');
             const previewImage = document.getElementById('previewImage');
             const file = fileInput.files[0];
 
@@ -86,10 +86,9 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
                 };
                 reader.readAsDataURL(file);
-            } else {
-                previewImage.src = "";
             }
         }
     </script>
