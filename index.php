@@ -232,7 +232,27 @@
                     </div>
                 </div>
 
-                
+                <div class="popular__container swiper">
+                    <div class="swiper-wrapper">
+                        <article class="popular__card swiper-slide">
+                            <a href="#">
+                                <img src="assets/img/instansi/kominfo.png" alt="" class="popular__img"/>
+                                <div class="popular__data">
+                                    <h2 class="popular__price"><span></span>Diskominfo</h2>
+                                    <h3 class="popular__title">Lemah Putro</h3>
+                                    <p class="popular__description"></p>Fokus pada bidang IT
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+
+                    <div class="swiper-button-next">
+                        <i class="bx bx-chevron-right"></i>
+                    </div>
+                    <div class="swiper-button-prev">
+                        <i class="bx bx-chevron-left"></i>
+                    </div>
+                </div>
             </div>
         </section>
 
