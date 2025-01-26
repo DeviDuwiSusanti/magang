@@ -107,7 +107,8 @@ body.dark-theme {
 .dark-theme .accordion-open .value__accordion-arrow,
 .dark-theme .contact__img,
 .dark-theme .contact__card-box:hover,
-.dark-theme .scrollup {
+.dark-theme .scrollup,
+.dark-theme .accordion{
   -webkit-box-shadow: none;
   box-shadow: none;
 }
