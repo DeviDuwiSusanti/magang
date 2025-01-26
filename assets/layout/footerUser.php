@@ -5,70 +5,51 @@
                     <a href="#" class="footer__logo">
                         Sidoarjo Internship Portal
                     </a>
-                    <p class="footer__description">
-                    Platform untuk mencari peluang magang di berbagai instansi di Sidoarjo.<br>
-                    Temukan pengalaman magang yang berharga dan berkembang bersama kami.
+                    <p class="text-gray-400">
+                        Dinas Komunikasi dan Informatika
                     </p>
+                    <p class="text-gray-400 mt-2">
+                    Jl. Diponegoro No.139, Lemah Putro, Lemahputro,<br/>
+                    Kec. Sidoarjo, Kabupaten Sidoarjo,<br/>
+                     Jawa Timur 61213
+                    </p>
+                    <p class="text-gray-400 mt-2">
+                        Email: <a href="mailto:hello@magangsidoarjo.id" class="text-gray-400 hover:text-white">sma.tchplatform@sidoarjo.go.id.</a><br/>
+                        Akses peluang magang terbaik di Sidoarjo dengan mudah</p>
                 </div>
 
                 <div class="footer__content">
                     <div>
-                        <h3 class="footer__title">Tentang Kami</h3>
-
-                        <ul class="footer__links">
+                  <ul class="footer__links space-y-2">
+                  <h3 class="footer__title text-xl font-semibold mb-4">Peserta</h3>
                             <li>
-                                <a href="#" class="footer__link">Tentang Portal</a>
+                            <a href="#" class="footer__link text-gray-400 hover:text-white">Home</a>
                             </li>
                             <li>
-                                <a href="#" class="footer__link">Fitur</a>
+                            <a href="#" class="footer__link text-gray-400 hover:text-white">Cari Lowongan</a>
                             </li>
                             <li>
-                                <a href="#" class="footer__link">Berita & Blog</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="footer__title">Perusahaan</h3>
-
-                        <ul class="footer__links">
-                            <li>
-                                <a href="#" class="footer__link">Cara Kami Bekerja</a>
+                            <a href="#" class="footer__link text-gray-400 hover:text-white">Pengajuan</a>
                             </li>
                             <li>
-                                <a href="#" class="footer__link">Modal & Investasi</a>
+                            <a href="#" class="footer__link text-gray-400 hover:text-white">Tentang Kami</a>
                             </li>
                             <li>
-                                <a href="#" class="footer__link">Keamanan</a>
+                            <a href="#" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
                             </li>
                         </ul>
                     </div>
                     <div>
-                        <h3 class="footer__title">Dukungan</h3>
-
-                        <ul class="footer__links">
-                            <li>
-                                <a href="#" class="footer__link">FAQ</a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link">Pusat Dukungan</a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link">Hubungi Kami</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="footer__title">Ikuti Kami</h3>
-
-                        <ul class="footer__social">
-                            <a href="#" class="footer__social-link">
-                                <i class="bx bxl-facebook-circle"></i>
+                    <h3 class="footer__title text-xl font-semibold mb-4">Ikuti Kami</h3>
+                        <ul class="footer__social flex space-x-4">
+                            <a href="#" class="footer__social-link text-gray-400 hover:text-white text-2xl">
+                            <i class="bx bxl-facebook-circle"></i>
                             </a>
-                            <a href="#" class="footer__social-link">
-                                <i class="bx bxl-instagram-alt"></i>
+                            <a href="#" class="footer__social-link text-gray-400 hover:text-white text-2xl">
+                            <i class="bx bxl-instagram-alt"></i>
                             </a>
-                            <a href="#" class="footer__social-link">
-                                <i class="bx bxl-pinterest"></i>
+                            <a href="#" class="footer__social-link text-gray-400 hover:text-white text-2xl">
+                            <i class="bx bxl-tiktok"></i>
                             </a>
                         </ul>
                     </div>

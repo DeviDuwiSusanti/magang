@@ -1,7 +1,7 @@
 .custom-container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 50px;
     align-items: center;
 }
 
@@ -36,22 +36,26 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+
 }
 
 .left-column {
-    flex: 0 0 30%;
+    flex: 0 0 50%;
     text-align: center;
+  
 }
 
 .right-column {
-    flex: 0 0 30%;
+    flex: 0 0 40%;
     text-align: center;
+  
 }
 
 .custom-image {
-    max-width: 100%;
+    max-width: 100%; /* Mengatur agar gambar memenuhi lebar kolom */
     height: auto;
-    margin: 10px 0;
+    border-radius: 15px; /* Memberikan radius pada gambar */
+   
 }
 
 .image-spacing {
@@ -91,7 +95,6 @@
     border-color: #0d6efd;
 }
 
-
 @media (max-width: 768px) {
     .image-row {
         flex-direction: column;
@@ -101,6 +104,7 @@
     .left-column,
     .right-column {
         flex: 0 0 100%;
+        margin: 0; /* Menghilangkan margin agar gambar menempel satu sama lain */
     }
 
     .image-spacing {
