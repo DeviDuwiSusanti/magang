@@ -1,3 +1,32 @@
+.lowongan .lowongans {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.slide-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.carousel img {
+    max-height: 400px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.details-button {
+    display: inline-block; 
+    background: linear-gradient(90deg, #4CAF50, #2D9CDB); 
+    color: #fff; 
+    text-decoration: none; 
+    font-weight: bold; 
+    padding: 10px 20px; 
+    border-radius: 25px; 
+    text-align: center
+}
+
 .custom-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -31,3 +60,4 @@
     font-size: 18px;
     margin: 0;
 }
+
