@@ -40,7 +40,7 @@
                 <div>
                     <!--========== ISLANDS ==========-->
                     <section class="islands">
-                        <img src="assets/img/lowongan3.jpg" alt="" class="islands__bg" />
+                        <img src="assets/img/bgHome.jpg" alt="" class="islands__bg" />
                         <div class="bg__overlay">
                             <div class="islands__container container">
                                 <div class="islands__data" style="z-index: 99; position: relative">
