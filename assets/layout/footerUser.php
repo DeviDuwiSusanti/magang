@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Footer Example</title>
-</head>
-<body>
+
     <footer class="footer section">
             <div class="footer__container container grid">
                 <div>
@@ -92,5 +85,19 @@
                 </div>
             </div>
         </footer>
-</body>
-</html>
+
+         <!--========== SCROLL UP ==========-->
+         <a href="#" class="scrollup" id="scroll-up">
+            <i class="bx bx-chevrons-up"></i>
+        </a>
+
+        <script src="https://unpkg.com/scrollreveal"></script>
+
+        <!--=============== SCROLLREVEAL ===============-->
+        <script src="./assets/libraries/scrollreveal.min.js"></script>
+
+        <!--=============== SWIPER JS ===============-->
+        <script src="./assets/libraries/swiper-bundle.min.js"></script>
+
+        <!--=============== MAIN JS ===============-->
+        <script src="./assets/js/main.js"></script>

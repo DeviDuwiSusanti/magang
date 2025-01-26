@@ -15,6 +15,7 @@
 
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/css/home.css" />
     <style>
         .destinasi .destination {
             display: flex;
@@ -30,15 +31,6 @@
 
 <body>
     <?php include "assets/layout/navbarUser.php" ?>
-<<<<<<< HEAD
-    <br><br><br><br>
-    <br><br><br><br>
-    <br><br><br><br>
-    <br><br><br><br>
-    <br><br><br><br>
-    <br><br><br><br>
-    <?php include "assets/layout/footerUser.php" ?>
-=======
 
     <!--==================== MAIN ====================-->
     <main class="main">
@@ -48,7 +40,7 @@
                 <div>
                     <!--========== ISLANDS ==========-->
                     <section class="islands">
-                        <img src="assets/img/bromo.jpg" alt="" class="islands__bg" />
+                        <img src="assets/img/lowongan3.jpg" alt="" class="islands__bg" />
                         <div class="bg__overlay">
                             <div class="islands__container container">
                                 <div class="islands__data" style="z-index: 99; position: relative">
@@ -56,12 +48,11 @@
                                         Explore
                                     </h2>
                                     <h1 class="islands__title">
-                                        Wonderful Bromo
+                                        Sidoarjo Internship
                                     </h1>
                                     <p class="islands__description">
-                                        This is a great time travel and
-                                        enjoy the <br />
-                                        beauty of Bromo.
+                                        Gain valuable experience and develop your potential <br/>
+                                        through an internship program in Sidoarjo.
                                     </p>
                                 </div>
                             </div>
@@ -70,12 +61,31 @@
                 </div>
             </div>
         </section>
+
         <!--==================== POPULAR ====================-->
         <section class="section" id="popular">
             <div class="container">
                 <h2 class="section__title" style="text-align: center">Destination Place</h2>
                 <span class="section__subtitle" style="text-align: center">"Let's go to Bromo, where endless adventures
                     await to be explored!"</span><br>
+                
+                <!---========== Text and image layout=======-->
+                <div class="custom-container">
+                <!-- Center Text -->
+                <div class="center-text">
+                    <div class="text-block">
+                        <p class="large-text">6</p>
+                        <p class="small-text">Company</p>
+                    </div>
+                    <div class="text-block">
+                        <p class="large-text">6</p>
+                        <p class="small-text">Internship Vacancies</p>
+                    </div>
+                    <div class="text-block">
+                        <p class="large-text">+950</p>
+                        <p class="small-text">Registrant</p>
+                    </div>
+                </div>
                 <div class="destinasi">
                     <div class="destination">
                         <article class="popular__card swiper-slide ">
@@ -152,113 +162,7 @@
             </div>
         </section>
 
-        <!--==================== FOOTER ====================-->
-        <footer class="footer section">
-            <div class="footer__container container grid">
-                <div>
-                    <a href="#" class="footer__logo">
-                        ACALA BR<i class="bx bxs-map"></i>MO
-                    </a>
-                    <p class="footer__description">
-                    Our vision is to provide the best travel experiences <br>
-                    in Bromo and unforgettable adventures.
-                    </p>
-                </div>
-
-                <div class="footer__content">
-                    <div>
-                        <h3 class="footer__title">About</h3>
-
-                        <ul class="footer__links">
-                            <li>
-                                <a href="#" class="footer__link">About Us</a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link">Features </a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link">News & Blog</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="footer__title">Company</h3>
-
-                        <ul class="footer__links">
-                            <li>
-                                <a href="#" class="footer__link">How We Work?
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link">Capital </a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link"> Security</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="footer__title">Support</h3>
-
-                        <ul class="footer__links">
-                            <li>
-                                <a href="#" class="footer__link">FAQs </a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link">Support center
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="footer__link"> Contact Us</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="footer__title">Follow us</h3>
-
-                        <ul class="footer__social">
-                            <a href="#" class="footer__social-link">
-                                <i class="bx bxl-facebook-circle"></i>
-                            </a>
-                            <a href="https://www.instagram.com/acala_bromo?igsh=MTB4dmFkcmFnNnht"
-                                class="footer__social-link">
-                                <i class="bx bxl-instagram-alt"></i>
-                            </a>
-                            <a href="#" class="footer__social-link">
-                                <i class="bx bxl-pinterest"></i>
-                            </a>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer__info container">
-                <span class="footer__copy">
-                    &#169; Acala Bromo. All rigths reserved
-                </span>
-                <div class="footer__privacy">
-                    <a href="#">Terms & Agreements</a>
-                    <a href="#">Privacy Policy</a>
-                </div>
-            </div>
-        </footer>
-
-        <!--========== SCROLL UP ==========-->
-        <a href="#" class="scrollup" id="scroll-up">
-            <i class="bx bx-chevrons-up"></i>
-        </a>
-
-        <script src="https://unpkg.com/scrollreveal"></script>
-
-        <!--=============== SCROLLREVEAL ===============-->
-        <script src="./assets/libraries/scrollreveal.min.js"></script>
-
-        <!--=============== SWIPER JS ===============-->
-        <script src="./assets/libraries/swiper-bundle.min.js"></script>
-
-        <!--=============== MAIN JS ===============-->
-        <script src="./assets/js/main.js"></script>
->>>>>>> 9c4e56209ab245d3061264412f7b5f0c6991c4b4
+        <?php include "assets/layout/footerUser.php" ?>
 </body>
 
 </html>
