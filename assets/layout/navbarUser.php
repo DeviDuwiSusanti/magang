@@ -9,7 +9,7 @@
                     <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'index.php' : '../index.php'; ?>" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-home-alt"></i>
-                        <span>Home</span>
+                        <span>Beranda</span>
                     </a>
                 </li>
                 <li class="nav__item">
@@ -22,8 +22,15 @@
                 <li class="nav__item">
                     <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'pengajuan.php' ? 'pengajuan.php' : 'user/pengajuan.php'; ?>" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'pengajuan.php' ? 'active-link' : ''; ?>">
-                        <i class="bx bx-award"></i>
+                        <i class="bx bx-building-house"></i>
                         <span>Pengajuan</span>
+                    </a>
+                </li>
+                <li class="nav__item">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'about.php' ? 'about.php' : 'user/about.php'; ?>" 
+                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'about.php' ? 'active-link' : ''; ?>">
+                        <i class="bx bx-award"></i>
+                        <span>Tentang Kami</span>
                     </a>
                 </li>
                 <li class="nav__item">
