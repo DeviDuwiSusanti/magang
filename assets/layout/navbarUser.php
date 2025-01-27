@@ -22,7 +22,7 @@
                 <li class="nav__item">
                     <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/pengajuan.php' : 'pengajuan.php'; ?>" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'pengajuan.php' ? 'active-link' : ''; ?>">
-                        <i class="bx bx-building-house"></i>
+                       <i class="bx bx-file"></i>
                         <span>Pengajuan</span>
                     </a>
                 </li>
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/profil.php' : 'profil.php'; ?>">
             <img 
                 src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/img/avatar1.png' : '../assets/img/avatar1.png'; ?>" 
                 alt="Logo" 
