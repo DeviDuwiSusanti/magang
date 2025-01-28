@@ -52,4 +52,15 @@
         3. Dan lain-lain, sesuai dengan persyaratan instansi.
     </div>
   </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingFive">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+        Bagaimana jika saya ingin magang secara berkelompok dengan teman-teman dari kampus/sekolah yang sama?
+      </button>
+    </h2>
+    <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        Pendaftaran dapat dilakukan atau diwakilkan oleh salah satu anggota kelompok.
+    </div>
+  </div>
 </div>

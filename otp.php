@@ -22,7 +22,7 @@
             <input type="text" class="otp-input" maxlength="1" oninput="handleInput(this, null, 'otp3')" id="otp4">
         </div>
         <p class="mb-4" id="timer" style="font-weight: 500; color: #333; font-size: 18px;">02:00</p>
-        <button class="verify-btn" onclick="window.location.href = 'index.php'">Verifikasi</button>
+        <button class="verify-btn" onclick="verifyOtp()">Verifikasi</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
@@ -64,6 +64,29 @@
         }
 
         startTimer();
+
+        // Function to verify OTP
+        function verifyOtp() {
+            const otpInputs = ['otp1', 'otp2', 'otp3', 'otp4'];
+            let isComplete = true;
+
+            for (const inputId of otpInputs) {
+                const input = document.getElementById(inputId);
+                if (!input.value.trim()) {
+                    isComplete = false;
+                    input.focus();
+                    break;
+                }
+            }
+
+            if (!isComplete) {
+                alert('Silakan isi semua kolom OTP!');
+            } else {
+                alert('Kode OTP berhasil diverifikasi!');
+                // Redirect to another page or perform another action here
+                window.location.href = 'index.php';
+            }
+        }
     </script>
 </body>
 </html>

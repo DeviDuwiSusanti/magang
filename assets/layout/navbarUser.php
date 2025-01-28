@@ -13,21 +13,21 @@
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'lowongan.php' ? 'lowongan.php' : 'user/lowongan.php'; ?>" 
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/lowongan.php' : 'lowongan.php'; ?>" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'lowongan.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-building-house"></i>
                         <span>Lowongan</span>
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'pengajuan.php' ? 'pengajuan.php' : 'user/pengajuan.php'; ?>" 
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/pengajuan.php' : 'pengajuan.php'; ?>" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'pengajuan.php' ? 'active-link' : ''; ?>">
-                        <i class="bx bx-building-house"></i>
+                       <i class="bx bx-file"></i>
                         <span>Pengajuan</span>
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'about.php' ? 'about.php' : 'user/about.php'; ?>" 
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/about.php' : 'about.php'; ?>" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'about.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-award"></i>
                         <span>Tentang Kami</span>
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/profil.php' : 'profil.php'; ?>">
             <img 
                 src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/img/avatar1.png' : '../assets/img/avatar1.png'; ?>" 
                 alt="Logo" 
