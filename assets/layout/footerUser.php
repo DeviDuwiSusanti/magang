@@ -58,7 +58,7 @@
 
             <div class="footer__info container">
                 <span class="footer__copy">
-                    &#169; Sidoarjo Internship Portal. Semua hak cipta dilindungi
+                    &#169; Sidoarjo  . Semua hak cipta dilindungi
                 </span>
                 <div class="footer__privacy">
                     <a href="#">Syarat & Ketentuan</a>

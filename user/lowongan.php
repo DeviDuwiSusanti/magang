@@ -16,6 +16,7 @@
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/lowongan.css" />
+    <link rel="stylesheet" href="../assets/css/home.css"/>
     <style>
         .transparent-img {
             filter: grayscale(100%);
@@ -48,155 +49,170 @@
 
     <!--==================== MAIN ====================-->
     <main class="main">
-        <!--==================== HOME ====================-->
-        <section>
-            <div class="swiper-container gallery-top">
-                <div class="swiper-wrapper">
-                <section class="islands swiper-slide">
-                    <img src="../assets/img/pw3.jpg" alt="" class="islands__bg" />
-                    <div class="islands__container container">
-                    <div class="islands__data">
-                        <h1 class="islands__title">Internship Portal</h1>
-                    </div>
-                    </div>
-                </section>
-                </div>
-            </div>
-            <div class="swiper-container gallery-top">
-                <div class="swiper-wrapper">
-                    <section class="islands swiper-slide">
-                        <img src="./assets/img/bromo1.jpg" alt="" class="islands__bg" />
 
-                        <div class="islands__container container">
-                            <div class="islands__data">
-                                <h1 class="islands__title">Learn More About Our Internship Website</h1>
-                            </div>
-                        </div>
-                    </section>
+    <!--==================== HOME ====================-->
+    <section>
+        <div class="swiper-container gallery-top">
+            <div class="swiper-wrapper">
+            <section class="islands swiper-slide">
+                <img src="../assets/img/pw3.jpg" alt="" class="islands__bg" />
+                <div class="islands__container container">
+                <div class="islands__data">
+                    <h1 class="islands__title">Internship Portal</h1>
                 </div>
+                </div>
+            </section>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!--==================== POPULAR ====================-->
+    <!--==================== POPULAR ====================-->
+    <section class="section" id="popular">
+        <div class="container">
+            <h2 class="section__title" style="text-align: center">
+                With Our Experience </br> We Will Serve You
+            </h2></br>
+
+    <!---========== Text and image layout=======-->
+    <div class="custom-container">
+        <!-- Center Text -->
+        <div class="center-text">
+            <div class="text-block">
+                <p class="large-text">44</p>
+                <p class="small-text">Instansi</p>
+            </div>
+            <div class="text-block">
+                <p class="large-text">+100</p>
+                <p class="small-text">Lowongan</p>
+            </div>
+            <div class="text-block">
+                <p class="large-text">+100</p>
+                <p class="small-text">Selesai</p>
+            </div>
+        </div>
+
+    <!-- Image Row -->
+    <div class="image-row">
+            <!-- Left Portrait Image -->
+            <div class="left-column">
+                <img src="../assets/img/pw2.jpg" alt="Left Portrait Image" class="custom-image">
+            </div>
+            <!-- Right Portrait Image -->
+            <div class="right-column">
+                <img src="../assets/img/pw1.jpg" alt="Right Portrait Image" class="custom-image">
+                <img src="../assets/img/pw3.jpg" alt="Bottom Portrait Image" class="custom-image image-spacing">
+            </div>
+        </div>
+    </div>
+
+    <!--==================== Carieer ====================-->
+    <h2 class="section__title" style="text-align: center">Explore Our Internship Opportunities</h2>
+    <div class="popular__all">
         <section class="section" id="popular">
             <div class="container">
-                <h2 class="section__title" style="text-align: center">
-                    With Our Experience </br> We Will Serve You
-                </h2></br>
-
-                <!---========== Text and image layout=======-->
-                <div class="custom-container">
-                    <!-- Center Text -->
-                    <div class="center-text">
-                        <div class="text-block">
-                            <p class="large-text">6</p>
-                            <p class="small-text">Year Experience</p>
-                        </div>
-                        <div class="text-block">
-                            <p class="large-text">+950</p>
-                            <p class="small-text">Complete Tours</p>
-                        </div>
-                        <div class="text-block">
-                            <p class="large-text">6</p>
-                            <p class="small-text">Destination</p>
-                        </div>
-                    </div>
-                    <!-- Image Row -->
-                    <div class="image-row">
-                        <!-- Left Portrait Image -->
-                        <div class="left-column">
-                            <img src="../assets/img/pw2.jpg" alt="Left Portrait Image" class="custom-image">
-                        </div>
-                        <!-- Right Portrait Image -->
-                        <div class="right-column">
-                            <img src="../assets/img/pw1.jpg" alt="Right Portrait Image" class="custom-image">
-                            <img src="../assets/img/pw3.jpg" alt="Bottom Portrait Image" class="custom-image image-spacing">
-                        </div>
-                    </div>
-                </div>
-
-                <!--================ ABOUT INTERNSHIP WEBSITE =======================-->
-                <h2 class="section__title" style="text-align: center">Learn More About Our Internship Website</h2>
-                <div class="popular__all">
-                    <article class="popular__card">
-                        <img src="assets/img/internship.png" alt="" class="popular__img" />
+                <div class="lowongan">
+                    <div class="lowongans">
+                    <article class="popular__card swiper-slide">
+                        <img src="assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                        <p>Dinas Komunikasi dan Informatika</p>
                         <div class="popular__data">
-                            <h2 class="popular__price">Why Join Us?</h2>
-                            <h3 class="popular__title">Enhance Your Skills</h3>
-                            <p class="popular__description">
-                                Explore opportunities to grow your technical and professional skills through real-world projects in our internship program.
-                            </p><br>
+                            <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
+                            <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                            <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                            <p class="popular__details">
+                                <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                            </p>
+                            <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
                         </div>
-                        <a href="about-us.php">
-                            <button type="button" class="btn btn-outline-primary">Learn More</button>
-                        </a>
                     </article>
 
-                    <article class="popular__card">
-                        <img src="assets/img/community.png" alt="" class="popular__img" />
-                        <div class="popular__data">
-                            <h2 class="popular__price">Join Our Community</h2>
-                            <h3 class="popular__title">Collaborate & Network</h3>
-                            <p class="popular__description">
-                                Work alongside professionals and like-minded individuals while contributing to impactful projects.
-                            </p><br>
-                        </div>
-                        <a href="community.php">
-                            <button type="button" class="btn btn-outline-primary">Get Involved</button>
-                        </a>
-                    </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="assets/img/instansi/dinas.png" alt="" class="popular__img"
+                                style="width: 50px; height: 50px;" />
+                            <p>Dinas Kesehatan</p>
+                            <div class="popular__data">
+                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
+                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                                <p class="popular__details">
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                </p>
+                                <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                            </div>
+                            </a>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="assets/img/instansi/dinas.png" alt="" class="popular__img"
+                                style="width: 50px; height: 50px;" />
+                            <p>Dinas Perikanan</p>
+                            <div class="popular__data">
+                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
+                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                                <p class="popular__details">
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                </p>
+                                <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                            </div>
+                            </a>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                            <p>Dinas Sosial</p>
+                            <div class="popular__data">
+                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
+                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                                <p class="popular__details">
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                </p>
+                                <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                            </div>
+                            </a>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                            <p>Dinas Pendidikan</p>
+                            <div class="popular__data">
+                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
+                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                                <p class="popular__details">
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                </p>
+                                <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                            </div>
+                            </a>
+                        </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                            <p>Dinas Tenaga Kerja</p>
+                            <div class="popular__data">
+                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
+                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                                <p class="popular__details">
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                </p>
+                                <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                            </div>
+                            </a>
+                        </article>
+                    </div>
+
+                    <div class="view-all" style="text-align: center; margin-top: 20px;">
+                        <a href="user/lowongan.php" style="text-decoration: none; font-weight: bold; color: #007BFF;">Lihat Selengkapnya →</a>
+                    </div>
                 </div>
-
-                <!--================ PACKAGE =======================-->
-                <h2 class="section__title" style="text-align: center">Explore Our Internship Opportunities</h2>
-<div class="popular__all">
-  <!-- Program Magang 1 -->
-  <article class="popular__card">
-    <img src="assets/img/web_development.png" alt="" class="popular__img" />
-    <div class="popular__data">
-      <h2 class="popular__price">Web Development</h2>
-      <h3 class="popular__title">6-Month Internship Program</h3>
-      <p class="popular__description">
-        Join our team as a Web Developer intern to gain hands-on experience in designing and building responsive websites.
-      </p><br>
-    </div>
-    <a href="detail-internship.php?id_internship=1">
-      <button type="button" class="btn btn-outline-primary">Learn More</button>
-    </a>
-  </article>
-
-  <!-- Program Magang 2 (Tutup) -->
-  <article class="popular__card" style="opacity: 0.5;">
-    <div class="sold-out-overlay">Closed</div>
-    <img src="assets/img/data_science.png" alt="" class="popular__img transparent-img" />
-    <div class="popular__data">
-      <h2 class="popular__price">Data Science</h2>
-      <h3 class="popular__title">3-Month Internship Program</h3>
-      <p class="popular__description">
-        Dive into the world of data analysis and machine learning as part of our Data Science internship program.
-      </p><br>
-    </div>
-    <button type="button" class="btn btn-outline-primary" disabled>Learn More</button>
-  </article>
-
-  <!-- Program Magang 3 -->
-  <article class="popular__card">
-    <img src="assets/img/ui_ux_design.png" alt="" class="popular__img" />
-    <div class="popular__data">
-      <h2 class="popular__price">UI/UX Design</h2>
-      <h3 class="popular__title">4-Month Internship Program</h3>
-      <p class="popular__description">
-        Enhance your skills in user interface and user experience design by working on real-world projects.
-      </p><br>
-    </div>
-    <a href="detail-internship.php?id_internship=3">
-      <button type="button" class="btn btn-outline-primary">Learn More</button>
-    </a>
-  </article>
-</div>
-
+                </div>
+            </div>
         </section>
-
         <?php include "../assets/layout/footerUser.php" ?>
     </main>
 </body>
