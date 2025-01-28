@@ -19,7 +19,7 @@
 <!--==================== MAIN ====================-->
 <main class="main">
 
-    <!--==================== HOME ====================-->
+<!--==================== HOME ====================-->
     <section>
         <div class="swiper-container gallery-top">
             <div class="swiper-wrapper">
@@ -38,38 +38,28 @@
     <?php include "../assets/layout/navbarPengajuan.php" ?>
     
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Tabel Pengajuan Aktif</h1>
+        <h1 class="text-center mb-4">Tabel Kegiatan Aktif </h1>
         <table class="table table-striped table-bordered">
             <thead class="table-primary">
                 <tr>
                     <th>No</th>
-                    <th>Nama Kegiatan</th>
-                    <th>Instansi</th>
-                    <th>Bagian</th>
+                    <th>Perusahaan</th>
+                    <th>Posisi</th>
                     <th>Durasi</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>Pelatihan Digital Marketing</td>
-                    <td>Dinas Kominfo Sidoarjo</td>
-                    <td>Pembicara</td>
+                    <td>Kominfo Sidoarjo</td>
+                    <td>Staff Bidang Komunikasi</td>
                     <td>3 Bulan</td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>Workshop UI/UX</td>
-                    <td>Universitas Trunojoyo Madura</td>
-                    <td>Peserta</td>
-                    <td>1 Minggu</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Sosialisasi Keamanan Jaringan</td>
-                    <td>Dinas Kominfo Surabaya</td>
-                    <td>Panitia</td>
-                    <td>2 Hari</td>
+                    <td>Tokopedia</td>
+                    <td>Freelance Front-End Developer</td>
+                    <td>4 Bulan</td>
                 </tr>
             </tbody>
         </table>

@@ -37,13 +37,13 @@
     <?php include "../assets/layout/navbarpengajuan.php" ?>
     
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Tabel Pengajuan Aktif</h1>
+        <h1 class="text-center mb-4">Tabel Status Pengajuan</h1>
         <table class="table table-striped table-bordered">
             <thead class="table-primary">
                 <tr>
                     <th>No</th>
-                    <th>Nama Kegiatan</th>
-                    <th>Instansi</th>
+                    <th>Perusahaan</th>
+                    <th>Posisi</th>
                     <th>Status Lamaran</th>
                     <th>Durasi</th>
                 </tr>
@@ -51,26 +51,26 @@
             <tbody>
                 <tr>
                     <td>1</td>
-                    <td>Pelatihan Digital Marketing</td>
-                    <td>Dinas Kominfo Sidoarjo</td>
-                    <td>Diterima</td>
+                    <td>Diskominfo Surabaya</td>
+                    <td>Website Developer</td>
+                    <td>Diterima <span style="color: green; font-size: 20px;">&#10004;</span></td>
                     <td>3 Bulan</td>
                 </tr>
                 <tr>
                     <td>2</td>
-                    <td>Workshop UI/UX</td>
-                    <td>Universitas Trunojoyo Madura</td>
-                    <td>Ditolak</td>
-                    <td>1 Minggu</td>
+                    <td>Telkom Indonesia</td>
+                    <td>UI/UX</td>
+                    <td>Ditolak <span style="color: red; font-size: 20px;">&#10006;</span></td>
+                    <td>3 Bulan</td>
                 </tr>
                 <tr>
                     <td>3</td>
-                    <td>Sosialisasi Keamanan Jaringan</td>
-                    <td>Dinas Kominfo Surabaya</td>
+                    <td>Diskominfo Sidoarjo</td>
+                    <td>Website Developer</td>
                     <td>
                         Progres  <a href="dokumen.php" class="btn btn-sm btn-primary">Lengkapi Dokumen</a>
                     </td>
-                    <td>2 Hari</td>
+                    <td>4 Bulan</td>
                 </tr>
             </tbody>
         </table>
