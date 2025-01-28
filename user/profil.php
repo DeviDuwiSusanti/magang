@@ -86,7 +86,13 @@
                     <!-- Article Kanan -->
                     <div class="col-md-8">
                         <article class="profile__data p-4">
-                            <h2 class="mb-3">Data Profil Pengguna</h2>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h2>Data Profil Pengguna</h2>
+                                <!-- Tombol Edit Profil -->
+                                <a href="edit_profil.php" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bx bx-edit"></i> Edit Profil
+                                </a>
+                            </div>
                             <hr style="border: 1px solid #ddd; margin: 10px 0;">
                             <table id="profile-table">
                                 <tbody>
