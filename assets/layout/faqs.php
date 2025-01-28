@@ -50,6 +50,7 @@
         1. Surat Bangkesbangpol Provinsi <br>
         2. Surat Bangkesbangpol Daerah <br>
         3. Dan lain-lain, sesuai dengan persyaratan instansi.
+      </div>
     </div>
   </div>
   <div class="accordion-item">
@@ -61,6 +62,8 @@
     <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
         Pendaftaran dapat dilakukan atau diwakilkan oleh salah satu anggota kelompok.
+      </div>
     </div>
   </div>
 </div>
+

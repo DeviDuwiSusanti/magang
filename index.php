@@ -314,6 +314,7 @@
                 <?php include "assets/layout/faqs.php" ?>
             </div>
         </section>
+    </main>
 
         <?php include "assets/layout/footerUser.php" ?>
 </body>
