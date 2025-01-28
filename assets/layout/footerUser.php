@@ -1,4 +1,3 @@
-
     <footer class="footer section">
             <div class="footer__container container grid">
                 <div>
