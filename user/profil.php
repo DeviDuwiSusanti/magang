@@ -69,8 +69,12 @@
                                 <a href="#pengajuan" class="btn btn-outline-success btn-sm mb-2 w-100">
                                     <i class="bx bx-task"></i> Kegiatan Aktif
                                 </a>
-                                <a href="#about" class="btn btn-outline-info btn-sm w-100">
+                                <a href="#about" class="btn btn-outline-info btn-sm mb-2 w-100">
                                     <i class="bx bx-history"></i> Histori
+                                </a>
+                                <!-- Tombol Keluar Akun -->
+                                <a href="logout.php" class="btn btn-outline-danger btn-sm w-100">
+                                    <i class="bx bx-log-out"></i> Keluar Akun
                                 </a>
                             </div>
                         </article>
@@ -134,5 +138,3 @@
 </body>
 
 </html>
-
-

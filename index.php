@@ -46,6 +46,10 @@
             border-radius: 25px; 
             text-align: center
         }
+
+        .use{
+            color: white;
+        }
     </style>
     <title>Home</title>
 </head>
@@ -104,30 +108,30 @@
                         <!-- The slideshow/carousel -->
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="assets/img/home1.jpg" alt="Los Angeles" class="d-block">
+                                <img src="assets/img/use2.jpg" alt="Los Angeles" class="d-block">
                                 <div class="carousel-caption">
-                                    <h3>Pengalaman Berharga</h3>
+                                    <h3 class="use">Pengalaman Berharga</h3>
                                     <p>Pembelajaran langsung untuk meningkatkan keterampilan Anda</p>
                                 </div>
                             </div>
                             <div class="carousel-item">
                                 <img src="assets/img/home2.jpg" alt="Chicago" class="d-block">
                                 <div class="carousel-caption">
-                                    <h3>Peluang Karir</h3>
+                                    <h3 class="use">Peluang Karir</h3>
                                     <p>Membuka pintu untuk prospek pekerjaan di masa depan</p>
                                 </div>
                             </div>
                             <div class="carousel-item">
                                 <img src="assets/img/home3.jpg" alt="New York" class="d-block">
                                 <div class="carousel-caption">
-                                    <h3>Jaringan Profesional</h3>
-                                    <p>CTerhubung dengan perusahaan terkemuka di Sidoarjo</p>
+                                    <h3 class="use">Jaringan Profesional</h3>
+                                    <p>Terhubung dengan perusahaan terkemuka di Sidoarjo</p>
                                 </div>
                             </div>
                             <div class="carousel-item">
-                                <img src="assets/img/home4.jpg" alt="New York" class="d-block">
+                                <img src="assets/img/use4.jpg" alt="New York" class="d-block">
                                 <div class="carousel-caption">
-                                    <h3>Pertumbuhan Pribadi</h3>
+                                    <h3 class="use">Pertumbuhan Pribadi</h3>
                                     <p>Tingkatkan kepercayaan diri dan kemampuan beradaptasi Anda</p>
                                 </div>
                             </div>

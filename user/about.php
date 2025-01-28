@@ -12,7 +12,17 @@
 
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
+    <style>
+        .contact__images img {
+    width: 500px; /* Sesuaikan ukuran */
+    height: 500px; /* Pastikan ukurannya sama untuk bentuk lingkaran */
+    border-radius: 50%; /* Membuat gambar menjadi bulat */
+    object-fit: cover; /* Pastikan gambar terpotong dengan baik */
+    display: block;
+    margin: auto;
+}
 
+    </style>
     <title>About</title>
 </head>
 
@@ -44,10 +54,7 @@
         <section class="contact section" id="contact">
             <div class="contact__container container grid">
                 <div class="contact__images">
-                    <div class="contact__orbe"></div>
-                    <div class="contact__img">
-                        <img src="../assets/img/home4.jpg" alt="" />
-                    </div>
+                    <img src="../assets/img/home4.jpg" alt="" />
                 </div>
 
                 <div class="contact__content">
