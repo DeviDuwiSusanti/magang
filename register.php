@@ -29,8 +29,13 @@
                             <label for="nik">NIK</label>
                         </div>
                         <div class="input-field">
-                            <input type="text" class="input" name="school" required>
-                            <label for="school">Nama Sekolah / Kampus</label>
+                        <select class="input" name="school" id="school" required>
+                            
+                            <option value="sma_a">SMA Negeri 1 Sidoarjo</option>
+                            <option value="sma_b">SMK Buduran 1</option>
+                            <option value="universitas_a">Universitas Trunojoyo Madura</option>
+                            <option value="universitas_b">Universitas Indonesia</option>
+                        </select>
                         </div>
                         <div class="input-field">
                             <select class="input" name="gender" required>

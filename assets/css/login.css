@@ -3,10 +3,10 @@
 
 * {
     font-family: 'Poppins', sans-serif;
+    background: #e2ecf4;
 }
 
 .wrapper {
-    background-image: url("../img/login.jpeg");
     background-size: cover;
     background-repeat: no-repeat;
     padding: 0 20px 0 20px;
