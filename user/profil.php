@@ -38,16 +38,9 @@
                         <div class="bg__overlay">
                             <div class="islands__container container">
                                 <div class="islands__data" style="z-index: 99; position: relative">
-                                    <h2 class="islands__subtitle">
-                                        Explore
-                                    </h2>
                                     <h1 class="islands__title">
                                         Your Profile
                                     </h1>
-                                    <p class="islands__description">
-                                    Dapatkan pengalaman berharga <br>dan kembangkan potensi Anda
-                                    melalui program magang di Sidoarjo.
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +82,7 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h2>Data Profil Pengguna</h2>
                                 <!-- Tombol Edit Profil -->
-                                <a href="edit_profil.php" class="btn btn-outline-secondary btn-sm">
+                                <a href="profil_edit.php" class="btn btn-outline-secondary btn-sm">
                                     <i class="bx bx-edit"></i> Edit Profil
                                 </a>
                             </div>

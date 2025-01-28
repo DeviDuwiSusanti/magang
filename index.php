@@ -47,7 +47,6 @@
             text-align: center
         }
     </style>
-
     <title>Home</title>
 </head>
 
@@ -151,20 +150,20 @@
                 <br><br>
                 <div class="lowongan">
                     <div class="lowongans">
-                    <article class="popular__card swiper-slide">
-                        <img src="assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                        <p>Dinas Komunikasi dan Informatika</p>
-                        <div class="popular__data">
-                            <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
-                            <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
-                            <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                            <p class="popular__details">
-                                <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
-                                <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                            </p>
-                            <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
-                        </div>
-                    </article>
+                        <article class="popular__card swiper-slide">
+                            <img src="assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                            <p>Dinas Komunikasi dan Informatika</p>
+                            <div class="popular__data">
+                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
+                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                                <p class="popular__details">
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                </p>
+                                <a href="user/lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                            </div>
+                        </article>
 
                         <article class="popular__card swiper-slide">
                             <img src="assets/img/instansi/dinas.png" alt="" class="popular__img"
@@ -298,7 +297,6 @@
                                 </div>
                             </a>
                         </article>
-
                     </div>
 
                     <div class="swiper-button-next">
@@ -314,6 +312,7 @@
                 <?php include "assets/layout/faqs.php" ?>
             </div>
         </section>
+    </main>
 
         <?php include "assets/layout/footerUser.php" ?>
 </body>

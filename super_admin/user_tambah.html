@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Dashboard - Super Admin</title>
+        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+        <link href="css/styles.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <!-- Navbar Brand-->
+            <a class="navbar-brand ps-3" href="index.html"> Super Admin</a>
+            <!-- Sidebar Toggle-->
+            
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">Edit Profile</a></li>
+                        <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <a class="nav-link" href="index.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard
+                            </a>
+
+                            <a class="nav-link" href="profile_edit.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Edit Profile
+                            </a>
+
+                            <a class="nav-link" href="instansi_view.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Instansi
+                            </a>
+
+                            <a class="nav-link active" href="user_view.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                User
+                            </a>
+
+                            <a class="nav-link" href="pengajuan_view.html">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Pengajuan
+                            </a>
+
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        Super Admin
+                    </div>
+                </nav>
+            </div>
+
+
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Halaman Tambah Admin Instansi</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">user</li>
+                        </ol>
+                    </div>
+
+                    <div class="container mt-5">
+                        <div class="card shadow-lg">
+                                <div class="card-body">
+                                <form action="" method="POST" enctype="multipart/form-data">
+                                    <!-- Nama Admin Instansi -->
+                                    <div class="mb-3">
+                                        <label for="nama_admin_instansi" class="form-label">Nama Lengkap : </label>
+                                        <input type="text" class="form-control" id="nama_admin_instansi" name="nama_admin_instansi" placeholder="Masukkan nama admin instansi" required>
+                                    </div>
+
+                                    <!-- NIK Admin Instansi -->
+                                    <div class="mb-3">
+                                        <label for="nik_admin_instansi" class="form-label">NIK :</label>
+                                        <input type="text" class="form-control" id="nik_admin_instansi" name="nik_admin_instansi" placeholder="Masukkan NIK admin instansi (16)" maxlength="16" required>
+                                    </div>
+                                    
+                                    <!-- Email Admin Instansi -->
+                                    <div class="mb-3">
+                                        <label for="email_admin_instansi" class="form-label">Email : </label>
+                                        <input type="text" class="form-control" id="email_admin_instansi" name="email_admin_instansi" placeholder="Masukkan email admin instansi" required>
+                                    </div>
+
+                                    <!-- Tempat Lahir Admin Instansi -->
+                                    <div class="mb-3">
+                                        <label for="tempat_lahir_admin_instansi" class="form-label">Tempat Lahir : </label>
+                                        <input type="text" class="form-control" id="tempat_lahir_admin_instansi" name="tempat_lahir_admin_instansi" placeholder="Masukkan Tempat admin instansi" required>
+                                    </div>
+
+                                    <!-- Tanggal Lahir Admin Instansi -->
+                                    <div class="mb-3">
+                                        <label for="tanggal_lahir_admin_instansi" class="form-label">Tanggal Lahir :</label>
+                                        <input type="date" name="tanggal_lahir_admin_instansi" id="tanggal_lahir_admin_instansi" class="form-control">
+                                    </div>
+
+                                    <!-- Gender Admin Instansi -->
+                                    <div class="mb-3">
+                                        <label for="gender_admin_instansi" class="form-label">Gender :</label>
+                                        <select name="gender_admin_instansi" id="gender_admin_instansi" class="form-select">
+                                            <option value="" selected>Pilih Gender</option>
+                                            <option value="L">Laki - Laki</option>
+                                            <option value="P">Perempuan</option>
+                                            <option value="O">Tidak Diketahui</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Alamat Instansi -->
+                                    <div class="mb-3">
+                                        <label for="alamat_admin_instansi" class="form-label">Alamat :</label>
+                                        <textarea class="form-control" id="alamat_admin_instansi" name="alamat_admin_instansi" rows="3" placeholder="Masukkan alamat Admin instansi" required></textarea>
+                                    </div>
+
+                                    <!-- Telephone Instansi -->
+                                    <div class="mb-3">
+                                        <label for="telepon_instansi" class="form-label">Telepon :</label>
+                                        <input type="tel" class="form-control" id="telepon_instansi" name="telepon_instansi" placeholder="Masukkan nomor telepon instansi" required>
+                                    </div>
+
+                                    <input type="hidden" name="level_admin_instansi" id="level_admin_instansi" value="2">
+
+                                    <!-- Submit Button -->
+                                    <div class="text-center mt-3">
+                                        <a href="user_view.html" class="btn btn-danger">Kembali</a>
+                                        <button type="submit" name="tambah_admin_instansi" class="btn btn-info w-50">Tambah Data </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid px-4">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Magang Aplication System 2025</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="assets/demo/chart-area-demo.js"></script>
+        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+        <script src="js/datatables-simple-demo.js"></script>
+    </body>
+</html>
