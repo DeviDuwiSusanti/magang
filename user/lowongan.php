@@ -313,6 +313,10 @@
                             <div class="popular__data">
                                 <h3 class="popular__title">Internship - Bidang Komunikasi Informatika</h3>
                                 <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo...</p>
+                                <p class="popular__details">
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                </p>
                                 <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                         </article>
