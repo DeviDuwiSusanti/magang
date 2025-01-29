@@ -6,29 +6,29 @@
         <div class="nav__menu">
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'index.php' : '../index.php'; ?>" 
-                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active-link' : ''; ?>">
+                    <a href="beranda.php" 
+                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'beranda.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-home-alt"></i>
                         <span>Beranda</span>
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/lowongan.php' : 'lowongan.php'; ?>" 
+                    <a href="lowongan.php" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'lowongan.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-building-house"></i>
                         <span>Lowongan</span>
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/pengajuanaktif.php' : 'pengajuanaktif.php'; ?>" 
+                    <a href="pengajuanaktif.php" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'pengajuanaktif.php' ? 'active-link' : ''; ?>">
                        <i class="bx bx-file"></i>
                         <span>Pengajuan</span>
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/about.php' : 'about.php'; ?>" 
-                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'about.php' ? 'active-link' : ''; ?>">
+                    <a href="tentang.php" 
+                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'tentang.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-award"></i>
                         <span>Tentang Kami</span>
                     </a>
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/profil.php' : 'profil.php'; ?>">
+        <a class="navbar-brand" href="../index.php">
             <img 
                 src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/img/avatar1.png' : '../assets/img/avatar1.png'; ?>" 
                 alt="Logo" 
