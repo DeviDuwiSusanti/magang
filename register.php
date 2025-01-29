@@ -14,7 +14,7 @@
             <div class="row">
                 <header>Register</header>
                 <form action="login.php" method="POST" enctype="multipart/form-data" class="d-flex">
-                    <!-- Left Column -->
+                    <!-- Kolom Kiri -->
                     <div class="col-md-6">
                         <div class="input-field">
                             <input type="text" class="input" name="name" required>
@@ -30,7 +30,7 @@
                         </div>
                         <div class="input-field">
                         <select class="input" name="school" id="school" required>
-                            
+                            <option value="">Masukkan Sekolah Asal</option>
                             <option value="sma_a">SMA Negeri 1 Sidoarjo</option>
                             <option value="sma_b">SMK Buduran 1</option>
                             <option value="universitas_a">Universitas Trunojoyo Madura</option>
@@ -46,7 +46,7 @@
                         </div>
                     </div>
 
-                    <!-- Right Column -->
+                    <!-- Kolom Kanan -->
                     <div class="col-md-6">
                         <div class="input-field">
                             <input type="text" class="input" name="birth_place" required>

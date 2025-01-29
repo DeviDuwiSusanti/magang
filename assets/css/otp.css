@@ -7,53 +7,101 @@ body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
 }
+
 .otp-container {
     text-align: center;
-    padding: 30px;
-    background: linear-gradient(145deg, #ffffff, #d3e0ea);
-    border-radius: 15px;
-    box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.2), -8px -8px 15px rgba(255, 255, 255, 0.7);
+    padding: 50px; /* Tambahkan padding */
+    background: linear-gradient(145deg, #ffffff, #e6eff5);
+    border-radius: 25px; /* Lebih melengkung */
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1), -10px -10px 30px rgba(255, 255, 255, 0.7);
     width: 100%;
-    max-width: 400px;
+    max-width: 450px; /* Ukuran container disesuaikan */
 }
+
 .otp-container h5 {
     font-weight: 600;
     color: #333;
+    margin-bottom: 30px; /* Tambahkan jarak */
+    font-size: 20px;
 }
+
 .otp-input {
-    width: 60px;
-    height: 60px;
-    margin: 0 8px;
+    width: 65px; /* Lebih proporsional */
+    height: 65px;
+    margin: 0 12px; /* Jarak antar input */
     text-align: center;
     border: 2px solid #58c1f7;
-    border-radius: 10px;
+    border-radius: 12px;
     font-size: 24px;
     background-color: #f8f9fa;
-    transition: all 0.3s ease;
+    color: #333;
+    transition: all 0.3s ease-in-out;
 }
+
 .otp-input:focus {
     border-color: #47a8d8;
-    box-shadow: 0 0 8px rgba(71, 168, 216, 0.5);
+    box-shadow: 0 0 10px rgba(71, 168, 216, 0.5);
     outline: none;
+    background-color: #ffffff;
 }
+
+#timer {
+    font-weight: 500;
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 30px; /* Jarak sebelum tombol */
+}
+
 .verify-btn {
-    background-color: #58c1f7;
-    color: white;
+    background: linear-gradient(90deg, #58c1f7, #47a8d8); /* Gradasi warna */
+    color: #ffffff;
     border: none;
-    padding: 12px 24px;
-    border-radius: 25px;
+    padding: 15px 30px;
+    border-radius: 30px;
     font-size: 18px;
     font-weight: 500;
-    transition: background-color 0.3s ease;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
+
 .verify-btn:hover {
-    background-color: #47a8d8;
+    background: linear-gradient(90deg, #47a8d8, #58c1f7);
+    box-shadow: 0 5px 15px rgba(71, 168, 216, 0.4);
 }
+
 .btn-link {
     color: #47a8d8;
     font-size: 20px;
     text-decoration: none;
+    transition: color 0.3s ease;
+    margin-bottom: 25px; /* Jarak antara tombol link dan heading */
 }
+
 .btn-link:hover {
     color: #58c1f7;
+    text-decoration: none;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .otp-container {
+        padding: 30px;
+        max-width: 90%; /* Sesuaikan dengan layar kecil */
+    }
+    .otp-input {
+        width: 55px;
+        height: 55px;
+        font-size: 20px;
+        margin: 0 8px;
+    }
+    .verify-btn {
+        padding: 12px 20px;
+        font-size: 16px;
+    }
+    .btn-link {
+        font-size: 18px;
+    }
+    #timer {
+        font-size: 16px;
+    }
 }
