@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+<!-- jika yang login level user -->
+<?php include "layout/sidebarUser.php" ?>
+<?php include "user/dashboard.php" ?>
+
+<!-- jika yang login level admin instansi -->
+<!-- taro sini -->
+
+<!-- jika yang login super admin -->
+
+<!-- taro sini -->
+
