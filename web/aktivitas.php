@@ -35,7 +35,7 @@
 </head>
 <body>
 
-<?php include "../assets/layout/navbarUser.php" ?>
+<?php include "../layout/navbarUser.php" ?>
 <main class="main">
     <section>
         <div class="swiper-container gallery-top">
@@ -263,70 +263,70 @@
     </div>
 </main>
 
-    <?php include "../assets/layout/footerUser.php" ?>
+    <?php include "../layout/footerUser.php" ?>
 
-<script>
-let currentPage = 1;
-const rowsPerPage = 5;
-const tableBody = document.getElementById("table-body");
-const rows = Array.from(tableBody.getElementsByTagName("tr"));
-const totalPages = Math.ceil(rows.length / rowsPerPage);
-const pagination = document.getElementById("pagination");
+    <script>
+        let currentPage = 1;
+        const rowsPerPage = 5;
+        const tableBody = document.getElementById("table-body");
+        const rows = Array.from(tableBody.getElementsByTagName("tr"));
+        const totalPages = Math.ceil(rows.length / rowsPerPage);
+        const pagination = document.getElementById("pagination");
 
-function showPage(page) {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    rows.forEach((row, index) => {
-        row.style.display = index >= start && index < end ? "" : "none";
-    });
-}
+        function showPage(page) {
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            rows.forEach((row, index) => {
+                row.style.display = index >= start && index < end ? "" : "none";
+            });
+        }
 
-function prevPage() {
-    if (currentPage > 1) {
-        currentPage--;
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePagination();
+            }
+        }
+
+        function gotoPage(page) {
+            currentPage = page;
+            updatePagination();
+        }
+
+        function updatePagination() {
+            pagination.innerHTML = `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="prevPage()">Previous</a>
+                </li>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.innerHTML += `
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="gotoPage(${i})">${i}</a>
+                    </li>
+                `;
+            }
+
+            pagination.innerHTML += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="nextPage()">Next</a>
+                </li>
+            `;
+
+            showPage(currentPage);
+        }
+
+        // Tampilkan halaman pertama saat halaman dimuat
         updatePagination();
-    }
-}
 
-function nextPage() {
-    if (currentPage < totalPages) {
-        currentPage++;
-        updatePagination();
-    }
-}
-
-function gotoPage(page) {
-    currentPage = page;
-    updatePagination();
-}
-
-function updatePagination() {
-    pagination.innerHTML = `
-        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="prevPage()">Previous</a>
-        </li>
-    `;
-
-    for (let i = 1; i <= totalPages; i++) {
-        pagination.innerHTML += `
-            <li class="page-item ${i === currentPage ? 'active' : ''}">
-                <a class="page-link" href="#" onclick="gotoPage(${i})">${i}</a>
-            </li>
-        `;
-    }
-
-    pagination.innerHTML += `
-        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="nextPage()">Next</a>
-        </li>
-    `;
-
-    showPage(currentPage);
-}
-
-// Tampilkan halaman pertama saat halaman dimuat
-updatePagination();
-
-</script>
+    </script>
 </body>
 </html>
