@@ -85,7 +85,7 @@
                                 <img src="./img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="edit_profile.php" class="dropdown-item">
+                                <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'profil.php' ? 'profil.php' : 'user/profil.php'; ?>" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Lihat Profil</span>
                                 </a>
