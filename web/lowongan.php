@@ -127,7 +127,7 @@
 </head>
 
 <body>
-    <?php include "../assets/layout/navbarUser.php" ?>
+    <?php include "../layout/navbarUser.php" ?>
 
     <!--==================== MAIN ====================-->
     <main class="main">
@@ -328,7 +328,7 @@
                 </div>
             </div>
         </section>
-        <?php include "../assets/layout/footerUser.php" ?>
+        <?php include "../layout/footerUser.php" ?>
     </main>
 
     <script>
