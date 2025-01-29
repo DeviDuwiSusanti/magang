@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? '' : '../'; ?>assets/css/dashboard.css">
 </head>
 
 <body>
@@ -31,13 +31,13 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'edit_profil.php' ? 'edit_profil.php' : 'user/edit_profil.php'; ?>" class="sidebar-link">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/edit_profil.php' : 'edit_profil.php'; ?>" class="sidebar-link">
                         <i class="bi bi-person-lines-fill"></i>
                         <span>Edit Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'kegiatan_aktif.php' ? 'kegiatan_aktif.php' : 'user/kegiatan_aktif.php'; ?>" class="sidebar-link">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/kegiatan_aktif.php' : 'kegiatan_aktif.php'; ?>" class="sidebar-link">
                         <i class="bi bi-pencil-square"></i>
                         <span>Kegiatan Aktif</span>
                     </a>

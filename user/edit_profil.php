@@ -29,10 +29,10 @@
             </div>
 
             <div class="mb-3">
-                <label for="nik" class="form-label">NIK</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="Heviaa" required>
+                <label for="" class="form-label"></label>
+                <input type="text" class="form-control" id="" name="" value="Heviaa" required>
             </div>
-            
+
             <!-- Alamat -->
             <div class="mb-3">
                 <label for="alamat" class="form-label">Alamat</label>
