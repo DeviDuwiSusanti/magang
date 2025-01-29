@@ -3,9 +3,9 @@
 <div class="main-content p-4">
     <div class="container-fluid">
         <!-- Heading Dashboard -->
-        <h1 class="mb-4">Kelola Instansi</h1>
+        <h1 class="mb-4">Daftar Kegiatan</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Daftar Instansi</li>
+            <li class="breadcrumb-item active">Tabel Kegiatan Aktif</li>
         </ol>
 
         <!-- Tabel -->
@@ -14,35 +14,34 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Deskripsi</th>
-                        <th>Alamat</th>
-                        <th>Gambar</th>
-                        <th>Telepon</th>
-                        <th>Aksi</th>
+                        <th>Nama</th>
+                        <th>Universitas</th>
+                        <th>Perusahaan</th>
+                        <th>Posisi</th>
+                        <th>Durasi</th>
+                        <th>Periode Magang</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Data 1 -->
                     <tr>
                         <td>1</td>
-                        <td>Instansi A adalah instansi yang bergerak di bidang pendidikan dan pelatihan.</td>
-                        <td>Jl. Merdeka No. 123, Jakarta</td>
-                        <td><img src="./img/login.jpeg" alt="Gambar Instansi A" class="rounded"></td>
-                        <td>08123456789</td>
-                        <td>
-                            <a href="edit_instansi.php" class="btn btn-primary btn-sm manage">Edit</a>
-                        </td>
+                        <td>Hendra Hartono</td>
+                        <td>Universitas Trunojoyo Madura</td>
+                        <td>Kominfo Sidoarjo</td>
+                        <td>Cyber Security</td>
+                        <td>3 Bulan</td>
+                        <td>02 Januari - 02 Mei</td>
                     </tr>
                     <!-- Data 2 -->
                     <tr>
                         <td>2</td>
-                        <td>Instansi B adalah instansi yang menyediakan layanan konsultasi bisnis.</td>
-                        <td>Jl. Sudirman No. 45, Bandung</td>
-                        <td><img src="./img/login.jpeg" alt="Gambar Instansi B" class="rounded"></td>
-                        <td>08234567890</td>
-                        <td>
-                            <a href="edit_instansi.php" class="btn btn-primary btn-sm manage">Edit</a>
-                        </td>
+                        <td>Hendra Hartono</td>
+                        <td>Universitas Trunojoyo Madura</td>
+                        <td>Kominfo Medan</td>
+                        <td>Website Developer</td>
+                        <td>6 Bulan</td>
+                        <td>02 Januari - 02 Mei</td>
                     </tr>
                 </tbody>
             </table>
