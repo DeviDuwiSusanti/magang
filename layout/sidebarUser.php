@@ -43,13 +43,13 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'status_pengajuan.php' ? 'status_pengajuan.php' : 'user/status_pengajuan.php'; ?>" class="sidebar-link">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/status_pengajuan.php' : 'status_pengajuan.php'; ?>" class="sidebar-link">
                         <i class="bi bi-building-fill-add"></i>
                         <span>Status Pengajuan</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'histori.php' ? 'histori.php' : 'user/histori.php'; ?>" class="sidebar-link">
+                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/histori.php' : 'histori.php'; ?>" class="sidebar-link">
                         <i class="bi bi-journals"></i>
                         <span>Histori</span>
                     </a>
@@ -109,7 +109,7 @@
             </nav>
         <!-- </div>
     </div> -->
-    <script src="./js/script.js"></script>
+    <script src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? '' : '../'; ?>js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
