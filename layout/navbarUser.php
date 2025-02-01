@@ -40,9 +40,9 @@
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="../index.php">
+        <a class="navbar-brand" href="../login.php">
             <img 
-                src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/img/avatar1.png' : '../assets/img/avatar1.png'; ?>" 
+                src="../assets/img/avatar1.png" 
                 alt="Logo" 
                 style="width:40px;" 
                 class="rounded-pill"

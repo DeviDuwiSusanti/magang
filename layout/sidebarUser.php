@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? '' : '../'; ?>assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
 </head>
 
 <body>
@@ -20,36 +20,36 @@
                     <i class="bi bi-grid"></i>
                 </button>
                 <div class="sidebar-logo">
-                    <a href="#">Sistem Magang</a>
+                    <a href="../web/beranda.php">Sistem Magang</a>
                 </div>
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'index.php' : '../index.php'; ?>" class="sidebar-link">
+                    <a href="dashboard.php" class="sidebar-link">
                         <i class="bi bi-speedometer"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/edit_profil.php' : 'edit_profil.php'; ?>" class="sidebar-link">
+                    <a href="edit_profil.php" class="sidebar-link">
                         <i class="bi bi-person-lines-fill"></i>
                         <span>Edit Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/kegiatan_aktif.php' : 'kegiatan_aktif.php'; ?>" class="sidebar-link">
+                    <a href="kegiatan_aktif.php" class="sidebar-link">
                         <i class="bi bi-pencil-square"></i>
                         <span>Kegiatan Aktif</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/status_pengajuan.php' : 'status_pengajuan.php'; ?>" class="sidebar-link">
+                    <a href="status_pengajuan.php" class="sidebar-link">
                         <i class="bi bi-building-fill-add"></i>
                         <span>Status Pengajuan</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'user/histori.php' : 'histori.php'; ?>" class="sidebar-link">
+                    <a href="histori.php" class="sidebar-link">
                         <i class="bi bi-journals"></i>
                         <span>Histori</span>
                     </a>
@@ -82,10 +82,10 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? '' : '../'; ?>img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
+                                <img src="../assets/img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="<?php echo basename($_SERVER['PHP_SELF']) === 'profil.php' ? 'profil.php' : 'user/profil.php'; ?>" class="dropdown-item">
+                                <a href="profil.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Lihat Profil</span>
                                 </a>
@@ -109,7 +109,7 @@
             </nav>
         <!-- </div>
     </div> -->
-    <script src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? '' : '../'; ?>js/script.js"></script>
+    <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>

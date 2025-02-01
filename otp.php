@@ -72,7 +72,14 @@
             const otp = Array.from(inputs).map(input => input.value).join('');
             if (otp.length === 6) {
                 alert('Verifikasi Berhasil!');
-                window.location.href="dashboard.php";
+                // Jika level 1 (super admin)
+                // window.location.href='super_admin/dashboard.php';
+
+                // Jika level 2 (admin)
+                // window.location.href='admin/dashboard.php';
+
+                // Jika level 3 (user biasa)
+                window.location.href="user/dashboard.php";
             } else {
                 alert('Kode OTP tidak sesuai. Silakan coba lagi.');
             }

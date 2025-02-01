@@ -313,7 +313,7 @@
 
                 <br><br><br>
                 <h2 class="section__title" style="text-align: center">Pertanyaan yang Sering Ditanyakan</h2><br><br>
-                <?php include "../assets/layout/faqs.php" ?>
+                <?php include "../layout/faqs.php" ?>
             </div>
         </section>
     </main>

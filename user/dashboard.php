@@ -1,3 +1,5 @@
+<?php include '../layout/sidebarUser.php' ?>
+
 <div class="main-content p-4">
     <div class="container-fluid">
         <!-- Heading Dashboard -->
