@@ -72,7 +72,7 @@
             const otp = Array.from(inputs).map(input => input.value).join('');
             if (otp.length === 6) {
                 alert('Verifikasi Berhasil!');
-                window.location.href="index.php";
+                window.location.href="dashboard.php";
             } else {
                 alert('Kode OTP tidak sesuai. Silakan coba lagi.');
             }
