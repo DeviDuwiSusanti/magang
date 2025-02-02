@@ -12,76 +12,43 @@
 
     <!--=============== SWIPER CSS untu membuat slider===============-->
     <link rel="stylesheet" href="../assets/libraries/swiper-bundle.min.css" />
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+    <!-- AOS JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/home.css" />
-    <style>
-        
-        .lowongan .lowongans {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .slide-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .carousel img {
-            max-height: 400px;
-            object-fit: cover;
-            width: 100%;
-        }
-
-        .details-button {
-            display: inline-block; 
-            background: linear-gradient(90deg, #4CAF50, #2D9CDB); 
-            color: #fff; 
-            text-decoration: none; 
-            font-weight: bold; 
-            padding: 10px 20px; 
-            border-radius: 25px; 
-            text-align: center
-        }
-
-        .use{
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/beranda.css" />
     <title>Home</title>
 </head>
 
 <body>
+    <script src="../assets/js/animasi.js"></script>
     <?php include "../layout/navbarUser.php" ?>
+
 
     <!--==================== MAIN ====================-->
     <main class="main">
         <!--==================== HOME ====================-->
-        <section>
-            <div class="swiper-container">
-                <div>
-                    <section class="islands">
-                        <img src="../assets/img/bgHome.jpg" alt="" class="islands__bg" />
-                        <div class="bg__overlay">
-                            <div class="islands__container container">
-                                <div class="islands__data" style="z-index: 99; position: relative">
-                                    <h2 class="islands__subtitle">
-                                        Explore
-                                    </h2>
-                                    <h1 class="islands__title">
-                                        Sidoarjo Internship
-                                    </h1>
-                                    <p class="islands__description">
-                                    Dapatkan pengalaman berharga <br>dan kembangkan potensi Anda
-                                    melalui program magang di Sidoarjo.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+       
+        <section class="swiper-wrapper" id="hero">
+            <div class="container">
+                <!-- Deskripsi di sebelah kiri -->
+                <div class="hero-text" data-aos="fade-left">
+                    <h1>Selamat Datang di Sidoarjo Internship</h1>
+                    <p>
+                        Temukan berbagai peluang magang terbaik di Sidoarjo yang sesuai dengan minat dan keahlianmu.
+                        Kami menyediakan akses mudah bagi mahasiswa dan fresh graduate untuk mendapatkan pengalaman berharga.
+                    </p>
+                    <a href="tentang.php"><button class="details-button">Tentang Kami →</button></a>
+                </div>
+                
+                <!-- Gambar di sebelah kanan -->
+                <div class="hero-image" data-aos="fade-right">
+                    <img src="../assets/img/bgHome.jpg" alt="Magang di Sidoarjo">
                 </div>
             </div>
         </section>
@@ -89,71 +56,12 @@
         <!--==================== POPULAR ====================-->
         <section class="section" id="popular">
             <div class="container">
-                <h2 class="section__title" style="text-align: center">Manfaat</h2>
-                <span class="section__subtitle" style="text-align: center">
-                "Ikutlah magang kami di Sidoarjo, di mana banyak sekali peluang menanti untuk membentuk masa depan Anda!"</span><br>
-                    
-                <div class="slide-container">
-                    <!-- Carousel -->
-                    <div id="demo" class="carousel slide" data-bs-ride="carousel">
-
-                        <!-- Indicators/dots -->
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-                            <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-                            <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-                            <button type="button" data-bs-target="#demo" data-bs-slide-to="3"></button>
-                        </div>
-
-                        <!-- The slideshow/carousel -->
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="../assets/img/use2.jpg" alt="Los Angeles" class="d-block">
-                                <div class="carousel-caption">
-                                    <h3 class="use">Pengalaman Berharga</h3>
-                                    <p>Pembelajaran langsung untuk meningkatkan keterampilan Anda</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../assets/img/home2.jpg" alt="Chicago" class="d-block">
-                                <div class="carousel-caption">
-                                    <h3 class="use">Peluang Karir</h3>
-                                    <p>Membuka pintu untuk prospek pekerjaan di masa depan</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../assets/img/home3.jpg" alt="New York" class="d-block">
-                                <div class="carousel-caption">
-                                    <h3 class="use">Jaringan Profesional</h3>
-                                    <p>Terhubung dengan perusahaan terkemuka di Sidoarjo</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img src="../assets/img/use4.jpg" alt="New York" class="d-block">
-                                <div class="carousel-caption">
-                                    <h3 class="use">Pertumbuhan Pribadi</h3>
-                                    <p>Tingkatkan kepercayaan diri dan kemampuan beradaptasi Anda</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Left and right controls/icons -->
-                        <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
-                    </div>
-                </div>
-
-                <br><br><br>
-                <h2 class="section__title" style="text-align: center">Temukan Peluang Magang Terbaik di Sidoarjo</h2>
-                <span class="section__subtitle" style="text-align: center">
+                <h2 class="section__title" style="text-align: center" data-aos="fade-up">Temukan Peluang Magang Terbaik di Sidoarjo</h2>
+                <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
                 "Sidoarjo Internship menyediakan berbagai program magang yang sesuai dengan keterampilan dan minatmu. Daftar sekarang dan ambil langkah pertama menuju masa depan karirmu. Kesuksesan dimulai dari sini!"</span><br>
                 <br><br>
                 <div class="lowongan">
-                    <div class="lowongans">
+                    <div class="lowongans" data-aos="fade-down">
                         <article class="popular__card swiper-slide">
                             <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                             <p>Dinas Komunikasi dan Informatika</p>
@@ -162,7 +70,7 @@
                                 <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
                                 <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
@@ -178,7 +86,7 @@
                                 <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
                                 <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
@@ -194,7 +102,7 @@
                                 <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
                                 <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
@@ -209,7 +117,7 @@
                                 <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
                                 <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
@@ -224,7 +132,7 @@
                                 <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
                                 <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
@@ -239,7 +147,7 @@
                                 <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pendaftar: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
                                 <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
@@ -255,8 +163,8 @@
 
 
                 <br><br><br>
-                <h2 class="section__title" style="text-align: center">Gabung Bersama Kami</h2>
-                <span class="section__subtitle" style="text-align: center">
+                <h2 class="section__title" style="text-align: center" data-aos="fade-up">Gabung Bersama Kami</h2>
+                <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
                 "S-Match telah membantu peserta dalam melaksanakan program magang berkualitas di Sidoarjo. Temukan peluang magang terbaik untuk karier masa depan Anda!"</span><br>
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper">
@@ -268,7 +176,7 @@
                                     <!-- <h3 class="popular__title">Lemah Putro</h3> --><br>
                                     <p class="popular__description">
                                         <i class="bx bx-briefcase"></i> 3 Lowongan <br />
-                                        <i class="bx bxs-group"></i> 50 Pendaftar
+                                        <i class="bx bxs-group"></i> 5 Pemagang Aktif
                                     </p>
                                 </div>
                             </a>
@@ -282,7 +190,7 @@
                                     <!-- <h3 class="popular__title">Lemah Putro</h3> --><br>
                                     <p class="popular__description">
                                         <i class="bx bx-briefcase"></i> 3 Lowongan <br />
-                                        <i class="bx bxs-group"></i> 50 Pendaftar
+                                        <i class="bx bxs-group"></i> 5 Pemagang Aktif
                                     </p>
                                 </div>
                             </a>
@@ -296,7 +204,7 @@
                                     <!-- <h3 class="popular__title">Lemah Putro</h3> --><br>
                                     <p class="popular__description">
                                         <i class="bx bx-briefcase"></i> 3 Lowongan <br />
-                                        <i class="bx bxs-group"></i> 50 Pendaftar
+                                        <i class="bx bxs-group"></i> 5 Pemagang Aktif
                                     </p>
                                 </div>
                             </a>
@@ -312,7 +220,7 @@
                 </div>
 
                 <br><br><br>
-                <h2 class="section__title" style="text-align: center">Pertanyaan yang Sering Ditanyakan</h2><br><br>
+                <h2 class="section__title" style="text-align: center" data-aos="fade-up">Pertanyaan yang Sering Ditanyakan</h2><br><br>
                 <?php include "../layout/faqs.php" ?>
             </div>
         </section>

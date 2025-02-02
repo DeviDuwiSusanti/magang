@@ -31,9 +31,9 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="edit_profil.php" class="sidebar-link">
+                    <a href="profil.php" class="sidebar-link">
                         <i class="bi bi-person-lines-fill"></i>
-                        <span>Edit Profile</span>
+                        <span>Profile</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -89,7 +89,7 @@
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Lihat Profil</span>
                                 </a>
-                                <a href="#" class="dropdown-item">
+                                <a href="../web/beranda.php" class="dropdown-item">
                                     <i class="bi bi-bar-chart-line-fill"></i>
                                     <span>Kembali ke Beranda</span>
                                 </a>

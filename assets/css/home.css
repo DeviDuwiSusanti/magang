@@ -1,20 +1,5 @@
-.lowongan .lowongans {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
-}
 
-.slide-container {
-    max-width: 800px;
-    margin: 0 auto;
-}
 
-.carousel img {
-    max-height: 400px;
-    object-fit: cover;
-    width: 100%;
-}
 
 .details-button {
     display: inline-block; 
