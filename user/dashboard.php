@@ -15,7 +15,7 @@
                         <h5 class="card-title">Unggah Logbook</h5>
                         <h2 class="card-text text-primary">15</h2>
                         <p class="text-muted">Logbook Terunggah</p>
-                        <a href="daftar_instansi.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        <a href="unggah_logbook.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                         <h5 class="card-title">Laporan Akhir</h5>
                         <h2 class="card-text text-success">0</h2>
                         <p class="text-muted">Laporan Terunggah</p>
-                        <a href="detail-mahasiswa.php" class="btn btn-success mt-3 detail">View Details</a>
+                        <a href="kegiatan_aktif.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         <h5 class="card-title">Cek Sertifikat</h5>
                         <h2 class="card-text text-warning">1</h2>
                         <p class="text-muted">Seritifikat Tersedia</p>
-                        <a href="detail-proyek.php" class="btn btn-warning mt-3 detail">View Details</a>
+                        <a href="histori.php" class="btn btn-warning mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                         <h5 class="card-title">Histori</h5>
                         <h2 class="card-text text-danger">4</h2>
                         <p class="text-muted">Jumlah Kegiatan</p>
-                        <a href="detail-pengumuman.php" class="btn btn-danger mt-3 detail">View Details</a>
+                        <a href="histori.php" class="btn btn-danger mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
