@@ -126,6 +126,13 @@
         .search-icon:hover {
             color: #0056b3;
         }
+
+        .lowongan .lowongans {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
     </style>
 
     <title>Home</title>
