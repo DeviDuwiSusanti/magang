@@ -7,6 +7,13 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <link rel="stylesheet" href="assets/css/login.css">
+    <style> 
+        p {
+            padding-top: 10px;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
     <title>Login</title>
 </head>
 
@@ -31,6 +38,7 @@
                                 <input type="submit" class="submit" name="login" value="Sign In">
                             </div>
                         </form>
+                        <p>Belum punya akun? <a href="register.php">Register Now</a></p>
                     </div>
                 </div>
             </div>
