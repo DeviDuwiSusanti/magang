@@ -133,6 +133,36 @@
             flex-wrap: wrap;
             gap: 20px;
         }
+        .wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+        }
+
+        .container.main {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .side-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text {
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+        }
     </style>
 
     <title>Home</title>
@@ -146,20 +176,18 @@
     <main class="main">
 
     <!--==================== HOME ====================-->
-    <section>
-        <div class="swiper-container gallery-top">
-            <div class="swiper-wrapper">
-            <section class="islands swiper-slide">
-                <img src="../assets/img/pw3.jpg" alt="" class="islands__bg" />
-                <div class="islands__container container">
-                <div class="islands__data">
-                    <h1 class="islands__title">Internship Portal</h1>
+    <div class="wrapper">
+    <div class="container main">
+        <div class="row">
+            <div class="col-md-6 side-image">
+                <div class="text">
+                    <h1 class="hero-title">Temukan Karir Impianmu</h1>
                 </div>
-                </div>
-            </section>
             </div>
         </div>
-    </section>
+    </div>
+    </div>
+
 
     <!--==================== POPULAR ====================-->
     <section class="section" id="popular">
