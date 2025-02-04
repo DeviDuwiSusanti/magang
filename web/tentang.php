@@ -14,14 +14,13 @@
     <link rel="stylesheet" href="../assets/css/style.css" />
     <style>
         .contact__images img {
-    width: 500px; /* Sesuaikan ukuran */
-    height: 500px; /* Pastikan ukurannya sama untuk bentuk lingkaran */
-    border-radius: 50%; /* Membuat gambar menjadi bulat */
-    object-fit: cover; /* Pastikan gambar terpotong dengan baik */
-    display: block;
-    margin: auto;
-}
-
+            width: 500px; /* Sesuaikan ukuran */
+            height: 500px; /* Pastikan ukurannya sama untuk bentuk lingkaran */
+            border-radius: 50%; /* Membuat gambar menjadi bulat */
+            object-fit: cover; /* Pastikan gambar terpotong dengan baik */
+            display: block;
+            margin: auto;
+        }
     </style>
     <title>About</title>
 </head>
@@ -31,24 +30,6 @@
 
     <!--==================== MAIN ====================-->
     <main class="main">
-        <!--==================== HOME ====================-->
-        <section>
-            <div class="swiper-container gallery-top">
-                <div class="swiper-wrapper">
-                    <section class="islands swiper-slide">
-                        <img src="../assets/img/home2.jpg" alt="" class="islands__bg" />
-                        <div class="bg__overlay">
-                            <div class="islands__container container">
-                                <div class="islands__data">
-                                    <h2 class="islands__subtitle">Need Internship</h2>
-                                    <h1 class="islands__title">About Us</h1>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </section>
 
         <!--==================== About ====================-->
         <section class="contact section" id="contact">

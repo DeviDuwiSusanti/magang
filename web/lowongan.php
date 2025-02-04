@@ -11,6 +11,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!--=============== SWIPER CSS ===============-->
     <link rel="stylesheet" href="../assets/libraries/swiper-bundle.min.css" />
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+    <!-- AOS JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/lowongan.css" />
@@ -121,12 +126,20 @@
         .search-icon:hover {
             color: #0056b3;
         }
+
+        .lowongan .lowongans {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
     </style>
 
     <title>Home</title>
 </head>
 
 <body>
+    <script src="../assets/js/animasi.js"></script>
     <?php include "../layout/navbarUser.php" ?>
 
     <!--==================== MAIN ====================-->
@@ -150,13 +163,13 @@
 
     <!--==================== POPULAR ====================-->
     <section class="section" id="popular">
-        <div class="container">
+        <div class="container" data-aos="fade-up">
             <h2 class="section__title" style="text-align: center">
                 With Our Experience </br> We Will Serve You
             </h2></br>
 
         <!---========== Text and image layout=======-->
-        <div class="custom-container">
+        <div class="custom-container" data-aos="fade-up">
             <!-- Center Text -->
             <div class="center-text">
                 <div class="text-block">
@@ -176,11 +189,11 @@
         <!-- Image Row -->
         <div class="image-row">
                 <!-- Kiri Gambar -->
-                <div class="left-column">
+                <div class="left-column" data-aos="fade-left">
                     <img src="../assets/img/pw2.jpg" alt="Left Portrait Image" class="custom-image">
                 </div>
                 <!-- Kanan Gambar-->
-                <div class="right-column">
+                <div class="right-column" data-aos="fade-right">
                     <img src="../assets/img/pw1.jpg" alt="Right Portrait Image" class="custom-image">
                     <img src="../assets/img/pw3.jpg" alt="Bottom Portrait Image" class="custom-image image-spacing">
                 </div>
@@ -188,14 +201,14 @@
         </div>
 
         <!--==================== Carieer ====================-->
-        <h2 class="section__title" style="text-align: center">Explore Our Internship Opportunities</h2>
+        <h2 class="section__title" style="text-align: center" data-aos="fade-up">Explore Our Internship Opportunities</h2>
         <div class="search-container" style="text-align: center; margin-bottom: 20px;">
             <div class="search-wrapper">
                 <input type="text" id="searchInput" class="search-input" placeholder="Cari Instansi atau Bidang..." />
                 <i id="searchIcon" class="fas fa-search search-icon"></i>
             </div>
         </div>
-            <section class="section" id="popular">
+            <section class="section" id="popular" data-aos="fade-up">
                 <div class="container">
                     <div class="lowongan">
                         <div class="lowongans">

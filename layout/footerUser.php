@@ -74,10 +74,11 @@
         <script src="https://unpkg.com/scrollreveal"></script>
 
         <!--=============== SCROLLREVEAL ===============-->
-        <script src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/libraries/scrollreveal.min.js' : '../assets/libraries/scrollreveal.min.js'; ?>"></script>
+        <script src="../assets/libraries/scrollreveal.min.js"></script>
 
         <!--=============== SWIPER JS ===============-->
-        <script src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/libraries/swiper-bundle.min.js' : '../assets/libraries/swiper-bundle.min.js'; ?>"></script>
+        <script src="../assets/libraries/swiper-bundle.min.js"></script>
 
         <!--=============== MAIN JS ===============-->
-        <script src="<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? 'assets/js/main.js' : '../assets/js/main.js'; ?>"></script>
+        <script src="../assets/js/main.js"></script>
+        

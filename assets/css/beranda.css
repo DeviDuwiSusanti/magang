@@ -1,0 +1,78 @@
+
+
+#hero {
+    padding-top: 100px;
+}
+
+#hero .container {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    flex-wrap: wrap;
+}
+.hero-text {
+    flex: 1; 
+    min-width: 300px; 
+    padding: 20px;
+}
+
+.hero-text h1 {
+    font-size: 2rem; 
+    font-weight: bold;
+}
+
+.hero-text p {
+    font-size: 1rem; 
+    margin-top: 10px; 
+    color: #555;
+}
+
+.hero-image {
+    flex: 1; 
+    min-width: 300px; 
+    display: flex; 
+    justify-content: center;
+}
+
+.hero-image img {
+    max-width: 100%; 
+    height: auto; 
+    border-radius: 10px;
+}
+
+.hero-image {
+    perspective: 1500px; /* Menambahkan perspektif agar gambar terlihat lebih mendalam */
+    transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-image img {
+    width: 100%;
+    height: auto;
+    transform: scale(1) translateZ(0px); /* Gambar awal, dalam posisi normal */
+    transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); /* Bayangan halus untuk efek kedalaman */
+}
+
+.hero-image:hover img {
+    transform: scale(1.1) translateZ(200px); /* Efek gambar yang lebih besar dan menonjol keluar dari layar */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); /* Bayangan lebih besar saat hover */
+}
+
+.hero-image:hover {
+    transform: scale(1.05); /* Memberikan efek zoom lebih pada gambar */
+}
+
+/* Menambahkan animasi saat pertama kali dimuat */
+[data-aos="fade-right"] {
+    opacity: 0;
+    transform: translateX(100px);
+    transition: transform 1s ease, opacity 1s ease;
+}
+
+[data-aos="fade-right"].aos-animate {
+    opacity: 1;
+    transform: translateX(0px);
+}

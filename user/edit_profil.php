@@ -12,7 +12,7 @@
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Edit Profile User</li>
         </ol>
-        <form action="update_profile.php" class="form-profile" method="POST" enctype="multipart/form-data">
+        <form action="profil.php" class="form-profile" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Lengkap</label>
                 <input type="text" class="form-control" id="nama" name="nama" value="Heviaa" required>
