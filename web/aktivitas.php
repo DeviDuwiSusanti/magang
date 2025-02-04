@@ -78,7 +78,7 @@
             </tr>
             <tr>
                 <td>2</td>
-                <td>Revika Syariqatun Alifia</td>
+                <td>Siti Nur Aprilia</td>
                 <td>Universitas Trunojoyo Madura</td>
                 <td>Kominfo Sidoarjo</td>
                 <td>Bidang IT</td>

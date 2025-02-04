@@ -23,7 +23,7 @@
                     <a href="aktivitas.php" 
                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'aktivitas.php' ? 'active-link' : ''; ?>">
                        <i class="bx bx-file"></i>
-                        <span>Pengajuan</span>
+                        <span>Terdaftar</span>
                     </a>
                 </li>
                 <li class="nav__item">

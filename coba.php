@@ -37,59 +37,57 @@
                             <label for="email">Email</label>
                         </div>
                         <div class="input-field">
-                            <input type="number" class="input" name="nik" required>
+                            <input type="text" class="input" name="nik" required>
                             <label for="nik">NIK</label>
                         </div>
-                        <div class="input-field">
-                            <input type="number" class="input" name="nim" required>
-                            <label for="nim">NIM/NISN</label>
-                        </div>
+
                         <div class="mb-3">
-                            <label class="form-label">Pilih Pendidikan</label>
-                            <select class="form-select" id="educationSelect">
-                                <option value="">Pilih Pendidikan</option>
-                                <option value="sekolah">Sekolah</option>
-                                <option value="universitas">Perguruan Tinggi</option>
-                            </select>
-                        </div>
+            <label class="form-label">Pilih Pendidikan</label>
+            <select class="form-select" id="educationSelect">
+                <option value="">Pilih Pendidikan</option>
+                <option value="sekolah">Sekolah</option>
+                <option value="universitas">Perguruan Tinggi</option>
+            </select>
+        </div>
 
-                        <!-- Opsi untuk Sekolah -->
-                        <div id="schoolOptions" class="d-none">
-                            <div class="card card-body">
-                                <label class="form-label">Nama Sekolah</label>
-                                <select class="form-select" id="schoolSelect">
-                                    <option value="">Pilih Sekolah</option>
-                                    <option value="sma1">SMA Negeri 1 Sidoarjo</option>
-                                    <option value="smk1">SMK Buduran 1</option>
-                                </select>
-                                <label class="form-label mt-2">Jurusan</label>
-                                <select class="form-select d-none" id="jurusanSelect">
-                                    <option value="">Pilih Jurusan</option>
-                                </select>
-                            </div>
-                        </div>
+        <!-- Opsi untuk Sekolah -->
+        <div id="schoolOptions" class="d-none">
+            <div class="card card-body">
+                <label class="form-label">Nama Sekolah</label>
+                <select class="form-select" id="schoolSelect">
+                    <option value="">Pilih Sekolah</option>
+                    <option value="sma1">SMA Negeri 1 Sidoarjo</option>
+                    <option value="smk1">SMK Buduran 1</option>
+                </select>
 
-                        <!-- Opsi untuk Universitas -->
-                        <div id="universityOptions" class="d-none">
-                            <div class="card card-body">
-                                <label class="form-label">Nama Universitas</label>
-                                <select class="form-select" id="universitySelect">
-                                    <option value="">Pilih Universitas</option>
-                                    <option value="utm">Universitas Trunojoyo Madura</option>
-                                    <option value="ui">Universitas Indonesia</option>
-                                </select>
+                <label class="form-label mt-2">Jurusan</label>
+                <select class="form-select d-none" id="jurusanSelect">
+                    <option value="">Pilih Jurusan</option>
+                </select>
+            </div>
+        </div>
 
-                                <label class="form-label mt-2">Fakultas</label>
-                                <select class="form-select d-none" id="facultySelect">
-                                    <option value="">Pilih Fakultas</option>
-                                </select>
+        <!-- Opsi untuk Universitas -->
+        <div id="universityOptions" class="d-none">
+            <div class="card card-body">
+                <label class="form-label">Nama Universitas</label>
+                <select class="form-select" id="universitySelect">
+                    <option value="">Pilih Universitas</option>
+                    <option value="utm">Universitas Trunojoyo Madura</option>
+                    <option value="ui">Universitas Indonesia</option>
+                </select>
 
-                                <label class="form-label mt-2 d-none" id="prodiLabel">Program Studi</label>
-                                <select class="form-select d-none" id="prodiSelect">
-                                    <option value="">Pilih Program Studi</option>
-                                </select>
-                            </div>
-                        </div>
+                <label class="form-label mt-2">Fakultas</label>
+                <select class="form-select d-none" id="facultySelect">
+                    <option value="">Pilih Fakultas</option>
+                </select>
+
+                <label class="form-label mt-2 d-none" id="prodiLabel">Program Studi</label>
+                <select class="form-select d-none" id="prodiSelect">
+                    <option value="">Pilih Program Studi</option>
+                </select>
+            </div>
+        </div>
 
                         <!-- Gender -->
                         <div class="form-group">
@@ -115,17 +113,14 @@
                             <input type="text" class="input" name="birth_place" required>
                             <label for="birth_place">Tempat Lahir</label>
                         </div>
-                        <div >
-                        <label for="birth_place">Tanggal Lahir</label>
                         <div class="input-field">
                             <input type="date" class="input" name="birth_date" required>
-                        </div>
                         </div>
                         <div>
                             <textarea name="address" id="address" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="number" class="input" name="phone" required>
+                            <input type="tel" class="input" name="phone" required>
                             <label for="phone">Telephone</label>
                         </div>
 
@@ -144,8 +139,8 @@
         </div>
     </div>
 
-<script>
-function validateFile() {
+    <script>
+ function validateFile() {
         const fileInput = document.getElementById('image');
         const previewContainer = document.getElementById('imagePreview');
         const previewImage = document.getElementById('previewImage');
@@ -168,6 +163,9 @@ function validateFile() {
             reader.readAsDataURL(file);
         }
     }
+
+
+
 
        // Data jurusan berdasarkan sekolah
        const jurusanData = {
@@ -267,6 +265,6 @@ function validateFile() {
         });
 
 
-</script>
+    </script>
 </body>
 </html>
