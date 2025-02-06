@@ -10,10 +10,30 @@
         </ol>
         
         <form action="" class="form-logbook" method="POST" enctype="multipart/form-data">
+            <!-- Input Tanggal Otomatis -->
             <div class="mb-3">
-                <input type="file" class="form-control" id="lampiran" name="lampiran" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                <label for="tanggal" class="form-label">Tanggal</label>
+                <input type="text" class="form-control" id="tanggal" name="tanggal" value="<?php echo date('Y-m-d'); ?>" readonly>
             </div>
-
+            
+            <!-- Input Kegiatan -->
+            <div class="mb-3">
+                <label for="kegiatan" class="form-label">Kegiatan</label>
+                <input type="text" class="form-control" id="kegiatan" name="kegiatan" required>
+            </div>
+            
+            <!-- Input Keterangan -->
+            <div class="mb-3">
+                <label for="keterangan" class="form-label">Keterangan</label>
+                <textarea class="form-control" id="keterangan" name="keterangan" rows="3" required></textarea>
+            </div>
+            
+            <!-- Input File Lampiran -->
+            <div class="mb-3">
+                <label for="lampiran" class="form-label">Lampiran (Opsional)</label>
+                <input type="file" class="form-control" id="lampiran" name="lampiran" accept=".pdf,.doc,.docx,.jpg,.png">
+            </div>
+            
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">Unggah Logbook</button>
         </form>

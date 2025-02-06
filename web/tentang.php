@@ -92,7 +92,7 @@
                                     <h3 class="contact__card-title">Cek Sertifikat</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat" data-steps='[]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat" data-steps='[{"step":"Masuk ke dashboard user.", "img":"../assets/img/logbook1.jpg"}, {"step":"Klik halaman Histori.", "img":"../assets/img/logbook2.jpg"}, {"step":"Klik link sertifikat untuk unduh sertifikat.", "img":"../assets/img/logbook3.jpg"}]'>Lihat</button>
                         </div>
                     </div>
                 </div>
