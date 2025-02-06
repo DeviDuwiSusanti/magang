@@ -13,7 +13,7 @@
         <!-- Table -->
         <div class="card shadow-lg">
             <div class="card-body">
-                <table class="table table-bordered table-hover text-center align-middle">
+                <table id="table_pengajuan" class="table table-bordered table-hover text-center align-middle">
                     <thead class="table-dark">
                         <tr>
                             <th>No.</th>
@@ -50,3 +50,41 @@
         </div>
     </div>
 </main>
+
+<script>
+    $(document).ready(function() {
+        $('#table_pengajuan').DataTable({
+            "paging" : true,
+            "searching" : true,
+            "ordering" : true,
+            "info" : true,
+            "lengthMenu" : [5, 10, 25, 50, 100],
+            "columnDefs" : [{"orderable" : false, "targets" : [2, 3, 4, 5, 8]}],
+            "language" : {
+                "search" : "Cari : ",
+                "lengthMenu" : "Tampilkan _MENU_  data Per Halaman",
+                "info" : "Menampilkan _START_ hingga _END_ dari _TOTAL_ Data",
+                "paginate" : {
+                    "first" : "Awal ",
+                    "last" : " Akhir",
+                    "next" : "Selanjutnya ",
+                    "previous" : " Sebelumnya",
+                }
+            }, 
+
+            dom : 'Blfrtip',
+            buttons : [
+                {
+                    extend : 'pdfHtml5',
+                    text : '<i class="bi bi-file-earmark-pdf"></i> PDF',
+                    className : 'btn btn-danger m-2',
+                    title : 'Laporan Data Pengajuan User',
+                    exportOptions : {
+                        columns : [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                }
+            ]
+        })
+    })
+
+</script>

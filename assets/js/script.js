@@ -18,3 +18,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+const modeToggle = document.getElementById("mode-toggle");
+const modeIcon = document.getElementById("mode-icon");
+
+function toggleMode() {
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+        modeIcon.classList.replace("bi-moon-fill", "bi-sun-fill");
+    } else {
+        localStorage.setItem("theme", "light");
+        modeIcon.classList.replace("bi-sun-fill", "bi-moon-fill");
+    }
+}
+
+window.onload = function() {
+    if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark-mode");
+        modeIcon.classList.replace("bi-moon-fill", "bi-sun-fill");
+    }
+};
+
+modeToggle.addEventListener("click", toggleMode);

@@ -2,15 +2,13 @@
 
 <div class="main-content p-4">
     <div class="container-fluid">
-        <!-- Heading Dashboard -->
         <h1 class="mb-4">Edit Bidang</h1>
-        <ol class="breadcrumb mb-4">
+        <ol class="breadcrumb mb-3">
             <li class="breadcrumb-item active">Edit Bidang Instansi</li>
         </ol>
-
-        <!-- Tombol Kembali -->
-        <div class="mb-4">
-            <a href="bidang.php" class="btn btn-danger">Kembali</a>
+        <div class="dropdown-divider"></div>
+        <div class="mb-4 mt-3 text-end">
+            <a href="view_bidang.php" class="btn btn-danger"><i class="bi bi-arrow-left-circle"></i> Kembali</a>
         </div>
         <form action="update_profile.php" class="form-profile" method="POST" enctype="multipart/form-data">
             <!-- Nama Bidang -->
@@ -34,11 +32,12 @@
             <!-- Kuota -->
             <div class="mb-3">
                 <label for="kuota" class="form-label">Kuota</label>
-                <input type="text" class="form-control" id="kuota" name="kuota" placeholder="Masukkan kuota bidang" required>
+                <input type="number" class="form-control" id="kuota" name="kuota" placeholder="Masukkan kuota bidang" required>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary edit">Simpan Perubahan</button>
+            <button type="submit" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i> Simpan Perubahan</button>
         </form>
+        <!-- <a href="bidang.php" class="btn btn-danger bi bi-arrow-left-circle"> Kembali</a> -->
     </div>
 </div>
