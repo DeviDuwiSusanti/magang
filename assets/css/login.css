@@ -154,6 +154,10 @@ span a:hover {
     color: #000;
 }
 
+p {
+    font-size: 10px;
+}
+
 
 @media only screen and (max-width: 768px) {
     .side-image {
@@ -183,5 +187,7 @@ span a:hover {
         width: 100%;
     }
 }
+
+
 
 
