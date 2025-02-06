@@ -5,7 +5,7 @@
         <!-- Heading Dashboard -->
         <h1 class="mb-4">Daftar Kegiatan</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Tabel Kegiatan Aktif</li>
+            <li class="breadcrumb-item active">Tabel Histori Kegiatan</li>
         </ol>
 
         <!-- Tabel -->
