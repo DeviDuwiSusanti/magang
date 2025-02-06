@@ -14,7 +14,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color:#e2ecf4 ;
         }
         select, input {
             width: 100%;
@@ -38,6 +38,25 @@
         .button:hover {
             background-color: #0056b3;
         }
+        .list {
+        list-style-type: disc !important;
+        padding-left: 20px !important;
+        }
+        .form_daftar {
+    background-color: #ffffff;  /* Warna putih untuk latar belakang */
+    padding: 20px;              /* Memberikan ruang di dalam form */
+    border-radius: 10px;        /* Membuat sudut membulat */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Efek bayangan halus */
+    margin-top: 20px;           /* Memberi jarak dari atas */
+}
+
+.form_daftar .card {
+    background-color: #ffffff;  /* Memastikan bagian dalam card juga putih */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Tambahan bayangan untuk kesan mengambang */
+}
+
     </style>
 </head>
 <body>
@@ -48,23 +67,23 @@
                 <div class="blog__detail">
                     <h2 class="blog__title">Detail Lowongan</h2>
                     <table class="detail-table">
-                        <tr><td><b>Posisi</b></td><td>:</td><td>Asisten IT</td></tr>
-                        <tr><td><b>Perusahaan</b></td><td>:</td><td>PT Sucofindo</td></tr>
-                        <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Bekasi • Onsite</td></tr>
+                        <tr><td><b>Posisi</b></td><td>:</td><td>Web Developer</td></tr>
+                        <tr><td><b>Perusahaan</b></td><td>:</td><td>Dinas Komunikasi dan Informatika</td></tr>
+                        <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Sidoarjo</td></tr>
                     </table>
                     <h3>Deskripsi Lowongan</h3>
-                    <ul>
+                    <ul class="list">
                         <li>Jenjang pendidikan: SMA/SMK.</li>
                         <li>Jurusan: Teknik Komputer dan Jaringan.</li>
-                        <li>IPK minimal: 3.1.</li>
+                        <li>IPK minimal: 3.1</li>
                     </ul>
                     <h3>Persyaratan Dokumen</h3>
-                    <ul>
+                    <ul class="list">
                         <li>CV</li>
                         <li>Surat Badan Kesatuan Bangsa dan Politik Provinsi Jawa Timur</li>
                         <li>Surat Badan Kesatuan Bangsa dan Politik Kabupaten Sidoarjo</li>
                         <li>Proposal</li>
-                    </ul>
+                    </ul></br>
                     <h3>Lokasi Instansi</h3>
                     <div class="maps-container">
                         <iframe src="https://www.google.com/maps/embed?..." referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -74,29 +93,17 @@
                     <h3 style="text-align: center;">Formulir Pendaftaran</h3>
                     <div class="card">
                         <form action="" method="POST">
+                        <div class="form-group">
+                            <select name="jenis_pengajuan" required>
+                                <option value="" disabled selected>Pilih Jenis Pengajuan</option>
+                                <option value="magang">Magang/Kerja Praktek</option>
+                                <option value="magang">Kerja Praktek</option>
+                                <option value="kp">PKL</option>
+                                <option value="penelitian">Penelitian</option>
+                            </select>
+                        </div>
                             <div class="form-group">
-                                <input type="text" name="nama" placeholder="Nama Lengkap" required />
-                            </div>
-                            <div class="form-group">
-                                <label for="jenjang">Jenjang Pendidikan:</label>
-                                <select id="jenjang" onchange="updateForm()">
-                                    <option value="">-- Pilih --</option>
-                                    <option value="sma">SMA</option>
-                                    <option value="smk">SMK</option>
-                                    <option value="universitas">Universitas</option>
-                                </select>
-                            </div>
-                            <div id="jurusanDiv" style="display: none;">
-                                <label for="jurusan">Jurusan:</label>
-                                <select id="jurusan"></select>
-                            </div>
-                            <div id="fakultasDiv" style="display: none;">
-                                <label for="fakultas">Fakultas:</label>
-                                <select id="fakultas" onchange="updateProdi()"></select>
-                            </div>
-                            <div id="prodiDiv" style="display: none;">
-                                <label for="prodi">Program Studi:</label>
-                                <select id="prodi"></select>
+                                <input type="number" name="jumlah" placeholder="Jumlah" required />
                             </div>
                             <div class="form-group">
                                 <label for="tanggal_mulai">Tanggal Mulai:</label>
@@ -120,68 +127,5 @@
         </div>
     </section>
 </main>
-<script>
-    function updateForm() {
-        let jenjang = document.getElementById("jenjang").value;
-        let jurusanDiv = document.getElementById("jurusanDiv");
-        let fakultasDiv = document.getElementById("fakultasDiv");
-        let prodiDiv = document.getElementById("prodiDiv");
-        let jurusanSelect = document.getElementById("jurusan");
-        let fakultasSelect = document.getElementById("fakultas");
-        let prodiSelect = document.getElementById("prodi");
-
-        jurusanDiv.style.display = "none";
-        fakultasDiv.style.display = "none";
-        prodiDiv.style.display = "none";
-        jurusanSelect.innerHTML = "<option value=''>-- Pilih Jurusan --</option>";
-        fakultasSelect.innerHTML = "<option value=''>-- Pilih Fakultas --</option>";
-        prodiSelect.innerHTML = "<option value=''>-- Pilih Program Studi --</option>";
-
-        if (jenjang === "sma") {
-            jurusanDiv.style.display = "block";
-            jurusanSelect.innerHTML += "<option value='ipa'>IPA</option><option value='ips'>IPS</option>";
-        } else if (jenjang === "smk") {
-            jurusanDiv.style.display = "block";
-            jurusanSelect.innerHTML += "<option value='rpl'>RPL</option><option value='jaringan'>Jaringan</option>";
-        } else if (jenjang === "universitas") {
-            fakultasDiv.style.display = "block";
-            fakultasSelect.innerHTML += `
-                <option value="fik">Fakultas Ilmu Komputer</option>
-                <option value="feb">Fakultas Ekonomi dan Bisnis</option>
-                <option value="fh">Fakultas Hukum</option>
-            `;
-        }
-    }
-
-    function updateProdi() {
-        let fakultas = document.getElementById("fakultas").value;
-        let prodiDiv = document.getElementById("prodiDiv");
-        let prodiSelect = document.getElementById("prodi");
-
-        prodiDiv.style.display = "none";
-        prodiSelect.innerHTML = "<option value=''>-- Pilih Program Studi --</option>";
-
-        if (fakultas === "fik") {
-            prodiDiv.style.display = "block";
-            prodiSelect.innerHTML += `
-                <option value="ti">Teknik Informatika</option>
-                <option value="si">Sistem Informasi</option>
-                <option value="dkv">Desain Komunikasi Visual</option>
-            `;
-        } else if (fakultas === "feb") {
-            prodiDiv.style.display = "block";
-            prodiSelect.innerHTML += `
-                <option value="manajemen">Manajemen</option>
-                <option value="akuntansi">Akuntansi</option>
-                <option value="ekonomi">Ekonomi</option>
-            `;
-        } else if (fakultas === "fh") {
-            prodiDiv.style.display = "block";
-            prodiSelect.innerHTML += `
-                <option value="ilmu_hukum">Ilmu Hukum</option>
-            `;
-        }
-    }
-</script>
 </body>
 </html>
