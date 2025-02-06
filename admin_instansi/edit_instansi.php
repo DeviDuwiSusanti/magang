@@ -14,25 +14,25 @@
             <!-- Nama Instansi -->
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Instansi</label>
-                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama instansi" required>
+                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama instansi" required value="Dinas Komunikasi dan Informatika Kabupaten Sidoarjo">
             </div>
         
             <!-- Deskripsi -->
             <div class="mb-3">
                 <label for="deskripsi" class="form-label">Deskripsi Instansi</label>
-                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Masukkan deskripsi instansi" required></textarea>
+                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Masukkan deskripsi instansi" required>Dinas Kominfo Sidoarjo adalah lembaga yang berada di Kabupaten Sidoarjo</textarea>
             </div>
 
             <!-- Alamat -->
             <div class="mb-3">
                 <label for="alamat" class="form-label">Alamat</label>
-                <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan alamat lengkap" required></textarea>
+                <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan alamat lengkap" required>Jl. Diponegoro No. 139, Lemahputro, Sidoarjo</textarea>
             </div>
 
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telephone" class="form-label">Telepon</label>
-                <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Masukkan nomor telepon" required>
+                <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Masukkan nomor telepon" required value="085876453211">
             </div>
 
             <!-- Upload Foto Profil -->
