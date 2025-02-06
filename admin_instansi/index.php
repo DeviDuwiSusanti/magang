@@ -24,9 +24,9 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card border-0">
                     <div class="card-body">
-                        <h5 class="card-title">Jumlah Mahasiswa</h5>
+                        <h5 class="card-title">Jumlah Pemagang</h5>
                         <h2 class="card-text text-success">55</h2>
-                        <p class="text-muted">Mahasiswa terdaftar</p>
+                        <p class="text-muted">Lihat data pemagang</p>
                         <a href="view_user.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
                 </div>
