@@ -2,9 +2,9 @@
 
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar User</h1>
+        <h1 class="mb-4">Daftar Pemagang</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Halaman View User</li>
+            <li class="breadcrumb-item active">Daftar Data Pemagang</li>
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
         <div class="table-responsive-sm">
@@ -32,14 +32,6 @@
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
                             <td class="text-success">Aktif</td>
-                            <!-- <td>
-                                <a href="edit_bidang.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check"></i> Terima
-                                </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-x-circle"></i> Tolak
-                                </a>
-                            </td> -->
                         </tr>
                         <tr>
                             <td>2</td>
@@ -50,14 +42,6 @@
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
                             <td class="text-danger">Selesai</td>
-                            <!-- <td>
-                                <a href="edit_bidang.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check"></i> Terima
-                                </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-x-circle"></i> Tolak
-                                </a>
-                            </td> -->
                         </tr>
                     </tbody>
                 </table>
