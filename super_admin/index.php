@@ -13,17 +13,6 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title">My Profile</h5>
-                        <h2 class="card-text text-primary">1</h2>
-                        <p class="text-muted">Lihat Atau Edit Profile Saya</p>
-                        <a href="profile_view.php" class="btn btn-primary mt-3 detail">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 2 -->
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
                         <h5 class="card-title">Instansi Terdaftar</h5>
                         <h2 class="card-text text-success">50</h2>
                         <p class="text-muted">Lihat Dan Kelola Daftar Instansi</p>
@@ -31,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Card 3 -->
+            <!-- Card 2 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
@@ -42,6 +31,19 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Card 3 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">Asal Sekolah / Universitas</h5>
+                        <h2 class="card-text text-primary">20</h2>
+                        <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p>
+                        <a href="study_view.php" class="btn btn-primary mt-3 detail">View Details</a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Card 4 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">

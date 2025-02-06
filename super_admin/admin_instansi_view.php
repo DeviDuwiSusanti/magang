@@ -4,7 +4,7 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Admin Instansi</h1>
+        <h1 class="mt-4">Calon Admin Instansi</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active"> Halaman View Calon Admin Instansi </li>
         </ol>
@@ -13,7 +13,7 @@
         <!-- Table -->
         <div class="card shadow-lg">
             <div class="card-body">
-                <table class="table table-bordered table-hover text-center align-middle">
+                <table id="table_admin_instansi" class="table table-bordered table-hover text-center align-middle">
                     <thead class="table-dark">
                         <tr>
                             <th>No.</th>
@@ -86,3 +86,28 @@
         </div>
     </div>
 </main>
+
+<script>
+    $(document).ready(function() {
+        $('#table_admin_instansi').DataTable({
+            "paging" : true,
+            "searching" : true,
+            "ordering" : true,
+            "info" : true,
+            "lengthMenu" : [5, 10, 25, 50, 100],
+            "columnDefs" : [{"orderable" : false, "targets" : [2, 3, 4, 5, 6, 7,8]}],
+            "language" : {
+                "search" : "Cari : ",
+                "lengthMenu" : "Tampilkan _MENU_  data Per Halaman",
+                "info" : "Menampilkan _START_ hingga _END_ dari _TOTAL_ Data",
+                "paginate" : {
+                    "first" : "Awal ",
+                    "last" : " Akhir",
+                    "next" : "Selanjutnya ",
+                    "previous" : " Sebelumnya",
+                }
+            }
+        })
+    })
+
+</script>
