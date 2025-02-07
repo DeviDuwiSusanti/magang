@@ -440,7 +440,34 @@ td {
     color: var(--text-mute);
 }
 
-
+/* Custom Footer Styles */
+.footer {
+    background-color: #343a40; /* Warna latar gelap */
+    color: #f8f9fa; /* Warna teks terang */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Garis atas tipis */
+    padding: 20px 0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .footer a {
+    color: #f8f9fa;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer a:hover {
+    color: #adb5bd; /* Warna saat hover */
+  }
+  
+  /* Responsif: Mengatur teks agar center pada perangkat kecil */
+  @media (max-width: 767.98px) {
+    .footer .text-md-start,
+    .footer .text-md-end {
+      text-align: center !important;
+      margin-bottom: 10px;
+    }
+  }
+  
 
 
 
