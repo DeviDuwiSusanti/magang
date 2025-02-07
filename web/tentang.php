@@ -59,7 +59,7 @@
                                     <h3 class="contact__card-title">Cara Daftar</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cara Daftar" data-steps='[{"step":"Buka halaman detail lowongan yang ingin dilamar.", "img":"../assets/img/tentang/daftar1.png"}, {"step":"Isi form pendaftaran.", "img":"../assets/img/tentang/daftar2.png"}, {"step":"Klik tombol Kirim."}, {"step":"Tunggu konfirmasi dari admin instansi terkait seleksi kriteria pendaftaran."}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cara Daftar" data-steps='[{"step":"Buka halaman detail lowongan yang ingin dilamar.", "img":"../assets/img/tentang/daftar1.png"}, {"step":"Isi form pendaftaran.", "img":"../assets/img/tentang/daftar2.png"}, {"step":"Klik tombol Kirim.", "img":"../assets/img/tentang/daftar3.png"}, {"step":"Tunggu konfirmasi dari admin instansi terkait seleksi kriteria pendaftaran."}]'>Lihat</button>
                         </div>
 
                         <!-- Cek Status -->
@@ -70,7 +70,7 @@
                                     <h3 class="contact__card-title">Cek Status</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Status" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/status1.png"}, {"step":"Masuk ke halaman dashboard user.", "img":"../assets/img/tentang/status2.jpg"}, {"step":"Masuk ke halaman dashboard user.", "img":"../assets/img/tentang/status3.jpg"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Status" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/status1.png"}, {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/status2.jpg"}, {"step":"Masuk ke halaman dashboard user.", "img":"../assets/img/tentang/status3.jpg"}]'>Lihat</button>
                         </div>
 
                         <!-- Unggah Logbook -->

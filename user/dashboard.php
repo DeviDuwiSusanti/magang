@@ -15,7 +15,7 @@
                         <h5 class="card-title">Unggah Logbook</h5>
                         <h2 class="card-text text-primary">15</h2>
                         <p class="text-muted">Logbook Terunggah</p>
-                        <a href="logbook_unggah.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        <a href="kegiatan_aktif.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>

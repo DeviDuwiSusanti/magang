@@ -8,6 +8,9 @@
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <link rel="stylesheet" href="assets/css/login.css">
     <style> 
+        body {
+            background-color:#e2ecf4 ;
+        }
         p {
             padding-top: 10px;
             font-size: 12px;
