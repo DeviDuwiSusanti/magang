@@ -177,7 +177,7 @@
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper">
                         <article class="popular__card swiper-slide" style="text-align: center;">
-                            <a href="lowongan.php">
+                            <a href="https://perikanan.sidoarjokab.go.id/template-1/" target="_blank">
                                 <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                 <div class="popular__data">
                                     <h2 class="popular__price"><span>Dinas </span>Komunikasi dan Informatika</h2>
@@ -191,7 +191,7 @@
                         </article>
 
                         <article class="popular__card swiper-slide" style="text-align: center;">
-                            <a href="lowongan.php">
+                            <a href="https://perikanan.sidoarjokab.go.id/template-1/" target="_blank">
                                 <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                 <div class="popular__data">
                                     <h2 class="popular__price"><span>Dinas </span>Kesehatan</h2>
@@ -205,7 +205,7 @@
                         </article>
 
                         <article class="popular__card swiper-slide" style="text-align: center;">
-                            <a href="lowongan.php">
+                            <a href="https://perikanan.sidoarjokab.go.id/template-1/" target="_blank">
                                 <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                 <div class="popular__data">
                                     <h2 class="popular__price"><span>Dinas </span>Perikanan</h2>
