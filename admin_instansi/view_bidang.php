@@ -12,10 +12,10 @@
                 <i class="bi bi-plus-circle me-1"></i>
                 Tambah Bidang
             </a>
-            <a href="bidang_print.php" class="btn btn-success">
+            <!-- <a href="bidang_print.php" class="btn btn-success">
                 <i class="bi bi-printer me-1"></i>
                 Cetak
-            </a>
+            </a> -->
         </div>
         <div class="table-responsive-sm">
             <div class="bungkus">

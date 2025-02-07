@@ -28,11 +28,11 @@
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-geo-alt"></i> <strong>Alamat</strong></td>
-                                    <td>Dusun Pencol Desa Setren, Bojonegoro</td>
+                                    <td>Jl. Diponegoro No.139, Lemah Putro, Sidoarjo</td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-calendar"></i> <strong>Telepon</strong></td>
-                                    <td>085760786535</td>
+                                    <td>085876453211</td>
                                 </tr>
                             </tbody>
                         </table>

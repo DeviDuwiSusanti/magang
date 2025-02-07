@@ -8,7 +8,7 @@
         </ol>
         <div class="dropdown-divider mb-3"></div>
         <div class="mb-4 text-end">
-            <a href="bidang.php" class="btn btn-danger">
+            <a href="view_bidang.php" class="btn btn-danger">
                 <i class="bi bi-arrow-left-circle me-1"></i>
                 Kembali
             </a>
@@ -25,10 +25,10 @@
             <div class="mb-3">
                 <label for="bidang" class="form-label">Pilih Bidang</label>
                 <select id="bidang" class="form-select">
-                    <option selected disabled>Pilih Instansi</option>
-                    <option>Diskominfo</option>
-                    <option>Dinas Kesehatan</option>
-                    <option>Dinas Pendidikan</option>
+                    <option selected disabled>Pilih Bidang</option>
+                    <option>Teknologi Informasi</option>
+                    <option>Akuntansi</option>
+                    <option>Manajemen</option>
                 </select>
             </div>
 
