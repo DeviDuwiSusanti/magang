@@ -72,6 +72,14 @@
         </aside>
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
+                <!-- <form action="#" class="d-none d-sm-inline-block">
+                    <div class="input-group input-group-navbar">
+                        <input type="text" class="form-control border-0 rounded-0 pe-0" placeholder="Search..." aria-label="Search">
+                        <button class="btn rounded-0 border-0">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form> -->
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown">
@@ -101,14 +109,18 @@
                     </ul>
                 </div>
             </nav>
-        </div>
-    </div>
+        <!-- </div>
+    </div> -->
     <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Inisialisasi DataTables -->
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable();
