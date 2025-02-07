@@ -6,10 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../assets/css/admin_instansi.css">
 </head>
 
 <body>
@@ -20,7 +21,7 @@
                     <i class="bi bi-grid"></i>
                 </button>
                 <div class="sidebar-logo">
-                    <a href="#">Sistem Magang</a>
+                    <a href="index.php">Sistem Magang</a>
                 </div>
             </div>
             <ul class="sidebar-nav">
@@ -31,21 +32,27 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="edit_profile.php" class="sidebar-link">
+                    <a href="view_profile.php" class="sidebar-link">
                         <i class="bi bi-person-lines-fill"></i>
-                        <span>Edit Profile</span>
+                        <span>Profile Saya</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="daftar_instansi.php" class="sidebar-link">
-                        <i class="bi bi-pencil-square"></i>
+                    <a href="view_instansi.php" class="sidebar-link">
+                        <i class="bi bi-buildings"></i>
                         <span>Kelola Instansi</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="bidang.php" class="sidebar-link">
+                    <a href="view_bidang.php" class="sidebar-link">
                         <i class="bi bi-building-fill-add"></i>
                         <span>Bidang</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="daftar_pembimbing.php" class="sidebar-link">
+                        <i class="bi bi-person-workspace"></i>
+                        <span>Pembimbing Bidang</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -54,56 +61,14 @@
                         <span>Pengajuan</span>
                     </a>
                 </li>
-                <!-- <li class="sidebar-item">
-                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#auth"
-                        aria-expanded="false" aria-controls="auth">
-                        <i class="bi bi-shield-check"></i>
-                        <span>Auth</span>
+                <li class="sidebar-item">
+                    <a href="view_user.php" class="sidebar-link">
+                        <i class="bi bi-people"></i>
+                        <span>User</span>
                     </a>
-                    <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">Login</a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link">Register</a>
-                        </li>
-                    </ul>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#multi"
-                        aria-expanded="false" aria-controls="multi">
-                        <i class="bi bi-grid-1x2"></i>
-                        <span>Multi Level</span>
-                    </a>
-                    <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                        <li class="sidebar-item">
-                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse" data-bs-target="#multi2"
-                                aria-expanded="false" aria-controls="multi2">
-                                Level 2
-                            </a>
-                            <ul id="multi2" class="sidebar-dropdown list-unstyled collapse">
-                                <li class="sidebar-item">
-                                    <a href="#" class="sidebar-link">
-                                        Link 1
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a href="#" class="sidebar-link">
-                                        Link 2
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li> -->
-                <!-- <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
-                        <i class="bi bi-chat-left-text"></i>
-                        <span>Notification</span>
-                    </a>
-                </li> -->
-                <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                    <a href="setting.php" class="sidebar-link">
                         <i class="bi bi-gear"></i>
                         <span>Setting</span>
                     </a>
@@ -118,30 +83,34 @@
         </aside>
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
-                <!-- <form action="#" class="d-none d-sm-inline-block">
-                    <div class="input-group input-group-navbar">
-                        <input type="text" class="form-control border-0 rounded-0 pe-0" placeholder="Search..." aria-label="Search">
-                        <button class="btn rounded-0 border-0">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form> -->
                 <div class="navbar-collapse collapse">
+                    <!-- <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <span class="navbar-text h5 text-primary fw-bold">Diskominfo Sidoarjo</span>
+                        </li>
+                    </ul> -->
                     <ul class="navbar-nav ms-auto">
+                        <!-- Tombol Toggle Dark Mode -->
+                        <li class="nav-item d-flex align-items-center me-5">
+                            <button id="mode-toggle" class="mode-toggle">
+                                <i id="mode-icon" class="bi bi-moon-fill"></i>
+                            </button>
+                        </li>
+
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="./img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
+                                <img src="../assets/img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="edit_profile.php" class="dropdown-item">
+                                <a href="view_profile.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Edit Profile</span>
                                 </a>
-                                <a href="#" class="dropdown-item">
+                                <!-- <a href="#" class="dropdown-item">
                                     <i class="bi bi-bar-chart-line-fill"></i>
                                     <span>Analisis</span>
-                                </a>
-                                <a href="#" class="dropdown-item">
+                                </a> -->
+                                <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
@@ -150,6 +119,10 @@
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>
+                                <a href="#" class="dropdown-item">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Logout</span>
+                                </a>
                             </div>
                         </li>
                     </ul>
@@ -157,9 +130,21 @@
             </nav>
         <!-- </div>
     </div> -->
-    <script src="./js/script.js"></script>
+    <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Inisialisasi DataTables -->
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
 </body>
 
 </html>

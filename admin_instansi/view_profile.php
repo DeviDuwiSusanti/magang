@@ -1,4 +1,4 @@
-<?php include "../layout/sidebarUser.php" ?>
+<?php include "header.php"; ?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
@@ -27,38 +27,26 @@
                                     <td>hendra815@gmail.com</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="bi bi-calendar"></i> <strong>TTL</strong></td>
-                                    <td>Bojonegoro, 03 April 2004</td>
+                                    <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
+                                    <td>085760786535</td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-gender-ambiguous"></i> <strong>Gender</strong></td>
                                     <td>Laki-laki</td>
                                 </tr>
                                 <tr>
-                                    <td><i class="bi bi-credit-card"></i> <strong>NIK</strong></td>
-                                    <td>3522674523647</td>
-                                </tr>
-                                <tr>
-                                    <td><i class="bi bi-mortarboard"></i> <strong>NIM</strong></td>
-                                    <td>226487264</td>
-                                </tr>
-                                <tr>
-                                    <td><i class="bi bi-building"></i> <strong>Asal Studi</strong></td>
-                                    <td>Universitas Trunojoyo Madura</td>
-                                </tr>
-                                <tr>
-                                    <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
-                                    <td>085760786535</td>
-                                </tr>
-                                <tr>
                                     <td><i class="bi bi-geo-alt"></i> <strong>Alamat</strong></td>
                                     <td>Dusun Pencol Desa Setren, Bojonegoro</td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-calendar"></i> <strong>TTL</strong></td>
+                                    <td>Bojonegoro, 03 April 2004</td>
                                 </tr>
                             </tbody>
                         </table>
 
                         <div class="d-grid">
-                            <a href="edit_profil.php" class="btn btn-primary">
+                            <a href="edit_profile.php" class="btn btn-primary">
                                 <i class="bi bi-pencil"></i> Edit Profile
                             </a>
                         </div>
