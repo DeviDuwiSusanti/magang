@@ -37,7 +37,7 @@
 
 <?php include "../layout/navbarUser.php" ?>
 <main class="main">
-    
+    <br><br><br>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Tabel Kegiatan Aktif</h1>
         <table class="table table-striped table-bordered">
