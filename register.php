@@ -25,7 +25,7 @@
         <div class="container main">
             <div class="row">
                 <header>Register</header>
-                <form action="" method="POST" enctype="multipart/form-data" class="d-flex">
+                <form action="login.php" method="POST" enctype="multipart/form-data" class="d-flex">
                     <!-- Kolom Kiri -->
                     <div class="col-md-6">
                         <div class="input-field">
@@ -135,7 +135,7 @@
                             <div class="image-preview" id="imagePreview">
                                 <img src="" id="previewImage">
                             </div>
-                            <input type="file" class="input" id="image" name="image" accept="image/*" onchange="previewFile()" required>
+                            <input type="file" class="input" id="image" name="image" accept="image/*" onchange="validateFile()" required>
                         </div>
                         <input type="submit" class="submit" name="register" value="Sign Up">
                     </div>

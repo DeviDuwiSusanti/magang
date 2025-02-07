@@ -6,10 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard User</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/admin_instansi.css">
 </head>
 
 <body>
@@ -38,19 +40,19 @@
                 </li>
                 <li class="sidebar-item">
                     <a href="kegiatan_aktif.php" class="sidebar-link">
-                        <i class="bi bi-pencil-square"></i>
+                        <i class="bi bi-clipboard-check"></i>
                         <span>Kegiatan Aktif</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a href="status_pengajuan.php" class="sidebar-link">
-                        <i class="bi bi-building-fill-add"></i>
+                        <i class="bi bi-file-earmark-text"></i>
                         <span>Status Pengajuan</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a href="histori.php" class="sidebar-link">
-                        <i class="bi bi-journals"></i>
+                        <i class="bi bi-clock-history"></i>
                         <span>Histori</span>
                     </a>
                 </li>
@@ -112,6 +114,18 @@
     <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Inisialisasi DataTables -->
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
 </body>
 
 </html>

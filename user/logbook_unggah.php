@@ -6,7 +6,7 @@
         <h1 class="mb-4">Unggah Logbook</h1>
         <ol class="breadcrumb mb-4 d-flex justify-content-between align-items-center">
             <li class="breadcrumb-item active">Unggah Logbook Harian</li>
-            <a href="daftar_logbook.php" class="btn btn-secondary">Lihat Daftar Logbook</a>
+            <a href="logbook_daftar.php" class="btn btn-secondary">Lihat Daftar Logbook</a>
         </ol>
         
         <form action="" class="form-logbook" method="POST" enctype="multipart/form-data">
@@ -26,12 +26,6 @@
             <div class="mb-3">
                 <label for="keterangan" class="form-label">Keterangan</label>
                 <textarea class="form-control" id="keterangan" name="keterangan" rows="3" required></textarea>
-            </div>
-            
-            <!-- Input File Lampiran -->
-            <div class="mb-3">
-                <label for="lampiran" class="form-label">Lampiran (Opsional)</label>
-                <input type="file" class="form-control" id="lampiran" name="lampiran" accept=".pdf,.doc,.docx,.jpg,.png">
             </div>
             
             <!-- Submit Button -->

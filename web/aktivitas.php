@@ -37,21 +37,7 @@
 
 <?php include "../layout/navbarUser.php" ?>
 <main class="main">
-    <section>
-        <div class="swiper-container gallery-top">
-            <div class="swiper-wrapper">
-                <section class="islands swiper-slide">
-                    <img src="../assets/img/pw3.jpg" alt="" class="islands__bg" />
-                    <div class="islands__container container">
-                        <div class="islands__data">
-                            <h1 class="islands__title">Internship Portal</h1>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </section>
-    
+    <br><br><br>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Tabel Kegiatan Aktif</h1>
         <table class="table table-striped table-bordered">
