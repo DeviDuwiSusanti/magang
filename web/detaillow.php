@@ -43,20 +43,19 @@
         padding-left: 20px !important;
         }
         .form_daftar {
-    background-color: #ffffff;  /* Warna putih untuk latar belakang */
-    padding: 20px;              /* Memberikan ruang di dalam form */
-    border-radius: 10px;        /* Membuat sudut membulat */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Efek bayangan halus */
-    margin-top: 20px;           /* Memberi jarak dari atas */
-}
+            background-color: #ffffff;  
+            padding: 20px;              
+            border-radius: 10px;       
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+            margin-top: 20px;          
+        }
 
-.form_daftar .card {
-    background-color: #ffffff;  /* Memastikan bagian dalam card juga putih */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Tambahan bayangan untuk kesan mengambang */
-}
-
+        .form_daftar .card {
+            background-color: #ffffff; 
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+        }
     </style>
 </head>
 <body>
@@ -96,7 +95,7 @@
                         <div class="form-group">
                             <select name="jenis_pengajuan" required>
                                 <option value="" disabled selected>Pilih Jenis Pengajuan</option>
-                                <option value="magang">Magang/Kerja Praktek</option>
+                                <option value="magang">Magang</option>
                                 <option value="magang">Kerja Praktek</option>
                                 <option value="kp">PKL</option>
                                 <option value="penelitian">Penelitian</option>

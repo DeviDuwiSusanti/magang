@@ -19,7 +19,7 @@
                         <th>Bidang</th>
                         <th>Durasi</th>
                         <th>Periode Magang</th>
-                        <th>Sertifikat</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,7 +31,10 @@
                         <td>Cyber Security</td>
                         <td>3 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td><a href="sertifikat_1.php">Masuk ke halaman sertifikat</a></td>
+                        <td><a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye"></i></a>
+                        <a href="path/to/sertifikat.pdf" class="text-decoration-none border p-2" title="Download Sertifikat" download>
+                           </i> Download Sertifikat</a></td>
                     </tr>
                     <!-- Data 2 -->
                     <tr>
@@ -41,7 +44,10 @@
                         <td>Website Developer</td>
                         <td>6 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td><a href="sertifikat_2.php">Masuk ke halaman sertifikat</a></td>
+                        <td><a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye"></i></a>
+                        <a href="path/to/sertifikat.pdf" class="text-decoration-none border p-2" title="Download Sertifikat" download>
+                           </i> Download Sertifikat</a></td>
                     </tr>
                 </tbody>
             </table>
