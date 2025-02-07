@@ -36,7 +36,7 @@
                         <td>
                         <a href="detail_aktif.php" class="text-decoration-none me-2" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
-                        <a href="unggah_logbook.php" class="text-decoration-none border p-2" title="Input Logbook">
+                        <a href="logbook_unggah.php" class="text-decoration-none border p-2" title="Input Logbook">
                          Input Logbook</a>
                         </td>
                     </tr>
@@ -52,7 +52,7 @@
                         <td>
                         <a href="detail_aktif.php" class="text-decoration-none me-2" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
-                        <a href="unggah_logbook.php" class="text-decoration-none border p-2" title="Input Logbook">
+                        <a href="logbook_unggah.php" class="text-decoration-none border p-2" title="Input Logbook">
                             Input Logbook</a>
                         </td>
                     </tr>

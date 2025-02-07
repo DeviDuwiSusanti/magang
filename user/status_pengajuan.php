@@ -28,7 +28,7 @@
                         <td>Cyber Security</td>
                         <td>Diterima <span style="color: green; font-size: 20px;">&#10004;</span></td>
                         <td>3 Bulan</td>
-                        <td><a href="halamandetail.php" class="text-decoration-none" title="Lihat Detail">
+                        <td><a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
                         <a href="logbook.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
                          Lengkapi Dokumen</a></td>
@@ -40,7 +40,7 @@
                         <td>Website Developer</td>
                         <td>Diterima <span style="color: green; font-size: 20px;">&#10004;</span></td>
                         <td>6 Bulan</td>
-                        <td><a href="halamandetail.php" class="text-decoration-none" title="Lihat Detail">
+                        <td><a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
                         <a href="logbook.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
                         Lengkapi Dokumen</a></td>

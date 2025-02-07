@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="dropdown-divider"></div>
         <div class="container mt-5 mb-5">
-            <div class="card mx-auto" style="max-width: 600px;">
+            <div class="card mx-auto position-relative" style="max-width: 600px;">
                 <div class="card-body top text-center">
                     <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                     <h4 class="card-title">Hendra Hartono</h4>
@@ -40,6 +40,12 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <!-- Tombol Cetak Sertifikat di pojok kiri bawah -->
+                        <a href="cetak_sertifikat.php" class="btn btn-sm btn-success position-absolute" style="bottom: 10px; left: 10px;">
+                            <i class="bi bi-printer"></i> Cetak Sertifikat
+                        </a>
+
                     </div>
                 </div>
             </div>

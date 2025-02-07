@@ -31,7 +31,7 @@
                         <td>Cyber Security</td>
                         <td>3 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td><a href="halamandetail.php" class="text-decoration-none" title="Lihat Detail">
+                        <td><a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
                         <a href="path/to/sertifikat.pdf" class="text-decoration-none border p-2" title="Download Sertifikat" download>
                            </i> Download Sertifikat</a></td>
@@ -44,7 +44,7 @@
                         <td>Website Developer</td>
                         <td>6 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td><a href="halamandetail.php" class="text-decoration-none" title="Lihat Detail">
+                        <td><a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
                         <a href="path/to/sertifikat.pdf" class="text-decoration-none border p-2" title="Download Sertifikat" download>
                            </i> Download Sertifikat</a></td>
