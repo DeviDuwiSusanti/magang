@@ -17,9 +17,10 @@
                         <th>Nama</th>
                         <th>Universitas</th>
                         <th>Perusahaan</th>
-                        <th>Posisi</th>
+                        <th>Bidang</th>
                         <th>Durasi</th>
                         <th>Periode Magang</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,6 +33,12 @@
                         <td>Cyber Security</td>
                         <td>3 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
+                        <td>
+                        <a href="detail_aktif.php" class="text-decoration-none me-2" title="Lihat Detail">
+                        <i class="bi bi-eye"></i></a>
+                        <a href="unggah_logbook.php" class="text-decoration-none border p-2" title="Input Logbook">
+                         Input Logbook</a>
+                        </td>
                     </tr>
                     <!-- Data 2 -->
                     <tr>
@@ -42,6 +49,12 @@
                         <td>Website Developer</td>
                         <td>6 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
+                        <td>
+                        <a href="detail_aktif.php" class="text-decoration-none me-2" title="Lihat Detail">
+                        <i class="bi bi-eye"></i></a>
+                        <a href="unggah_logbook.php" class="text-decoration-none border p-2" title="Input Logbook">
+                            Input Logbook</a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
