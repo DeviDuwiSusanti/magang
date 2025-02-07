@@ -70,7 +70,7 @@
                                     <h3 class="contact__card-title">Cek Status</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Status" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/status1.png"}, {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/status2.jpg"}, {"step":"Masuk ke halaman dashboard user.", "img":"../assets/img/tentang/status3.jpg"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Status" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/dashboard.png"}, {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/status2.png"}, {"step":"Status akan tertera pada tabel, dan jika Anda diterima, maka anda bisa melengkapi dokumen persyaratan lainnya.", "img":"../assets/img/tentang/status3.png"}]'>Lihat</button>
                         </div>
 
                         <!-- Unggah Logbook -->
@@ -81,7 +81,7 @@
                                     <h3 class="contact__card-title">Unggah Logbook</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Logbook" data-steps='[{"step":"Buka halaman Pengajuan.", "img":"../assets/img/logbook1.jpg"}, {"step":"Klik halaman Kegiatan Aktif.", "img":"../assets/img/logbook2.jpg"}, {"step":"Klik tombol Unggah Logbook.", "img":"../assets/img/logbook3.jpg"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Logbook" data-steps='[{"step":"Masuk ke dashboard user, dan klik unggah logbook", "img":"../assets/img/tentang/dashboard1.png"}, {"step":"Klik input logbook pada kegiatan aktif yang Anda jalani.", "img":"../assets/img/tentang/logbook1.png"}, {"step":"Isi logbook harian Anda.", "img":"../assets/img/tentang/logbook2.png"}]'>Lihat</button>
                         </div>
 
                         <!-- Cek Sertifikat -->
@@ -92,7 +92,7 @@
                                     <h3 class="contact__card-title">Cek Sertifikat</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat" data-steps='[{"step":"Masuk ke dashboard user.", "img":"../assets/img/logbook1.jpg"}, {"step":"Klik halaman Histori.", "img":"../assets/img/logbook2.jpg"}, {"step":"Klik link sertifikat untuk unduh sertifikat.", "img":"../assets/img/logbook3.jpg"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat" data-steps='[{"step":"Masuk ke dashboard user, dan klik Histori.", "img":"../assets/img/tentang/dashboard1.png"}, {"step":"Unduh Sertifikat pada kolom yang tersedia.", "img":"../assets/img/tentang/sertifikat1.png"}]'>Lihat</button>
                         </div>
                     </div>
                 </div>
