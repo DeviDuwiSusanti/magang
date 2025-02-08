@@ -82,6 +82,13 @@
                 </form> -->
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
+                        <!-- Tombol Toggle Dark Mode -->
+                        <li class="nav-item d-flex align-items-center me-5">
+                            <button id="mode-toggle" class="mode-toggle">
+                                <i id="mode-icon" class="bi bi-moon-fill"></i>
+                            </button>
+                        </li>
+                        
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                                 <img src="../assets/img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
