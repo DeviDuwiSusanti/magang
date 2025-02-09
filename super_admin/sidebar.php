@@ -93,7 +93,7 @@
             </ul>
             
             <div class="sidebar-footer">
-                <a href="register.php" class="sidebar-link text-decoration-none">
+                <a href="logout.php" class="sidebar-link text-decoration-none">
                     <i class="bi bi-box-arrow-left"></i>
                     <span>Logout</span>
                 </a>
@@ -105,9 +105,16 @@
             <nav class="navbar navbar-expand px-4 py-3">
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
+
+                        <li class="nav-item d-flex align-items-center me-5">
+                            <button id="mode-toggle" class="mode-toggle">
+                                <i id="mode-icon" class="bi bi-moon-fill"></i>
+                            </button>
+                        </li>
+
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="./img/login.jpeg" alt="avatar" class="avatar rounded-circle">
+                                <img src="../assets/img/login.jpeg" alt="avatar" class="avatar rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                 <a href="profile_view.php" class="dropdown-item">

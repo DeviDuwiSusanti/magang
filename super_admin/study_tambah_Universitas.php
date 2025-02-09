@@ -34,7 +34,7 @@
             </div>
             <!-- Submit Button -->
             <div class="text-center mt-3">
-                <button type="submit" name="tambah_study" class="btn btn-info w-100">Tambah Data Perguruan Tinggi</button>
+                <button type="submit" name="tambah_study" class="btn btn-success w-100">Tambah Data Perguruan Tinggi</button>
             </div>
         </form>
         <a href="study_view.php" class="btn btn-danger mb-4 bi bi-arrow-left-circle"> Kembali</a>

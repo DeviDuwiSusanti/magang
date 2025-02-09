@@ -21,7 +21,7 @@
         <div class="card shadow-lg">
             <div class="card-body">
                 <table id="table_user"  class="table table-bordered table-hover text-center align-middle">
-                    <thead class="table-dark">
+                    <thead>
                         <tr>
                             <th>No.</th>
                             <th>Nama</th>
@@ -43,7 +43,7 @@
                             <td>0891234432</td>
                             <td>Jl.sakera sepulu</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>1. Super Admin</td>
                             <td class="d-flex justify-content-center gap-2">
@@ -64,7 +64,7 @@
                             <td>0891234432</td>
                             <td>Jl.sakera sepulu</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>3. User Biasa</td>
                             <td class="d-flex justify-content-center gap-2">
@@ -85,7 +85,7 @@
                             <td>0891234432</td>
                             <td>Jl.sakera sepulu</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>2. Admin Instansi Diskominfo sidoarjo</td>
                             <td class="d-flex justify-content-center gap-2">
@@ -106,7 +106,7 @@
                             <td>0891234432</td>
                             <td>Jl.sakera sepulu</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>3. User Biasa</td>
                             <td class="d-flex justify-content-center gap-2">
