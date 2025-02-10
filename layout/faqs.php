@@ -19,9 +19,9 @@
       <div class="accordion-body">
         1. Lihat lowongan yang sesuai dengan jurusan Kamu <br>
         2. Lihat detail dan klik "Daftar"<br>
-        3. Lalu Kamu akan diarahkan ke halaman "Logi"<br>
+        3. Lalu Kamu akan diarahkan ke halaman "Login"<br>
         4. Jika belum punya akun, Kamu bisa register dulu, dan login jika Kamu sudah punya akun<br>
-        5. Nanti Kamu akan diarahkan ke halaman "Dashboard", dan kamu bisa pilih icon Daftar untuk membuat pengajuan magang.
+        5. Nanti Kamu akan diarahkan ke halaman "Dashboard", dan kamu bisa klik "Pengajuan" untuk membuat pengajuan magang.
       </div>
     </div>
   </div>
@@ -50,7 +50,7 @@
         Kamu harus melengkapi dokumen persyaratan lainnya, yang sudah ditentukan oleh instansi, seperti <br>
         1. Surat Bangkesbangpol Provinsi <br>
         2. Surat Bangkesbangpol Daerah <br>
-        3. Dan lain-lain, sesuai dengan persyaratan instansi.
+        3. Dan lain-lain, sesuai dengan persyaratan dari instansi.
       </div>
     </div>
   </div>
@@ -62,7 +62,7 @@
     </h2>
     <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
-        Pendaftaran dapat dilakukan atau diwakilkan oleh salah satu anggota kelompok.
+        Pendaftaran dapat dilakukan atau diwakilkan oleh salah satu anggota kelompok saja yaa.
       </div>
     </div>
   </div>
