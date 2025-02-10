@@ -14,7 +14,7 @@
         <div class="card shadow-lg">
             <div class="card-body">
                 <table id="table_pengajuan" class="table table-bordered table-hover text-center align-middle">
-                    <thead class="table-dark">
+                    <thead>
                         <tr>
                             <th>No.</th>
                             <th>Nama User</th>

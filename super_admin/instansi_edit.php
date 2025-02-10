@@ -35,12 +35,12 @@
             <!-- Image Instansi -->
             <div class="mb-3">
                 <label for="image_instansi" class="form-label">Image Instansi</label>
-                <div> <img src="img/login.jpeg" alt="upload foto" style="width: 100px; height: 100px" class="rounded-circle p-2 mb-2"></div>
+                <div> <img src="../assets/img/login.jpeg" alt="upload foto" style="width: 100px; height: 100px" class="rounded-circle p-2 mb-2"></div>
                 <input type="file" class="form-control" id="image_instansi" name="image_instansi" accept="image/*">
             </div>
             <!-- Submit Button -->
             <div class="text-center mt-3">
-                <button type="submit" name="edit_instansi" class="btn btn-info w-100">Edit Instansi</button>
+                <button type="submit" name="edit_instansi" class="btn btn-success w-100">Edit Instansi</button>
             </div>
         </form>
         <a href="instansi_view.php" class="btn btn-danger mb-4 bi bi-arrow-left-circle"> Kembali</a>

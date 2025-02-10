@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin</title>
-    <link rel="stylesheet" href="../assets/css/style_super_admin.css">
-
-    <!-- Bootstrap Icons -->
+    <title>Dashboard Super Admin</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <!-- DataTables CSS + Bootstrap Theme -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="../assets/css/style_super_admin.css">
     <!-- DataTables Buttons CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 </head>
@@ -93,21 +86,27 @@
             </ul>
             
             <div class="sidebar-footer">
-                <a href="register.php" class="sidebar-link text-decoration-none">
+                <a href="logout.php" class="sidebar-link text-decoration-none">
                     <i class="bi bi-box-arrow-left"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
 
-
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
+
+                        <li class="nav-item d-flex align-items-center me-5">
+                            <button id="mode-toggle" class="mode-toggle">
+                                <i id="mode-icon" class="bi bi-moon-fill"></i>
+                            </button>
+                        </li>
+
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="./img/login.jpeg" alt="avatar" class="avatar rounded-circle">
+                                <img src="../assets/img/login.jpeg" alt="avatar" class="avatar rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                 <a href="profile_view.php" class="dropdown-item">
@@ -127,40 +126,33 @@
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="logout.php" class="dropdown-item">
+                                    <i class="bi bi-box-arrow-left"></i>
+                                    <span>Logout</span>
+                                </a>
                             </div>
                         </li>
                     </ul>
                 </div>
             </nav>
-
+        <!-- </div>
+    </div> -->
     <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
 
-
-        <!-- jQuery -->
+    <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-    <!-- DataTables Buttons JS -->
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-
-    <!-- JSZip (Required for Export) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-    <!-- pdfMake (Required for PDF Export) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
-    <!-- DataTables Buttons Export to PDF -->
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-
+    <!-- Inisialisasi DataTables -->
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
 </body>
 
 </html>

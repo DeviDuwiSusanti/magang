@@ -14,7 +14,7 @@
         <div class="card shadow-lg">
             <div class="card-body">
                 <table id="table_admin_instansi" class="table table-bordered table-hover text-center align-middle">
-                    <thead class="table-dark">
+                    <thead>
                         <tr>
                             <th>No.</th>
                             <th>Nama</th>
@@ -36,7 +36,7 @@
                             <td>0891234432</td>
                             <td>Jl.sakera sepulu</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>2. Admin Instansi</td>
                             <td>
@@ -54,7 +54,7 @@
                             <td>0891234432</td>
                             <td>Jl.sakera sepulu</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>2. Admin Instansi</td>
                             <td>
@@ -71,7 +71,7 @@
                             <td>0891234432</td>
                             <td>Jl.sakera sepulu</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>2. Admin Instansi</td>
                             <td>

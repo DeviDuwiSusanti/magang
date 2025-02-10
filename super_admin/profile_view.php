@@ -10,7 +10,7 @@
     <div class="container mt-5 mb-5">
         <div class="card mx-auto shadow" style="max-width: 500px;">
             <div class="card-body">
-                <img src="img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                 <h4 class="card-title">Mishbahus Surur</h4>
                 <p class="text-muted">mishbahus30@gmail.com</p>
                 
