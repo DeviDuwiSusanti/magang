@@ -206,6 +206,7 @@
     border-color: #0d6efd;
 }
 
+
 @media (max-width: 768px) {
     .image-row {
         flex-direction: column;
@@ -231,4 +232,124 @@
     object-fit: cover; /* Pastikan gambar terpotong dengan baik */
     display: block;
     margin: auto;
+}
+
+/* Mode terang (default) */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #121212;
+    margin: 0;
+    padding: 0;
+}
+
+/* Mode gelap */
+body.dark-theme {
+    background-color: var(--body-color);
+    color: var(--text-color);
+}
+
+/* Elemen detail blog */
+.blog__title {
+    color: #121212; /* Warna teks mode terang */
+}
+
+body.dark-theme .blog__title {
+    color: var(--title-color); /* Warna teks mode gelap */
+}
+
+.blog__detail {
+    background-color: #ffffff; /* Warna latar mode terang */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .blog__detail {
+    background-color: var(--container-color); /* Latar belakang mode gelap */
+    box-shadow: none;
+}
+
+/* Teks di tabel */
+.detail-table td {
+    padding: 5px 10px;
+    vertical-align: top;
+    color: #121212;
+}
+
+body.dark-theme .detail-table td {
+    color: var(--text-color);
+}
+
+/* Judul */
+h3 {
+    margin-top: 20px;
+    color: #121212;
+}
+
+body.dark-theme h3 {
+    color: var(--title-color);
+}
+
+/* List */
+.list {
+    list-style-type: disc;
+    padding-left: 20px;
+    color: #121212;
+}
+
+body.dark-theme .list {
+    color: var(--text-color);
+}
+
+/* Maps */
+.maps-container iframe {
+    width: 100%;
+    height: 300px;
+    border: none;
+    border-radius: 10px;
+}
+
+/* Tombol */
+.button, .btn-detail {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover, .btn-detail:hover {
+    background-color: #0056b3;
+}
+
+.btn-detail {
+    background-color: #28a745;
+}
+
+.btn-detail:hover {
+    background-color: #218838;
+}
+
+/* Tombol di mode gelap */
+body.dark-theme .button {
+    background-color: var(--first-color);
+}
+
+body.dark-theme .button:hover {
+    background-color: hsl(228, 66%, 50%);
+}
+
+body.dark-theme .btn-detail {
+    background-color: var(--second-color);
+}
+
+body.dark-theme .btn-detail:hover {
+    background-color: hsl(25, 57%, 35%);
 }
