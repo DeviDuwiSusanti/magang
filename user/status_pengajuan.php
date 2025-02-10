@@ -8,51 +8,53 @@
             <li class="breadcrumb-item active">Tabel Histori Pengajuan</li>
         </ol>
 
+        <!-- Tombol Tambah Pengajuan -->
+        <a href="pengajuan.php" class="btn btn-primary mb-4 float-end">Tambah Pengajuan</a><br><br>
+
         <!-- Tabel -->
         <div class="bungkus">
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Perusahaan</th>
-                        <th>Bidang</th>
-                        <th>Status Lamaran</th>
-                        <th>Durasi</th>
-                        <th>Aksi</th>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Perusahaan</th>
+                        <th class="text-center">Bidang</th>
+                        <th class="text-center">Status Lamaran</th>
+                        <th class="text-center">Durasi</th>
+                        <th class="text-center">Aksi</th>
                 </thead>
                 <tbody>
                     <!-- Data 1 -->
                     <tr>
-                        <td>1</td>
+                        <td class="text-center">1</td>
                         <td>Diskominfo Sidoarjo</td>
                         <td>Cyber Security</td>
                         <td>Diterima <span style="color: green; font-size: 20px;">&#10004;</span></td>
-                        <td>3 Bulan</td>
-                        <td><a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye"></i></a>
-                        <a href="unggah_persyaratan.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
-                         Lengkapi Dokumen</a></td>
+                        <td class="text-center">3 Bulan</td>
+                        <td class="text-center">
+                        <a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
                     </tr>
                     <!-- Data 2 -->
                     <tr>
-                        <td>1</td>
+                        <td class="text-center">2</td>
                         <td>Diskominfo Medan</td>
                         <td>Website Developer</td>
                         <td>Diterima <span style="color: green; font-size: 20px;">&#10004;</span></td>
-                        <td>6 Bulan</td>
-                        <td><a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye"></i></a>
-                        <a href="unggah_persyaratan.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
-                        Lengkapi Dokumen</a></td>
+                        <td class="text-center">6 Bulan</td>
+                        <td class="text-center">
+                        <a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
                     </tr>
                     <tr>
-                        <td>2</td>
+                        <td class="text-center">3</td>
                         <td>Telkom Indonesia</td>
                         <td>UI/UX</td>
                         <td>Ditolak <span style="color: red; font-size: 20px;">&#10006;</span></td>
-                        <td>4 Bulan</td>
-                        <td><a href="halamandetail.php" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye"></i></a></td>
+                        <td class="text-center">4 Bulan</td>
+                        <td class="text-center">
+                        <a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
                     </tr>
                 </tbody>
             </table>

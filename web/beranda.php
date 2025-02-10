@@ -19,42 +19,9 @@
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
     <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="../assets/css/web.css" />
     <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="../assets/css/home.css" />
-    <link rel="stylesheet" href="../assets/css/beranda.css" />
     <title>Home</title>
-    <style>
-        .lowongan .lowongans {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .dark-theme .accordion-item {
-            background-color: var(--container-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .dark-theme .accordion-button {
-            background-color: var(--container-color);
-            color: var(--title-color);
-        }
-
-        .dark-theme .accordion-button:not(.collapsed) {
-            background-color: var(--second-color);
-            color: white;
-        }
-
-        .dark-theme .accordion-body {
-            background-color: var(--body-color);
-            color: var(--text-color);
-        }
-
-        .dark-theme .accordion-button:focus {
-            box-shadow: none;
-        }
-
-    </style>
 </head>
 
 <body>
@@ -105,7 +72,7 @@
                                     <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
-                                <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                         </article>
 
@@ -121,7 +88,7 @@
                                     <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
-                                <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                             </a>
                         </article>
@@ -137,7 +104,7 @@
                                     <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
-                                <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                             </a>
                         </article>
@@ -152,7 +119,7 @@
                                     <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
-                                <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                             </a>
                         </article>
@@ -167,7 +134,7 @@
                                     <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
-                                <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                             </a>
                         </article>
@@ -182,14 +149,14 @@
                                     <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
                                 </p>
-                                <a href="lowongan.php"><button class="details-button">Lihat Detail →</button></a>
+                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                             </a>
                         </article>
                     </div>
 
                     <div class="view-all" style="text-align: center; margin-top: 20px;">
-                        <a href="lowongan.php" style="text-decoration: none; font-weight: bold; color: #007BFF;">Lihat Selengkapnya →</a>
+                        <a href="detaillow.php" style="text-decoration: none; font-weight: bold; color: #007BFF;">Lihat Selengkapnya →</a>
                     </div>
                 </div>
 

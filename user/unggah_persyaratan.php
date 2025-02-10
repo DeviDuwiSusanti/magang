@@ -8,12 +8,13 @@
             <li class="breadcrumb-item active">Unggah Persyaratan yang ditentukan Instansi</li>
         </ol>
         
-        <form action="" class="form-logbook" method="POST" enctype="multipart/form-data">
+        <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <div id="file-container" class="mb-3">
                 <?php $no = 1; ?>
-                <label for="lampiran">Dokumen Persyaratan - <span id="file-number">1</span></label>
-                <input type="file" class="form-control" name="lampiran[]" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                <label for="persyaratan" class="form-label">Dokumen Persyaratan - <span id="file-number">1</span></label>
+                <input type="file" class="form-control" id="persyaratan" name="persyaratan[]" accept=".pdf,.doc,.docx,.jpg,.png" required>
             </div>
+
             <button type="button" class="btn btn-secondary mb-3" onclick="addFileInput()">Tambah</button><br>
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary">Unggah Logbook</button>

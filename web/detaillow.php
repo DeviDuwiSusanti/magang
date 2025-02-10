@@ -5,126 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--=============== BOXICONS ===============-->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <!--=============== SWIPER CSS ===============-->
-    <link rel="stylesheet" href="./assets/libraries/swiper-bundle.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="../assets/css/detailow.css">
+    <link rel="stylesheet" href="../assets/css/detail.css" />
     <title>Detail Lowongan</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color:#e2ecf4 ;
-        }
-        select, input {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            width: 100%;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .list {
-        list-style-type: disc !important;
-        padding-left: 20px !important;
-        }
-        .form_daftar {
-            background-color: #ffffff;  
-            padding: 20px;              
-            border-radius: 10px;       
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
-            margin-top: 20px;          
-        }
-
-        .form_daftar .card {
-            background-color: #ffffff; 
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
-        }
-    </style>
 </head>
 <body>
+
+<!-- Navbar -->
+<?php include "../layout/navbarUser.php" ?>
+
+<!--==================== MAIN ====================-->
 <main class="main">
     <section class="blog section" id="blog">
-        <div class="blog__container container">
-            <div class="content__container">
-                <div class="blog__detail">
-                    <h2 class="blog__title">Detail Lowongan</h2>
-                    <table class="detail-table">
-                        <tr><td><b>Posisi</b></td><td>:</td><td>Web Developer</td></tr>
-                        <tr><td><b>Perusahaan</b></td><td>:</td><td>Dinas Komunikasi dan Informatika</td></tr>
-                        <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Sidoarjo</td></tr>
-                    </table>
-                    <h3>Deskripsi Lowongan</h3>
-                    <ul class="list">
-                        <li>Jenjang pendidikan: SMA/SMK.</li>
-                        <li>Jurusan: Teknik Komputer dan Jaringan.</li>
-                        <li>IPK minimal: 3.1</li>
-                    </ul>
-                    <h3>Persyaratan Dokumen</h3>
-                    <ul class="list">
-                        <li>CV</li>
-                        <li>Surat Badan Kesatuan Bangsa dan Politik Provinsi Jawa Timur</li>
-                        <li>Surat Badan Kesatuan Bangsa dan Politik Kabupaten Sidoarjo</li>
-                        <li>Proposal</li>
-                    </ul></br>
-                    <h3>Lokasi Instansi</h3>
-                    <div class="maps-container">
-                        <iframe src="https://www.google.com/maps/embed?..." referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
+        <div class="container">
+            <h1 class="blog__title">Detail Lowongan</h1>
+            
+            <!-- Detail Lowongan -->
+            <div class="blog__detail">
+                <h3>Internship - Web Developer</h3>
+                <table class="detail-table">
+                    <tr><td><b>Perusahaan</b></td><td>:</td><td>Dinas Komunikasi dan Informatika</td></tr>
+                    <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Sidoarjo</td></tr>
+                    <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td>120</td></tr>
+                    <tr><td><b>Dibuat pada</b></td><td>:</td><td>25 Januari 2025</td></tr>
+                </table>
+                
+                <h3>Deskripsi Lowongan</h3>
+                <ul class="list">
+                    <li>Jenjang pendidikan: SMA/SMK.</li>
+                    <li>Jurusan: Teknik Komputer dan Jaringan.</li>
+                    <li>IPK minimal: 3.1</li>
+                </ul>
+
+                <h3>Persyaratan Dokumen</h3>
+                <ul class="list">
+                    <li>CV</li>
+                    <li>Surat Badan Kesatuan Bangsa dan Politik Provinsi Jawa Timur</li>
+                    <li>Surat Badan Kesatuan Bangsa dan Politik Kabupaten Sidoarjo</li>
+                    <li>Proposal</li>
+                </ul>
+
+                <h3>Lokasi Instansi</h3>
+                <div class="maps-container">
+                    <iframe src="https://www.google.com/maps/embed?..." allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
-                <div class="form_daftar">
-                    <h3 style="text-align: center;">Formulir Pendaftaran</h3>
-                    <div class="card">
-                        <form action="" method="POST">
-                        <div class="form-group">
-                            <select name="jenis_pengajuan" required>
-                                <option value="" disabled selected>Pilih Jenis Pengajuan</option>
-                                <option value="magang">Magang</option>
-                                <option value="magang">Kerja Praktek</option>
-                                <option value="kp">PKL</option>
-                                <option value="penelitian">Penelitian</option>
-                            </select>
-                        </div>
-                            <div class="form-group">
-                                <input type="number" name="jumlah" placeholder="Jumlah" required />
-                            </div>
-                            <div class="form-group">
-                                <label for="tanggal_mulai">Tanggal Mulai:</label>
-                                <input type="date" id="tanggal_mulai" name="tanggal_mulai" required />
-                            </div>
-                            <div class="form-group">
-                                <label for="tanggal_selesai">Tanggal Selesai:</label>
-                                <input type="date" id="tanggal_selesai" name="tanggal_selesai" required />
-                            </div>
-                            <div class="form-group">
-                                <label for="cv">Unggah CV:</label>
-                                <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required />
-                            </div>
-                            <div class="form-group">
-                                <button class="button" name="kirim">Kirim</button>
-                            </div>
-                        </form>
-                    </div>
+                
+                <div class="d-flex justify-content-left mt-4">
+                    <a href="../login.php" class="btn btn-primary">Daftar Sekarang</a>
                 </div>
             </div>
         </div>
     </section>
+
 </main>
+
+<?php include "../layout/footerUser.php" ?>
+
 </body>
 </html>

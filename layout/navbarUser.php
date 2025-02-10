@@ -1,7 +1,7 @@
 <!--==================== HEADER ====================-->
 <header class="header" id="header">
     <nav class="nav container">
-        <a href="#home" class="nav__logo">S M<i class="bx bxs-map"></i>TCH</a>
+        <a href="#home" class="nav__logo">SID<i class="bx bxs-map"></i>ARJO<span>&nbsp;INTERNSHIP</span></a>
 
         <div class="nav__menu">
             <ul class="nav__list">
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="../login.php">
+        <a class="navbar-brand" href="../user/dashboard.php">
             <img 
                 src="../assets/img/avatar1.png" 
                 alt="Logo" 

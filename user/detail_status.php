@@ -1,8 +1,22 @@
 <?php include "../layout/sidebarUser.php" ?>
-
+  
 <div class="main-content p-4">
+     <!-- Heading Dashboard -->
     <div class="container-fluid">
+    <h1 class="mb-4">Lengkapi Dokumen</h1>
+        <ol class="breadcrumb mb-3">
+            <li class="breadcrumb-item active">Lengkapi Dokumen Persyaratan</li>
+        </ol>
+
+         <!-- Tombol Kembali -->
         <div class="dropdown-divider"></div>
+        <div class="mb-4 text-end">
+            <a href="status_pengajuan.php" class="btn btn-danger">
+                <i class="bi bi-arrow-left-circle me-1"></i>
+                Kembali
+            </a>
+        </div>
+        
         <div class="container mt-5 mb-5">
             <div class="card mx-auto position-relative" style="max-width: 600px;">
                 <div class="card-body top text-center">

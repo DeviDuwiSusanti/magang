@@ -1,4 +1,4 @@
-
+/* ===============  BERANDA ============*/
 
 #hero {
     padding-top: 100px;
@@ -65,15 +65,65 @@
     transform: scale(1.05); /* Memberikan efek zoom lebih pada gambar */
 }
 
-/* Menambahkan animasi saat pertama kali dimuat */
-[data-aos="fade-right"] {
-    opacity: 0;
-    transform: translateX(100px);
-    transition: transform 1s ease, opacity 1s ease;
+.details-button {
+    display: inline-block; 
+    background: linear-gradient(90deg, #4CAF50, #2D9CDB); 
+    color: #fff; 
+    text-decoration: none; 
+    font-weight: bold; 
+    padding: 10px 20px; 
+    border-radius: 25px; 
+    text-align: center
 }
 
-[data-aos="fade-right"].aos-animate {
-    opacity: 1;
-    transform: translateX(0px);
+.lowongan .lowongans {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.dark-theme .accordion-item {
+    background-color: var(--container-color);
+    border: 1px solid var(--border-color);
+}
+
+.dark-theme .accordion-button {
+    background-color: var(--container-color);
+    color: var(--title-color);
+}
+
+.dark-theme .accordion-button:not(.collapsed) {
+    background-color: var(--second-color);
+    color: white;
+}
+
+.dark-theme .accordion-body {
+    background-color: var(--body-color);
+    color: var(--text-color);
+}
+
+.dark-theme .accordion-button:focus {
+    box-shadow: none;
+}
+
+
+
+
+/* ========= ABOUT ========== */
+.contact__images img {
+    width: 500px; /* Sesuaikan ukuran */
+    height: 500px; /* Pastikan ukurannya sama untuk bentuk lingkaran */
+    border-radius: 50%; /* Membuat gambar menjadi bulat */
+    object-fit: cover; /* Pastikan gambar terpotong dengan baik */
+    display: block;
+    margin: auto;
+}
+
+/* Mode terang (default) */
+body {
+    background-color: #f4f4f4;
+    color: #121212;
+    margin: 0;
+    padding: 0;
 }
 
