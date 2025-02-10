@@ -36,7 +36,7 @@
                             <td>Diskusi Tim</td>
                             <td>Diskusi Proyek Magang</td>
                             <td>
-                                <a href="edit_logbook.php" class="btn btn-warning btn-sm">
+                                <a href="logbook_edit.php" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
                                 <a href="hapus_logbook.php" class="btn btn-danger btn-sm">
@@ -50,7 +50,7 @@
                             <td>Pengerjaan Tugas</td>
                             <td>Mengerjakan Flowchart Sistem Magang</td>
                             <td>
-                                <a href="edit_logbook.php" class="btn btn-warning btn-sm">
+                                <a href="logbook_edit.php" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
                                 <a href="hapus_logbook.php" class="btn btn-danger btn-sm">

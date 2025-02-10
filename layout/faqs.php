@@ -17,10 +17,11 @@
     </h2>
     <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
-        1. Buat akun untuk melanjutkan pendaftaran pada menu “Masuk ke Akun”. <br>
-        2. Setelah sudah buat akun, pergi ke menu "Lowongan".<br>
-        3. Pilih lowongan magang yang sesuai jurusan kamu yang sedang dibuka dengan cara klik tombol “Lihat detail”.<br>
-        4. Terakhir, kamu bisa melengkapi form pendaftaran yang tersedia.<br>
+        1. Lihat lowongan yang sesuai dengan jurusan Kamu <br>
+        2. Lihat detail dan klik "Daftar"<br>
+        3. Lalu Kamu akan diarahkan ke halaman "Logi"<br>
+        4. Jika belum punya akun, Kamu bisa register dulu, dan login jika Kamu sudah punya akun<br>
+        5. Nanti Kamu akan diarahkan ke halaman "Dashboard", dan kamu bisa pilih icon Daftar untuk membuat pengajuan magang.
       </div>
     </div>
   </div>

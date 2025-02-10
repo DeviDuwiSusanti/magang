@@ -20,41 +20,8 @@
 
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="../assets/css/home.css" />
-    <link rel="stylesheet" href="../assets/css/beranda.css" />
+    <link rel="stylesheet" href="../assets/css/web.css" />
     <title>Home</title>
-    <style>
-        .lowongan .lowongans {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .dark-theme .accordion-item {
-            background-color: var(--container-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .dark-theme .accordion-button {
-            background-color: var(--container-color);
-            color: var(--title-color);
-        }
-
-        .dark-theme .accordion-button:not(.collapsed) {
-            background-color: var(--second-color);
-            color: white;
-        }
-
-        .dark-theme .accordion-body {
-            background-color: var(--body-color);
-            color: var(--text-color);
-        }
-
-        .dark-theme .accordion-button:focus {
-            box-shadow: none;
-        }
-
-    </style>
 </head>
 
 <body>

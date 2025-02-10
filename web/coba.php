@@ -13,25 +13,25 @@
     <link rel="stylesheet" href="../assets/css/style.css" />
     <style>
         /* Style untuk tabel dalam mode dark */
-.dark-theme .table {
-  background-color: var(--container-color);
-  color: var(--title-color);
-  border-color: var(--border-color);
-}
+        .dark-theme .table {
+        background-color: var(--container-color);
+        color: var(--title-color);
+        border-color: var(--border-color);
+        }
 
-.dark-theme .table th,
-.dark-theme .table td {
-  border-color: var(--border-color);
-}
+        .dark-theme .table th,
+        .dark-theme .table td {
+        border-color: var(--border-color);
+        }
 
-.dark-theme .table-primary {
-  background-color: hsl(228, 40%, 20%) !important;
-  color: var(--title-color) !important;
-}
+        .dark-theme .table-primary {
+        background-color: hsl(228, 40%, 20%) !important;
+        color: var(--title-color) !important;
+        }
 
-.dark-theme .table-striped tbody tr:nth-of-type(odd) {
-  background-color: hsl(228, 20%, 15%);
-}
+        .dark-theme .table-striped tbody tr:nth-of-type(odd) {
+        background-color: hsl(228, 20%, 15%);
+        }
 
     </style>
 </head>
@@ -42,7 +42,7 @@
         <br><br><br>
         <div class="container mt-5">
             <h1 class="text-center mb-4">Tabel Kegiatan Aktif</h1>
-            <table class="table table-striped table-bordered">
+            <table>
                 <thead class="table-primary">
                     <tr>
                         <th>No</th>
@@ -240,7 +240,7 @@
         </div>
     </main>
 
-<?php include "../layout/footerUser.php" ?>
+    <?php include "../layout/footerUser.php" ?>
 
 </body>
 </html>
