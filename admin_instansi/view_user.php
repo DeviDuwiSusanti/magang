@@ -34,7 +34,7 @@
                             </td>
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
-                            <td class="text-success">Aktif</td>
+                            <td><span class="badge bg-success">Aktif</span></td>
                         </tr>
                         <tr>
                             <td>2</td>
@@ -47,7 +47,7 @@
                             </td>
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
-                            <td class="text-danger">Selesai</td>
+                            <td><span class="badge bg-danger">Selesai</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -55,3 +55,5 @@
         </div>
     </div>
 </div>
+
+<?php include "footer.php"; ?>

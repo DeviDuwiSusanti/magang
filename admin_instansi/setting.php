@@ -28,7 +28,7 @@
         <!-- Pengaturan Akun -->
         <div class="tab-pane fade show active" id="akun" role="tabpanel" aria-labelledby="akun-tab">
             <div class="card p-4 mb-4">
-                <h4><i class="bi bi-person-circle"></i> Pengaturan Akun</h4>
+                <h1><i class="bi bi-person-circle"></i> Pengaturan Akun</h1>
                 <form action="update_account.php" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Lengkap</label>
@@ -58,7 +58,7 @@
         <!-- Pengaturan Sistem -->
         <div class="tab-pane fade" id="sistem" role="tabpanel" aria-labelledby="sistem-tab">
             <div class="card p-4 mb-4">
-                <h4><i class="bi bi-sliders"></i> Pengaturan Sistem</h4>
+                <h1><i class="bi bi-sliders"></i> Pengaturan Sistem</h1>
                 <form action="update_system.php" method="post">
                     <div class="mb-3">
                         <label for="tema" class="form-label">Tema Aplikasi</label>
@@ -92,7 +92,7 @@
         <!-- Pengaturan Keamanan -->
         <div class="tab-pane fade" id="keamanan" role="tabpanel" aria-labelledby="keamanan-tab">
             <div class="card p-4">
-                <h4><i class="bi bi-shield-lock"></i> Pengaturan Keamanan</h4>
+                <h1><i class="bi bi-shield-lock"></i> Pengaturan Keamanan</h1>
                 <form action="update_security.php" method="post">
                     <div class="mb-3">
                         <label for="password_lama" class="form-label">Password Lama</label>
@@ -119,3 +119,5 @@
         </div>
     </div>
 </div>
+
+<?php include "footer.php"; ?>

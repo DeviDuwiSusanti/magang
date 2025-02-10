@@ -68,6 +68,12 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
+                    <a href="sertifikat.php" class="sidebar-link">
+                        <i class="bi bi-award"></i>
+                        <span>Sertifikat</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
                     <a href="setting.php" class="sidebar-link">
                         <i class="bi bi-gear"></i>
                         <span>Setting</span>
@@ -115,7 +121,7 @@
                                     <span>Pengaturan</span>
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">
+                                <a href="bantuan.php" class="dropdown-item">
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>

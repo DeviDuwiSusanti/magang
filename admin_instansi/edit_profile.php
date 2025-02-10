@@ -63,6 +63,8 @@
     </div>
 </div>
 
+<?php include "footer.php"; ?>
+
 <script>
   function previewFile() {
     const fileInput = document.getElementById('image');

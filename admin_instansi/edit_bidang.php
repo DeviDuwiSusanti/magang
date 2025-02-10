@@ -41,3 +41,5 @@
         <!-- <a href="bidang.php" class="btn btn-danger bi bi-arrow-left-circle"> Kembali</a> -->
     </div>
 </div>
+
+<?php include "footer.php"; ?>
