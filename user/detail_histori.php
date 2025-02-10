@@ -55,8 +55,15 @@
                         </table>
 
                         <!-- Tombol Cetak Sertifikat di pojok kiri bawah -->
-                        <a href="path/to/sertifikat.pdf" class="btn btn-sm btn-success position-absolute" style="bottom: 10px; left: 10px;" download>
-                        <i class="bi bi-printer"></i> Cetak Sertifikat</a>
+                        <!-- Tombol Cetak Sertifikat (Kiri) -->
+                        <a href="path/to/sertifikat.pdf" class="btn btn-sm btn-success" download>
+                            <i class="bi bi-printer"></i> Cetak Sertifikat
+                        </a>
+
+                        <!-- Tombol Cetak Logbook (Kanan) -->
+                        <a href="logbook_daftar.php" class="btn btn-sm btn-info">
+                            <i class="bi bi-book"></i> Lihat Logbook
+                        </a>
                     </div>
                 </div>
             </div>

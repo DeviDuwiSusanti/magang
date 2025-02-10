@@ -13,23 +13,23 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Instansi</th>
-                        <th>Bidang</th>
-                        <th>Durasi</th>
-                        <th>Periode Magang</th>
-                        <th>Aksi</th>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Nama</th>
+                        <th class="text-center">Instansi</th>
+                        <th class="text-center">Bidang</th>
+                        <th class="text-center">Durasi</th>
+                        <th class="text-center">Periode Magang</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Data 1 -->
                     <tr>
-                        <td>1</td>
+                        <td class="text-center">1</td>
                         <td>Hendra Hartono</td>
                         <td>Kominfo Sidoarjo</td>
                         <td>Cyber Security</td>
-                        <td>3 Bulan</td>
+                        <td class="text-center">3 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
                         <td class="text-center">
                         <a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
@@ -38,11 +38,11 @@
                     </tr>
                     <!-- Data 2 -->
                     <tr>
-                        <td>2</td>
+                        <td class="text-center">2</td>
                         <td>Hendra Hartono</td>
                         <td>Kominfo Medan</td>
                         <td>Website Developer</td>
-                        <td>6 Bulan</td>
+                        <td class="text-center">6 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
                         <td class="text-center">
                         <a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">

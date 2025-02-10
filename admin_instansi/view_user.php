@@ -15,7 +15,7 @@
                             <th>No</th>
                             <th>Nama User</th>
                             <th>Nama Bidang</th>
-                            <th>Jenis Pengajuan</th>
+                            <th>Jenis Kegiatan</th>
                             <th>Pemagang Aktif</th>
                             <th>Tanggal Mulai</th>
                             <th>Tanggal Selesai</th>
@@ -28,7 +28,10 @@
                             <td>Mishbahus Surur</td>
                             <td>Teknologi Informasi</td>
                             <td>Magang</td>
-                            <td>4</td>
+                            <!-- <td>4</td> -->
+                            <td>
+                                <a href="#" class="show-detail" title="Lihat Detail" data-detail='["Mishbahus Surur", "Revika Syariqatun Alifia", "Devi Dwi Susanti", "Hendra Hartono"]'>4</a>
+                            </td>
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
                             <td class="text-success">Aktif</td>
@@ -38,7 +41,10 @@
                             <td>Syaiful Hidayat</td>
                             <td>Teknologi Informasi</td>
                             <td>Magang</td>
-                            <td>4</td>
+                            <!-- <td>4</td> -->
+                            <td>
+                                <a href="#" class="show-detail" title="Lihat Detail" data-detail='["Syaiful Hidayat", "Siti Aisyah", "Andi Zainuri"]'>3</a>
+                            </td>
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
                             <td class="text-danger">Selesai</td>

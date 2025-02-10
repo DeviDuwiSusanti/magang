@@ -106,9 +106,9 @@
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Edit Profile</span>
                                 </a>
-                                <!-- <a href="#" class="dropdown-item">
+                                <!-- <a href="../web/beranda.php" class="dropdown-item">
                                     <i class="bi bi-bar-chart-line-fill"></i>
-                                    <span>Analisis</span>
+                                    <span>Kembali ke Beranda</span>
                                 </a> -->
                                 <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
@@ -143,6 +143,42 @@
     <script>
         $(document).ready(function() {
             $('#myTable').DataTable();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable();
+
+            $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+                e.preventDefault();
+
+                var detailData = $(this).data('detail');
+                var detailHtml = '<ul>';
+                $.each(detailData, function(index, name) {
+                    detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+                });
+                detailHtml += '</ul>';
+
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                // Jika baris yang diklik belum terbuka, tutup semua child row yang sedang terbuka
+                if (!row.child.isShown()) {
+                    $('#myTable tbody tr.shown').not(tr).each(function() {
+                        table.row(this).child.hide();
+                        $(this).removeClass('shown');
+                    });
+                }
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    row.child(detailHtml).show();
+                    tr.addClass('shown');
+                }
+            });
         });
     </script>
 </body>

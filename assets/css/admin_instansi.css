@@ -372,9 +372,8 @@ h1 {
 
 .edit {
     width: 100%;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    padding: 10px;
     border-radius: 5px;
 }
 
@@ -403,6 +402,7 @@ table th {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     font-size: 14px;
+    overflow-x: scroll;
 }
 
 .bungkus-2 {
@@ -414,6 +414,7 @@ table th {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     font-size: 14px;
+    overflow-x: scroll;
 }
 
 .manage {
@@ -447,27 +448,34 @@ td {
     border-top: 1px solid rgba(255, 255, 255, 0.1); /* Garis atas tipis */
     padding: 20px 0;
     transition: background-color 0.3s ease;
-  }
-  
-  .footer a {
+}
+
+.footer a {
     color: #f8f9fa;
     text-decoration: none;
     transition: color 0.3s ease;
-  }
-  
-  .footer a:hover {
+}
+
+.footer a:hover {
     color: #adb5bd; /* Warna saat hover */
-  }
-  
-  /* Responsif: Mengatur teks agar center pada perangkat kecil */
-  @media (max-width: 767.98px) {
+}
+
+/* Responsif: Mengatur teks agar center pada perangkat kecil */
+@media (max-width: 767.98px) {
     .footer .text-md-start,
     .footer .text-md-end {
-      text-align: center !important;
-      margin-bottom: 10px;
+        text-align: center !important;
+        margin-bottom: 10px;
     }
-  }
-  
+}
+ 
+.show-detail {
+    color: var(--text-color);
+}
+
+.show-detail:hover {
+    color: var(--text-color);
+}
 
 
 
