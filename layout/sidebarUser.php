@@ -56,7 +56,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="#" class="sidebar-link">
+                    <a href="setting.php" class="sidebar-link">
                         <i class="bi bi-gear"></i>
                         <span>Setting</span>
                     </a>
@@ -101,7 +101,7 @@
                                     <i class="bi bi-bar-chart-line-fill"></i>
                                     <span>Kembali ke Beranda</span>
                                 </a>
-                                <a href="#" class="dropdown-item">
+                                <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
