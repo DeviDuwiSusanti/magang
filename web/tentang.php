@@ -49,7 +49,16 @@
                                     <h3 class="contact__card-title">Cara Daftar</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cara Daftar" data-steps='[{"step":"Buka halaman detail lowongan yang ingin dilamar.", "img":"../assets/img/tentang/daftar1.png"}, {"step":"Lihat detail lowongan, dan pastikan Kamu sesuai kriteria yaa! Lalu Kamu bisa klik Daftar Sekarang.", "img":"../assets/img/tentang/daftar2.png"}, {"step":"Masuk ke Dashboar user, lalu klik Pengajuan.", "img":"../assets/img/tentang/daftar3.png"}, {"step":"Tunggu konfirmasi dari admin instansi terkait seleksi kriteria pendaftaran."}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cara Daftar" 
+                            data-steps='[{"step":"Buka halaman detail lowongan yang ingin dilamar.", "img":"../assets/img/tentang/daftar1.png"}, 
+                            {"step":"Lihat detail lowongan, dan pastikan Kamu sesuai kriteria yaa! Lalu Kamu bisa klik Daftar Sekarang.", "img":"../assets/img/tentang/daftar2.png"}, 
+                            {"step":"Masuk ke Dashboar user, lalu klik Pengajuan.", "img":"../assets/img/tentang/daftar3.png"}, 
+                            {"step":"Lalu Kamu akan diarahkan ke halaman Daftar Pengajuan, Lalu Kamu bisa klik Tambah Pengajuan, dan isi form yang tersedia.", "img":"../assets/img/tentang/daftar4.png"}, 
+                            {"step":"Tunggu konfirmasi dari admin instansi terkait seleksi kriteria pendaftaran."},
+                            {"step":"Jika status pengajuan bukan ditolak, maka Anda bisa mengikuti tahap selanjutnya"},
+                            {"step":"Instansi akan mengirimkan link zoom via email bagi pendaftar yang belum ditolak, jadi Anda akan diwawancarai via zoom"},
+                            {"step":"Jika status setelah melakukan wawancara Anda sudah diterima, maka Anda bisa mengunggah dokumen persyaratan lainnya, agar Anda benar-benar resmi diterima"},
+                            {"step":"Jika selama tenggat waktu yang ditentukan, Anda tidak melengkapi dokumen persyaratan, maka Kami akan mengganggap Anda batal mengajukan magang"}]'>Lihat</button>
                         </div>
 
                         <!-- Cek Status -->
@@ -60,7 +69,11 @@
                                     <h3 class="contact__card-title">Cek Status</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Status" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/dashboard.png"}, {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/status2.png"}, {"step":"Status akan tertera pada tabel, dan jika Anda diterima, maka anda bisa melengkapi dokumen persyaratan lainnya.", "img":"../assets/img/tentang/status3.png"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Status" 
+                            data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/dashboard.png"}, 
+                            {"step":"Login jika belum login"},
+                            {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/daftar4.png"}, 
+                            {"step":"Status akan tertera pada tabel, dan jika Anda diterima, maka anda bisa melengkapi dokumen persyaratan lainnya."}]'>Lihat</button>
                         </div>
 
                         <!-- Unggah Persyaratan -->
@@ -71,7 +84,10 @@
                                     <h3 class="contact__card-title">Unggah Persyaratan</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Persyaratan" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/dashboard.png"}, {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/status2.png"}, {"step":"Status akan tertera pada tabel, dan jika Anda diterima, maka anda bisa melengkapi dokumen persyaratan lainnya.", "img":"../assets/img/tentang/status3.png"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Persyaratan" 
+                            data-steps='[{"step":"Masuk ke dashboard user.", "img":"../assets/img/tentang/dashboard.png"}, 
+                            {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/daftar4.png"}, 
+                            {"step":"Status akan tertera pada tabel, dan jika Anda diterima, maka anda bisa melengkapi dokumen persyaratan lainnya.", "img":"../assets/img/tentang/status3.png"}]'>Lihat</button>
                         </div>
 
                         <!-- Unggah Logbook -->
@@ -82,7 +98,11 @@
                                     <h3 class="contact__card-title">Unggah Logbook</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Logbook" data-steps='[{"step":"Masuk ke dashboard user, dan klik unggah logbook", "img":"../assets/img/tentang/dashboard1.png"}, {"step":"Klik input logbook pada kegiatan aktif yang Anda jalani.", "img":"../assets/img/tentang/logbook1.png"}, {"step":"Isi logbook harian Anda.", "img":"../assets/img/tentang/logbook2.png"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Logbook" 
+                            data-steps='[{"step":"Masuk ke dashboard user, dan klik unggah logbook", "img":"../assets/img/tentang/dashboard1.png"}, 
+                            {"step":"Kamu akan diarahkan ke halaman Kegiatan Aktif.", "img":"../assets/img/tentang/logbook2.png"},
+                            {"step":"Klik ikon detail.", "img":"../assets/img/tentang/logbook1.png"},
+                            {"step":"Klik Unggah Logbook.", "img":"../assets/img/tentang/logbook1.png"}]'>Lihat</button>
                         </div>
 
                         <!-- Unggah Laporan Akhir -->
@@ -93,7 +113,11 @@
                                     <h3 class="contact__card-title">Laporan Akhir</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Laporan Akhir" data-steps='[{"step":"Masuk ke dashboard user, dan klik unggah logbook", "img":"../assets/img/tentang/dashboard1.png"}, {"step":"Klik input logbook pada kegiatan aktif yang Anda jalani.", "img":"../assets/img/tentang/logbook1.png"}, {"step":"Isi logbook harian Anda.", "img":"../assets/img/tentang/logbook2.png"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Laporan Akhir" 
+                            data-steps='[{"step":"Masuk ke dashboard user, dan klik unggah logbook", "img":"../assets/img/tentang/dashboard1.png"}, 
+                            {"step":"Kamu akan diarahkan ke halaman Kegiatan Aktif.", "img":"../assets/img/tentang/logbook2.png"},
+                            {"step":"Klik ikon detail.", "img":"../assets/img/tentang/logbook1.png"},
+                            {"step":"Klik Unggah Laporan Akhir.", "img":"../assets/img/tentang/logbook1.png"}]'>Lihat</button>
                         </div>
 
                         <!-- Cek Sertifikat -->
@@ -104,7 +128,11 @@
                                     <h3 class="contact__card-title">Cek Sertifikat</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat" data-steps='[{"step":"Masuk ke dashboard user, dan klik Histori.", "img":"../assets/img/tentang/dashboard1.png"}, {"step":"Unduh Sertifikat pada kolom yang tersedia.", "img":"../assets/img/tentang/sertifikat1.png"}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat" 
+                            data-steps='[{"step":"Masuk ke dashboard user, dan klik Histori", "img":"../assets/img/tentang/dashboard1.png"}, 
+                            {"step":"Kamu akan diarahkan ke halaman Histori.", "img":"../assets/img/tentang/logbook2.png"},
+                            {"step":"Klik ikon detail.", "img":"../assets/img/tentang/logbook1.png"},
+                            {"step":"Klik Cetak Sertifikat.", "img":"../assets/img/tentang/logbook1.png"}]'>Lihat</button>
                         </div>
                     </div>
                 </div>
