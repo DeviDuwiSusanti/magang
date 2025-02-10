@@ -24,7 +24,7 @@
                     </button>
                 </h2>
                 <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
+                    <div class="accordion-body text-danger">
                         Untuk menambahkan instansi baru, masuk ke menu <strong>Instansi</strong> lalu klik tombol <em>"Tambah Instansi"</em>.
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     </button>
                 </h2>
                 <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                    <div class="accordion-body">
+                    <div class="accordion-body text-danger">
                         Masuk ke menu <strong>User</strong>, cari user yang ingin diubah, lalu klik tombol <em>"Edit User"</em>.
                     </div>
                 </div>

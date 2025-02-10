@@ -1,122 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pengaturan Super Admin - Sistem Magang Sidoarjo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .settings-container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-        }
-        .settings-container h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-    </style>
-</head>
-<body>
-    <div class="settings-container">
-        <h2>Pengaturan Super Admin - Sistem Magang Sidoarjo</h2>
+<?php 
+    include "sidebar.php";
+?>
 
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs" id="settingsTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">Pengaturan Umum</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">Pengaturan Pengguna</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="internship-tab" data-bs-toggle="tab" data-bs-target="#internship" type="button" role="tab" aria-controls="internship" aria-selected="false">Pengaturan Magang</button>
-            </li>
-        </ul>
+<div class="container mt-4">
+    <h2 class="text-center"><i class="bi bi-gear"></i> Pengaturan Super Admin</h2>
+    <p class="text-center text-muted">Kelola akun dan pengguna di sistem.</p>
 
-        <!-- Tab Content -->
-        <div class="tab-content mt-3" id="settingsTabContent">
-            <!-- Pengaturan Umum -->
-            <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
-                <form action="save_general_settings.php" method="POST">
-                    <div class="form-group">
-                        <label for="app_name">Nama Aplikasi</label>
-                        <input type="text" class="form-control" id="app_name" name="app_name" value="Sistem Magang Sidoarjo" required>
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Edit Email Super Admin -->
+            <div class="card mb-4 p-4">
+                <h4><i class="bi bi-envelope"></i> Edit Email</h4>
+                <p>Email Saat Ini: <strong>superadmin@example.com</strong></p>
+                <form>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Baru</label>
+                        <input type="email" class="form-control" id="email" placeholder="Masukkan email baru">
                     </div>
-                    <div class="form-group">
-                        <label for="app_description">Deskripsi Aplikasi</label>
-                        <textarea class="form-control" id="app_description" name="app_description" rows="3" required>Sistem untuk mengelola magang di Kabupaten Sidoarjo.</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="timezone">Zona Waktu</label>
-                        <select class="form-control" id="timezone" name="timezone" required>
-                            <option value="Asia/Jakarta">Asia/Jakarta (WIB)</option>
-                            <option value="Asia/Makassar">Asia/Makassar (WITA)</option>
-                            <option value="Asia/Jayapura">Asia/Jayapura (WIT)</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
-                </form>
-            </div>
-
-            <!-- Pengaturan Pengguna -->
-            <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
-                <form action="save_user_settings.php" method="POST">
-                    <div class="form-group">
-                        <label for="user_registration">Registrasi Pengguna</label>
-                        <select class="form-control" id="user_registration" name="user_registration" required>
-                            <option value="1">Aktif</option>
-                            <option value="0">Nonaktif</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="email_verification">Verifikasi Email</label>
-                        <select class="form-control" id="email_verification" name="email_verification" required>
-                            <option value="1">Aktif</option>
-                            <option value="0">Nonaktif</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="default_role">Role Default</label>
-                        <select class="form-control" id="default_role" name="default_role" required>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
-                </form>
-            </div>
-
-            <!-- Pengaturan Magang -->
-            <div class="tab-pane fade" id="internship" role="tabpanel" aria-labelledby="internship-tab">
-                <form action="save_internship_settings.php" method="POST">
-                    <div class="form-group">
-                        <label for="internship_duration">Durasi Magang (Bulan)</label>
-                        <input type="number" class="form-control" id="internship_duration" name="internship_duration" min="1" max="12" value="3" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="max_interns">Maksimal Peserta Magang</label>
-                        <input type="number" class="form-control" id="max_interns" name="max_interns" min="1" value="50" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="internship_status">Status Magang</label>
-                        <select class="form-control" id="internship_status" name="internship_status" required>
-                            <option value="open">Dibuka</option>
-                            <option value="closed">Ditutup</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Simpan Pengaturan</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan Perubahan</button>
                 </form>
             </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+        <div class="col-md-6">
+            <!-- Jadikan User sebagai Super Admin -->
+            <div class="card p-4">
+                <h4><i class="bi bi-person-gear"></i> Jadikan Super Admin</h4>
+                <p>Pilih pengguna untuk dijadikan Super Admin.</p>
+                <form>
+                    <div class="mb-3">
+                        <label for="user" class="form-label">Pilih User</label>
+                        <select class="form-select" id="user">
+                            <option selected disabled>Pilih User</option>
+                            <option value="1">Saiful Anam</option>
+                            <option value="2">Rina Wijaya</option>
+                            <option value="3">Budi Santoso</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning"><i class="bi bi-person-badge"></i> Jadikan Super Admin</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tambah Super Admin Baru -->
+        <div class="col-md-12"></div>
+            <h4 class="mt-5"><i class="bi bi-person-plus"></i> Tambah Super Admin Baru</h4>
+            <form action="profile_view.php" class="form-profile" method="POST" enctype="multipart/form-data">
+            
+            <!-- Nama -->
+            <div class="mb-3">
+                <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
+                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan Nama Lengkap Calon Admin Instansi" required>
+            </div>
+
+            <!-- NIK -->
+            <div class="mb-3">
+                <label for="nik_admin_instansi" class="form-label">NIK</label>
+                <input type="text" class="form-control" id="nik_admin_instansi" name="nik_admin_instansi" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email_admin_instansi" class="form-label">Email</label>
+                <input type="text" class="form-control" id="email_admin_instansi" name="email_admin_instansi" placeholder="Masukkan Email Calon Admin Instansi" required>
+            </div>
+
+            <!-- Tempat Lahir -->
+            <div class="mb-3">
+                <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Masukkan Tempat Lahir Calon Admin Instansi"  required>
+            </div>
+
+            <!-- Tanggal Lahir -->
+            <div class="mb-3">
+                <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="Masukkan Tanggal Lahir Calon Admin Instansi" required>
+            </div>
+
+            <!-- Gender -->
+            <div class="mb-3">
+                <label for="gender" class="form-label"> Jenis Kelamin </label>
+                <div class="form-check">
+                    <input type="radio" name="gender" id="gender_l" value="L" class="form-check-input">
+                    <label for="gender_l" class="form-check-label">Laki - Laki</label>
+                </div>
+                <div class="form-check">
+                    <input type="radio" name="gender" id="gender_p" value="P" class="form-check-input">
+                    <label for="gender_p" class="form-check-label">Perempuan</label>
+                </div>
+            </div>
+
+            <!-- Tempat Lahir -->
+            <div class="mb-3">
+                <label for="no_telepon" class="form-label">No. Telepon</label>
+                <input type="text" class="form-control" id="no_telepon" name="no_telepon" placeholder="Masukkan Nomor telepone Calon Admin Instansi" required>
+            </div>
+
+            <!-- Alamat -->
+            <div class="mb-3">
+                <label for="alamat" class="form-label">Alamat</label>
+                <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan Alamat Calon Admin Instansi" required></textarea>
+            </div>
+
+            <!-- Upload Image -->
+            <div class="mb-3">
+                <img src="../assets/img/login.jpeg" alt="gambaredit" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" placeholder="Masukkan Gambar (OPSIONAL)">
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary edit">Tambah Data</button>
+        </form>
+    </div>
+</div>
