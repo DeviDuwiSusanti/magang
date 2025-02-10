@@ -145,6 +145,42 @@
             $('#myTable').DataTable();
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable();
+
+            $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+                e.preventDefault();
+
+                var detailData = $(this).data('detail');
+                var detailHtml = '<ul>';
+                $.each(detailData, function(index, name) {
+                    detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+                });
+                detailHtml += '</ul>';
+
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                // Jika baris yang diklik belum terbuka, tutup semua child row yang sedang terbuka
+                if (!row.child.isShown()) {
+                    $('#myTable tbody tr.shown').not(tr).each(function() {
+                        table.row(this).child.hide();
+                        $(this).removeClass('shown');
+                    });
+                }
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    row.child(detailHtml).show();
+                    tr.addClass('shown');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
