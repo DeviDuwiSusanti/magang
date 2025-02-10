@@ -222,3 +222,13 @@
         margin-top: 20px;
     }
 }
+
+/* ========= ABOUT ========== */
+.contact__images img {
+    width: 500px; /* Sesuaikan ukuran */
+    height: 500px; /* Pastikan ukurannya sama untuk bentuk lingkaran */
+    border-radius: 50%; /* Membuat gambar menjadi bulat */
+    object-fit: cover; /* Pastikan gambar terpotong dengan baik */
+    display: block;
+    margin: auto;
+}

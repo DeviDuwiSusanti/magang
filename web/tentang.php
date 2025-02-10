@@ -11,16 +11,7 @@
 
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
-    <style>
-        .contact__images img {
-            width: 500px; /* Sesuaikan ukuran */
-            height: 500px; /* Pastikan ukurannya sama untuk bentuk lingkaran */
-            border-radius: 50%; /* Membuat gambar menjadi bulat */
-            object-fit: cover; /* Pastikan gambar terpotong dengan baik */
-            display: block;
-            margin: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/web.css" />
     <title>About</title>
 </head>
 
