@@ -36,10 +36,10 @@
                             <td>02-05-2025</td>
                             <td>
                                 <a href="terima.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check"></i> Terima
+                                    <i class="bi bi-check-circle-fill"></i> Terima
                                 </a>
                                 <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-x-circle"></i> Tolak
+                                    <i class="bi bi-x-circle-fill"></i> Tolak
                                 </a>
                             </td>
                         </tr>
@@ -56,10 +56,10 @@
                             <td>02-05-2025</td>
                             <td>
                                 <a href="terima.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check"></i> Terima
+                                    <i class="bi bi-check-circle-fill"></i> Terima
                                 </a>
                                 <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-x-circle"></i> Tolak
+                                    <i class="bi bi-x-circle-fill"></i> Tolak
                                 </a>
                             </td>
                         </tr>
