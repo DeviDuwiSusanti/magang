@@ -402,7 +402,7 @@ table th {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     font-size: 14px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .bungkus-2 {
@@ -414,7 +414,7 @@ table th {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     font-size: 14px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .manage {

@@ -58,13 +58,13 @@
                 <li class="sidebar-item">
                     <a href="pengajuan.php" class="sidebar-link">
                         <i class="bi bi-journals"></i>
-                        <span>Pengajuan</span>
+                        <span>Kelola Pengajuan</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a href="view_user.php" class="sidebar-link">
                         <i class="bi bi-people"></i>
-                        <span>User</span>
+                        <span>Daftar Pemagang</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
