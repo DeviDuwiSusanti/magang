@@ -13,47 +13,43 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Universitas</th>
-                        <th>Perusahaan</th>
-                        <th>Bidang</th>
-                        <th>Durasi</th>
-                        <th>Periode Magang</th>
-                        <th>Aksi</th>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Nama</th>
+                        <th class="text-center">Universitas</th>
+                        <th class="text-center">Perusahaan</th>
+                        <th class="text-center">Bidang</th>
+                        <th class="text-center">Durasi</th>
+                        <th class="text-center">Periode Magang</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Data 1 -->
                     <tr>
-                        <td>1</td>
+                        <td class="text-center">1</td>
                         <td>Hendra Hartono</td>
                         <td>Universitas Trunojoyo Madura</td>
                         <td>Kominfo Sidoarjo</td>
                         <td>Cyber Security</td>
-                        <td>3 Bulan</td>
+                        <td class="text-center">3 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td>
-                        <a href="detail_aktif.php" class="text-decoration-none me-2" title="Lihat Detail">
-                        <i class="bi bi-eye"></i></a>
-                        <a href="logbook_unggah.php" class="text-decoration-none border p-2" title="Input Logbook">
-                         Input Logbook</a>
+                        <td class="text-center">
+                        <a href="detail_aktif.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
                         </td>
                     </tr>
                     <!-- Data 2 -->
                     <tr>
-                        <td>2</td>
+                        <td class="text-center">2</td>
                         <td>Hendra Hartono</td>
                         <td>Universitas Trunojoyo Madura</td>
                         <td>Kominfo Medan</td>
                         <td>Website Developer</td>
-                        <td>6 Bulan</td>
+                        <td class="text-center">6 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td>
-                        <a href="detail_aktif.php" class="text-decoration-none me-2" title="Lihat Detail">
-                        <i class="bi bi-eye"></i></a>
-                        <a href="logbook_unggah.php" class="text-decoration-none border p-2" title="Input Logbook">
-                            Input Logbook</a>
+                        <td class="text-center">
+                        <a href="detail_aktif.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
                         </td>
                     </tr>
                 </tbody>

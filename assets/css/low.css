@@ -1,3 +1,34 @@
+/* Mengubah warna teks dan background ketika dark theme aktif */
+body.dark-theme .hero-title {
+    color: var(--title-color);  /* Sesuaikan warna teks judul */
+}
+
+body.dark-theme .search-wrapper {
+    background-color: var(--container-color);  /* Background search box */
+    border: 1px solid var(--border-color);  /* Border untuk search box */
+}
+
+/* Mengubah warna input dan icon search */
+body.dark-theme .search-input {
+    background-color: var(--container-color);  /* Background input field */
+    color: var(--text-color);  /* Warna teks input */
+    border: 1px solid var(--border-color);  /* Border input field */
+}
+
+body.dark-theme .search-icon {
+    color: var(--text-color);  /* Warna icon search */
+}
+
+/* Mengubah warna hover untuk elemen di search-wrapper */
+body.dark-theme .search-wrapper:hover {
+    background-color: var(--second-color);  /* Warna background saat hover */
+}
+
+/* Mengatur warna background pada container utama */
+body.dark-theme .container.main {
+    background-color: var(--body-color);  /* Background container */
+}
+
 .custom-container {
     max-width: 1000px;
     margin: 0 auto;

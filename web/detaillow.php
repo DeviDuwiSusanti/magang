@@ -60,8 +60,10 @@
             </div>
         </div>
     </section>
-    <?php include "../layout/footerUser.php" ?>
+
 </main>
+
+<?php include "../layout/footerUser.php" ?>
 
 </body>
 </html>

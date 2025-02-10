@@ -1,8 +1,20 @@
 <?php include "../layout/sidebarUser.php" ?>
 
 <div class="main-content p-4">
+    <!-- Heading Dashboard -->
     <div class="container-fluid">
+        <h1 class="mb-4">Kegiatan Aktif</h1>
+        <ol class="breadcrumb mb-3">
+            <li class="breadcrumb-item active">Kegiatan Aktif</li>
+        </ol>
         <div class="dropdown-divider"></div>
+         <!-- Tombol Kembali -->
+        <div class="mb-4 text-end">
+            <a href="status_pengajuan.php" class="btn btn-danger">
+                <i class="bi bi-arrow-left-circle me-1"></i>
+                Kembali
+            </a>
+        </div>
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top text-center">
@@ -40,6 +52,15 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <!-- Tombol Unggah Logbook dan Laporan Akhir -->
+                    <div class="mb-3">
+                        <a href="logbook_unggah.php" class="btn btn-primary btn-sm me-2">
+                            <i class="bi bi-file-earmark-text me-1"></i> Unggah Logbook
+                        </a>
+                        <a href="laporan_akhir.php" class="btn btn-success btn-sm">
+                            <i class="bi bi-file-earmark-check me-1"></i> Unggah Laporan Akhir
+                        </a>
                     </div>
                 </div>
             </div>
