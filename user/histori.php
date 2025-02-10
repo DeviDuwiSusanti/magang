@@ -31,10 +31,10 @@
                         <td>Cyber Security</td>
                         <td>3 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td><a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye"></i></a>
-                        <a href="path/to/sertifikat.pdf" class="text-decoration-none border p-2" title="Download Sertifikat" download>
-                           </i> Download Sertifikat</a></td>
+                        <td class="text-center">
+                        <a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
+                        </td>
                     </tr>
                     <!-- Data 2 -->
                     <tr>
@@ -44,10 +44,10 @@
                         <td>Website Developer</td>
                         <td>6 Bulan</td>
                         <td>02 Januari - 02 Mei</td>
-                        <td><a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye"></i></a>
-                        <a href="path/to/sertifikat.pdf" class="text-decoration-none border p-2" title="Download Sertifikat" download>
-                           </i> Download Sertifikat</a></td>
+                        <td class="text-center">
+                        <a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
+                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
+                        </td>
                     </tr>
                 </tbody>
             </table>
