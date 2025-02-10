@@ -10,7 +10,7 @@
         <div class="dropdown-divider"></div>
          <!-- Tombol Kembali -->
         <div class="mb-4 text-end">
-            <a href="status_pengajuan.php" class="btn btn-danger">
+            <a href="kegiatan_aktif.php" class="btn btn-danger">
                 <i class="bi bi-arrow-left-circle me-1"></i>
                 Kembali
             </a>

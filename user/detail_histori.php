@@ -1,9 +1,22 @@
 <?php include "../layout/sidebarUser.php" ?>
-
+  
 <div class="main-content p-4">
+     <!-- Heading Dashboard -->
     <div class="container-fluid">
+    <h1 class="mb-4">Histori</h1>
+        <ol class="breadcrumb mb-3">
+            <li class="breadcrumb-item active">histori Kegiatan</li>
+        </ol>
+
+         <!-- Tombol Kembali -->
         <div class="dropdown-divider"></div>
-        <div class="container mt-5 mb-5">
+        <div class="mb-4 text-end">
+            <a href="histori.php" class="btn btn-danger">
+                <i class="bi bi-arrow-left-circle me-1"></i>
+                Kembali
+            </a>
+        </div>
+
             <div class="card mx-auto position-relative" style="max-width: 600px;">
                 <div class="card-body top text-center">
                     <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
@@ -42,10 +55,8 @@
                         </table>
 
                         <!-- Tombol Cetak Sertifikat di pojok kiri bawah -->
-                        <a href="cetak_sertifikat.php" class="btn btn-sm btn-success position-absolute" style="bottom: 10px; left: 10px;">
-                            <i class="bi bi-printer"></i> Cetak Sertifikat
-                        </a>
-
+                        <a href="path/to/sertifikat.pdf" class="btn btn-sm btn-success position-absolute" style="bottom: 10px; left: 10px;" download>
+                        <i class="bi bi-printer"></i> Cetak Sertifikat</a>
                     </div>
                 </div>
             </div>
