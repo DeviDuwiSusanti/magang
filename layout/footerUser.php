@@ -2,7 +2,7 @@
             <div class="footer__container container grid">
                 <div>
                     <a href="#" class="footer__logo">
-                        Sidoarjo Internship Portal
+                        Sid<i class="bx bxs-map"></i>arjo Internship Portal
                     </a>
                     <p class="text-gray-400">
                         Dinas Komunikasi dan Informatika

@@ -10,8 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/web.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
     <title>About</title>
 </head>
 
@@ -121,12 +121,17 @@
             const modalSteps = tutorialModal.querySelector('#modalSteps');
 
             modalTitle.textContent = title;
-            modalSteps.innerHTML = steps.map(step => `
-                <li class="mb-3">
-                    <p>${step.step}</p>
-                    <img src="${step.img}" alt="Step Image" class="img-fluid" />
-                </li>
-            `).join('');
+
+            // Generate list items based on steps, checking for 'img'
+            modalSteps.innerHTML = steps.map(step => {
+                const hasImage = step.img && step.img.trim() !== ""; // Check if img exists and is not empty
+                return `
+                    <li class="mb-3">
+                        <p>${step.step}</p>
+                        ${hasImage ? `<img src="${step.img}" alt="Step Image" class="img-fluid" />` : ""}
+                    </li>
+                `;
+            }).join('');
         });
     </script>
 </body>

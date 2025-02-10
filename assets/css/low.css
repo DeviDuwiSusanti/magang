@@ -1,0 +1,267 @@
+.custom-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 50px;
+    align-items: center;
+}
+
+.custom-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.center-text {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.text-block {
+    display: inline-block;
+    margin: 0 80px;
+}
+
+.large-text {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.small-text {
+    font-size: 18px;
+    margin: 0;
+}
+
+.image-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+}
+
+.left-column {
+    flex: 0 0 50%;
+    text-align: center;
+  
+}
+
+.right-column {
+    flex: 0 0 40%;
+    text-align: center;
+  
+}
+
+.custom-image {
+    max-width: 100%; /* Mengatur agar gambar memenuhi lebar kolom */
+    height: auto;
+    border-radius: 15px; /* Memberikan radius pada gambar */
+   
+}
+
+.image-spacing {
+    margin-top: 20px;
+}
+
+.full-width {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: transparent;
+    border: 2px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.30rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.details-button {
+    display: inline-block; 
+    background: linear-gradient(90deg, #4CAF50, #2D9CDB); 
+    color: #fff; 
+    text-decoration: none; 
+    font-weight: bold; 
+    padding: 10px 20px; 
+    border-radius: 25px; 
+    text-align: center
+}
+
+@media (max-width: 768px) {
+    .image-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-column,
+    .right-column {
+        flex: 0 0 100%;
+        margin: 0; /* Menghilangkan margin agar gambar menempel satu sama lain */
+    }
+
+    .image-spacing {
+        margin-top: 20px;
+    }
+}
+
+.transparent-img {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+.popular__card {
+    position: relative;
+}
+
+.sold-out-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-style: italic;
+    font-weight: bold;
+    border-radius: 100px;
+    z-index: 10;
+}
+.popular__card {
+    display: none; 
+}
+
+.popular__card.visible {
+    display: block;
+}
+
+.details-button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.details-button:hover {
+    background-color: #0056b3;
+}
+
+.view-all {
+    text-align: center;
+    margin-top: 20px;
+}
+.search-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    width: 60%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007BFF;
+}
+.search-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 60%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007BFF;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #007BFF;
+    cursor: pointer;
+}
+
+.search-icon:hover {
+    color: #0056b3;
+}
+
+.lowongan .lowongans {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+.container.main {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.side-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+}
