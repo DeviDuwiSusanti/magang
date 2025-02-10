@@ -1,0 +1,74 @@
+/* Tema terang */
+body.light-theme table {
+    background-color: #fff; /* Warna background tabel terang */
+    color: #000; /* Ubah warna teks menjadi hitam untuk kontras lebih baik */
+}
+
+/* Warna header tabel pada tema terang */
+body.light-theme th {
+    background-color: #1d7eed; /* Gunakan warna biru yang lebih kontras */
+    color: #fff; /* Warna teks header putih untuk kontras */
+}
+
+/* Warna ketika hover pada baris tabel pada tema terang */
+body.light-theme tr:hover {
+    background-color: #f1f1f1; /* Background hover tabel lebih gelap sedikit */
+}
+/* Tema gelap */
+body.dark-theme table {
+    background-color: #333; /* Warna background tabel gelap */
+    color: #fff; /* Warna teks tabel gelap */
+}
+
+/* Warna header tabel pada tema gelap */
+body.dark-theme th {
+    background-color: #555; /* Warna abu-abu gelap untuk header */
+    color: #fff; /* Warna teks header */
+}
+
+/* Warna ketika hover pada baris tabel pada tema gelap */
+body.dark-theme tr:hover {
+    background-color: #444; /* Background hover tabel gelap */
+}
+
+/* Warna tombol pagination pada tema gelap */
+body.dark-theme .pagination button {
+    background-color: #444; /* Background tombol */
+    color: #fff; /* Warna teks tombol */
+    border: 1px solid #555; /* Border tombol */
+}
+
+body.dark-theme .pagination button:hover {
+    background-color: #A7C7E7; /* Warna tombol saat hover */
+    color: #333; /* Warna teks tombol saat hover */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+.pagination {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+.pagination button {
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    margin: 0 5px;
+    background-color: #f8f9fa;
+}
+.pagination .disabled {
+    cursor: not-allowed;
+    background-color: #e9ecef;
+}
+.pagination .active {
+    background-color: #007bff;
+    color: white;
+}
