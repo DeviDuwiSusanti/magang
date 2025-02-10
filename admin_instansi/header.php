@@ -106,9 +106,9 @@
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Edit Profile</span>
                                 </a>
-                                <!-- <a href="#" class="dropdown-item">
+                                <!-- <a href="../web/beranda.php" class="dropdown-item">
                                     <i class="bi bi-bar-chart-line-fill"></i>
-                                    <span>Analisis</span>
+                                    <span>Kembali ke Beranda</span>
                                 </a> -->
                                 <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
