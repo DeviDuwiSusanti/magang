@@ -12,6 +12,18 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
+                        <h5 class="card-title">Pengajuan</h5>
+                        <h2 class="card-text text-primary">2</h2>
+                        <p class="text-muted">Permohonan Magang</p>
+                        <a href="status_pengajuan.php" class="btn btn-info mt-3 detail">View Details</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 1 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
                         <h5 class="card-title">Unggah Logbook</h5>
                         <h2 class="card-text text-primary">15</h2>
                         <p class="text-muted">Logbook Terunggah</p>

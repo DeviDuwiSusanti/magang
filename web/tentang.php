@@ -49,7 +49,7 @@
                                     <h3 class="contact__card-title">Cara Daftar</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cara Daftar" data-steps='[{"step":"Buka halaman detail lowongan yang ingin dilamar.", "img":"../assets/img/tentang/daftar1.png"}, {"step":"Isi form pendaftaran.", "img":"../assets/img/tentang/daftar2.png"}, {"step":"Klik tombol Kirim.", "img":"../assets/img/tentang/daftar3.png"}, {"step":"Tunggu konfirmasi dari admin instansi terkait seleksi kriteria pendaftaran."}]'>Lihat</button>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cara Daftar" data-steps='[{"step":"Buka halaman detail lowongan yang ingin dilamar.", "img":"../assets/img/tentang/daftar1.png"}, {"step":"Lihat detail lowongan, dan pastikan Kamu sesuai kriteria yaa! Lalu Kamu bisa klik Daftar Sekarang.", "img":"../assets/img/tentang/daftar2.png"}, {"step":"Masuk ke Dashboar user, lalu klik Pengajuan.", "img":"../assets/img/tentang/daftar3.png"}, {"step":"Tunggu konfirmasi dari admin instansi terkait seleksi kriteria pendaftaran."}]'>Lihat</button>
                         </div>
 
                         <!-- Cek Status -->
@@ -63,6 +63,17 @@
                             <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Status" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/dashboard.png"}, {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/status2.png"}, {"step":"Status akan tertera pada tabel, dan jika Anda diterima, maka anda bisa melengkapi dokumen persyaratan lainnya.", "img":"../assets/img/tentang/status3.png"}]'>Lihat</button>
                         </div>
 
+                        <!-- Unggah Persyaratan -->
+                        <div class="contact__card-box">
+                            <div class="contact__card-info">
+                                <i class="bx bx-cloud-upload"></i>
+                                <div>
+                                    <h3 class="contact__card-title">Unggah Persyaratan</h3>
+                                </div>
+                            </div>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Persyaratan" data-steps='[{"step":"Klik bagian foto profil pada navbar.", "img":"../assets/img/tentang/dashboard.png"}, {"step":"Masuk ke menu Status Pengajuan.", "img":"../assets/img/tentang/status2.png"}, {"step":"Status akan tertera pada tabel, dan jika Anda diterima, maka anda bisa melengkapi dokumen persyaratan lainnya.", "img":"../assets/img/tentang/status3.png"}]'>Lihat</button>
+                        </div>
+
                         <!-- Unggah Logbook -->
                         <div class="contact__card-box">
                             <div class="contact__card-info">
@@ -74,10 +85,21 @@
                             <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Logbook" data-steps='[{"step":"Masuk ke dashboard user, dan klik unggah logbook", "img":"../assets/img/tentang/dashboard1.png"}, {"step":"Klik input logbook pada kegiatan aktif yang Anda jalani.", "img":"../assets/img/tentang/logbook1.png"}, {"step":"Isi logbook harian Anda.", "img":"../assets/img/tentang/logbook2.png"}]'>Lihat</button>
                         </div>
 
+                        <!-- Unggah Laporan Akhir -->
+                        <div class="contact__card-box">
+                            <div class="contact__card-info">
+                                <i class="bx bxs-file-plus"></i>
+                                <div>
+                                    <h3 class="contact__card-title">Laporan Akhir</h3>
+                                </div>
+                            </div>
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Laporan Akhir" data-steps='[{"step":"Masuk ke dashboard user, dan klik unggah logbook", "img":"../assets/img/tentang/dashboard1.png"}, {"step":"Klik input logbook pada kegiatan aktif yang Anda jalani.", "img":"../assets/img/tentang/logbook1.png"}, {"step":"Isi logbook harian Anda.", "img":"../assets/img/tentang/logbook2.png"}]'>Lihat</button>
+                        </div>
+
                         <!-- Cek Sertifikat -->
                         <div class="contact__card-box">
                             <div class="contact__card-info">
-                                <i class="bx bx-certificate"></i>
+                                <i class="bx bxs-file-export"></i>
                                 <div>
                                     <h3 class="contact__card-title">Cek Sertifikat</h3>
                                 </div>
@@ -120,15 +142,18 @@
             const modalTitle = tutorialModal.querySelector('.modal-title');
             const modalSteps = tutorialModal.querySelector('#modalSteps');
 
+            // Set title modal
             modalTitle.textContent = title;
 
-            // Generate list items based on steps, checking for 'img'
+            // Bersihkan dan masukkan langkah baru
+            modalSteps.innerHTML = ''; // Bersihkan modal lama
             modalSteps.innerHTML = steps.map(step => {
-                const hasImage = step.img && step.img.trim() !== ""; // Check if img exists and is not empty
+                const hasImage = step.img && step.img.trim() !== ""; // Check jika img ada
+                const timestamp = new Date().getTime(); // Cache buster
                 return `
                     <li class="mb-3">
                         <p>${step.step}</p>
-                        ${hasImage ? `<img src="${step.img}" alt="Step Image" class="img-fluid" />` : ""}
+                        ${hasImage ? `<img src="${step.img}?v=${timestamp}" alt="Step Image" class="img-fluid" />` : ""}
                     </li>
                 `;
             }).join('');
