@@ -14,10 +14,10 @@
             </a>
         </div>
 
-        <form id="pengajuanForm" action="update_profile.php" class="form-profile" method="POST" enctype="multipart/form-data">
+        <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <!-- Dropdown Instansi -->
             <div class="mb-3">
-                <label for="instansi" class="form-label">Instansi yang Dipilih</label>
+                <label for="instansi" class="form-label">Instansi yang Dituju</label>
                 <select class="form-control" id="instansi" name="instansi" required>
                     <option value="" disabled selected>Pilih Instansi</option>
                     <option value="Instansi 1">Dinas Komunikasi dan Informatika Kab Sidoarjo</option>
@@ -45,14 +45,31 @@
                     <option value="Pengajuan 1">Magang</option>
                     <option value="Pengajuan 2">Kerja Praktek</option>
                     <option value="Pengajuan 3">PKL</option>
-                    <option value="Pengajuan 4">Pengajuan Lainnya</option>
+                    <option value="Pengajuan 4">Penelitian</option>
                 </select>
             </div>
 
-            <!-- Jumlah Orang -->
+            <!-- Dropdown Kelompok/Pribadi -->
             <div class="mb-3">
-                <label for="jumlah_orang" class="form-label">Jumlah Orang</label>
-                <input type="number" class="form-control" id="jumlah_orang" name="jumlah_orang" min="1" required>
+                <label for="kelompok_pribadi" class="form-label">Personil</label>
+                <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi" required>
+                    <option value="" disabled selected>Pilih Personil</option>
+                    <option value="Kelompok">Kelompok</option>
+                    <option value="Pribadi">Pribadi</option>
+                </select>
+            </div>
+
+            <!-- Jumlah Orang (Disembunyikan saat "Pribadi" dipilih) -->
+            <div class="mb-3" id="jumlahAnggota" style="display: none;">
+                <label for="jumlah_orang" class="form-label">Jumlah Anggota</label>
+                <input type="number" class="form-control" id="jumlah_orang" name="jumlah_orang" min="1">
+            </div>
+
+            <!-- Daftar Anggota (Disembunyikan saat "Pribadi" dipilih) -->
+            <div class="mb-3" id="daftarAnggota" style="display: none;">
+                <label for="daftar_anggota" class="form-label">Daftar Anggota</label>
+                <textarea class="form-control" id="daftar_anggota" name="daftar_anggota" rows="3"></textarea>
+                <small class="text-muted">Masukkan nama anggota (pisahkan dengan koma jika lebih dari satu)</small>
             </div>
 
             <!-- Tanggal Mulai dan Selesai -->
@@ -65,11 +82,18 @@
                 <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" required>
             </div>
 
+            <!-- Upload KTP -->
+            <div class="mb-3">
+                <label for="ktp" class="form-label">Upload KTP</label>
+                <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf" required>
+                <small class="text-muted">Upload semua KTP terdaftar jadikan 1 file PDF</small>
+            </div>
+
             <!-- Upload CV -->
             <div class="mb-3">
                 <label for="cv" class="form-label">Upload CV</label>
-                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
-                <small class="text-muted">Pilih file CV (PDF, DOC, DOCX)</small>
+                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" required>
+                <small class="text-muted">Pilih file CV (PDF)</small>
             </div>
 
             <!-- Tombol Submit -->
@@ -79,14 +103,20 @@
 </div>
 
 <script>
-    // Event listener untuk form submit
-    document.getElementById("pengajuanForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Mencegah form melakukan submit langsung
+    // Function to toggle the visibility of fields based on the "Personil" selection
+    document.getElementById("kelompok_pribadi").addEventListener("change", function() {
+        var kelompok = document.getElementById("kelompok_pribadi").value;
+        var jumlahAnggota = document.getElementById("jumlahAnggota");
+        var daftarAnggota = document.getElementById("daftarAnggota");
 
-        // Tampilkan alert setelah klik kirim
-        alert("Pendaftaran berhasil!");
-
-        // Redirect ke halaman status_pengajuan.php
-        window.location.href = "status_pengajuan.php";
+        if (kelompok === "Kelompok") {
+            // Show fields for group members
+            jumlahAnggota.style.display = "block";
+            daftarAnggota.style.display = "block";
+        } else {
+            // Hide fields for group members
+            jumlahAnggota.style.display = "none";
+            daftarAnggota.style.display = "none";
+        }
     });
 </script>
