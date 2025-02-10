@@ -66,7 +66,7 @@
 
             <!-- Upload Image -->
             <div class="mb-3">
-                <img src="img/login.jpeg" alt="gambaredit" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+                <img src="../assets/img/login.jpeg" alt="gambaredit" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
                 <input type="file" class="form-control" id="image" name="image" accept="image/*" placeholder="Masukkan Gambar (OPSIONAL)">
             </div>
 

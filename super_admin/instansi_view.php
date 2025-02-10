@@ -18,10 +18,10 @@
         </div>
         
         <!-- Table -->
-        <div class="card shadow-lg">
+        <div class="card ">
             <div class="card-body">
                 <table id="table_instansi" class="table table-bordered table-hover text-center align-middle">
-                    <thead class="table-dark">
+                    <thead >
                         <tr>
                             <th>No.</th>
                             <th>Nama</th>
@@ -40,7 +40,7 @@
                             <td>Dinas ini berdiri sejak tahun sekian</td>
                             <td>0891234432</td>
                             <td>
-                                <img src="img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
                             </td>
                             <td>
                                 <a href="instansi_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">

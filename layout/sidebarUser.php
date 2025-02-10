@@ -10,7 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
 </head>
 
@@ -82,6 +81,13 @@
                 </form> -->
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
+                        <!-- Tombol Toggle Dark Mode -->
+                        <li class="nav-item d-flex align-items-center me-5">
+                            <button id="mode-toggle" class="mode-toggle">
+                                <i id="mode-icon" class="bi bi-moon-fill"></i>
+                            </button>
+                        </li>
+                        
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                                 <img src="../assets/img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">

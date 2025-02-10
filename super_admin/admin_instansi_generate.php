@@ -7,7 +7,7 @@
         <div class="card p-4">
             <div class="row">
                 <div class="col-md-4 text-center">
-                    <img src="img/login.jpeg" alt="Gambar User" class="img-thumbnail mb-5" width="150">
+                    <img src="../assets/img/login.jpeg" alt="Gambar User" class="img-thumbnail mb-5" width="150">
                 </div>
                 <div class="col-md-8">
                     <table class="table table-borderless">

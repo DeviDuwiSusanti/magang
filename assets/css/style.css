@@ -94,6 +94,8 @@ body.dark-theme {
     Color changes in some parts of 
     the website, in dark theme 
 ==========*/
+
+
 .dark-theme .swiper-button-next,
 .dark-theme .swiper-button-prev {
   border: 3px solid var(--border-color);
@@ -118,7 +120,7 @@ body.dark-theme {
 .dark-theme .value__accordion-arrow,
 .dark-theme .contact__orbe,
 .dark-theme .contact__card i,
-.dark-theme .contact__card-button {
+.dark-theme .contact__card-button{
   background-color: var(--container-color);
 }
 
@@ -133,6 +135,7 @@ body.dark-theme {
 .dark-theme::-webkit-scrollbar-thumb:hover {
   background-color: #56575d;
 }
+
 
 /*=============== REUSABLE CSS CLASSES ===============*/
 .container {
@@ -1473,5 +1476,7 @@ body.dark-theme {
     height: 55px;
   }
 }
+
+
 
 /*# sourceMappingURL=style.css.map */

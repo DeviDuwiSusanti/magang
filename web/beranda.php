@@ -20,17 +20,8 @@
 
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
-    <link rel="stylesheet" href="../assets/css/home.css" />
-    <link rel="stylesheet" href="../assets/css/beranda.css" />
+    <link rel="stylesheet" href="../assets/css/web.css" />
     <title>Home</title>
-    <style>
-        .lowongan .lowongans {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-    </style>
 </head>
 
 <body>

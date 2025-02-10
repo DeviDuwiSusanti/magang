@@ -30,7 +30,7 @@
                         <td>3 Bulan</td>
                         <td><a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
-                        <a href="logbook.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
+                        <a href="unggah_persyaratan.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
                          Lengkapi Dokumen</a></td>
                     </tr>
                     <!-- Data 2 -->
@@ -42,7 +42,7 @@
                         <td>6 Bulan</td>
                         <td><a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
                         <i class="bi bi-eye"></i></a>
-                        <a href="logbook.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
+                        <a href="unggah_persyaratan.php" class="text-decoration-none border p-2" title="Lengkapi Dokumen">
                         Lengkapi Dokumen</a></td>
                     </tr>
                     <tr>

@@ -19,7 +19,7 @@
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/lowongan.css" />
-    <link rel="stylesheet" href="../assets/css/home.css"/>
+    <link rel="stylesheet" href="../assets/css/web.css" />
     <style>
         .transparent-img {
             filter: grayscale(100%);

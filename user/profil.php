@@ -58,7 +58,7 @@
                         </table>
 
                         <div class="d-grid">
-                            <a href="edit_profil.php" class="btn btn-primary">
+                            <a href="profil_edit.php" class="btn btn-primary">
                                 <i class="bi bi-pencil"></i> Edit Profile
                             </a>
                         </div>
