@@ -3,7 +3,7 @@
 <div class="main-content p-4">
     <div class="container-fluid">
         <!-- Heading Dashboard -->
-        <h1 class="mb-4">Daftar Kegiatan</h1>
+        <h1 class="mb-4">Daftar Histori Kegiatan</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Tabel Histori Kegiatan</li>
         </ol>

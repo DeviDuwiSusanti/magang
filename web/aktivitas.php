@@ -9,6 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="../assets/css/style.css" />
     <link rel="stylesheet" href="../assets/css/aktiv.css" />
+    <link rel="stylesheet" href="../assets/css/low.css" />
 </head>
 <body>
 
@@ -18,6 +19,12 @@
 <br><br><br>
     <div class="container mt-5">
         <h1 class="text-center mb-4">Tabel Kegiatan Aktif</h1>
+        <div class="search-container" style="text-align: center; margin-bottom: 20px;">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari Mahasiswa Aktif..." />
+                <i id="searchIcon" class="fas fa-search search-icon"></i>
+            </div>
+        </div>
         <table>
             <thead class="table-primary">
                 <tr>
