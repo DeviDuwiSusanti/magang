@@ -14,7 +14,7 @@
             <table id="myTable" class="table table-striped table-bordered">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>No</th>
                         <th>Nama Peserta</th>
                         <th>Program Magang</th>
                         <th>Tanggal Magang</th>
