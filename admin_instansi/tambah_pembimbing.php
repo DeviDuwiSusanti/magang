@@ -8,7 +8,7 @@
         </ol>
         <div class="dropdown-divider mb-3"></div>
         <div class="mb-4 text-end">
-            <a href="view_bidang.php" class="btn btn-danger">
+            <a href="daftar_pembimbing.php" class="btn btn-danger">
                 <i class="bi bi-arrow-left-circle me-1"></i>
                 Kembali
             </a>

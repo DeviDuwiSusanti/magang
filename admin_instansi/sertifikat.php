@@ -16,7 +16,8 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Peserta</th>
-                        <th>Program Magang</th>
+                        <th>Jenis Kegiatan</th>
+                        <th>Bidang</th>
                         <th>Tanggal Magang</th>
                         <th>Status Sertifikat</th>
                         <th>Aksi</th>
@@ -26,7 +27,8 @@
                     <tr>
                         <td>1</td>
                         <td>Ahmad Fauzi</td>
-                        <td>Program IT</td>
+                        <td>Magang</td>
+                        <td>Informatika</td>
                         <td>01 Jan 2025 - 30 Mar 2025</td>
                         <td><span class="badge bg-warning text-dark">Belum Diterbitkan</span></td>
                         <td>
@@ -38,7 +40,8 @@
                     <tr>
                         <td>2</td>
                         <td>Siti Aminah</td>
-                        <td>Program Desain</td>
+                        <td>PKL</td>
+                        <td>Desain Grafis</td>
                         <td>05 Feb 2025 - 05 Mei 2025</td>
                         <td><span class="badge bg-success">Sudah Diterbitkan</span></td>
                         <td>
