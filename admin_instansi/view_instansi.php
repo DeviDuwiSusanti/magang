@@ -39,7 +39,7 @@
 
                         <div class="d-grid">
                             <a href="edit_instansi.php" class="btn btn-primary">
-                                <i class="bi bi-pencil me-1"></i> Edit Profile
+                                <i class="bi bi-pencil me-1"></i> Edit Profile Instansi
                             </a>
                         </div>
                     </div>
@@ -48,3 +48,5 @@
         </div>
     </div>
 </div>
+
+<?php include "footer.php"; ?>

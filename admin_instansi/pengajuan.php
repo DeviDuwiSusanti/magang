@@ -28,12 +28,15 @@
                             <td>Mishbahus Surur</td>
                             <td>Teknologi Informasi</td>
                             <td>Magang</td>
-                            <td>4</td>
+                            <!-- <td>4</td> -->
+                            <td>
+                                <a href="#" class="show-detail" title="Lihat Detail" data-detail='["Mishbahus Surur", "Revika Syariqatun Alifia", "Devi Dwi Susanti", "Hendra Hartono"]'>4</a>
+                            </td>
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
                             <td>
                                 <a href="terima.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check"></i> Terima
+                                    <i class="bi bi-check-circle"></i> Terima
                                 </a>
                                 <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
                                     <i class="bi bi-x-circle"></i> Tolak
@@ -45,12 +48,15 @@
                             <td>Syaiful Hidayat</td>
                             <td>Teknologi Informasi</td>
                             <td>Magang</td>
-                            <td>4</td>
+                            <!-- <td>4</td> -->
+                            <td>
+                                <a href="#" class="show-detail" title="Lihat Detail" data-detail='["Syaiful Hidayat", "Siti Aisyah", "Andi Zainuri"]'>3</a>
+                            </td>
                             <td>02-01-2025</td>
                             <td>02-05-2025</td>
                             <td>
                                 <a href="terima.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check"></i> Terima
+                                    <i class="bi bi-check-circle"></i> Terima
                                 </a>
                                 <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
                                     <i class="bi bi-x-circle"></i> Tolak
@@ -63,3 +69,5 @@
         </div>
     </div>
 </div>
+
+<?php include "footer.php"; ?>
