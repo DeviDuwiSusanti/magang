@@ -1,4 +1,4 @@
-<?php include "header.php"; ?>
+<?php include "../layout/header.php"; ?>
 
 <div class="container mt-4">
     <h1 class="text-center"><i class="bi bi-gear"></i> Pengaturan</h1>

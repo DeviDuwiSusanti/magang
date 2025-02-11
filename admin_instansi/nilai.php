@@ -1,4 +1,4 @@
-<?php include 'header.php'; ?>
+<?php include '../layout/header.php'; ?>
 
 <div class="main-content p-4">
     <h1 class="mb-4">Manajemen Nilai Magang</h1>
