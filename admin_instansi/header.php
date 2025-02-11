@@ -68,6 +68,12 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
+                    <a href="nilai.php" class="sidebar-link">
+                        <i class="bi bi-clipboard-check"></i>
+                        <span>Penilaian</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
                     <a href="sertifikat.php" class="sidebar-link">
                         <i class="bi bi-award"></i>
                         <span>Sertifikat</span>
@@ -90,13 +96,7 @@
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
                 <div class="navbar-collapse collapse">
-                    <!-- <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <span class="navbar-text h5 text-primary fw-bold">Diskominfo Sidoarjo</span>
-                        </li>
-                    </ul> -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- Tombol Toggle Dark Mode -->
                         <li class="nav-item d-flex align-items-center me-5">
                             <button id="mode-toggle" class="mode-toggle">
                                 <i id="mode-icon" class="bi bi-moon-fill"></i>
@@ -112,10 +112,6 @@
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Edit Profile</span>
                                 </a>
-                                <!-- <a href="../web/beranda.php" class="dropdown-item">
-                                    <i class="bi bi-bar-chart-line-fill"></i>
-                                    <span>Kembali ke Beranda</span>
-                                </a> -->
                                 <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
@@ -169,7 +165,6 @@
                 var tr = $(this).closest('tr');
                 var row = table.row(tr);
 
-                // Jika baris yang diklik belum terbuka, tutup semua child row yang sedang terbuka
                 if (!row.child.isShown()) {
                     $('#myTable tbody tr.shown').not(tr).each(function() {
                         table.row(this).child.hide();

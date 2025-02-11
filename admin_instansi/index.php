@@ -8,9 +8,7 @@
             <li class="breadcrumb-item active">Admin Instansi</li>
         </ol>
         <div class="row">
-            <!-- Kartu 1 -->
             <div class="col-lg-3 col-md-6 mb-4">
-                <!-- shadow sm -->
                 <div class="card border-0">
                     <div class="card-body">
                         <h5 class="card-title">Kelola Instansi</h5>
@@ -20,7 +18,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Kartu 2 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card border-0">
                     <div class="card-body">
@@ -31,7 +28,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Kartu 3 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card border-0">
                     <div class="card-body">
@@ -42,7 +38,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Kartu 4 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card border-0">
                     <div class="card-body">
