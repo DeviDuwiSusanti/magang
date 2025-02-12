@@ -156,7 +156,7 @@
                     </div>
 
                     <div class="view-all" style="text-align: center; margin-top: 20px;">
-                        <a href="detaillow.php" style="text-decoration: none; font-weight: bold; color: #007BFF;">Lihat Selengkapnya →</a>
+                        <a href="lowongan.php" style="text-decoration: none; font-weight: bold; color: #007BFF;">Lihat Selengkapnya →</a>
                     </div>
                 </div>
 
