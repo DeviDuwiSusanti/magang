@@ -93,22 +93,22 @@
                                 <img src="../assets/img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="profil.php" class="dropdown-item">
+                                <a href="profil_edit.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
-                                    <span>Lihat Profil</span>
-                                </a>
-                                <a href="../web/beranda.php" class="dropdown-item">
-                                    <i class="bi bi-bar-chart-line-fill"></i>
-                                    <span>Kembali ke Beranda</span>
+                                    <span>Edit Profil</span>
                                 </a>
                                 <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item">
+                                <a href="bantuan.php" class="dropdown-item">
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
+                                </a>
+                                <a href="#" class="dropdown-item">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Logout</span>
                                 </a>
                             </div>
                         </li>
