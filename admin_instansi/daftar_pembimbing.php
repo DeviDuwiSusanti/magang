@@ -1,4 +1,5 @@
-<?php include "header.php"; ?>
+<?php include "../layout/header.php"; ?>
+
 
 <div class="main-content p-3">
     <div class="container-fluid">

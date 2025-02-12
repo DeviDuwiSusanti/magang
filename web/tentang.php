@@ -125,15 +125,15 @@
                             <div class="contact__card-info">
                                 <i class="bx bxs-file-export"></i>
                                 <div>
-                                    <h3 class="contact__card-title">Cek Sertifikat</h3>
+                                    <h3 class="contact__card-title">Cek Sertifikat dan Nilai</h3>
                                 </div>
                             </div>
-                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat" 
+                            <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Cek Sertifikat dan Nilai" 
                             data-steps='[{"step":"Masuk ke dashboard user, dan klik Histori", "img":"../assets/img/tentang/dashboard.png"}, 
                             {"step":"Kamu akan diarahkan ke halaman Histori.", "img":"../assets/img/tentang/histori.png"},
                             {"step":"Klik ikon detail."},
-                            {"step":"Klik Cetak Sertifikat.", "img":"../assets/img/tentang/detail_histori.png"},
-                            {"step":"Jika sertifikat belum tersedia, artinya admin instansi belum menggunggah sertifikat Kamu.]'>Lihat</button>
+                            {"step":"Klik Cetak Sertifikat atau Nilai.", "img":"../assets/img/tentang/detail_histori.png"},
+                            {"step":"Jika sertifikat atau nilai belum tersedia, artinya admin instansi belum menggunggah sertifikat dan nilai Kamu. Jadi bersabar yaa."}]'>Lihat</button>
                         </div>
                     </div>
                 </div>
@@ -146,7 +146,7 @@
     <!-- Modal -->
     <div class="modal fade" id="tutorialModal" tabindex="-1" aria-labelledby="tutorialModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content text-dark">
                 <div class="modal-header">
                     <h5 class="modal-title" id="tutorialModalLabel">Modal title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

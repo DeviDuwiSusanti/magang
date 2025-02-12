@@ -20,7 +20,7 @@
 
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/web.css" />
-    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/style2.css" />
     <title>Home</title>
 </head>
 

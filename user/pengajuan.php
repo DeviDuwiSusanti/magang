@@ -65,7 +65,7 @@
                 <input type="number" class="form-control" id="jumlah_orang" name="jumlah_orang" min="1">
             </div>
 
-            <!-- Daftar Anggota (Disembunyikan saat "Pribadi" dipilih) -->
+            <!-- Daftar Anggota -->
             <div class="mb-3" id="daftarAnggota" style="display: none;">
                 <label for="daftar_anggota" class="form-label">Daftar Anggota</label>
                 <textarea class="form-control" id="daftar_anggota" name="daftar_anggota" rows="3"></textarea>
@@ -97,26 +97,68 @@
             </div>
 
             <!-- Tombol Submit -->
-            <button type="submit" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i>Kirim</button>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-floppy me-1"></i>Kirim
+            </button>
         </form>
     </div>
 </div>
 
-<script>
-    // Function to toggle the visibility of fields based on the "Personil" selection
-    document.getElementById("kelompok_pribadi").addEventListener("change", function() {
-        var kelompok = document.getElementById("kelompok_pribadi").value;
-        var jumlahAnggota = document.getElementById("jumlahAnggota");
-        var daftarAnggota = document.getElementById("daftarAnggota");
+<!-- Modal Sukses -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Pendaftaran Berhasil!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Pengajuan Anda telah berhasil dikirim. Silakan tunggu konfirmasi.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        if (kelompok === "Kelompok") {
-            // Show fields for group members
-            jumlahAnggota.style.display = "block";
-            daftarAnggota.style.display = "block";
+<!-- Modal Gagal -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Pendaftaran Gagal!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Terjadi kesalahan, silakan coba lagi nanti.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php include "../layout/footerDashboard.php" ?>
+
+<script>
+    document.getElementById("pengajuanForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        var isSuccess = Math.random() < 0.7; // 70% kemungkinan sukses
+
+        if (isSuccess) {
+            var successModal = new bootstrap.Modal(document.getElementById("successModal"));
+            successModal.show();
         } else {
-            // Hide fields for group members
-            jumlahAnggota.style.display = "none";
-            daftarAnggota.style.display = "none";
+            var errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+            errorModal.show();
         }
+    });
+
+    document.getElementById("kelompok_pribadi").addEventListener("change", function() {
+        var kelompok = this.value;
+        document.getElementById("jumlahAnggota").style.display = kelompok === "Kelompok" ? "block" : "none";
+        document.getElementById("daftarAnggota").style.display = kelompok === "Kelompok" ? "block" : "none";
     });
 </script>

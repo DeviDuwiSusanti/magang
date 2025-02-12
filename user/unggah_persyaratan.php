@@ -39,3 +39,5 @@
         container.appendChild(input);
     }
 </script>
+
+<?php include "../layout/footerDashboard.php" ?>

@@ -40,7 +40,7 @@
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="../user/dashboard.php">
+        <a class="navbar-brand" href="../user/dashboard.php" data-bs-toggle="tooltip" title="Login / Daftar">
             <img 
                 src="../assets/img/avatar1.png" 
                 alt="Logo" 
@@ -50,3 +50,13 @@
         </a>
     </nav>
 </header>
+
+<!-- Script untuk mengaktifkan tooltip Bootstrap -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
