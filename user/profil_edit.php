@@ -97,6 +97,7 @@
     </div>
 </div>
 
+<?php include "../layout/footerDashboard.php" ?>
 <script>
   function previewFile() {
     const fileInput = document.getElementById('image');

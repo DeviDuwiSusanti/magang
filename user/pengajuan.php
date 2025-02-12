@@ -139,6 +139,7 @@
         </div>
     </div>
 </div>
+<?php include "../layout/footerDashboard.php" ?>
 
 <script>
     document.getElementById("pengajuanForm").addEventListener("submit", function(event) {
