@@ -26,7 +26,7 @@
             </div>
             <ul class="sidebar-nav">
                 <li class="sidebar-item">
-                    <a href="index.php" class="sidebar-link">
+                    <a href="index.php" class="sidebar-link active">
                         <i class="bi bi-speedometer"></i>
                         <span>Dashboard</span>
                     </a>
@@ -46,7 +46,7 @@
                 <li class="sidebar-item">
                     <a href="view_bidang.php" class="sidebar-link">
                         <i class="bi bi-building-fill-add"></i>
-                        <span>Bidang</span>
+                        <span>Kelola Bidang</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -87,7 +87,7 @@
                 </li>
             </ul>
             <div class="sidebar-footer">
-                <a href="#" class="sidebar-link">
+                <a href="logout.php" class="sidebar-link">
                     <i class="bi bi-box-arrow-left"></i>
                     <span>Logout</span>
                 </a>
