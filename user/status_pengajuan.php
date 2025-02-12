@@ -9,7 +9,9 @@
         </ol>
 
         <!-- Tombol Tambah Pengajuan -->
-        <a href="pengajuan.php" class="btn btn-primary mb-4 ">Tambah Pengajuan</a><br><br>
+        <div class="d-flex justify-content-end mb-4">
+            <a href="pengajuan.php" class="btn btn-primary">Tambah Pengajuan</a>
+        </div>
 
         <!-- Tabel -->
         <div class="bungkus">
@@ -29,7 +31,7 @@
                         <td class="text-center">1</td>
                         <td>Diskominfo Sidoarjo</td>
                         <td>Cyber Security</td>
-                        <td><span class="badge bg-success">Diterima</span> <span style="color: green; font-size: 20px;">&#10004;</span></td>
+                        <td>Diterima <span style="color: green; font-size: 20px;">&#10004;</span></td>
                         <td class="text-center">3 Bulan</td>
                         <td class="text-center">
                         <a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
@@ -40,7 +42,7 @@
                         <td class="text-center">2</td>
                         <td>Diskominfo Medan</td>
                         <td>Website Developer</td>
-                        <td><span class="badge bg-success">Diterima</span> <span style="color: green; font-size: 20px;">&#10004;</span></td>
+                        <td>Diterima <span style="color: green; font-size: 20px;">&#10004;</span></td>
                         <td class="text-center">6 Bulan</td>
                         <td class="text-center">
                         <a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
@@ -50,7 +52,7 @@
                         <td class="text-center">3</td>
                         <td>Telkom Indonesia</td>
                         <td>UI/UX</td>
-                        <td><span class="badge bg-danger">Ditolak</span> <span style="color: red; font-size: 20px;">&#10006;</span></td>
+                        <td>Ditolak <span style="color: red; font-size: 20px;">&#10006;</span></td>
                         <td class="text-center">4 Bulan</td>
                         <td class="text-center">
                         <a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
@@ -61,5 +63,3 @@
         </div>
     </div>
 </div>
-
-<?php include "../layout/footerDashboard.php" ?>
