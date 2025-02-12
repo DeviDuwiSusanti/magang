@@ -139,7 +139,8 @@ a.sidebar-link {
 
 a.sidebar-link:hover {
     background-color: rgba(255, 255, 255, .075);
-    border-left: 3px solid #ffcc00;
+    /* border-left: 3px solid #ffcc00; */
+    border-left: 3px solid #3b7ddd;
 }
 
 .sidebar-item {
@@ -183,13 +184,14 @@ a.sidebar-link:hover {
 
 #sidebar:not(.expand) a.sidebar-link.active {
     background-color: rgba(255, 255, 255, 0.075);
-    /* border-left: 3px solid #3b7ddd; */
-    border-left: 3px solid #ffcc00;
+    border-left: 3px solid #3b7ddd;
+    /* border-left: 3px solid #ffcc00; */
 }
 
 #sidebar.expand a.sidebar-link.active {
     background-color: rgba(255, 255, 255, 0.075);
-    border-left: 3px solid #ffcc00;
+    /* border-left: 3px solid #ffcc00; */
+    border-left: 3px solid #3b7ddd;
     font-weight: bold;
 }
 
