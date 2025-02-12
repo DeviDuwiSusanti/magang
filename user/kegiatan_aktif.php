@@ -57,3 +57,5 @@
         </div>
     </div>
 </div>
+
+<?php include "../layout/footerDashboard.php" ?>
