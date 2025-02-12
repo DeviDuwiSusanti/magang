@@ -17,7 +17,7 @@
     <!-- AOS JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/style2.css" />
     <link rel="stylesheet" href="../assets/css/low.css" />
     <title>Home</title>
 </head>

@@ -9,7 +9,7 @@
         </ol>
 
         <!-- Tombol Tambah Pengajuan -->
-        <a href="pengajuan.php" class="btn btn-primary mb-4 float-end">Tambah Pengajuan</a><br><br>
+        <a href="pengajuan.php" class="btn btn-primary mb-4 ">Tambah Pengajuan</a><br><br>
 
         <!-- Tabel -->
         <div class="bungkus">
