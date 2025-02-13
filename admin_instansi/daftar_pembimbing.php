@@ -1,6 +1,5 @@
 <?php include "../layout/header.php"; ?>
 
-
 <div class="main-content p-3">
     <div class="container-fluid">
         <h1 class="mb-4">Daftar Pembimbing</h1>
@@ -37,10 +36,10 @@
                             <td>087968743321</td>
                             <td>Bangkalan</td>
                             <td>
-                                <a href="edit_bidang.php" class="btn btn-warning btn-sm">
+                                <a href="edit_pembimbing.php" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
+                                <a href="daftar_pembimbing.php" class="btn btn-danger btn-sm" onclick="event.preventDefault(); showDeleteConfirmation(this.href);">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
                             </td>
@@ -53,10 +52,10 @@
                             <td>085743213344</td>
                             <td>Surabaya</td>
                             <td>
-                                <a href="edit_bidang.php" class="btn btn-warning btn-sm">
+                                <a href="edit_pembimbing.php" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
+                                <a href="daftar_pembimbing.php" class="btn btn-danger btn-sm" onclick="event.preventDefault(); showDeleteConfirmation(this.href);">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
                             </td>

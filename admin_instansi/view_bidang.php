@@ -41,7 +41,7 @@
                                 <a href="edit_bidang.php" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
+                                <a href="view_bidang.php" class="btn btn-danger btn-sm" onclick="event.preventDefault(); showDeleteConfirmation(this.href);">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
                             </td>
@@ -56,7 +56,7 @@
                                 <a href="edit_bidang.php" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
+                                <a href="view_bidang.php" class="btn btn-danger btn-sm" onclick="event.preventDefault(); showDeleteConfirmation(this.href);">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
                             </td>

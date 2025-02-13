@@ -36,9 +36,8 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i> Simpan Perubahan</button>
+            <button type="submit" class="btn btn-primary edit" onclick="event.preventDefault(); alertEdit(this.href);"><i class="bi bi-floppy me-1"></i> Simpan Perubahan</button>
         </form>
-        <!-- <a href="bidang.php" class="btn btn-danger bi bi-arrow-left-circle"> Kembali</a> -->
     </div>
 </div>
 

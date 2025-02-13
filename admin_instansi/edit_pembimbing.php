@@ -2,9 +2,9 @@
 
 <div class="main-content p-4">
     <div class="container-fluid">
-        <h1 class="mb-4">Tambah Pembimbing</h1>
+        <h1 class="mb-4">Edit Pembimbing</h1>
         <ol class="breadcrumb mb-3">
-            <li class="breadcrumb-item active">Tambah Pembimbing Bidang</li>
+            <li class="breadcrumb-item active">Kelola Data Pembimbing Bidang</li>
         </ol>
         <div class="dropdown-divider mb-3"></div>
         <div class="mb-4 text-end">
@@ -60,7 +60,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary edit" onclick="event.preventDefault(); alertTambah(this.href);"><i class="bi bi-floppy me-1"></i> Simpan Perubahan</button>
+            <button type="submit" class="btn btn-primary edit" onclick="event.preventDefault(); alertEdit(this.href);"><i class="bi bi-floppy me-1"></i> Simpan Perubahan</button>
         </form>
     </div>
 </div>
