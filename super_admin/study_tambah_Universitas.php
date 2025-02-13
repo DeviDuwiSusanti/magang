@@ -40,3 +40,4 @@
         <a href="study_view.php" class="btn btn-danger mb-4 bi bi-arrow-left-circle"> Kembali</a>
     </div>
 </main>
+<?php include "footer.php" ?>

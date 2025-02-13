@@ -60,7 +60,7 @@
         </div>
     </div>
 </main>
-
+<?php include "footer.php" ?>
 <script>
     $(document).ready(function() {
         $('#table_instansi').DataTable({
