@@ -32,7 +32,8 @@
                 <button type="submit" name="tambah_study" class="btn btn-success w-100">Tambah Data Sekolah</button>
             </div>
         </form>
-        <a href="study_view.php" class="btn btn-danger mb-4 bi bi-arrow-left-circle"> Kembali</a>
+        <a href="study_view.php" class="btn btn-danger mb-4 bi bi-arrow-left-circle"> Kembali</a><br>
     </div>
 </main>
+
 <?php include "footer.php" ?>

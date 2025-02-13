@@ -52,27 +52,35 @@ li {
 h1 {
     font-weight: 600;
     font-size: 1.5rem;
+    color: var(--text-color);
 }
 
 body {
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 .wrapper {
     display: flex;
+    flex: 1;
 }
 
 .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     transition: all 0.35s ease-in-out;
     background-color: var(--bg-color);
 }
 
+/* CSS Default untuk Sidebar */
 #sidebar {
     width: 70px;
     min-width: 70px;
     z-index: 1000;
-    transition: all .25s ease-in-out;
+    transition: all 0.25s ease-in-out;
     background-color: #0e223e;
     display: flex;
     flex-direction: column;
@@ -132,6 +140,7 @@ a.sidebar-link {
 
 a.sidebar-link:hover {
     background-color: rgba(255, 255, 255, .075);
+    /* border-left: 3px solid #ffcc00; */
     border-left: 3px solid #3b7ddd;
 }
 
@@ -174,6 +183,19 @@ a.sidebar-link:hover {
     transition: all .2s ease-out;
 }
 
+#sidebar:not(.expand) a.sidebar-link.active {
+    background-color: rgba(255, 255, 255, 0.075);
+    border-left: 3px solid #3b7ddd;
+    /* border-left: 3px solid #ffcc00; */
+}
+
+#sidebar.expand a.sidebar-link.active {
+    background-color: rgba(255, 255, 255, 0.075);
+    /* border-left: 3px solid #ffcc00; */
+    border-left: 3px solid #3b7ddd;
+    font-weight: bold;
+}
+
 /* Navbar */
 .navbar {
     background-color: #FFF;
@@ -194,12 +216,7 @@ a.sidebar-link:hover {
     padding: 2rem;
     transition: all 0.3s ease-in-out;
     background-color: var(--bg-color);
-}
-
-/* Heading */
-h1 {
-    font-size: 1.5rem;
-    color: var(--text-color);
+    flex: 1;
 }
 
 .breadcrumb {
@@ -372,18 +389,31 @@ h1 {
 
 .edit {
     width: 100%;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    padding: 10px;
     border-radius: 5px;
 }
 
 table {
     background-color: var(--form-bg);
+
 }
 
 table th {
     color: var(--text-color);
+}
+
+td {
+    font-size: 14px;
+    color: var(--td-tabel);
+}
+
+p {
+    color: var(--text-color);
+}
+
+#bidang {
+    color: var(--text-mute);
 }
 
 /* Instansi */
@@ -403,6 +433,7 @@ table th {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     font-size: 14px;
+    overflow-x: auto;
 }
 
 .bungkus-2 {
@@ -414,6 +445,7 @@ table th {
     border-radius: 10px;
     box-shadow: var(--box-shadow);
     font-size: 14px;
+    overflow-x: auto;
 }
 
 .manage {
@@ -421,11 +453,6 @@ table th {
     font-size: 14px;
     font-weight: bold;
     border-radius: 5px;
-}
-
-td {
-    font-size: 14px;
-    color: var(--td-tabel);
 }
 
 .form-check-input {
@@ -436,40 +463,120 @@ td {
     background-color: var(--text-mute);
 }
 
-#bidang {
-    color: var(--text-mute);
+
+/* Fancy Footer Styles */
+.footer {
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    color: #f8f9fa;
+    padding: 30px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Custom Footer Styles */
-.footer {
-    background-color: #343a40; /* Warna latar gelap */
-    color: #f8f9fa; /* Warna teks terang */
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Garis atas tipis */
-    padding: 20px 0;
-    transition: background-color 0.3s ease;
-  }
-  
-  .footer a {
+.footer::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.05);
+    transform: rotate(15deg);
+}
+
+.footer .container {
+    position: relative;
+    z-index: 1;
+}
+
+.footer a {
     color: #f8f9fa;
     text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .footer a:hover {
-    color: #adb5bd; /* Warna saat hover */
-  }
-  
-  /* Responsif: Mengatur teks agar center pada perangkat kecil */
-  @media (max-width: 767.98px) {
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer a:hover {
+    color: #ffdd57; 
+    transform: translateY(-3px); 
+}
+
+.footer p,
+.footer small {
+    margin: 0;
+    line-height: 1.6;
+}
+
+@media (max-width: 767.98px) {
     .footer .text-md-start,
     .footer .text-md-end {
-      text-align: center !important;
-      margin-bottom: 10px;
+        text-align: center !important;
+        margin-bottom: 10px;
     }
-  }
-  
+}
 
+ 
+.show-detail {
+    color: var(--text-color);
+}
 
+.show-detail:hover {
+    color: var(--text-color);
+}
+
+.form-label {
+    color: var(--text-color);
+}
+
+.form-control {
+    background-color: var(--form-bg);
+    color: var(--text-color);
+}
+
+/* Modal Dokumen */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #0e223e, #3b7ddd);
+    padding: 1rem 1.5rem;
+    border-bottom: none;
+}
+
+.modal-header .modal-title {
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modal-header .btn-close {
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #fff;
+    opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    background: #fff;
+    padding: 1.5rem;
+    color: #333;
+}
+
+.modal-footer {
+    background: #f1f1f1;
+    border-top: 1px solid #ddd;
+    padding: 0.75rem 1.5rem;
+}
 
 
 

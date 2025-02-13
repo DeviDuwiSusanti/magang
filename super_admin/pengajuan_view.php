@@ -43,6 +43,66 @@
                                 </a>
                             </td>
                         </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Mishbahus Surur</td>
+                            <td>Diskominfo Sidoarjo</td>
+                            <td>Bidang Informatika</td>
+                            <td>Magang</td>
+                            <td>4</td>
+                            <td>02-01-2025</td>
+                            <td>02-05-2025</td>
+                            <td>
+                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Mishbahus Surur</td>
+                            <td>Diskominfo Sidoarjo</td>
+                            <td>Bidang Informatika</td>
+                            <td>Magang</td>
+                            <td>4</td>
+                            <td>02-01-2025</td>
+                            <td>02-05-2025</td>
+                            <td>
+                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Mishbahus Surur</td>
+                            <td>Diskominfo Sidoarjo</td>
+                            <td>Bidang Informatika</td>
+                            <td>Magang</td>
+                            <td>4</td>
+                            <td>02-01-2025</td>
+                            <td>02-05-2025</td>
+                            <td>
+                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Mishbahus Surur</td>
+                            <td>Diskominfo Sidoarjo</td>
+                            <td>Bidang Informatika</td>
+                            <td>Magang</td>
+                            <td>4</td>
+                            <td>02-01-2025</td>
+                            <td>02-05-2025</td>
+                            <td>
+                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </a>
+                            </td>
+                        </tr>
                         <!-- Tambahkan data lain di sini -->
                     </tbody>
                 </table>
