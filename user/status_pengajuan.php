@@ -7,6 +7,7 @@
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Tabel Histori Pengajuan</li>
         </ol>
+        <div class="mb-4 dropdown-divider"></div>
 
         <!-- Tombol Tambah Pengajuan -->
         <div class="d-flex justify-content-end mb-4">
@@ -63,3 +64,5 @@
         </div>
     </div>
 </div>
+
+<?php include "../layout/footerDashboard.php" ?>

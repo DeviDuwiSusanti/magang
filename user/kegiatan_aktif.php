@@ -7,6 +7,7 @@
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Tabel Kegiatan Aktif</li>
         </ol>
+        <div class="mb-4 dropdown-divider"></div>
 
         <!-- Tabel -->
         <div class="bungkus">
