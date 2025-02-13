@@ -75,11 +75,12 @@ body {
     background-color: var(--bg-color);
 }
 
+/* CSS Default untuk Sidebar */
 #sidebar {
     width: 70px;
     min-width: 70px;
     z-index: 1000;
-    transition: all .25s ease-in-out;
+    transition: all 0.25s ease-in-out;
     background-color: #0e223e;
     display: flex;
     flex-direction: column;

@@ -95,6 +95,9 @@
         </aside>
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
+                <button id="hamburger-menu" class="btn btn-outline-secondary d-lg-none me-3">
+                    <i class="bi bi-list"></i>
+                </button>
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item d-flex align-items-center me-5">
