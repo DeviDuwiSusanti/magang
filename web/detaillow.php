@@ -1,3 +1,11 @@
+<?php
+include "koneksi.php";
+if(isset($_GET['id_bidang'])){
+    $id_bidang = $_GET['id_bidang'];
+    
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
