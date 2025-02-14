@@ -1,3 +1,45 @@
+<?php
+session_start();
+require 'functions.php'; // Pastikan koneksi database tersedia
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    
+    // Cek apakah email ada di database
+    $query = "SELECT * FROM tb_user WHERE email = '$email'";
+    $result = mysqli_query($conn, $query);
+    
+    if (mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        
+        if ($user['status_active'] == 'Y' || $user['status_active'] == 'y' ) {
+            // Generate OTP (6 digit angka)
+            $otp = rand(100000, 999999);
+            $otp_expired = date("Y-m-d H:i:s", strtotime("+7 hours +2 minutes"));
+            
+            // Update OTP di database
+            $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email'";
+            mysqli_query($conn, $updateQuery);
+            
+            // Simpan email di sesi untuk verifikasi OTP
+            $_SESSION['email'] = $email;
+            
+            // Redirect ke halaman OTP verification
+            header("Location: otp.php");
+            exit();
+        } else {
+            echo "<script>alert('Akun tidak aktif!'); window.location='login.php';</script>";
+        }
+    } else {
+        echo "<script>alert('Email tidak ditemukan!'); window.location='login.php';</script>";
+    }
+}
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,13 +67,13 @@
                 <div class="col-md-6 right">
                     <div class="input-box">
                         <header>Log In</header>
-                        <form action="otp.php" method="POST">
+                        <form action="" method="POST">
                             <div class="input-field">
                                 <input type="email" class="input" name="email" required>
                                 <label for="email">Email</label>
                             </div>
                             <div class="input-field">
-                                <input type="submit" class="submit" name="login" value="Sign In">
+                                <button type="submit" name="login" class="submit">Sign In</button>
                             </div>
                         </form>
                         <p>Belum punya akun? <a href="register.php">Register Now</a></p>

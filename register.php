@@ -148,7 +148,7 @@
 
                             </div>
                                 <div class="input-field mt-3">
-                                    <input type="text" class="input" name="nim" maxlength="15" required>
+                                    <input type="text" class="input" name="nim" maxlength="15">
                                     <label for="nim">NIM</label>
                                 </div>
                         </div>

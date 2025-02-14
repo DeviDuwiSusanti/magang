@@ -93,12 +93,11 @@
 
     function register($POST) {
         global $conn;
-
+    
         $id_user = generateUserId($conn);
         $nama = $POST["nama"];
         $email = $POST["email"];
         $nik = $POST["nik"];
-        $nim = $POST["nim"];
         $nisn = $POST["nisn"];
         $pendidikan = $POST["pendidikan"];
         $jenis_kelamin = $POST["jenis_kelamin"];
@@ -108,8 +107,10 @@
         $telepone = $POST["telepone"];
         $level = $POST["level"];
         $gambar = uploadImage($_FILES["gambar"]);
+        $nim = isset($POST["nim"]) ? $POST["nim"] : NULL;
+    
 
-
+        
         if (isEmailRegistered($conn, $email)) {
             echo "<script>alert('Email Sudah Terdaftar');</script>";
             return 0;
@@ -122,13 +123,17 @@
             echo "<script>alert('NISN Sudah Terdaftar');</script>";
             return 0;
         }
-
+    
+        // Query untuk tb_user
         $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
+    
+        // Query untuk tb_profile_user (gunakan NULL jika NIM tidak ada)
         $query2 = "INSERT INTO tb_profile_user (id_user, nama, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat, gambar, id_pendidikan, create_by, telepone)
-                    VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
-        
+                    VALUES ('$id_user', '$nama', '$nik', '$nisn', " . ($nim ? "'$nim'" : "NULL") . ", '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
+    
         mysqli_query($conn, $query1);
         mysqli_query($conn, $query2);
         return mysqli_affected_rows($conn);
     }
+    
 ?>

@@ -1,13 +1,51 @@
+<?php
+session_start();
+include "functions.php";
+
+if (!isset($_SESSION['email'])) {
+    header("Location: login.php");
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $otp = $conn->real_escape_string($_POST['otp']);
+    $email = $_SESSION['email'];
+
+    // Cek OTP & waktu kedaluwarsa
+    $query = "SELECT * FROM tb_user WHERE email = '$email' AND otp = '$otp' AND otp_expired > NOW()";
+    $result = $conn->query($query);
+
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+
+        // Reset OTP setelah verifikasi
+        $conn->query("UPDATE tb_user SET otp = NULL, otp_expired = NULL WHERE email = '$email'");
+
+        // Redirect sesuai level
+        switch ($user['level']) {
+            case 1: header("Location: super_admin/"); break;
+            case 2: header("Location: admin_instansi/"); break;
+            case 3: header("Location: user/dashboard.php"); break;
+            case 4: header("Location: user/history.php"); break;
+            default: header("Location: login.php");
+        }
+        exit();
+    } else {
+        echo "<script>alert('Kode OTP salah atau sudah kedaluwarsa!');</script>";
+    }
+}
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP Input</title>
+    <title>Verifikasi OTP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        body{
+        body {
             background: #e2ecf4;
         }
         .otp-input {
@@ -36,15 +74,16 @@
             <p class="text-center text-muted">
                 Kami telah mengirimkan kode OTP ke email Anda. Silakan masukkan kode di bawah ini untuk melanjutkan.
             </p>
-            <form id="otp-form">
+            <form id="otp-form" method="POST">
                 <div class="d-flex justify-content-center">
-                    <input type="text" class="otp-input" maxlength="1" id="digit-1" autofocus>
-                    <input type="text" class="otp-input" maxlength="1" id="digit-2">
-                    <input type="text" class="otp-input" maxlength="1" id="digit-3">
-                    <input type="text" class="otp-input" maxlength="1" id="digit-4">
-                    <input type="text" class="otp-input" maxlength="1" id="digit-5">
-                    <input type="text" class="otp-input" maxlength="1" id="digit-6">
+                    <input type="text" class="otp-input" maxlength="1" name="otp1" autofocus required>
+                    <input type="text" class="otp-input" maxlength="1" name="otp2" required>
+                    <input type="text" class="otp-input" maxlength="1" name="otp3" required>
+                    <input type="text" class="otp-input" maxlength="1" name="otp4" required>
+                    <input type="text" class="otp-input" maxlength="1" name="otp5" required>
+                    <input type="text" class="otp-input" maxlength="1" name="otp6" required>
                 </div>
+                <input type="hidden" name="otp" id="full-otp">
                 <p class="text-center mt-3" id="timer">Waktu tersisa: 2:00</p>
                 <button type="submit" class="btn btn-primary w-100 mt-2">Verifikasi</button>
             </form>
@@ -53,38 +92,30 @@
 
     <script>
         const inputs = document.querySelectorAll('.otp-input');
+        const hiddenOtp = document.getElementById('full-otp');
+
+        // Auto move to next input
         inputs.forEach((input, index) => {
             input.addEventListener('input', (e) => {
                 if (e.target.value.length === 1 && index < inputs.length - 1) {
                     inputs[index + 1].focus();
                 }
+                updateHiddenOtp();
             });
 
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' && index > 0 && !e.target.value) {
                     inputs[index - 1].focus();
                 }
+                updateHiddenOtp();
             });
         });
 
-        document.getElementById('otp-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const otp = Array.from(inputs).map(input => input.value).join('');
-            if (otp.length === 6) {
-                alert('Verifikasi Berhasil!');
-                // Jika level 1 (super admin)
-                // window.location.href='super_admin/dashboard.php';
+        function updateHiddenOtp() {
+            hiddenOtp.value = Array.from(inputs).map(input => input.value).join('');
+        }
 
-                // Jika level 2 (admin)
-                // window.location.href='admin/dashboard.php';
-
-                // Jika level 3 (user biasa)
-                window.location.href="user/dashboard.php";
-            } else {
-                alert('Kode OTP tidak sesuai. Silakan coba lagi.');
-            }
-        });
-
+        // Timer countdown 2 menit (120 detik)
         let timeLeft = 120;
         const timerElement = document.getElementById('timer');
         const countdown = setInterval(() => {
@@ -93,8 +124,8 @@
             timerElement.textContent = `Waktu tersisa: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
             if (timeLeft === 0) {
                 clearInterval(countdown);
-                alert('Waktu habis. Silahkan login ulang!')
-                window.location.href='login.php';
+                alert('Waktu habis. Silakan login ulang!');
+                window.location.href = 'login.php';
             }
             timeLeft--;
         }, 1000);
