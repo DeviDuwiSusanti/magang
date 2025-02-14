@@ -3,8 +3,8 @@
 
 
     // Ambil data sekolah dan perguruan tinggi
-    $sekolah = query("SELECT id_pendidikan, nama, jurusan FROM tb_pendidikan WHERE fakultas IS NULL");
-    $perguruan_tinggi = query("SELECT id_pendidikan, nama, fakultas, jurusan FROM tb_pendidikan WHERE fakultas IS NOT NULL");
+    $sekolah = query("SELECT id_pendidikan, nama, jurusan FROM tb_pendidikan WHERE fakultas IS NULL OR fakultas = '' ");
+    $perguruan_tinggi = query("SELECT id_pendidikan, nama, fakultas, jurusan FROM tb_pendidikan WHERE fakultas IS NOT NULL AND fakultas != '' ");
 
 
     // Struktur data sekolah
