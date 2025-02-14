@@ -9,7 +9,6 @@ function getBidangInstansi($conn) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 

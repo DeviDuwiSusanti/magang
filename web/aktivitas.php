@@ -2,15 +2,22 @@
 include "koneksi.php"; 
 
 // Mengambil data lowongan dari database dengan JOIN tabel yang diperlukan
-$sql = "
-SELECT p.*, 
-       u.nama AS nama_user, 
-       pd.nama AS nama_universitas  -- Mengambil nama universitas dari tabel tb_pendidikan
-FROM tb_pengajuan p
-JOIN tb_profile_user u ON p.id_user = u.id_user
-JOIN tb_pendidikan pd ON u.id_pendidikan = pd.id_pendidikan  -- Mengambil id_pendidikan dari tabel tb_profile_user
-WHERE p.status_active = 'Y';
-";
+$sql = "SELECT * FROM tb_pengajuan 
+        JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
+        JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        WHERE tb_pengajuan.status_active = 'Y'";
+
+// $sql = "
+// SELECT p.*, 
+//        u.nama AS nama_user, 
+//        pd.nama AS nama_universitas  -- Mengambil nama universitas dari tabel tb_pendidikan
+// FROM tb_pengajuan p
+// JOIN tb_profile_user u ON p.id_user = u.id_user
+// JOIN tb_pendidikan pd ON u.id_pendidikan = pd.id_pendidikan  -- Mengambil id_pendidikan dari tabel tb_profile_user
+// WHERE p.status_active = 'Y';
+// ";
 
 $query = mysqli_query($conn, $sql);
 
@@ -63,11 +70,11 @@ $no = 1;
     <tbody id="table-body">
         <?php while($row = mysqli_fetch_assoc($query)): ?>
             <tr class="table-row">
-                <td><?php echo $no++; ?></td>
-                <td><?php echo $row['nama_user']; ?></td>
-                <td><?php echo $row['nama_universitas']; ?></td>
-                <td><?php echo "Kominfo Sidoarjo"; ?></td>
-                <td><?php echo $row['jenis_pengajuan']; ?></td>
+                <td><?= $no++; ?></td>
+                <td><?= $row['nama_user'] ?></td>
+                <td><?= $row['nama_pendidikan'] ?></td>
+                <td><?= $row['nama_panjang'] ?></td>
+                <td><?= $row['nama_bidang'] ?></td>
                 <td>
                     <?php 
                         // Menghitung durasi berdasarkan tanggal mulai dan selesai
