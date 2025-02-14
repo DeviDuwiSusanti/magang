@@ -3,7 +3,7 @@ include "koneksi.php";
 if(isset($_GET['id_bidang'])){
     $id_bidang = $_GET['id_bidang'];
 
-    $sql = "SELECT * FROM bidang, instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
+    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date, tb_instansi.create_date AS instansi_create_date FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
     $query = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($query);
 }
