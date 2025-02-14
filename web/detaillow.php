@@ -1,10 +1,12 @@
 <?php
-include "koneksi.php"; 
+include "koneksi.php";
+if(isset($_GET['id_bidang'])){
+    $id_bidang = $_GET['id_bidang'];
 
-// Mengambil data lowongan dari database
-$sql = "SELECT * FROM tb_bidang WHERE status_active = '1'";
-$query = mysqli_query($conn, $sql);
-$bidang = mysqli_fetch_assoc($query);
+    $sql = "SELECT * FROM bidang, instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
+    $query = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($query);
+}
 ?>
 
 <!DOCTYPE html>
@@ -35,21 +37,23 @@ $bidang = mysqli_fetch_assoc($query);
             
             <!-- Detail Lowongan -->
             <div class="blog__detail">
-                <h3>Internship - <?php echo $bidang['nama']; ?></h3>
+                <h3>Internship - <?= $row['nama'] ?></h3>
                 <table class="detail-table">
-                    <tr><td><b>Perusahaan</b></td><td>:</td><td><?php echo $bidang['id_instansi']; ?></td></tr>
-                    <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Sidoarjo</td></tr>
-                    <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td><?php echo $bidang['kuota']; ?></td></tr>
-                    <tr><td><b>Kuota Lowongan</b></td><td>:</td><td>4</td></tr>
-                    <tr><td><b>Dibuat pada</b></td><td>:</td><td><?php echo date("d F Y", strtotime($bidang['create_date'])); ?></td></tr>
+                    <tr><td><b>Perusahaan</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
+                    <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat'] ?></td></tr>
+                    <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td>120</td></tr>
+                    <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota'] ?></td></tr>
+                    <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_create_date'] ?></td></tr>
                 </table>
                 
                 <h3>Deskripsi Lowongan</h3>
-                <p><?php echo $bidang['deskripsi']; ?></p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut non autem doloremque eos praesentium fugiat temporibus pariatur veniam? In, nostrum nam! Rem doloremque tenetur fugiat hic cupiditate, provident praesentium assumenda?</p>
                 
                 <h3>Kriteria</h3>
                 <ul class="list">
-                    <li>Jenjang pendidikan: <?php echo $bidang['kriteria']; ?></li>
+                    <li>Jenjang pendidikan: SMA/SMK.</li>
+                    <li>Jurusan: Teknik Komputer dan Jaringan.</li>
+                    <li>IPK minimal: 3.1</li>
                 </ul>
 
                 <h3>Persyaratan Dokumen</h3>

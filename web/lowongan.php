@@ -1,6 +1,6 @@
 <?php
 include "koneksi.php";
-$sql = "SELECT * FROM tb_bidang  WHERE status_active = '1'" ;
+$sql = "SELECT * FROM tb_bidang  WHERE status_active = 'Y'" ;
 $query = mysqli_query($conn, $sql);
 
 ?>
