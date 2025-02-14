@@ -1,7 +1,12 @@
 <?php
 include "koneksi.php";
-$sql = "SELECT * FROM tb_bidang WHERE status_active = '1'";
-$query = mysqli_query($conn, $sql);
+
+function getBidangInstansi($conn) {
+    $sql = "SELECT * FROM tb_bidang, tb_instansi 
+            WHERE tb_bidang.status_active = 'Y' 
+            AND tb_bidang.id_instansi = tb_instansi.id_instansi";
+    return mysqli_query($conn, $sql);
+}
 
 ?>
 
@@ -70,23 +75,21 @@ $query = mysqli_query($conn, $sql);
                 <div class="lowongan">
                     <div class="lowongans" data-aos="fade-down">
                         <?php
-                        while ($row = mysqli_fetch_assoc($query)){
-                            $sql2 = "SELECT * FROM tb_instansi WHERE id_instansi = '$row[id_instansi]'";
-                            $query2 = mysqli_query($conn, $sql2);
-                            $row2 = mysqli_fetch_assoc($query2);
+                        $query = getBidangInstansi($conn);
+                        while ($row = mysqli_fetch_assoc($query)){      
                             ?>
                             <article class="popular__card swiper-slide">
                                 <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                                <p><?= $row2['nama_panjang'] ?></p>
+                                <p><?= $row['nama_panjang'] ?></p>
                                 <div class="popular__data">
                                     <h3 class="popular__title">Internship - <?= $row['nama'] ?></h3>
-                                    <p class="popular__description"><?= $row2['alamat'] ?></p>
+                                    <p class="popular__description"><?= $row['alamat'] ?></p>
                                     <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                     <p class="popular__details">
                                         <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                         <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= $row['create_date'] ?></span>
                                     </p>
-                                    <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
+                                    <a href="detaillow.php?id_bidang=<?= $row['id_bidang'] ?>"><button class="details-button">Lihat Detail →</button></a>
                                 </div>
                             </article>
                         <?php
@@ -107,26 +110,25 @@ $query = mysqli_query($conn, $sql);
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper">
                     <?php
-                        $sql3 = "SELECT * FROM tb_instansi";
-                        $query3 = mysqli_query($conn, $sql3);
-                        while ($row3 = mysqli_fetch_assoc($query3)){
-                            $nama_instansi = $row3['nama_panjang'];
+                        $query = getBidangInstansi($conn);
+                        while ($row = mysqli_fetch_assoc($query)){
+                            $nama_instansi = $row['nama_panjang'];
                             $kata_pertama = explode(' ', $nama_instansi)[0]; // Pecah string dan ambil kata pertama
 
-                            $sql4 = "SELECT COUNT(*) AS jumlah_lowongan FROM tb_bidang WHERE id_instansi = '$row3[id_instansi]'";
-                            $query4 = mysqli_query($conn, $sql4);
-                            $row4 = mysqli_fetch_assoc($query4);
-                            $jumlah_lowongan = $row4['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
+                            $sql2 = "SELECT COUNT(*) AS jumlah_lowongan FROM tb_bidang WHERE id_instansi = '$row[id_instansi]'";
+                            $query2 = mysqli_query($conn, $sql2);
+                            $row2 = mysqli_fetch_assoc($query2);
+                            $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
                             ?>
                             <article class="popular__card swiper-slide" style="text-align: center;">
-                                <a href="<?= $row3['deskripsi'] ?>" target="_blank">
+                                <a href="<?= $row['deskripsi'] ?>" target="_blank">
                                     <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                     <div class="popular__data">
                                         <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
                                         <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
                                         <br>
                                         <p class="popular__description">
-                                            <i class="bx bx-briefcase"></i> <?= $row4['jumlah_lowongan'] ?> Lowongan <br />
+                                            <i class="bx bx-briefcase"></i> <?= $row2['jumlah_lowongan'] ?> Lowongan <br />
                                             <i class="bx bxs-group"></i> 5 Pemagang Aktif
                                         </p>
                                     </div>
