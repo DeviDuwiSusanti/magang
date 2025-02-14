@@ -31,10 +31,14 @@
                     <tr><td><b>Perusahaan</b></td><td>:</td><td>Dinas Komunikasi dan Informatika</td></tr>
                     <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Sidoarjo</td></tr>
                     <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td>120</td></tr>
+                    <tr><td><b>Kuota Lowongan</b></td><td>:</td><td>4</td></tr>
                     <tr><td><b>Dibuat pada</b></td><td>:</td><td>25 Januari 2025</td></tr>
                 </table>
                 
                 <h3>Deskripsi Lowongan</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut non autem doloremque eos praesentium fugiat temporibus pariatur veniam? In, nostrum nam! Rem doloremque tenetur fugiat hic cupiditate, provident praesentium assumenda?</p>
+                
+                <h3>Kriteria</h3>
                 <ul class="list">
                     <li>Jenjang pendidikan: SMA/SMK.</li>
                     <li>Jurusan: Teknik Komputer dan Jaringan.</li>
