@@ -2,7 +2,7 @@
 include "koneksi.php";
 
 function getBidangInstansi($conn) {
-    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date, tb_instansi.create_date AS instansi_create_date FROM tb_bidang, tb_instansi 
+    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.change_date AS bidang_change_date, tb_instansi.change_date AS instansi_change_date FROM tb_bidang, tb_instansi 
             WHERE tb_bidang.status_active = 'Y' 
             AND tb_bidang.id_instansi = tb_instansi.id_instansi";
     return mysqli_query($conn, $sql);
@@ -81,12 +81,12 @@ function getBidangInstansi($conn) {
                                 <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                 <p><?= $row['nama_panjang'] ?></p>
                                 <div class="popular__data">
-                                    <h3 class="popular__title">Internship - <?= $row['nama'] ?></h3>
-                                    <p class="popular__description"><?= $row['alamat'] ?></p>
+                                    <h3 class="popular__title">Internship - <?= $row['nama_bidang'] ?></h3>
+                                    <p class="popular__description"><?= $row['alamat_instansi'] ?></p>
                                     <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                     <p class="popular__details">
                                         <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                        <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= $row['bidang_create_date'] ?></span>
+                                        <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= $row['bidang_change_date'] ?></span>
                                     </p>
                                     <a href="detaillow.php?id_bidang=<?= $row['id_bidang'] ?>"><button class="details-button">Lihat Detail →</button></a>
                                 </div>
@@ -120,7 +120,7 @@ function getBidangInstansi($conn) {
                             $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
                             ?>
                             <article class="popular__card swiper-slide" style="text-align: center;">
-                                <a href="<?= $row['deskripsi'] ?>" target="_blank">
+                                <a href="<?= $row['deskripsi_instansi'] ?>" target="_blank">
                                     <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                     <div class="popular__data">
                                         <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 

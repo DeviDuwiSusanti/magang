@@ -122,14 +122,14 @@ $query = mysqli_query($conn, $sql);
                             <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                             <p><?= $row2['nama_panjang'] ?></p>
                             <div class="popular__data">
-                                <h3 class="popular__title">Internship - <?= $row['nama'] ?></h3>
-                                <p class="popular__description"><?= $row2['alamat'] ?></p>
+                                <h3 class="popular__title">Internship - <?= $row['nama_bidang'] ?></h3>
+                                <p class="popular__description"><?= $row2['alamat_instansi'] ?></p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
                                     <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
                                     <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= $row['create_date'] ?></span>
                                 </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
+                                <a href="detaillow.php?id_bidang=<?= $row['id_bidang'] ?>"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                         </article>
                     <?php

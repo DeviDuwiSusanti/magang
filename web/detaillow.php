@@ -3,7 +3,7 @@ include "koneksi.php";
 if(isset($_GET['id_bidang'])){
     $id_bidang = $_GET['id_bidang'];
 
-    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date, tb_instansi.create_date AS instansi_create_date FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
+    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.change_date AS bidang_change_date, tb_instansi.change_date AS instansi_change_date FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
     $query = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($query);
 }
@@ -37,36 +37,39 @@ if(isset($_GET['id_bidang'])){
             
             <!-- Detail Lowongan -->
             <div class="blog__detail">
-                <h3>Internship - <?= $row['nama'] ?></h3>
+                <h3>Internship - <?= $row['nama_bidang'] ?></h3>
                 <table class="detail-table">
                     <tr><td><b>Perusahaan</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
-                    <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat'] ?></td></tr>
+                    <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat_instansi'] ?></td></tr>
                     <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td>120</td></tr>
                     <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota'] ?></td></tr>
-                    <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_create_date'] ?></td></tr>
+                    <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_change_date'] ?></td></tr>
                 </table>
                 
                 <h3>Deskripsi Lowongan</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut non autem doloremque eos praesentium fugiat temporibus pariatur veniam? In, nostrum nam! Rem doloremque tenetur fugiat hic cupiditate, provident praesentium assumenda?</p>
+                <p><?= $row['deskripsi_bidang'] ?></p>
                 
                 <h3>Kriteria</h3>
                 <ul class="list">
-                    <li>Jenjang pendidikan: SMA/SMK.</li>
-                    <li>Jurusan: Teknik Komputer dan Jaringan.</li>
-                    <li>IPK minimal: 3.1</li>
+                    <?php 
+                    $kriteria = isset($row['kriteria']) ? explode(',', $row['kriteria']) : [];
+                    foreach ($kriteria as $item) : ?>
+                        <li><?= $item ?></li>
+                    <?php endforeach; ?>
                 </ul>
 
                 <h3>Persyaratan Dokumen</h3>
                 <ul class="list">
-                    <li>CV</li>
-                    <li>Surat Badan Kesatuan Bangsa dan Politik Provinsi Jawa Timur</li>
-                    <li>Surat Badan Kesatuan Bangsa dan Politik Kabupaten Sidoarjo</li>
-                    <li>Proposal</li>
+                    <?php 
+                    $doc_prasyarat = isset($row['dokumen_prasyarat']) ? explode(',', $row['dokumen_prasyarat']) : [];
+                    foreach ($doc_prasyarat as $item) : ?>
+                        <li><?= $item ?></li>
+                    <?php endforeach; ?>
                 </ul>
 
                 <h3>Lokasi Instansi</h3>
                 <div class="maps-container">
-                    <iframe src="https://www.google.com/maps/embed?..." allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="<?= $row['lokasi'] ?>" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 
                 <div class="d-flex justify-content-left mt-4">
