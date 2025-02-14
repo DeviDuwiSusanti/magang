@@ -2,7 +2,7 @@
 include "koneksi.php"; 
 
 // Mengambil data lowongan dari database
-$sql = "SELECT * FROM tb_bidang WHERE status_active = '1'";
+$sql = "SELECT * FROM tb_bidang WHERE status_active = 'Y'";
 $query = mysqli_query($conn, $sql);
 $bidang = mysqli_fetch_assoc($query);
 ?>

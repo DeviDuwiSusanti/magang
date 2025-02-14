@@ -1,46 +1,21 @@
-/* Tema terang */
-body.light-theme table {
-    background-color: #fff; /* Warna background tabel terang */
-    color: #000; /* Ubah warna teks menjadi hitam untuk kontras lebih baik */
-}
-
-/* Warna header tabel pada tema terang */
-body.light-theme th {
-    background-color: #1d7eed; /* Gunakan warna biru yang lebih kontras */
-    color: #fff; /* Warna teks header putih untuk kontras */
-}
-
-/* Warna ketika hover pada baris tabel pada tema terang */
-body.light-theme tr:hover {
-    background-color: #f1f1f1; /* Background hover tabel lebih gelap sedikit */
-}
 /* Tema gelap */
 body.dark-theme table {
     background-color: #333; /* Warna background tabel gelap */
-    color: #fff; /* Warna teks tabel gelap */
+    color: #fff; /* Warna teks putih pada tabel */
 }
 
-/* Warna header tabel pada tema gelap */
+body.dark-theme th, body.dark-theme td {
+    background-color: #222; /* Warna latar belakang sel tabel lebih gelap */
+    color: #fff; /* Warna teks putih pada tabel */
+}
+
 body.dark-theme th {
     background-color: #555; /* Warna abu-abu gelap untuk header */
-    color: #fff; /* Warna teks header */
+    color: #fff; /* Warna teks header putih */
 }
 
-/* Warna ketika hover pada baris tabel pada tema gelap */
 body.dark-theme tr:hover {
-    background-color: #444; /* Background hover tabel gelap */
-}
-
-/* Warna tombol pagination pada tema gelap */
-body.dark-theme .pagination button {
-    background-color: #444; /* Background tombol */
-    color: #fff; /* Warna teks tombol */
-    border: 1px solid #555; /* Border tombol */
-}
-
-body.dark-theme .pagination button:hover {
-    background-color: #A7C7E7; /* Warna tombol saat hover */
-    color: #333; /* Warna teks tombol saat hover */
+    background-color: #444; /* Warna hover lebih gelap pada tabel */
 }
 
 table {

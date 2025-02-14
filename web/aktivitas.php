@@ -1,3 +1,25 @@
+<?php
+include "koneksi.php"; 
+
+// Mengambil data lowongan dari database dengan JOIN tabel yang diperlukan
+$sql = "
+SELECT p.*, 
+       u.nama AS nama_user, 
+       pd.nama AS nama_universitas  -- Mengambil nama universitas dari tabel tb_pendidikan
+FROM tb_pengajuan p
+JOIN tb_profile_user u ON p.id_user = u.id_user
+JOIN tb_pendidikan pd ON u.id_pendidikan = pd.id_pendidikan  -- Mengambil id_pendidikan dari tabel tb_profile_user
+WHERE p.status_active = 'Y';
+";
+
+$query = mysqli_query($conn, $sql);
+
+// Membuat variabel untuk menghitung nomor urut
+$no = 1;
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,138 +48,46 @@
                 <i id="searchIcon" class="fas fa-search search-icon"></i>
             </div>
         </div>
-        <table>
-            <thead class="table-primary">
-                <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Universitas</th>
-                    <th>Perusahaan</th>
-                    <th>Posisi</th>
-                    <th>Durasi</th>
-                    <th>Periode Magang</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-            <tr>
-                <td>1</td>
-                <td>Hendra Hartono</td>
-                <td>Universitas Trunojoyo Madura</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Komunikasi</td>
-                <td>3 Bulan</td>
-                <td>02 Januari - 02 Mei</td>
+        <table class="table table-bordered">
+    <thead class="table-primary">
+        <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Universitas</th>
+            <th>Perusahaan</th>
+            <th>Posisi</th>
+            <th>Durasi</th>
+            <th>Periode Magang</th>
+        </tr>
+    </thead>
+    <tbody id="table-body">
+        <?php while($row = mysqli_fetch_assoc($query)): ?>
+            <tr class="table-row">
+                <td><?php echo $no++; ?></td>
+                <td><?php echo $row['nama_user']; ?></td>
+                <td><?php echo $row['nama_universitas']; ?></td>
+                <td><?php echo "Kominfo Sidoarjo"; ?></td>
+                <td><?php echo $row['jenis_pengajuan']; ?></td>
+                <td>
+                    <?php 
+                        // Menghitung durasi berdasarkan tanggal mulai dan selesai
+                        $start_date = strtotime($row['tanggal_mulai']);
+                        $end_date = strtotime($row['tanggal_selesai']);
+                        $duration = ($end_date - $start_date) / (60 * 60 * 24); // Menghitung durasi dalam hari
+                        echo ceil($duration / 30) . " Bulan"; // Durasi dalam bulan
+                    ?>
+                </td>
+                <td>
+                    <?php 
+                        // Format periode magang (tanggal mulai - tanggal selesai)
+                        echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
+                    ?>
+                </td>
             </tr>
-            <tr>
-                <td>2</td>
-                <td>Siti Nur Aprilia</td>
-                <td>Universitas Trunojoyo Madura</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang IT</td>
-                <td>3 Bulan</td>
-                <td>05 Februari - 05 Mei</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Andi Saputra</td>
-                <td>Universitas Airlangga</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Jurnalistik</td>
-                <td>6 Bulan</td>
-                <td>10 Januari - 10 Juli</td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td>Siti Aisyah</td>
-                <td>Universitas Brawijaya</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Humas</td>
-                <td>3 Bulan</td>
-                <td>01 Maret - 01 Juni</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>Joko Prasetyo</td>
-                <td>Institut Teknologi Sepuluh Nopember</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Keamanan Data</td>
-                <td>4 Bulan</td>
-                <td>15 Januari - 15 Mei</td>
-            </tr>
-            <tr>
-                <td>6</td>
-                <td>Lisa Febrianti</td>
-                <td>Universitas Trunojoyo Madura</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Desain Grafis</td>
-                <td>3 Bulan</td>
-                <td>12 Februari - 12 Mei</td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td>Budi Santoso</td>
-                <td>Universitas Negeri Malang</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Data Science</td>
-                <td>6 Bulan</td>
-                <td>01 Januari - 01 Juli</td>
-            </tr>
-            <tr>
-                <td>8</td>
-                <td>Aulia Rahman</td>
-                <td>Universitas Gadjah Mada</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Cyber Security</td>
-                <td>3 Bulan</td>
-                <td>10 Februari - 10 Mei</td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td>Nadia Kurniawati</td>
-                <td>Universitas Padjadjaran</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Media Digital</td>
-                <td>4 Bulan</td>
-                <td>05 Maret - 05 Juli</td>
-            </tr>
-            <tr>
-                <td>10</td>
-                <td>Rizky Hidayat</td>
-                <td>Universitas Diponegoro</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Riset dan Analisis</td>
-                <td>3 Bulan</td>
-                <td>07 Februari - 07 Mei</td>
-            </tr>
-            <tr>
-                <td>11</td>
-                <td>Fajar Ramadhan</td>
-                <td>Universitas Surabaya</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Pengembangan Web</td>
-                <td>6 Bulan</td>
-                <td>01 Januari - 01 Juli</td>
-            </tr>
-            <tr>
-                <td>12</td>
-                <td>Dewi Anggraini</td>
-                <td>Universitas Trunojoyo Madura</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Public Relations</td>
-                <td>3 Bulan</td>
-                <td>08 Februari - 08 Mei</td>
-            </tr>
-            <tr>
-                <td>13</td>
-                <td>Rendy Prasetyo</td>
-                <td>Universitas Jember</td>
-                <td>Kominfo Sidoarjo</td>
-                <td>Bidang Mobile Development</td>
-                <td>4 Bulan</td>
-                <td>10 Maret - 10 Juli</td>
-            </tr>
-            </tbody>
-        </table>
+        <?php endwhile; ?>
+    </tbody>
+</table>
+
     </div>
 
         <!-- Pagination -->
@@ -176,10 +106,11 @@
     let currentPage = 1;
     const rowsPerPage = 5;
     const tableBody = document.getElementById("table-body");
-    const rows = Array.from(tableBody.getElementsByTagName("tr"));
+    const rows = Array.from(tableBody.getElementsByClassName("table-row"));
     const totalPages = Math.ceil(rows.length / rowsPerPage);
     const pagination = document.getElementById("pagination");
 
+    // Menampilkan data berdasarkan halaman
     function showPage(page) {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
@@ -188,6 +119,7 @@
         });
     }
 
+    // Fungsi untuk tombol prev
     function prevPage() {
         if (currentPage > 1) {
             currentPage--;
@@ -195,6 +127,7 @@
         }
     }
 
+    // Fungsi untuk tombol next
     function nextPage() {
         if (currentPage < totalPages) {
             currentPage++;
@@ -202,17 +135,33 @@
         }
     }
 
+    // Memperbarui status tombol pagination
     function updatePagination() {
         const prevButton = pagination.querySelector('.prev');
         const nextButton = pagination.querySelector('.next');
 
-        // Disable/enable buttons based on the current page
         prevButton.classList.toggle('disabled', currentPage === 1);
         nextButton.classList.toggle('disabled', currentPage === totalPages);
 
-        // Show the correct page
         showPage(currentPage);
     }
+
+    // Fungsi untuk mencari dan menyaring tabel berdasarkan nama
+    function filterTable() {
+        const searchValue = document.getElementById("searchInput").value.toLowerCase();
+        rows.forEach((row) => {
+            const nameCell = row.getElementsByTagName("td")[1]; // Mengambil kolom nama
+            const name = nameCell.textContent || nameCell.innerText;
+            if (name.toLowerCase().includes(searchValue)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+    // Menambahkan event listener pada input pencarian
+    document.getElementById("searchInput").addEventListener("input", filterTable);
 
     // Tampilkan halaman pertama saat halaman dimuat
     updatePagination();
