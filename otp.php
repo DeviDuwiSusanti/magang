@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             case 1: header("Location: super_admin/"); break;
             case 2: header("Location: admin_instansi/"); break;
             case 3: header("Location: user/dashboard.php"); break;
-            case 4: header("Location: user/history.php"); break;
+            case 4: header("Location: user/detail_histori.php"); break;
             default: header("Location: login.php");
         }
         exit();
