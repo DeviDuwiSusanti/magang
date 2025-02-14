@@ -168,11 +168,11 @@
                             <label class="form-label">Pilih Jenis Kelamin:</label>
                             <div class="d-flex">
                                 <div class="form-check me-3">
-                                    <input class="form-check-input" type="radio" id="male" name="jenis_kelamin" value="L">
+                                    <input class="form-check-input" type="radio" id="male" name="jenis_kelamin" value="L" required>
                                     <label class="form-check-label" for="male">Laki-laki</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="female" name="jenis_kelamin" value="P">
+                                    <input class="form-check-input" type="radio" id="female" name="jenis_kelamin" value="P" required>
                                     <label class="form-check-label" for="female">Perempuan</label>
                                 </div>
                             </div>

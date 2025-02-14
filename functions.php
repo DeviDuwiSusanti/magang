@@ -71,8 +71,29 @@
         return $randomName; // Kembalikan nama file yang diupload
     }
 
+
+    function isEmailRegistered($conn, $email) {
+        $email = mysqli_real_escape_string($conn, $email);
+        $result = mysqli_query($conn, "SELECT email FROM tb_user WHERE email = '$email'");
+        return mysqli_num_rows($result) > 0;
+    }
+    
+    function isNIKRegistered($conn, $nik) {
+        $nik = mysqli_real_escape_string($conn, $nik);
+        $result = mysqli_query($conn, "SELECT nik FROM tb_profile_user WHERE nik = '$nik'");
+        return mysqli_num_rows($result) > 0;
+    }
+    
+    function isNISNRegistered($conn, $nisn) {
+        $nisn = mysqli_real_escape_string($conn, $nisn);
+        $result = mysqli_query($conn, "SELECT nisn FROM tb_profile_user WHERE nisn = '$nisn'");
+        return mysqli_num_rows($result) > 0;
+    }
+
+
     function register($POST) {
         global $conn;
+
         $id_user = generateUserId($conn);
         $nama = $POST["nama"];
         $email = $POST["email"];
@@ -88,10 +109,24 @@
         $level = $POST["level"];
         $gambar = uploadImage($_FILES["gambar"]);
 
-        $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
-        $query2 = "INSERT INTO tb_profile_user (id_user, nama, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat, gambar,  id_pendidikan, create_by, telepone)
-                    VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
 
+        if (isEmailRegistered($conn, $email)) {
+            echo "<script>alert('Email Sudah Terdaftar');</script>";
+            return 0;
+        }
+        if (isNIKRegistered($conn, $nik)) {
+            echo "<script>alert('NIK Sudah Terdaftar');</script>";
+            return 0;
+        }
+        if (isNISNRegistered($conn, $nisn)) {
+            echo "<script>alert('NISN Sudah Terdaftar');</script>";
+            return 0;
+        }
+
+        $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
+        $query2 = "INSERT INTO tb_profile_user (id_user, nama, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat, gambar, id_pendidikan, create_by, telepone)
+                    VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
+        
         mysqli_query($conn, $query1);
         mysqli_query($conn, $query2);
         return mysqli_affected_rows($conn);
