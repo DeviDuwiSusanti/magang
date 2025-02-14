@@ -8,157 +8,165 @@
         </ol>
         <div class="dropdown-divider mb-3"></div>
         <div class="mb-4 text-end">
-            <a href="status_pengajuan.php" class="btn btn-danger">
-                <i class="bi bi-arrow-left-circle me-1"></i>
-                Kembali
+            <a href="status_pengajuan.php" class="btn btn-danger btn-sm">
+                <i class="bi bi-arrow-left-circle me-1"></i> Kembali
             </a>
         </div>
 
         <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data">
-            <!-- Dropdown Instansi -->
-            <div class="mb-3">
-                <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                <select class="form-control" id="instansi" name="instansi" required>
-                    <option value="" disabled selected>Pilih Instansi</option>
-                    <option value="Instansi 1">Dinas Komunikasi dan Informatika Kab Sidoarjo</option>
-                    <option value="Instansi 2">Telekomunikasi Indonesia</option>
-                    <option value="Instansi 3">Kimia Farma</option>
-                </select>
-            </div>
-            
-            <!-- Dropdown Bidang -->
-            <div class="mb-3">
-                <label for="jenis_bidang" class="form-label">Bidang yang Dipilih</label>
-                <select class="form-control" id="jenis_bidang" name="jenis_bidang" required>
-                    <option value="" disabled selected>Pilih Bidang</option>
-                    <option value="Pengajuan 1">Web Developer</option>
-                    <option value="Pengajuan 2">UI/UX</option>
-                    <option value="Pengajuan 3">Admin</option>
-                </select>
+            <!-- Step 1 -->
+            <div id="step1">
+                <h4>Step 1: Informasi Anggota</h4>
+                <div class="mb-3">
+                    <label for="instansi" class="form-label">Instansi yang Dituju</label>
+                    <select class="form-control" id="instansi" name="instansi" required>
+                        <option value="" disabled selected>Pilih Instansi</option>
+                        <option value="Instansi 1">Dinas Komunikasi dan Informatika Kab Sidoarjo</option>
+                        <option value="Instansi 2">Telekomunikasi Indonesia</option>
+                        <option value="Instansi 3">Kimia Farma</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="jenis_bidang" class="form-label">Bidang yang Dipilih</label>
+                    <select class="form-control" id="jenis_bidang" name="jenis_bidang" required>
+                        <option value="" disabled selected>Pilih Bidang</option>
+                        <option value="Pengajuan 1">Web Developer</option>
+                        <option value="Pengajuan 2">UI/UX</option>
+                        <option value="Pengajuan 3">Admin</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
+                    <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan" required>
+                        <option value="" disabled selected>Pilih Jenis Pengajuan</option>
+                        <option value="Pengajuan 1">Magang</option>
+                        <option value="Pengajuan 2">Kerja Praktek</option>
+                        <option value="Pengajuan 3">PKL</option>
+                        <option value="Pengajuan 4">Penelitian</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="kelompok_pribadi" class="form-label">Personil</label>
+                    <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi" required>
+                        <option value="" disabled selected>Pilih Personil</option>
+                        <option value="Kelompok">Kelompok</option>
+                        <option value="Pribadi">Pribadi</option>
+                    </select>
+                </div>
+
+                <!-- Tanggal Mulai dan Selesai -->
+                <div class="mb-3">
+                    <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                    <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
+                </div>
+                <div class="mb-3">
+                    <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                    <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" required>
+                </div>
+
+                <!-- Upload KTP -->
+                <div class="mb-3">
+                    <label for="ktp" class="form-label">Upload KTP</label>
+                    <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf" required>
+                </div>
+
+                <!-- Upload CV -->
+                <div class="mb-3">
+                    <label for="cv" class="form-label">Upload CV</label>
+                    <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" required>
+                </div>
+
+                <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep()">Next</button>
+                <button type="submit" id="submitButton" class="btn btn-success btn-sm" style="display: none;">Kirim</button>
             </div>
 
-            <!-- Dropdown Jenis Pengajuan -->
-            <div class="mb-3">
-                <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
-                <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan" required>
-                    <option value="" disabled selected>Pilih Jenis Pengajuan</option>
-                    <option value="Pengajuan 1">Magang</option>
-                    <option value="Pengajuan 2">Kerja Praktek</option>
-                    <option value="Pengajuan 3">PKL</option>
-                    <option value="Pengajuan 4">Penelitian</option>
-                </select>
+           <!-- Step 2 -->
+            <div id="step2" style="display: none;">
+                <h4>Step 2: Informasi Anggota</h4>
+                <div id="anggotaContainer">
+                    <div class="mb-3 anggota-group">
+                        <label class="form-label">Anggota 1</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" required>
+                            </div>
+                            <div class="col">
+                                <input type="email" class="form-control" name="anggota_email[]" placeholder="Email" required>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK" required>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1" onclick="tambahAnggota()">
+                    <i class="bi bi-person-plus-fill"></i> Tambah Anggota
+                </button><br><br>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
+                <button type="submit" class="btn btn-success btn-sm">Kirim</button>
             </div>
-
-            <!-- Dropdown Kelompok/Pribadi -->
-            <div class="mb-3">
-                <label for="kelompok_pribadi" class="form-label">Personil</label>
-                <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi" required>
-                    <option value="" disabled selected>Pilih Personil</option>
-                    <option value="Kelompok">Kelompok</option>
-                    <option value="Pribadi">Pribadi</option>
-                </select>
-            </div>
-
-            <!-- Jumlah Orang (Disembunyikan saat "Pribadi" dipilih) -->
-            <div class="mb-3" id="jumlahAnggota" style="display: none;">
-                <label for="jumlah_orang" class="form-label">Jumlah Anggota</label>
-                <input type="number" class="form-control" id="jumlah_orang" name="jumlah_orang" min="1">
-            </div>
-
-            <!-- Daftar Anggota -->
-            <div class="mb-3" id="daftarAnggota" style="display: none;">
-                <label for="daftar_anggota" class="form-label">Daftar Anggota</label>
-                <textarea class="form-control" id="daftar_anggota" name="daftar_anggota" rows="3"></textarea>
-                <small class="text-muted">Masukkan nama anggota (pisahkan dengan koma jika lebih dari satu)</small>
-            </div>
-
-            <!-- Tanggal Mulai dan Selesai -->
-            <div class="mb-3">
-                <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
-            </div>
-            <div class="mb-3">
-                <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" required>
-            </div>
-
-            <!-- Upload KTP -->
-            <div class="mb-3">
-                <label for="ktp" class="form-label">Upload KTP</label>
-                <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf" required>
-                <small class="text-muted">Upload semua KTP terdaftar jadikan 1 file PDF</small>
-            </div>
-
-            <!-- Upload CV -->
-            <div class="mb-3">
-                <label for="cv" class="form-label">Upload CV</label>
-                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" required>
-                <small class="text-muted">Pilih file CV (PDF)</small>
-            </div>
-
-            <!-- Tombol Submit -->
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-floppy me-1"></i>Kirim
-            </button>
         </form>
     </div>
 </div>
 
-<!-- Modal Sukses -->
-<div class="modal fade" id="successModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Pendaftaran Berhasil!</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                Pengajuan Anda telah berhasil dikirim. Silakan tunggu konfirmasi.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Gagal -->
-<div class="modal fade" id="errorModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title">Pendaftaran Gagal!</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                Terjadi kesalahan, silakan coba lagi nanti.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-<?php include "../layout/footerDashboard.php" ?>
+<?php include "../layout/footerDashboard.php"; ?>
 
 <script>
-    document.getElementById("pengajuanForm").addEventListener("submit", function(event) {
-        event.preventDefault();
+    document.addEventListener("DOMContentLoaded", function() {
+        const kelompokPribadi = document.getElementById("kelompok_pribadi");
+        const nextButton = document.getElementById("nextButton");
+        const submitButton = document.getElementById("submitButton");
+        const step2 = document.getElementById("step2");
 
-        var isSuccess = Math.random() < 0.7; // 70% kemungkinan sukses
-
-        if (isSuccess) {
-            var successModal = new bootstrap.Modal(document.getElementById("successModal"));
-            successModal.show();
-        } else {
-            var errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
-            errorModal.show();
-        }
+        kelompokPribadi.addEventListener("change", function() {
+            if (this.value === "Kelompok") {
+                nextButton.style.display = "inline-block";
+                submitButton.style.display = "none";
+            } else {
+                nextButton.style.display = "none";
+                submitButton.style.display = "inline-block";
+                step2.style.display = "none"; // Sembunyikan Step 2 jika pilih Pribadi
+            }
+        });
     });
 
-    document.getElementById("kelompok_pribadi").addEventListener("change", function() {
-        var kelompok = this.value;
-        document.getElementById("jumlahAnggota").style.display = kelompok === "Kelompok" ? "block" : "none";
-        document.getElementById("daftarAnggota").style.display = kelompok === "Kelompok" ? "block" : "none";
-    });
+    function nextStep() {
+        document.getElementById("step1").style.display = "none";
+        document.getElementById("step2").style.display = "block";
+    }
+
+    function prevStep() {
+        document.getElementById("step2").style.display = "none";
+        document.getElementById("step1").style.display = "block";
+    }
+
+    function tambahAnggota() {
+        var anggotaContainer = document.getElementById('anggotaContainer');
+        var newAnggota = document.createElement('div');
+        newAnggota.classList.add('mb-3', 'anggota-group');
+        newAnggota.innerHTML = `
+            <label class="form-label">Anggota ${anggotaContainer.children.length + 1}</label>
+            <div class="row">
+                <div class="col">
+                    <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" required>
+                </div>
+                <div class="col">
+                    <input type="email" class="form-control" name="anggota_email[]" placeholder="Email" required>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="anggota_nik[]" placeholder="NIK" required>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" required>
+                </div>
+            </div>
+        `;
+        anggotaContainer.appendChild(newAnggota);
+    }
 </script>
