@@ -1,3 +1,18 @@
+<?php
+session_start();
+include "koneksi.php";
+
+if (!isset($_SESSION['email'])){
+    echo "<script> window.location.href='../login.php' </script>";
+    exit;
+} else {
+    $email = $_SESSION['email'];
+    $sql = "SELECT * FROM tb_user WHERE email = '$email'";
+    $hasil = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($hasil);   
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,13 +46,17 @@
                         <span>Dashboard</span>
                     </a>
                 </li>
+                <?php 
+                    if ($row['level'] == 3){?>
                         <li class="sidebar-item">
                             <a href="profil.php" class="sidebar-link">
                                 <i class="bi bi-person-lines-fill"></i>
                                 <span>Profile</span>
                             </a>
                         </li>
-                
+                <?php        
+                    }
+                ?>
                 
                 <li class="sidebar-item">
                     <a href="kegiatan_aktif.php" class="sidebar-link">
@@ -45,26 +64,34 @@
                         <span>Kegiatan Aktif</span>
                     </a>
                 </li>
+                <?php 
+                    if ($row['level'] == 3){?>
                         <li class="sidebar-item">
                             <a href="status_pengajuan.php" class="sidebar-link">
                                 <i class="bi bi-file-earmark-text"></i>
                                 <span>Status Pengajuan</span>
                             </a>
                         </li>
-               
+                <?php
+                    }
+                ?>
                 <li class="sidebar-item">
                     <a href="histori.php" class="sidebar-link">
                         <i class="bi bi-clock-history"></i>
                         <span>Histori</span>
                     </a>
                 </li>
+                <?php 
+                    if ($row['level'] == 3){?>
                         <li class="sidebar-item">
                             <a href="setting.php" class="sidebar-link">
                                 <i class="bi bi-gear"></i>
                                 <span>Setting</span>
                             </a>
                         </li>
-               
+                <?php
+                    }
+                ?>
             </ul>
             <div class="sidebar-footer">
                 <a href="logout.php" class="sidebar-link">
@@ -96,7 +123,8 @@
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                                 <img src="../assets/img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
                             </a>
-                          
+                            <?php 
+                            if ($row['level'] == 3){?>
                                 <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                     <a href="profil_edit.php" class="dropdown-item">
                                         <i class="bi bi-pencil-square"></i>
@@ -116,6 +144,9 @@
                                         <span>Logout</span>
                                     </a>
                                 </div>
+                            <?php
+                                }
+                            ?>
                         </li>
                     </ul>
                 </div>
