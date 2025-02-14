@@ -1,6 +1,6 @@
 <?php
 include "koneksi.php";
-$sql = "SELECT * FROM tb_bidang";
+$sql = "SELECT * FROM tb_bidang WHERE status_active = '1'";
 $query = mysqli_query($conn, $sql);
 
 ?>
@@ -106,47 +106,35 @@ $query = mysqli_query($conn, $sql);
                 "S-Match telah membantu peserta dalam melaksanakan program magang berkualitas di Sidoarjo. Temukan peluang magang terbaik untuk karier masa depan Anda!"</span><br>
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper">
-                        <article class="popular__card swiper-slide" style="text-align: center;">
-                            <a href="https://perikanan.sidoarjokab.go.id/template-1/" target="_blank">
-                                <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                                <div class="popular__data">
-                                    <h2 class="popular__price"><span>Dinas </span>Komunikasi dan Informatika</h2>
-                                    <!-- <h3 class="popular__title">Lemah Putro</h3> --><br>
-                                    <p class="popular__description">
-                                        <i class="bx bx-briefcase"></i> 3 Lowongan <br />
-                                        <i class="bx bxs-group"></i> 5 Pemagang Aktif
-                                    </p>
-                                </div>
-                            </a>
-                        </article>
+                    <?php
+                        $sql3 = "SELECT * FROM tb_instansi";
+                        $query3 = mysqli_query($conn, $sql3);
+                        while ($row3 = mysqli_fetch_assoc($query3)){
+                            $nama_instansi = $row3['nama_panjang'];
+                            $kata_pertama = explode(' ', $nama_instansi)[0]; // Pecah string dan ambil kata pertama
 
-                        <article class="popular__card swiper-slide" style="text-align: center;">
-                            <a href="https://perikanan.sidoarjokab.go.id/template-1/" target="_blank">
-                                <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                                <div class="popular__data">
-                                    <h2 class="popular__price"><span>Dinas </span>Kesehatan</h2>
-                                    <!-- <h3 class="popular__title">Lemah Putro</h3> --><br>
-                                    <p class="popular__description">
-                                        <i class="bx bx-briefcase"></i> 3 Lowongan <br />
-                                        <i class="bx bxs-group"></i> 5 Pemagang Aktif
-                                    </p>
-                                </div>
-                            </a>
-                        </article>
-
-                        <article class="popular__card swiper-slide" style="text-align: center;">
-                            <a href="https://perikanan.sidoarjokab.go.id/template-1/" target="_blank">
-                                <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                                <div class="popular__data">
-                                    <h2 class="popular__price"><span>Dinas </span>Perikanan</h2>
-                                    <!-- <h3 class="popular__title">Lemah Putro</h3> --><br>
-                                    <p class="popular__description">
-                                        <i class="bx bx-briefcase"></i> 3 Lowongan <br />
-                                        <i class="bx bxs-group"></i> 5 Pemagang Aktif
-                                    </p>
-                                </div>
-                            </a>
-                        </article>
+                            $sql4 = "SELECT COUNT(*) AS jumlah_lowongan FROM tb_bidang WHERE id_instansi = '$row3[id_instansi]'";
+                            $query4 = mysqli_query($conn, $sql4);
+                            $row4 = mysqli_fetch_assoc($query4);
+                            $jumlah_lowongan = $row4['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
+                            ?>
+                            <article class="popular__card swiper-slide" style="text-align: center;">
+                                <a href="<?= $row3['deskripsi'] ?>" target="_blank">
+                                    <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                                    <div class="popular__data">
+                                        <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
+                                        <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
+                                        <br>
+                                        <p class="popular__description">
+                                            <i class="bx bx-briefcase"></i> <?= $row4['jumlah_lowongan'] ?> Lowongan <br />
+                                            <i class="bx bxs-group"></i> 5 Pemagang Aktif
+                                        </p>
+                                    </div>
+                                </a>
+                            </article>
+                        <?php
+                        }
+                        ?>
                     </div>
 
                     <div class="swiper-button-next">
