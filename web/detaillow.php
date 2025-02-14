@@ -3,10 +3,10 @@ include "koneksi.php";
 if(isset($_GET['id_bidang'])){
     $id_bidang = $_GET['id_bidang'];
 
-// Mengambil data lowongan dari database
-$sql = "SELECT * FROM tb_bidang WHERE status_active = '1'";
-$query = mysqli_query($conn, $sql);
-$bidang = mysqli_fetch_assoc($query);
+    $sql = "SELECT * FROM bidang, instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
+    $query = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($query);
+}
 ?>
 
 <!DOCTYPE html>
@@ -39,11 +39,11 @@ $bidang = mysqli_fetch_assoc($query);
             <div class="blog__detail">
                 <h3>Internship - <?= $row['nama'] ?></h3>
                 <table class="detail-table">
-                    <tr><td><b>Perusahaan</b></td><td>:</td><td>Dinas Komunikasi dan Informatika</td></tr>
-                    <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Sidoarjo</td></tr>
+                    <tr><td><b>Perusahaan</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
+                    <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat'] ?></td></tr>
                     <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td>120</td></tr>
-                    <tr><td><b>Kuota Lowongan</b></td><td>:</td><td>4</td></tr>
-                    <tr><td><b>Dibuat pada</b></td><td>:</td><td>25 Januari 2025</td></tr>
+                    <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota'] ?></td></tr>
+                    <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_create_date'] ?></td></tr>
                 </table>
                 
                 <h3>Deskripsi Lowongan</h3>
