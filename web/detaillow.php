@@ -2,7 +2,10 @@
 include "koneksi.php";
 if(isset($_GET['id_bidang'])){
     $id_bidang = $_GET['id_bidang'];
-    
+
+    $sql = "SELECT * FROM bidang, instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
+    $query = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($query);
 }
 ?>
 
@@ -34,7 +37,7 @@ if(isset($_GET['id_bidang'])){
             
             <!-- Detail Lowongan -->
             <div class="blog__detail">
-                <h3>Internship - Web Developer</h3>
+                <h3>Internship - <?= $row['nama'] ?></h3>
                 <table class="detail-table">
                     <tr><td><b>Perusahaan</b></td><td>:</td><td>Dinas Komunikasi dan Informatika</td></tr>
                     <tr><td><b>Lokasi</b></td><td>:</td><td>Kab. Sidoarjo</td></tr>

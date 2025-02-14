@@ -1,3 +1,10 @@
+<?php
+include "koneksi.php";
+$sql = "SELECT * FROM tb_bidang  WHERE status_active = '1'" ;
+$query = mysqli_query($conn, $sql);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -84,139 +91,51 @@
 
         <!--==================== Carieer ====================-->
         <h2 class="section__title" style="text-align: center" data-aos="fade-up">Explore Our Internship Opportunities</h2>
-        <div class="search-container" style="text-align: center; margin-bottom: 20px;">
+
+        <!-- Search Section -->
+        <div class="search-container" style="text-align: center; margin-top: 10px">
             <div class="search-wrapper">
                 <input type="text" id="searchInput" class="search-input" placeholder="Cari Instansi atau Bidang..." />
                 <i id="searchIcon" class="fas fa-search search-icon"></i>
             </div>
         </div>
-            <section class="section" id="popular" data-aos="fade-up">
-                <div class="container">
-                    <div class="lowongan">
-                        <div class="lowongans">
-                        <article class="popular__card swiper-slide">
-                            <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                            <p>Dinas Komunikasi dan Informatika</p>
-                            <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
-                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                                </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
-                            </div>
-                        </article>
 
-                        <article class="popular__card swiper-slide">
-                            <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img"
-                                style="width: 50px; height: 50px;" />
-                            <p>Dinas Kesehatan</p>
-                            <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
-                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                                </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
-                            </div>
-                            </a>
-                        </article>
-                        <article class="popular__card swiper-slide">
-                            <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img"
-                                style="width: 50px; height: 50px;" />
-                            <p>Dinas Perikanan</p>
-                            <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
-                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                                </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
-                            </div>
-                            </a>
-                        </article>
+        <section class="section" id="popular">
+            <div class="container">
+            <h2 class="section__title" style="text-align: center" data-aos="fade-up">
+            Temukan Peluang Magang Terbaik di Sidoarjo</h2>
+            <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
+                    "Sidoarjo Internship menyediakan berbagai program magang yang sesuai dengan keterampilan dan minatmu. Daftar sekarang dan ambil langkah pertama menuju masa depan karirmu. Kesuksesan dimulai dari sini!"
+                </span>
+            <br><br><br>
+            <div class="lowongan">
+                <div class="lowongans" data-aos="fade-down">
+                    <?php
+                    // Menampilkan lowongan
+                    while ($row = mysqli_fetch_assoc($query)) {
+                        // Ambil data instansi berdasarkan id_instansi
+                        $sql2 = "SELECT * FROM tb_instansi WHERE id_instansi = '$row[id_instansi]'";
+                        $query2 = mysqli_query($conn, $sql2);
+                        $row2 = mysqli_fetch_assoc($query2);
+                    ?>
                         <article class="popular__card swiper-slide">
                             <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                            <p>Dinas Sosial</p>
+                            <p><?= $row2['nama_panjang'] ?></p>
                             <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
+                                <h3 class="popular__title">Internship - <?= $row['nama'] ?></h3>
+                                <p class="popular__description"><?= $row2['alamat'] ?></p>
                                 <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                 <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                                </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
-                            </div>
-                            </a>
-                        </article>
-                        <article class="popular__card swiper-slide">
-                            <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                            <p>Dinas Pendidikan</p>
-                            <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
-                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                                </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
-                            </div>
-                            </a>
-                        </article>
-                        <article class="popular__card swiper-slide">
-                            <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                            <p>Dinas Pendidikan</p>
-                            <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang TIK</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
-                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                                </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
-                            </div>
-                            </a>
-                        </article>
-                        <!-- Lowongan tambahan -->
-                        <article class="popular__card swiper-slide">
-                            <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                            <p>Dinas Tenaga Kerja</p>
-                            <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang Komunikasi</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo, Kabupaten Sidoarjo, Jawa Timur 61213</p>
-                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
-                                </p>
-                                <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
-                            </div>
-                            </a>
-                        </article>
-                        <article class="popular__card">
-                            <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                            <p>Dinas Tenaga Kerja</p>
-                            <div class="popular__data">
-                                <h3 class="popular__title">Internship - Bidang Komunikasi Informatika</h3>
-                                <p class="popular__description">Jl. Diponegoro No.139, Lemah Putro, Lemahputro, Kec. Sidoarjo...</p>
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Total Pemagang Aktif: <span class="total-pendaftar">120</span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date">25 Januari 2025</span>
+                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
+                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= $row['create_date'] ?></span>
                                 </p>
                                 <a href="detaillow.php"><button class="details-button">Lihat Detail →</button></a>
                             </div>
                         </article>
-                    </div>
-
+                    <?php
+                    }
+                    ?>
+                </div>
                     <div class="view-all">
                         <i id="viewMore" class="details-button fa fa-arrow-down"></i>
                     </div>
@@ -227,22 +146,42 @@
     </main>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const cards = document.querySelectorAll(".popular__card");
-            const viewMoreButton = document.getElementById("viewMore");
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.getElementById("searchInput");
+        const cards = document.querySelectorAll(".popular__card");
+        const viewMoreButton = document.getElementById("viewMore");
 
-            // Tampilkan 4 lowongan pertama
-            cards.forEach((card, index) => {
-                if (index < 4) {
-                    card.classList.add("visible");
+        // Menambahkan event listener untuk pencarian
+        searchInput.addEventListener("input", function () {
+            const query = searchInput.value.toLowerCase(); // Ambil nilai input dan ubah jadi huruf kecil
+
+            cards.forEach((card) => {
+                const title = card.querySelector(".popular__title").textContent.toLowerCase(); // Ambil nama bidang
+                const description = card.querySelector(".popular__description").textContent.toLowerCase(); // Ambil deskripsi
+
+                // Filter card berdasarkan nama atau deskripsi yang sesuai dengan input
+                if (title.includes(query) || description.includes(query)) {
+                    card.style.display = "block"; // Tampilkan card jika cocok
+                } else {
+                    card.style.display = "none"; // Sembunyikan card jika tidak cocok
                 }
             });
-
-            viewMoreButton.addEventListener("click", () => {
-                cards.forEach(card => card.classList.add("visible"));
-                viewMoreButton.style.display = "none"; // Sembunyikan tombol setelah klik
-            });
         });
-    </script>
+
+        // Tampilkan 4 lowongan pertama
+        cards.forEach((card, index) => {
+            if (index < 4) {
+                card.classList.add("visible");
+            }
+        });
+
+        // Event listener untuk tombol 'Lihat Lebih Banyak'
+        viewMoreButton.addEventListener("click", () => {
+            cards.forEach(card => card.classList.add("visible"));
+            viewMoreButton.style.display = "none"; // Sembunyikan tombol setelah klik
+        });
+    });
+</script>
+
 </body>
 </html>
