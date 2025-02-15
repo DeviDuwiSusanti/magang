@@ -1,4 +1,10 @@
-<?php include "../layout/sidebarUser.php" ?>
+<?php include "../layout/sidebarUser.php";
+
+$sql2 = "SELECT * FROM tb_profile_user, tb_user, tb_pendidikan WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user  = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
+$query2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($query2);
+
+?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
@@ -11,8 +17,8 @@
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top">
                     <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
-                    <h4 class="card-title">Hendra Hartono</h4>
-                    <p class="text-muted">hendra815@gmail.com</p>
+                    <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
+                    <p class="text-muted"><?= $row2['email'] ?></p>
 
                     <hr>
                     <div class="card-body">
@@ -20,45 +26,47 @@
                             <tbody class="text-start">
                                 <tr>
                                     <td><i class="bi bi-person"></i> <strong>Nama</strong></td>
-                                    <td>Hendra</td>
+                                    <td><?= $row2['nama_user'] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-envelope"></i> <strong>Email</strong></td>
-                                    <td>hendra815@gmail.com</td>
+                                    <td><?= $row['email'] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-calendar"></i> <strong>TTL</strong></td>
-                                    <td>Bojonegoro, 03 April 2004</td>
+                                    <td><?php echo $row['tempat_lahir'] . ', ' . $row['tanggal_lahir']; ?></td>
                                 </tr>
                                 <tr>
-                                    <td><i class="bi bi-gender-ambiguous"></i> <strong>Gender</strong></td>
-                                    <td>Laki-laki</td>
+                                    <td><i class="bi bi-gender-ambiguous"></i> <strong>Jenis Kelamin</strong></td>
+                                    <td><?= $row2['jenis_kelamin'] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-credit-card"></i> <strong>NIK</strong></td>
-                                    <td>3522674523647</td>
+                                    <td><?= $row2['nik'] ?></td>
                                 </tr>
                                 <tr>
-                                    <td><i class="bi bi-mortarboard"></i> <strong>NIM</strong></td>
-                                    <td>226487264</td>
+                                <tr>
+                                    <td><i class="bi bi-mortarboard"></i> <strong>NIM/NISN</strong></td>
+                                    <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
+                                </tr>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-building"></i> <strong>Asal Studi</strong></td>
-                                    <td>Universitas Trunojoyo Madura</td>
+                                    <td><?= $row2['nama_pendidikan'] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
-                                    <td>085760786535</td>
+                                    <td><?= $row2['telepone'] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-geo-alt"></i> <strong>Alamat</strong></td>
-                                    <td>Dusun Pencol Desa Setren, Bojonegoro</td>
+                                    <td><?= $row2['alamat_user'] ?></td>
                                 </tr>
                             </tbody>
                         </table>
 
                         <div class="d-grid">
-                            <a href="profil_edit.php" class="btn btn-primary">
+                            <a href="profil_edit.php?id_user=<?= $id_user ?>" class="btn btn-primary">
                                 <i class="bi bi-pencil"></i> Edit Profile
                             </a>
                         </div>

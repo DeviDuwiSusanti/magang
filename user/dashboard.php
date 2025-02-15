@@ -1,9 +1,19 @@
-<?php include '../layout/sidebarUser.php' ?>
-<?php
-$sql2 = "SELECT COUNT(*) FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$row[id_user]' AND tb_dokumen = '$row[id_user]'";
-$query2 = mysqli_query($conn, $sql);
-$row2 = mysqli_fetch_assoc($query2);
+<?php include '../layout/sidebarUser.php';
 
+// Query dapat jumlah pengajuan user
+$sql2 = "SELECT COUNT(*) AS jumlah FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Menunggu'";
+$query2 = mysqli_query($conn, $sql2);
+$jumlah_pengajuan = mysqli_fetch_array($query2)['jumlah'];
+
+// akses dokumen
+$sql2 = "SELECT COUNT(*) FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan";
+$query2 = mysqli_query($conn, $sql);
+$jumlah_dokumen = mysqli_fetch_assoc($query2);
+
+// akses histori kegiatan
+$sql3 = "SELECT COUNT(*) FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Diterima' AND status_active != 'Y'";
+$query3 = mysqli_query($conn, $sql);
+$jumlah_kegiatan = mysqli_fetch_assoc($query2);
 ?>
 
 <div class="main-content p-4">
@@ -21,7 +31,7 @@ $row2 = mysqli_fetch_assoc($query2);
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
                             <h5 class="card-title">Pengajuan</h5>
-                            <h2 class="card-text text-primary">2</h2>
+                            <h2 class="card-text text-primary"><?= $jumlah_pengajuan?></h2>
                             <p class="text-muted">Permohonan Magang</p>
                             <a href="status_pengajuan.php" class="btn btn-info mt-3 detail">View Details</a>
                         </div>
@@ -69,7 +79,7 @@ $row2 = mysqli_fetch_assoc($query2);
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Histori</h5>
-                        <h2 class="card-text text-danger">4</h2>
+                        <h2 class="card-text text-danger"><?= $jumlah_kegiatan ?: 0 ?></h2>
                         <p class="text-muted">Jumlah Kegiatan</p>
                         <a href="histori.php" class="btn btn-danger mt-3 detail">View Details</a>
                     </div>

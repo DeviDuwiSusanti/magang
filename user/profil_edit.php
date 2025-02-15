@@ -1,4 +1,14 @@
-<?php include "../layout/sidebarUser.php"; ?>
+<?php include "../layout/sidebarUser.php"; 
+
+if (ISSET($_GET['id_user'])){
+    $id_user = $_GET['id_user'];
+    $sql2 = "SELECT * FROM tb_profile_user, tb_user, tb_pendidikan WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user  = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
+    $query2 = mysqli_query($conn, $sql2);
+    $row2 = mysqli_fetch_assoc($query2);
+}
+
+?>
+
 
 <div class="main-content p-4">
     <div class="container-fluid">
@@ -17,25 +27,25 @@
             <!-- Nama Lengkap -->
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="nama" name="nama" value="Hendra" required>
+                <input type="text" class="form-control" id="nama" name="nama" value="<?= $row2['nama_user'] ?>" required>
             </div>
             
             <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="hendra815@gmail.com" required>
+                <input type="email" class="form-control" id="email" name="email" value="<?= $row2['email'] ?>" required>
             </div>
             
             <!-- Tempat Lahir -->
             <div class="mb-3">
                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="Bojonegoro" required>
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= $row2['tempat_lahir'] ?>" required>
             </div>
             
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="2005-08-01" required>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $row2['tanggal_lahir'] ?>" required>
             </div>
             <!-- Jenis Kelamin -->
             <div class="mb-3">
@@ -55,30 +65,30 @@
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="35224233465274" required>
+                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik'] ?>" required>
             </div>
             
             <!-- NIM -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIM</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="2264246282" required>
+                <input type="text" class="form-control" id="nik" name="nik" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>" required>
             </div>
             
             <!-- Asal Studi -->
             <div class="mb-3">
                 <label for="asal_studi" class="form-label">Asal Studi</label>
-                <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="Universitas Trunojoyo Madura" required>
+                <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $row2['nama_pendidikan'] ?>" required>
             </div>
             
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telepon" class="form-label">Telepon</label>
-                <input type="number" class="form-control" id="telepon" name="telepon" value="082487234" required>
+                <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone'] ?>" required>
             </div>
             <!-- Alamat -->
             <div class="mb-3">
                 <label for="alamat" class="form-label">Alamat</label>
-                <textarea class="form-control" id="alamat" name="alamat" rows="3" required>Dusun Pencol Desan Setren, Bojonegoro</textarea>
+                <textarea class="form-control" id="alamat" name="alamat" rows="3" required><?= $row2['alamat_user'] ?></textarea>
             </div>
             
             <!-- Upload Foto Profil -->
