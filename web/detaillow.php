@@ -1,5 +1,7 @@
 <?php
-include "koneksi.php";
+include "../koneksi.php";
+
+// MENGAMBIL DATA DARI BIDANG/LOWONGAN SESUAI DENGAN ID
 if(isset($_GET['id_bidang'])){
     $id_bidang = $_GET['id_bidang'];
 
@@ -51,7 +53,8 @@ if(isset($_GET['id_bidang'])){
                 
                 <h3>Kriteria</h3>
                 <ul class="list">
-                    <?php 
+                    <?php
+                    // perulangan untuk data list di database 
                     $kriteria = isset($row['kriteria']) ? explode(',', $row['kriteria']) : [];
                     foreach ($kriteria as $item) : ?>
                         <li><?= $item ?></li>

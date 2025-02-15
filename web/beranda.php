@@ -1,5 +1,5 @@
 <?php
-include "koneksi.php";
+include "../koneksi.php";
 
 function getBidangInstansi($conn) {
     $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.change_date AS bidang_change_date, tb_instansi.change_date AS instansi_change_date FROM tb_bidang, tb_instansi 
@@ -7,6 +7,29 @@ function getBidangInstansi($conn) {
             AND tb_bidang.id_instansi = tb_instansi.id_instansi";
     return mysqli_query($conn, $sql);
 }
+
+// Pemagang aktif dari 1 instansi tiap bidang
+function getPemagangAktif1($conn, $id_instansi, $id_bidang) {
+    $sql = "SELECT COUNT(*) FROM tb_pengajuan WHERE status_active = 'Y' AND id_instansi = '$id_instansi' 
+            AND id_bidang = '$id_bidang'";
+
+    $result = mysqli_query($conn, $sql);
+    $count1 = mysqli_fetch_array($result)[0]; // Ambil hasil COUNT(*)
+
+    return $count1;
+}
+
+// Jumlah total pemagang aktif dari 1 instansi
+function getPemagangAktif2($conn, $id_instansi) {
+    $sql = "SELECT COUNT(*) FROM tb_pengajuan WHERE status_active = 'Y' AND id_instansi = '$id_instansi'";
+
+    $result = mysqli_query($conn, $sql);
+    $count2 = mysqli_fetch_array($result)[0]; // Ambil hasil COUNT(*)
+
+    return $count2;
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -74,7 +97,8 @@ function getBidangInstansi($conn) {
                     <div class="lowongans" data-aos="fade-down">
                         <?php
                         $query = getBidangInstansi($conn);
-                        while ($row = mysqli_fetch_assoc($query)){      
+                        while ($row = mysqli_fetch_assoc($query)){  
+                            $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
                             ?>
                             <article class="popular__card swiper-slide">
                                 <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
@@ -84,7 +108,7 @@ function getBidangInstansi($conn) {
                                     <p class="popular__description"><?= $row['alamat_instansi'] ?></p>
                                     <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                     <p class="popular__details">
-                                        <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar">120</span><br>
+                                        <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar"><?= $pemagang_aktif ?></span><br>
                                         <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= $row['bidang_change_date'] ?></span>
                                     </p>
                                     <a href="detaillow.php?id_bidang=<?= $row['id_bidang'] ?>"><button class="details-button">Lihat Detail →</button></a>
@@ -110,6 +134,7 @@ function getBidangInstansi($conn) {
                     <?php
                         $query = getBidangInstansi($conn);
                         while ($row = mysqli_fetch_assoc($query)){
+                            $pemagang_aktif = getPemagangAktif2($conn, $row['id_instansi']);
                             $nama_instansi = $row['nama_panjang'];
                             $kata_pertama = explode(' ', $nama_instansi)[0]; // Pecah string dan ambil kata pertama
 
@@ -127,7 +152,7 @@ function getBidangInstansi($conn) {
                                         <br>
                                         <p class="popular__description">
                                             <i class="bx bx-briefcase"></i> <?= $row2['jumlah_lowongan'] ?> Lowongan <br />
-                                            <i class="bx bxs-group"></i> 5 Pemagang Aktif
+                                            <i class="bx bxs-group"></i> <?= $pemagang_aktif ?> Pemagang Aktif
                                         </p>
                                     </div>
                                 </a>
