@@ -27,47 +27,71 @@ function showDeleteConfirmation(
 window.showDeleteConfirmation = showDeleteConfirmation;
 
 // Alert edit profile
-function alertEdit(
-    linkHref,
-    successMessage = "Data berhasil diperbarui."
-) {
-    Swal.fire({
-        icon: "success",
-        title: "Berhasil!",
-        text: successMessage,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            if (linkHref) {
-                window.location.href = linkHref;
-            }
-        }
-    })
+function alertEdit(linkHref, successMessage = "Data berhasil diperbarui.") {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: successMessage,
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (linkHref) {
+        window.location.href = linkHref;
+      }
+    }
+  });
 }
 
 // Ekspor ke global scope
 window.alertEdit = alertEdit;
 
 // ALert tambah
-function alertTambah(
-    linkHref,
-    successMessage = "Data berhasil ditambahkan."
-) {
-    Swal.fire({
-        icon: "success",
-        title: "Berhasil!",
-        text: successMessage,
-        confirmButtonColor: "#3085d6",
-        confirmButtonText: "OK",
-    }).then((result) => {
-        if (result.isConfirmed) {
-            if (linkHref) {
-                window.location.href = linkHref;
-            }
-        }
-    })
+function alertTambah(linkHref, successMessage = "Data berhasil ditambahkan.") {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: successMessage,
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (linkHref) {
+        window.location.href = linkHref;
+      }
+    }
+  });
 }
 
 // Ekspor ke global scope
 window.alertTambah = alertTambah;
+
+// Alert berhasil register
+function alertSuccessRegister(message, redirectUrl) {
+  Swal.fire({
+    title: "Berhasil!",
+    text: message,
+    icon: "success",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if (result.isConfirmed && redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  });
+}
+
+// Ekspor ke global scope
+window.alertSuccessRegister = alertSuccessRegister;
+
+function alertErrorRegister(message) {
+  Swal.fire({
+      title: 'Gagal!',
+      text: message,
+      icon: 'error',
+      confirmButtonText: 'Coba Lagi'
+  });
+}
+
+// Ekspor ke global scope 
+window.alertErrorRegister = alertErrorRegister;
