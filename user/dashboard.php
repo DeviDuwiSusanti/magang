@@ -1,4 +1,10 @@
 <?php include '../layout/sidebarUser.php' ?>
+<?php
+$sql2 = "SELECT COUNT(*) FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$row[id_user]' AND tb_dokumen = '$row[id_user]'";
+$query2 = mysqli_query($conn, $sql);
+$row2 = mysqli_fetch_assoc($query2);
+
+?>
 
 <div class="main-content p-4">
     <div class="container-fluid">

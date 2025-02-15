@@ -11,8 +11,8 @@ if (!isset($_SESSION['email'])) {
             JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user 
             WHERE tb_user.email = '$email'";
     $hasil = mysqli_query($conn, $sql);
-    $user = mysqli_fetch_array($hasil);
-    $id_user = $user['id_user']; // Ambil id_user dari sesi login
+    $row = mysqli_fetch_array($hasil);
+    $id_user = $row['id_user']; // Ambil id_user dari sesi login
 }
 ?>
 
