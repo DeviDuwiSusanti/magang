@@ -76,7 +76,7 @@ if(isset($_GET['id_bidang'])){
                 </div>
                 
                 <div class="d-flex justify-content-left mt-4">
-                    <a href="../login.php" class="btn btn-primary">Daftar Sekarang</a>
+                    <a href="../user/dashboard.php" class="btn btn-primary">Daftar Sekarang</a>
                 </div>
             </div>
         </div>
