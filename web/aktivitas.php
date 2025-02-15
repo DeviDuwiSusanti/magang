@@ -46,24 +46,24 @@ $no = 1;
         <table id="myTable" class="table table-bordered table-striped">
             <thead class="table-primary">
                 <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Universitas</th>
-                    <th>Perusahaan</th>
-                    <th>Posisi</th>
-                    <th>Durasi</th>
-                    <th>Periode Magang</th>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Nama</th>
+                    <th class="text-center">Pendidikan</th>
+                    <th class="text-center">Perusahaan</th>
+                    <th class="text-center">Posisi</th>
+                    <th class="text-center">Durasi</th>
+                    <th class="text-center">Periode Magang</th>
                 </tr>
             </thead>
             <tbody>
                 <?php while($row = mysqli_fetch_assoc($query)): ?> 
                     <tr>
-                        <td><?= $no++; ?></td> 
+                        <td class="text-center"><?= $no++; ?></td> 
                         <td><?= $row['nama_user'] ?></td> 
                         <td><?= $row['nama_pendidikan'] ?></td> 
                         <td><?= $row['nama_panjang'] ?></td> 
                         <td><?= $row['nama_bidang'] ?></td> 
-                        <td>
+                        <td class="text-center">
                             <?php 
                                 // Cek apakah tanggal mulai dan selesai ada atau tidak
                                 if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
