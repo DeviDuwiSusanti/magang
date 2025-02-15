@@ -89,18 +89,18 @@
                             <label for="email">Email </label>
                         </div>
                         <div class="input-field">
-                            <input type="text" class="input" name="nik" maxlength="16" required>
+                            <input type="number" class="input" name="nik" maxlength="16" required>
                             <label for="nik">NIK (16)</label>
                         </div>
                         <div class="input-field">
-                            <input type="text" maxlength="10" class="input" name="nisn" required>
+                            <input type="number" maxlength="10" class="input" name="nisn" required>
                             <label for="nisn">NISN (10)</label>
                         </div>
 
 
                         <div class="mb-3">
                             <label class="form-label">Pilih Pendidikan</label>
-                            <select class="form-select" id="educationSelect">
+                            <select class="form-select" id="educationSelect" required>
                                 <option value="">Pilih Pendidikan</option>
                                 <option value="sekolah">Sekolah</option>
                                 <option value="universitas">Perguruan Tinggi</option>
@@ -186,7 +186,7 @@
                         <div>
                         <label for="tanggal_lahir">Tanggal Lahir</label>
                             <div class="input-field">
-                                <input type="date" class="input" name="tanggal_lahir" required>
+                                <input type="date" class="input" name="tanggal_lahir">
                             </div>
                         </div>
 
@@ -194,7 +194,7 @@
                             <textarea name="alamat" id="address" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="text" class="input" name="telepone" maxlength="15">
+                            <input type="number" class="input" name="telepone" maxlength="15" required>
                             <label for="telepone">Telephone</label>
                         </div>
                         
