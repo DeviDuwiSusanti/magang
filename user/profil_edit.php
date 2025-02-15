@@ -7,6 +7,9 @@ if (ISSET($_GET['id_user'])){
     $row2 = mysqli_fetch_assoc($query2);
 }
 
+if (ISSET($_POST['update_profil'])){
+    
+}
 ?>
 
 
@@ -23,7 +26,7 @@ if (ISSET($_GET['id_user'])){
                 Kembali
             </a>
         </div>
-        <form action="update_profile.php" class="form-profile" method="POST" enctype="multipart/form-data">
+        <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <!-- Nama Lengkap -->
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Lengkap</label>
@@ -52,12 +55,12 @@ if (ISSET($_GET['id_user'])){
                 <label class="form-label">Jenis Kelamin</label>
                 <div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" id="gender_l" value="L" checked>
-                        <label class="form-check-label" for="gender_l">Laki-laki</label>
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_l" value="L" <?= ($row2['jenis_kelamin'] == 'L') ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="jenis_kelamin_l">Laki-laki</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="gender" id="gender_p" value="P">
-                        <label class="form-check-label" for="gender_p">Perempuan</label>
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_p" value="P" <?= ($row2['jenis_kelamin'] == 'P') ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="jenis_kelamin_p">Perempuan</label>
                     </div>
                 </div>
             </div>
@@ -95,14 +98,17 @@ if (ISSET($_GET['id_user'])){
             <div class="mb-3">
                 <label for="image">Foto Profil</label><br><br>
                 <div class="image-preview" id="imagePreview">
-                    <img src="../assets/img/login.jpeg" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; object-position: top;" >
+                    <img src="<?= !empty($row2['gambar']) ? '../assets/img/user/'.$row2['gambar'] : '../assets/img/user/avatar.png' ?>" 
+                        id="previewImage" 
+                        class="rounded-circle mb-3" 
+                        style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
                 </div>
                 <input type="file" class="input form-control" id="image" name="image" accept="image/*" onchange="previewFile()">
-                <small class="text-muted">Kosong Jika tidak ingin di ganti</small>
+                <small class="text-muted">Kosong jika tidak ingin diganti</small>
             </div>
             
             <!-- Tombol Submit -->
-            <button type="submit" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i> Simpan Perubahan</button>
+            <button type="submit" name="update_profil" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i> Simpan Perubahan</button>
         </form>
     </div>
 </div>
@@ -120,8 +126,6 @@ if (ISSET($_GET['id_user'])){
         previewImage.src = e.target.result;
       }
       reader.readAsDataURL(file);
-    } else {
-      previewImage.src = '../assets/img/login.jpeg';
     }
   }
 </script>
