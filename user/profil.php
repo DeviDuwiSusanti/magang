@@ -46,7 +46,7 @@ $row2 = mysqli_fetch_assoc($query2);
                                 </tr>
                                 <tr>
                                 <tr>
-                                    <td><i class="bi bi-mortarboard"></i> <strong>NIM/NISN</strong></td>
+                                    <td><i class="bi bi-mortarboard"></i> <strong> <?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></strong></td>
                                     <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
                                 </tr>
                                 </tr>

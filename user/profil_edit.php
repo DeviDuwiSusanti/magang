@@ -1,5 +1,6 @@
 <?php include "../layout/sidebarUser.php"; 
 
+// akses data profil pengguna sebelum update
 if (ISSET($_GET['id_user'])){
     $id_user = $_GET['id_user'];
     $sql2 = "SELECT * FROM tb_profile_user, tb_user, tb_pendidikan WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user  = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
@@ -7,8 +8,78 @@ if (ISSET($_GET['id_user'])){
     $row2 = mysqli_fetch_assoc($query2);
 }
 
+// akses daftar studi
+$sql3 = "SELECT * FROM tb_pendidikan";
+$query3 = mysqli_query($conn, $sql3);
+$daftar_studi = mysqli_fetch_all($query3, MYSQLI_ASSOC);
+
+// query update profil
 if (ISSET($_POST['update_profil'])){
+    $email = $_POST['email'];
+    $nama_user = $_POST['nama'];
+    $tempat_lahir = $_POST['tempat_lahir'];
+    $tanggal_lahir = $_POST['tanggal_lahir'];
+    $jenis_kelamin = $_POST['jenis_kelamin'];
+    $nik = $_POST['nik'];
+    $telepone = $_POST['telepon'];
+    $alamat_user = $_POST['alamat'];
+    $asal_studi = $_POST['asal_studi'];
     
+    // Pastikan update NIM atau NISN sesuai dengan yang ada di database
+    if (!empty($row2['nim'])) {
+        $nim_or_nisn = $_POST['nim'];
+        $field_nim_nisn = "nim";
+    } else {
+        $nim_or_nisn = $_POST['nim'];
+        $field_nim_nisn = "nisn";
+    }
+
+    // Update data pendidikan (ambil id_pendidikan dari nama_pendidikan)
+    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$asal_studi' LIMIT 1";
+    $result_pendidikan = mysqli_query($conn, $query_pendidikan);
+    $row_pendidikan = mysqli_fetch_assoc($result_pendidikan);
+    $id_pendidikan = $row_pendidikan['id_pendidikan'] ?? $row2['id_pendidikan']; // Pakai data lama jika tidak ditemukan
+
+    // Cek apakah ada file gambar yang diunggah
+    if (!empty($_FILES['image']['name'])) {
+        $image_name = time() . "_" . $_FILES['image']['name'];
+        $target_dir = "../assets/img/user/";
+        $target_file = $target_dir . basename($image_name);
+        
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            $gambar_update = ", gambar = '$image_name'";
+        } else {
+            $gambar_update = "";
+        }
+    } else {
+        $gambar_update = "";
+    }
+
+    // Query update email di tb_user
+    $sql4 = "UPDATE tb_user SET email = '$email' WHERE id_user = '$id_user'";
+    $query4 = mysqli_query($conn, $sql4);
+
+    // Query update profil di tb_profile_user
+    $sql5 = "UPDATE tb_profile_user SET 
+        nama_user = '$nama_user',
+        tempat_lahir = '$tempat_lahir',
+        tanggal_lahir = '$tanggal_lahir',
+        jenis_kelamin = '$jenis_kelamin',
+        nik = '$nik',
+        $field_nim_nisn = '$nim_or_nisn',
+        id_pendidikan = '$id_pendidikan',
+        telepone = '$telepone',
+        alamat_user = '$alamat_user' 
+        $gambar_update
+        WHERE id_user = '$id_user'";
+    
+    $query5 = mysqli_query($conn, $sql5);
+
+    if ($query4 && $query5) {
+        echo "<script>alert('Profil berhasil diperbarui!'); window.location.href='profil.php';</script>";
+    } else {
+        echo "<script>alert('Gagal memperbarui profil!');</script>";
+    }
 }
 ?>
 
@@ -73,15 +144,22 @@ if (ISSET($_POST['update_profil'])){
             
             <!-- NIM -->
             <div class="mb-3">
-                <label for="nik" class="form-label">NIM</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>" required>
+                <label for="nim" class="form-label"><?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></label>
+                <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>" required>
             </div>
             
             <!-- Asal Studi -->
             <div class="mb-3">
                 <label for="asal_studi" class="form-label">Asal Studi</label>
-                <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $row2['nama_pendidikan'] ?>" required>
+                <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $row2['nama_pendidikan'] ?>" list="sekolahList" required>
+                <datalist id="sekolahList">
+                    <?php foreach($daftar_studi as $studi) : ?>
+                        <option value="<?= $studi['nama_pendidikan'] ?>"></option>
+                    <?php endforeach; ?>
+                </datalist>
+
             </div>
+
             
             <!-- Telepon -->
             <div class="mb-3">
