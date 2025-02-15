@@ -1,3 +1,25 @@
+<?php
+session_start();
+include "../koneksi.php";
+
+$default_image = "../assets/img/user/avatar.png"; // Gambar default
+$user_image = $default_image; // Set default gambar terlebih dahulu
+
+if (isset($_SESSION['email'])) {
+    $email = $_SESSION['email'];
+    $sql = "SELECT * FROM tb_user 
+            JOIN tb_profile_user ON tb_profile_user.id_user = tb_user.id_user 
+            WHERE tb_user.email = '$email'";
+    $hasil = mysqli_query($conn, $sql);
+    if ($row = mysqli_fetch_array($hasil)) {
+        // Jika ada gambar di database, gunakan gambar tersebut
+        if (!empty($row['gambar'])) {
+            $user_image = $row['gambar'];
+        }
+    }
+}
+?>
+
 <!--==================== HEADER ====================-->
 <header class="header" id="header">
     <nav class="nav container">
@@ -40,14 +62,12 @@
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="../user/dashboard.php" data-bs-toggle="tooltip" title="Login / Daftar">
-            <img 
-                src="../assets/img/avatar1.png" 
-                alt="Logo" 
-                style="width:40px;" 
-                class="rounded-pill"
-            >
-        </a>
+        <img 
+            src="../assets/img/user/<?= $user_image ?>" 
+            alt="User Image" 
+            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
+        >
+
     </nav>
 </header>
 
