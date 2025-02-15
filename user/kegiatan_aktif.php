@@ -1,30 +1,33 @@
 <?php
-include "../koneksi.php";
+include "../koneksi.php"; 
+include "../layout/sidebarUser.php"; 
 
-include "../layout/sidebarUser.php";
+// Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
+$sql = "SELECT * 
+        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 
+        WHERE tb_pengajuan.id_user = tb_profile_user.id_user 
+        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        AND tb_pengajuan.status_active = 'Y' 
+        AND tb_pengajuan.id_user = '$id_user'";  
 
-// Query hanya menampilkan data pengajuan magang berdasarkan id_user dari sesi
-$sql = "SELECT * FROM tb_pengajuan 
-        JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
-        JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
-        JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
-        JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.status_active = 'Y' 
-        AND tb_pengajuan.id_user = '$id_user'";  // Menampilkan hanya data user yang sedang login
-$query = mysqli_query($conn, $sql);
+$query = mysqli_query($conn, $sql); 
+if (!$query) {
+    die("Query Error: " . mysqli_error($conn));
+}
+
 $no = 1;
 ?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
-        <!-- Heading Dashboard -->
         <h1 class="mb-4">Daftar Kegiatan</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Tabel Kegiatan Aktif</li>
         </ol>
         <div class="mb-4 dropdown-divider"></div>
 
-        <!-- Tabel -->
         <div class="bungkus">
             <table class="table table-bordered table-hover">
                 <thead>
@@ -40,7 +43,7 @@ $no = 1;
                     </tr>
                 </thead>
                 <tbody>
-                <?php while($row = mysqli_fetch_assoc($query)): ?> 
+                <?php while ($row = mysqli_fetch_assoc($query)): ?> 
                     <tr>
                         <td class="text-center"><?= $no++; ?></td> 
                         <td><?= $row['nama_user'] ?></td> 
