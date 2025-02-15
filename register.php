@@ -3,14 +3,14 @@
 
 
     // Ambil data sekolah dan perguruan tinggi
-    $sekolah = query("SELECT id_pendidikan, nama, jurusan FROM tb_pendidikan WHERE fakultas IS NULL OR fakultas = '' ");
-    $perguruan_tinggi = query("SELECT id_pendidikan, nama, fakultas, jurusan FROM tb_pendidikan WHERE fakultas IS NOT NULL AND fakultas != '' ");
+    $sekolah = query("SELECT id_pendidikan, nama_pendidikan, jurusan FROM tb_pendidikan WHERE fakultas IS NULL OR fakultas = '' ");
+    $perguruan_tinggi = query("SELECT id_pendidikan, nama_pendidikan, fakultas, jurusan FROM tb_pendidikan WHERE fakultas IS NOT NULL AND fakultas != '' ");
 
 
     // Struktur data sekolah
     $sekolahData = [];
     foreach ($sekolah as $school) {
-        $sekolahData[$school['nama']][] = [
+        $sekolahData[$school['nama_pendidikan']][] = [
             'id_pendidikan' => $school['id_pendidikan'],
             'jurusan' => $school['jurusan']
         ];
@@ -19,7 +19,7 @@
     // Struktur data perguruan tinggi
         $universitasData = [];
         foreach ($perguruan_tinggi as $kampus) {
-            $universitasData[$kampus['nama']][$kampus['fakultas']][] = [
+            $universitasData[$kampus['nama_pendidikan']][$kampus['fakultas']][] = [
                 'id_pendidikan' => $kampus['id_pendidikan'],
                 'jurusan' => $kampus['jurusan']
             ];
@@ -81,11 +81,11 @@
                     <!-- Kolom Kiri -->
                     <div class="col-md-6">
                         <div class="input-field">
-                            <input type="text" class="input" name="nama" required>
+                            <input type="text" class="input" name="nama" required maxlength="100">
                             <label for="name">Nama Lengkap</label>
                         </div>
                         <div class="input-field">
-                            <input type="email" class="input" name="email" required>
+                            <input type="email" class="input" name="email" required maxlength="255">
                             <label for="email">Email </label>
                         </div>
                         <div class="input-field">
@@ -154,7 +154,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <h6>ID Pendidikan:</h6>
+                            <!-- <h6>ID Pendidikan:</h6> -->
                             <span id="idPendidikanResult"></span>
                             <input type="hidden" id="idPendidikanInput" name="pendidikan">
                         </div>
@@ -194,7 +194,7 @@
                             <textarea name="alamat" id="address" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="text" class="input" name="telepone">
+                            <input type="text" class="input" name="telepone" maxlength="15">
                             <label for="telepone">Telephone</label>
                         </div>
                         
