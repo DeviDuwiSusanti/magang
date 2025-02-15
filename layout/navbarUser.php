@@ -13,8 +13,8 @@ if (isset($_SESSION['email'])) {
     $hasil = mysqli_query($conn, $sql);
     if ($row = mysqli_fetch_array($hasil)) {
         // Jika ada gambar di database, gunakan gambar tersebut
-        if (!empty($row['gambar'])) {
-            $user_image = $row['gambar'];
+        if (!empty($row['gambar']) && file_exists("../assets/img/user/" . $row['gambar'])) {
+            $user_image = "../assets/img/user/" . $row['gambar'];
         }
     }
 }
@@ -62,12 +62,13 @@ if (isset($_SESSION['email'])) {
         </div>
 
         <!-- Kondisi untuk mengatur jalur gambar -->
-        <img 
-            src="../assets/img/user/<?= $user_image ?>" 
-            alt="User Image" 
-            style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
-        >
-
+        <a class="navbar-brand" href="../user/dashboard.php" data-bs-toggle="tooltip" title="Dashboard">
+            <img 
+                src="<?= $user_image ?>" 
+                alt="User Image" 
+                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
+            >
+        </a>
     </nav>
 </header>
 
