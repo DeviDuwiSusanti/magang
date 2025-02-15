@@ -15,7 +15,7 @@ $daftar_studi = mysqli_fetch_all($query3, MYSQLI_ASSOC);
 
 // query update profil
 if (ISSET($_POST['update_profil'])){
-    $email = $_POST['email'];
+    // $email = $_POST['email'];
     $nama_user = $_POST['nama'];
     $tempat_lahir = $_POST['tempat_lahir'];
     $tanggal_lahir = $_POST['tanggal_lahir'];
@@ -55,9 +55,9 @@ if (ISSET($_POST['update_profil'])){
         $gambar_update = "";
     }
 
-    // Query update email di tb_user
-    $sql4 = "UPDATE tb_user SET email = '$email' WHERE id_user = '$id_user'";
-    $query4 = mysqli_query($conn, $sql4);
+    // // Query update email di tb_user
+    // $sql4 = "UPDATE tb_user SET email = '$email' WHERE id_user = '$id_user'";
+    // $query4 = mysqli_query($conn, $sql4);
 
     // Query update profil di tb_profile_user
     $sql5 = "UPDATE tb_profile_user SET 
@@ -75,7 +75,7 @@ if (ISSET($_POST['update_profil'])){
     
     $query5 = mysqli_query($conn, $sql5);
 
-    if ($query4 && $query5) {
+    if ($query5) {
         echo "<script>alert('Profil berhasil diperbarui!'); window.location.href='profil.php';</script>";
     } else {
         echo "<script>alert('Gagal memperbarui profil!');</script>";
@@ -105,10 +105,10 @@ if (ISSET($_POST['update_profil'])){
             </div>
             
             <!-- Email -->
-            <div class="mb-3">
+            <!-- <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" class="form-control" id="email" name="email" value="<?= $row2['email'] ?>" required>
-            </div>
+            </div> -->
             
             <!-- Tempat Lahir -->
             <div class="mb-3">
