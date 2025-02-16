@@ -1,12 +1,9 @@
 <?php include "../layout/sidebarUser.php"; 
 
 // akses data profil pengguna sebelum update
-if (ISSET($_GET['id_user'])){
-    $id_user = $_GET['id_user'];
-    $sql2 = "SELECT * FROM tb_profile_user, tb_user, tb_pendidikan WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user  = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
-    $query2 = mysqli_query($conn, $sql2);
-    $row2 = mysqli_fetch_assoc($query2);
-}
+$sql2 = "SELECT * FROM tb_profile_user, tb_user, tb_pendidikan WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user  = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
+$query2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($query2);
 
 // akses daftar studi
 $sql3 = "SELECT * FROM tb_pendidikan";
@@ -29,15 +26,17 @@ if (ISSET($_POST['update_profil'])){
         $jurusan = $_POST['jurusan'];
         $nim = $_POST['nim'];
         $nisn = NULL;
+        echo "fakultas";
     }else{
         $fakultas = NULL;
         $jurusan = $_POST['jurusan'];
         $nisn = $_POST['nim'];
         $nim = NULL;
+        echo "$fakultas";
     }
 
     // Update data pendidikan (ambil id_pendidikan dari nama_pendidikan)
-    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$asal_studi' AND fakultas = '$fakultas' AND jurusan = '$jurusan' LIMIT 1";
+    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$asal_studi' AND fakultas = '$fakultas' AND jurusan = '$jurusan'";
     $result_pendidikan = mysqli_query($conn, $query_pendidikan);
     $row_pendidikan = mysqli_fetch_assoc($result_pendidikan);
     $id_pendidikan = $row_pendidikan['id_pendidikan'] ?? $row2['id_pendidikan']; // Pakai data lama jika tidak ditemukan
