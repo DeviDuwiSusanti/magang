@@ -18,6 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
+        $_SESSION["id_user"] = $user["id_user"];
+
         // Reset OTP setelah verifikasi
         $conn->query("UPDATE tb_user SET otp = NULL, otp_expired = NULL WHERE email = '$email'");
 

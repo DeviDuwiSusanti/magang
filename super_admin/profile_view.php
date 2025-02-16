@@ -1,5 +1,8 @@
 <?php 
     include "sidebar.php";
+
+    $profile = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user = '$id_user'")[0];
+    $jenis_kelamin = ($profile["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki - Laki")
 ?>
 
 <div class="container">
@@ -10,9 +13,9 @@
     <div class="container mt-5 mb-5">
         <div class="card mx-auto shadow" style="max-width: 500px;">
             <div class="card-body">
-                <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
-                <h4 class="card-title">Mishbahus Surur</h4>
-                <p class="text-muted">mishbahus30@gmail.com</p>
+                <img src="../assets/img/user/<?= $profile["gambar"] ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                <h4 class="card-title"><?= $profile["nama_user"] ?></h4>
+                <p class="text-muted"><?= $profile["email"] ?></p>
                 
                 <hr>
                 <div class="card-body">
@@ -20,27 +23,27 @@
                         <tbody class="text-start">
                             <tr>
                                 <td><i class="bi bi-person"></i> <strong>Nama</strong></td>
-                                <td>Mishbahus Surur</td>
+                                <td><?= $profile["nama_user"] ?></td>
                             </tr>
                             <tr>
                                 <td><i class="bi bi-envelope"></i> <strong>Email</strong></td>
-                                <td>mishbahus30@gmail.com</td>
+                                <td><?= $profile["nama_user"] ?></td>
                             </tr>
                             <tr>
                                 <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
-                                <td>0895803255502</td>
+                                <td><?= $profile["telepone"] ?></td>
                             </tr>
                             <tr>
                                 <td><i class="bi bi-gender-ambiguous"></i> <strong>Gender</strong></td>
-                                <td>Laki-laki</td>
+                                <td><?= $jenis_kelamin ?></td>
                             </tr>
                             <tr>
                                 <td><i class="bi bi-geo-alt"></i> <strong>Alamat</strong></td>
-                                <td>Jl. Sakera Sepulu No 52, Bangkalan</td>
+                                <td><?= $profile["alamat_user"] ?></td>
                             </tr>
                             <tr>
                                 <td><i class="bi bi-calendar"></i> <strong>TTL</strong></td>
-                                <td>Bangkalan, 30 Mei 2004</td>
+                                <td><?= $profile["tempat_lahir"] ?> , <?= $profile["tanggal_lahir"] ?></td>
                             </tr>
                         </tbody>
                     </table>
