@@ -54,6 +54,19 @@ $row2 = mysqli_fetch_assoc($query2);
                                     <td><i class="bi bi-building"></i> <strong>Asal Studi</strong></td>
                                     <td><?= $row2['nama_pendidikan'] ?></td>
                                 </tr>
+                                <?php
+                                if ($row2['fakultas'] != NULL){?>
+                                <tr>
+                                    <td><i class="bi bi-building-check"></i> <strong>Fakultas</strong></td>
+                                    <td><?= $row2['fakultas'] ?></td>
+                                </tr>
+                                <?php
+                                }
+                                ?>
+                                <tr>
+                                    <td><i class="bi bi-diagram-3"></i> <strong>Jurusan</strong></td>
+                                    <td><?= $row2['jurusan'] ?></td>
+                                </tr>
                                 <tr>
                                     <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
                                     <td><?= $row2['telepone'] ?></td>
