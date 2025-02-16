@@ -2,6 +2,10 @@
 include "../koneksi.php"; 
 include "../layout/sidebarUser.php"; 
 
+if ($level != 3){
+    echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='dashboard.php?id_user=$id_user'; </script>";
+}
+
 // Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
 $sql = "SELECT * 
         FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 

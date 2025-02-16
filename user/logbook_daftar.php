@@ -1,4 +1,25 @@
-<?php include "../layout/sidebarUser.php"; ?>
+<?php include "../layout/sidebarUser.php"; 
+
+if (ISSET($_GET['id_pengajuan'])){
+    $id_pengajuan = $_GET['id_pengajuan'];
+
+    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+    $query = mysqli_query($conn, $sql);
+
+    $no = 1;
+}
+
+if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
+    $id_logbook = $_GET['id_logbook'];
+    $id_pengajuan = $_GET['id_pengajuan'];
+    $sql2 =  "DELETE FROM tb_logbook WHERE id_logbook = '$id_logbook' AND id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+    $query2 = mysqli_query($conn, $sql2);
+    if ($query2){
+        echo "<script> alert('Logbook Berhasil Dihapus'); window.location.href='logbook_daftar.php?id_pengajuan={$id_pengajuan}&id_user={$id_user}'; </script>";
+    }
+}
+
+?>
 
 <div class="main-content p-3">
     <div class="container-fluid">
@@ -8,11 +29,11 @@
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
-            <a href="logbook_unggah.php" class="btn btn-primary">
+            <a href="logbook_unggah.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-1"></i>
                 Tambah Logbook
             </a>
-            <a href="logbook_print.php" class="btn btn-success">
+            <a href="logbook_print.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>" class="btn btn-success">
                 <i class="bi bi-printer me-1"></i>
                 Cetak
             </a>
@@ -30,34 +51,28 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>2025-02-07</td>
-                            <td>Diskusi Tim</td>
-                            <td>Diskusi Proyek Magang</td>
-                            <td>
-                                <a href="logbook_edit.php" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                                <a href="hapus_logbook.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>2025-02-08</td>
-                            <td>Pengerjaan Tugas</td>
-                            <td>Mengerjakan Flowchart Sistem Magang</td>
-                            <td>
-                                <a href="logbook_edit.php" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                                <a href="hapus_logbook.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
+                        <?php
+                        while ($row = mysqli_fetch_assoc($query)){?>
+                            <tr>
+                                <td><?= $no ?></td>
+                                <td><?= $row['tanggal_logbook'] ?></td>
+                                <td><?= $row['kegiatan_logbook'] ?></td>
+                                <td><?= $row['keterangan_logbook'] ?></td>
+                                <td>
+                                    <a href="logbook_edit.php?id_logbook=<?= $row['id_logbook'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <a href="?id_logbook=<?= $row['id_logbook'] ?>&id_pengajuan=<?= $id_pengajuan ?>" 
+                                    onclick="return confirm('Anda yakin akan menghapus Logbook ini?')"
+                                    class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php
+                        $no++;
+                        }
+                        ?>
                     </tbody>
                 </table>
             </div>

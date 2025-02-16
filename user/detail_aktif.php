@@ -97,7 +97,7 @@ $row = mysqli_fetch_assoc($query);
 
                     <!-- Tombol untuk unggah logbook dan laporan akhir -->
                     <div class="mb-3">
-                        <a href="logbook_unggah.php" class="btn btn-primary btn-sm me-2">
+                        <a href="logbook_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-primary btn-sm me-2">
                             <i class="bi bi-file-earmark-text me-1"></i> Unggah Logbook
                         </a>
                         <a href="laporan_akhir.php" class="btn btn-success btn-sm">

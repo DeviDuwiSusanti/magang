@@ -1,9 +1,9 @@
 <?php include '../layout/sidebarUser.php';
 
 // Query dapat jumlah pengajuan user
-$sql2 = "SELECT COUNT(*) AS jumlah FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Menunggu'";
+$sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Menunggu'";
 $query2 = mysqli_query($conn, $sql2);
-$jumlah_pengajuan = mysqli_fetch_array($query2)['jumlah'];
+$total_pengajuan = mysqli_fetch_array($query2)['jumlah_pengajuan'];
 
 // akses dokumen
 $sql2 = "SELECT COUNT(*) FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan";
@@ -14,6 +14,11 @@ $jumlah_dokumen = mysqli_fetch_assoc($query2);
 $sql3 = "SELECT COUNT(*) FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Diterima' AND status_active != 'Y'";
 $query3 = mysqli_query($conn, $sql);
 $jumlah_kegiatan = mysqli_fetch_assoc($query2);
+
+// akses logbook
+$sql4 = "SELECT COUNT(*) AS jumlah_logbook FROM tb_logbook WHERE id_user = '$id_user'";
+$query4 = mysqli_query($conn, $sql4);
+$total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
 ?>
 
 <div class="main-content p-4">
@@ -31,7 +36,7 @@ $jumlah_kegiatan = mysqli_fetch_assoc($query2);
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
                             <h5 class="card-title">Pengajuan</h5>
-                            <h2 class="card-text text-primary"><?= $jumlah_pengajuan?></h2>
+                            <h2 class="card-text text-primary"><?= $total_pengajuan?></h2>
                             <p class="text-muted">Permohonan Magang</p>
                             <a href="status_pengajuan.php" class="btn btn-info mt-3 detail">View Details</a>
                         </div>
@@ -46,7 +51,7 @@ $jumlah_kegiatan = mysqli_fetch_assoc($query2);
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Unggah Logbook</h5>
-                        <h2 class="card-text text-primary">15</h2>
+                        <h2 class="card-text text-primary"><?= $total_logbook ?></h2>
                         <p class="text-muted">Logbook Terunggah</p>
                         <a href="kegiatan_aktif.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>

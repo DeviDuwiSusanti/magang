@@ -13,6 +13,7 @@ if (!isset($_SESSION['email'])) {
     $hasil = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($hasil);
     $id_user = $row['id_user']; // Ambil id_user dari sesi login
+    $level = $row['level'];
 }
 ?>
 
@@ -50,7 +51,7 @@ if (!isset($_SESSION['email'])) {
                     </a>
                 </li>
                 <?php 
-                    if ($row['level'] == 3){?>
+                    if ($level == 3){?>
                         <li class="sidebar-item">
                             <a href="profil.php" class="sidebar-link">
                                 <i class="bi bi-person-lines-fill"></i>
@@ -68,7 +69,7 @@ if (!isset($_SESSION['email'])) {
                     </a>
                 </li>
                 <?php 
-                    if ($row['level'] == 3){?>
+                    if ($level == 3){?>
                         <li class="sidebar-item">
                             <a href="status_pengajuan.php" class="sidebar-link">
                                 <i class="bi bi-file-earmark-text"></i>
@@ -85,7 +86,7 @@ if (!isset($_SESSION['email'])) {
                     </a>
                 </li>
                 <?php 
-                    if ($row['level'] == 3){?>
+                    if ($level == 3){?>
                         <li class="sidebar-item">
                             <a href="setting.php" class="sidebar-link">
                                 <i class="bi bi-gear"></i>
@@ -127,7 +128,7 @@ if (!isset($_SESSION['email'])) {
                                 <img src="../assets/img/user/<?= $row['gambar'] ?>" alt="foto profil" class="avatar img-fluid rounded-circle">
                             </a>
                             <?php 
-                            if ($row['level'] == 3){?>
+                            if ($level == 3){?>
                                 <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                     <a href="profil_edit.php?id_user=<?= $id_user ?>" class="dropdown-item">
                                         <i class="bi bi-pencil-square"></i>

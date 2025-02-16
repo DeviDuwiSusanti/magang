@@ -1,3 +1,16 @@
+<?php
+include '../koneksi.php';
+
+if (ISSET($_GET['id_pengajuan'])){
+    $id_pengajuan = $_GET['id_pengajuan'];
+    $id_user = $_GET['id_user'];
+
+    $sql = "SELECT * FROM tb_logbook, tb_bidang, tb_instansi, tb_pengajuan, tb_profile_user, tb_pendidikan WHERE tb_logbook.id_pengajuan = '$id_pengajuan' AND tb_logbook.id_user = '$id_user'
+    AND tb_pengajuan.id_instansi = tb_instansi.id_instansi AND  tb_pengajuan.id_bidang = tb_bidang.id_bidang AND tb_profile_user.id_user = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
+    $query = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($query);
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -93,47 +106,80 @@
     <div class="filter-info">
         <table>
             <tr>
+                <td><strong>NAMA</strong></td>
+                <td>:</td>
+                <td><?= $row['nama_user'] ?></td>
+            </tr>
+            <tr>
+                <td><strong>ASAL STUDI</strong></td>
+                <td>:</td>
+                <td><?= $row['nama_pendidikan'] ?></td>
+            </tr>
+            <tr>
                 <td><strong>MAGANG</strong></td>
                 <td>:</td>
-                <td>Bidang Informatika</td>
+                <td><?= $row['nama_bidang'] ?> di <?= $row['nama_panjang'] ?> Sidoarjo</td>
+            </tr>
+            <tr>
+                <td><strong>DURASI</strong></td>
+                <td>:</td>
+                <td><?= $row['tanggal_mulai'] ?> Sampai <?= $row['tanggal_selesai'] ?></td>
             </tr>
         </table>
     </div>
 
     <table class="table">
-        <thead>
-            <tr>
-                <th style="width: 2%;">No</th>
-                <th>Tanggal</th>
-                <th>Kegiatan</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="text-align: center;">1</td>
-                <td style="text-align: left;">Diskusi Tim</td>
-                <td style="text-align: left;">Diskusi Proyek Magang</td>
-            </tr>
-            <tr>
-                <td style="text-align: center;">2</td>
-                <td style="text-align: left;">Pengerjaan Tugas</td>
-                <td style="text-align: left;">Mengerjakan Flowchart Sistem Magang</td>
-            </tr>
-            
-        </tbody>
+    <thead>
+        <tr>
+            <th style="width: 2%;">No</th>
+            <th>Tanggal</th>
+            <th>Kegiatan</th>
+            <th>Keterangan</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+        $sql2 = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+        $query2 = mysqli_query($conn, $sql2);
+        $no = 1;
+        $total_logbook = 0; // Untuk menghitung total logbook
+
+        while ($row2 = mysqli_fetch_assoc($query2)) { 
+            $total_logbook++;
+        ?>
+        <tr>
+            <td style="text-align: center;"><?= $no ?></td>
+            <td style="text-align: left;"><?= $row2['tanggal_logbook'] ?></td>
+            <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
+            <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
+        </tr>
+        <?php
+        $no++;
+        }
+        ?>
+    </tbody>
         <tfoot>
             <tr>
                 <th>Total Logbook</th>
-                <td colspan="2">2 Logbook</td>
-            
+                <td colspan="3"><?= $total_logbook ?> Logbook</td>
             </tr>
         </tfoot>
     </table>
+
 
     <div class="no-print">
         <button onclick="window.print()">Cetak Logbook</button>
     </div>
 
+    <!-- Tambahan: Tempat Tanda Tangan -->
+    <div style="width: 100%; display: flex; justify-content: flex-end; margin-top: 50px;">
+        <div style="text-align: center; width: 300px;">
+            <p>Sidoarjo, <?= date("d F Y") ?></p>
+            <p><strong>Pembimbing Magang</strong></p>
+            <br><br><br><br> <!-- Jeda untuk tanda tangan -->
+            <p><strong>(...................................)</strong></p>
+        </div>
+    </div>
 </body>
 
 </html>
