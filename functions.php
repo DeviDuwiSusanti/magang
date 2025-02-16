@@ -144,4 +144,3 @@ function register($POST)
 }
 
 ?>
->>>>>>> 593718b1c40eb7cb177c93c7aef827ade5d0f463
