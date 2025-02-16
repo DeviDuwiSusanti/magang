@@ -1,14 +1,8 @@
 <?php
 include "../koneksi.php";
+include "functions.php";
 
-// MENGAMBIL DATA DARI BIDANG/LOWONGAN SESUAI DENGAN ID
-if(isset($_GET['id_bidang'])){
-    $id_bidang = $_GET['id_bidang'];
 
-    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.change_date AS bidang_change_date, tb_instansi.change_date AS instansi_change_date FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = '$id_bidang'";
-    $query = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($query);
-}
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +23,16 @@ if(isset($_GET['id_bidang'])){
 <body>
 
 <!-- Navbar -->
-<?php include "../layout/navbarUser.php" ?>
+<?php include "../layout/navbarUser.php";
+// MENGAMBIL DATA DARI BIDANG/LOWONGAN SESUAI DENGAN ID
+if(isset($_GET['id_bidang'])){
+    $id_bidang = $_GET['id_bidang'];
+
+    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.change_date AS bidang_change_date FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = tb_bidang.id_instansi";
+    $query = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($query);
+    $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
+} ?>
 
 <!--==================== MAIN ====================-->
 <main class="main">
@@ -43,7 +46,7 @@ if(isset($_GET['id_bidang'])){
                 <table class="detail-table">
                     <tr><td><b>Perusahaan</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
                     <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat_instansi'] ?></td></tr>
-                    <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td>120</td></tr>
+                    <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td><?= $pemagang_aktif ?></td></tr>
                     <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota'] ?></td></tr>
                     <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_change_date'] ?></td></tr>
                 </table>
@@ -76,7 +79,7 @@ if(isset($_GET['id_bidang'])){
                 </div>
                 
                 <div class="d-flex justify-content-left mt-4">
-                    <a href="../user/dashboard.php" class="btn btn-primary">Daftar Sekarang</a>
+                    <a href="../user/pengajuan.php" class="btn btn-primary">Daftar Sekarang</a>
                 </div>
             </div>
         </div>
