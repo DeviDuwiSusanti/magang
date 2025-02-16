@@ -129,7 +129,7 @@ if (!isset($_SESSION['email'])) {
                             <?php 
                             if ($row['level'] == 3){?>
                                 <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                    <a href="profil_edit.php" class="dropdown-item">
+                                    <a href="profil_edit.php?id_user=<?= $id_user ?>" class="dropdown-item">
                                         <i class="bi bi-pencil-square"></i>
                                         <span>Edit Profil</span>
                                     </a>
