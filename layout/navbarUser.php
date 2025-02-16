@@ -43,14 +43,14 @@ if (isset($_SESSION['email'])) {
                 </li>
                 <li class="nav__item">
                     <a href="aktivitas.php" 
-                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'aktivitas.php' ? 'active-link' : ''; ?>">
-                       <i class="bx bx-file"></i>
+                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'aktivitas.php' ? 'active-link' : ''; ?>">
+                        <i class="bx bx-file"></i>
                         <span>Terdaftar</span>
                     </a>
                 </li>
                 <li class="nav__item">
                     <a href="tentang.php" 
-                       class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'tentang.php' ? 'active-link' : ''; ?>">
+                        class="nav__link <?php echo basename($_SERVER['PHP_SELF']) === 'tentang.php' ? 'active-link' : ''; ?>">
                         <i class="bx bx-award"></i>
                         <span>Tentang Kami</span>
                     </a>

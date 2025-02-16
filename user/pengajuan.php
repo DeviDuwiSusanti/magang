@@ -16,7 +16,7 @@
         <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <!-- Step 1 -->
             <div id="step1">
-                <h4>Step 1: Informasi Anggota</h4>
+                <h4>Step 1: Daftar Pengajuan</h4>
                 <div class="mb-3">
                     <label for="instansi" class="form-label">Instansi yang Dituju</label>
                     <select class="form-control" id="instansi" name="instansi" required>
@@ -107,7 +107,8 @@
                 </div>
                 <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1" onclick="tambahAnggota()">
                     <i class="bi bi-person-plus-fill"></i> Tambah Anggota
-                </button><br><br>
+                </button>
+                <div id="anggotaContainer"></div><br><br>
                 <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
                 <button type="submit" class="btn btn-success btn-sm">Kirim</button>
             </div>
@@ -147,26 +148,40 @@
     }
 
     function tambahAnggota() {
-        var anggotaContainer = document.getElementById('anggotaContainer');
-        var newAnggota = document.createElement('div');
-        newAnggota.classList.add('mb-3', 'anggota-group');
-        newAnggota.innerHTML = `
-            <label class="form-label">Anggota ${anggotaContainer.children.length + 1}</label>
-            <div class="row">
-                <div class="col">
-                    <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" required>
-                </div>
-                <div class="col">
-                    <input type="email" class="form-control" name="anggota_email[]" placeholder="Email" required>
-                </div>
-                <div class="col">
-                    <input type="text" class="form-control" name="anggota_nik[]" placeholder="NIK" required>
-                </div>
-                <div class="col">
-                    <input type="text" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" required>
-                </div>
+    var anggotaContainer = document.getElementById('anggotaContainer');
+    var newAnggota = document.createElement('div');
+    newAnggota.classList.add('mb-3', 'anggota-group');
+    
+    var index = anggotaContainer.children.length + 1;
+
+    newAnggota.innerHTML = `
+        <label class="form-label">Anggota ${index}</label>
+        <div class="row align-items-center">
+            <div class="col">
+                <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" required>
             </div>
-        `;
-        anggotaContainer.appendChild(newAnggota);
+            <div class="col">
+                <input type="email" class="form-control" name="anggota_email[]" placeholder="Email" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="anggota_nik[]" placeholder="NIK" required>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" required>
+            </div>
+            <div class="col-auto">
+                <button type="button" class="btn btn-danger btn-sm" onclick="hapusAnggota(this)">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    anggotaContainer.appendChild(newAnggota);
+    }
+
+    function hapusAnggota(button) {
+        var anggotaGroup = button.closest('.anggota-group');
+        anggotaGroup.remove();
     }
 </script>

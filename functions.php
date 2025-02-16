@@ -1,5 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "magang_database");
+$conn = mysqli_connect("localhost", "root", "", "db_magang");
 
 function query($query)
 {
@@ -43,7 +43,7 @@ function uploadImage($file)
 {
     // Jika file tidak diupload, kembalikan avatar default
     if ($file['error'] === 4) { // Error code 4 = No file uploaded
-        return "avatar1.png";
+        return "avatar.png";
     }
 
     // Validasi ukuran file (max 1 MB)
@@ -114,7 +114,7 @@ function register($POST)
     $telepone = $POST["telepone"];
     $level = $POST["level"];
     $gambar = uploadImage($_FILES["gambar"]);
-    $nim = isset($POST["nim"]) ? $POST["nim"] : NULL;
+    $nim = $POST["nim"];
 
 
 
@@ -131,15 +131,17 @@ function register($POST)
         exit;
     }
 
-
     // Query untuk tb_user
     $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
 
     // Query untuk tb_profile_user (gunakan NULL jika NIM tidak ada)
-    $query2 = "INSERT INTO tb_profile_user (id_user, nama, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat, gambar, id_pendidikan, create_by, telepone)
-                    VALUES ('$id_user', '$nama', '$nik', '$nisn', " . ($nim ? "'$nim'" : "NULL") . ", '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
+    $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar, id_pendidikan, create_by, telepone)
+                    VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
 
     mysqli_query($conn, $query1);
     mysqli_query($conn, $query2);
     return mysqli_affected_rows($conn);
 }
+
+?>
+>>>>>>> 593718b1c40eb7cb177c93c7aef827ade5d0f463

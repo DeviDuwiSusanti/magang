@@ -10,14 +10,15 @@
         
         <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <div id="file-container" class="mb-3">
-                <?php $no = 1; ?>
-                <label for="persyaratan" class="form-label">Dokumen Persyaratan - <span id="file-number">1</span></label>
-                <input type="file" class="form-control" id="persyaratan" name="persyaratan[]" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                <div class="file-input-group d-flex align-items-center mb-2">
+                    <label for="persyaratan" class="form-label me-2">Dokumen Persyaratan - <span class="file-number">1</span></label>
+                    <input type="file" class="form-control me-2" name="persyaratan[]" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
+                </div>
             </div>
-
             <button type="button" class="btn btn-secondary mb-3" onclick="addFileInput()">Tambah</button><br>
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Unggah Logbook</button>
+            <button type="submit" class="btn btn-primary">Unggah Persyaratan</button>
         </form>
     </div>
 </div>
@@ -27,17 +28,22 @@
     function addFileInput() {
         fileCount++;
         let container = document.getElementById("file-container");
-        let label = document.createElement("label");
-        label.innerHTML = `Dokumen Persyaratan - ${fileCount}`;
-        label.className = "mt-2";
-        let input = document.createElement("input");
-        input.type = "file";
-        input.className = "form-control mt-2";
-        input.name = "lampiran[]";
-        input.accept = ".pdf,.doc,.docx,.jpg,.png";
-        container.appendChild(label);
-        container.appendChild(input);
+        let div = document.createElement("div");
+        div.className = "file-input-group d-flex align-items-center mb-2";
+        div.innerHTML = `
+            <label class="form-label me-2">Dokumen Persyaratan - <span class="file-number">${fileCount}</span></label>
+            <input type="file" class="form-control me-2" name="persyaratan[]" accept=".pdf,.doc,.docx,.jpg,.png" required>
+            <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function removeFileInput(button) {
+        let container = document.getElementById("file-container");
+        if (container.children.length > 1) {
+            button.parentElement.remove();
+        }
     }
 </script>
 
-<?php include "../layout/footerDashboard.php" ?>
+<?php include "../layout/footerDashboard.php"; ?>
