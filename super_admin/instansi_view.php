@@ -45,10 +45,10 @@
                         <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi"></td>
 
                         <td class="d-flex justify-content-center gap-2">
-                            <a href="user_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                            <a href="instansi_hapus.php?id_instansi=<?= $opd["id_instansi"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
                                 <i class="bi bi-trash"></i> Hapus
                             </a>
-                            <a href="user_edit.php" class="btn btn-warning btn-sm">
+                            <a href="instansi_edit.php?id_instansi=<?= $opd["id_instansi"] ?>" class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil"></i> Edit
                             </a>
                         </td>

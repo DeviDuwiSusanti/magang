@@ -101,11 +101,11 @@ if (isset($_POST["register"])) {
                             <label for="email">Email </label>
                         </div>
                         <div class="input-field">
-                            <input type="number" class="input" name="nik" maxlength="16" required>
+                            <input type="text" inputmode="numeric" id="nik" class="input" name="nik" maxlength="16" required>
                             <label for="nik">NIK (16)</label>
                         </div>
                         <div class="input-field">
-                            <input type="number" maxlength="10" class="input" name="nisn" required>
+                            <input type="text" maxlength="10" id="nisn" inputmode="numeric" class="input" name="nisn" required>
                             <label for="nisn">NISN (10)</label>
                         </div>
 
@@ -206,7 +206,7 @@ if (isset($_POST["register"])) {
                             <textarea name="alamat" id="address" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="number" class="input" name="telepone" maxlength="15" required>
+                            <input type="text" class="input" name="telepone" id="telepone" inputmode="numeric"  maxlength="15" required>
                             <label for="telepone">Telephone</label>
                         </div>
 
@@ -263,6 +263,17 @@ if (isset($_POST["register"])) {
         // Kirim data PHP ke JavaScript
         const sekolahData = <?= json_encode($sekolahData) ?>;
         const universitasData = <?= json_encode($universitasData) ?>;
+
+        document.getElementById("nik").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        });
+        document.getElementById("nisn").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        });
+        document.getElementById("telepone").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        });
+
 
         // Event listener untuk pilihan pendidikan
         document.getElementById("educationSelect").addEventListener("change", function() {

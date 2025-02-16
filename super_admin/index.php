@@ -1,5 +1,9 @@
 <?php 
     include "sidebar.php"; 
+    $instansi = query("SELECT COUNT(*) AS total FROM tb_instansi")[0];
+    $pendidikan = query("SELECT COUNT(*) AS total FROM tb_pendidikan")[0];
+    $pengajuan = query("SELECT COUNT(*) AS total FROM tb_pengajuan")[0];
+    $user = query("SELECT COUNT(*) AS total FROM tb_user")[0];
 ?>
 
 <div class="main-content p-4">
@@ -15,7 +19,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Instansi Terdaftar</h5>
-                        <h2 class="card-text text-success">50</h2>
+                        <h2 class="card-text text-success"><?= $instansi["total"] ?></h2>
                         <p class="text-muted">Lihat Dan Kelola Daftar Instansi</p>
                         <a href="instansi_view.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
@@ -26,7 +30,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Daftar Pengguna</h5>
-                        <h2 class="card-text text-warning">100</h2>
+                        <h2 class="card-text text-warning"><?= $user["total"] ?></h2>
                         <p class="text-muted">Lihat Dan Kelola Daftar Pengguna</p>
                         <a href="user_view.php" class="btn btn-warning mt-3 detail">View Details</a>
                     </div>
@@ -38,7 +42,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Asal Sekolah / Universitas</h5>
-                        <h2 class="card-text text-primary">20</h2>
+                        <h2 class="card-text text-primary"><?= $pendidikan["total"] ?></h2>
                         <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p>
                         <a href="study_view.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
@@ -50,7 +54,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Pengajuan</h5>
-                        <h2 class="card-text text-danger">13</h2>
+                        <h2 class="card-text text-danger"><?= $pengajuan["total"] ?></h2>
                         <p class="text-muted">Daftar Pengajuan Pengguna</p>
                         <a href="pengajuan_view.php" class="btn btn-danger mt-3 detail">View Details</a>
                     </div>
