@@ -600,3 +600,9 @@ body.dark-mode .text-muted {
 body.dark-mode .btn {
     color: #fff;
 }
+
+
+body.dark-mode .text-success { color: #28a745 !important; } /* Hijau */
+body.dark-mode .text-warning { color: #ffc107 !important; } /* Kuning */
+body.dark-mode .text-primary { color: #007bff !important; } /* Biru */
+body.dark-mode .text-danger { color: #dc3545 !important; } /* Merah */

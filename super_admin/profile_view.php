@@ -27,7 +27,7 @@
                             </tr>
                             <tr>
                                 <td><i class="bi bi-envelope"></i> <strong>Email</strong></td>
-                                <td><?= $profile["nama_user"] ?></td>
+                                <td><?= $profile["email"] ?></td>
                             </tr>
                             <tr>
                                 <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
