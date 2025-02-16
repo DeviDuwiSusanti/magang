@@ -103,12 +103,6 @@ if (ISSET($_POST['update_profil'])){
                 <input type="text" class="form-control" id="nama" name="nama" value="<?= $row2['nama_user'] ?>" required>
             </div>
             
-            <!-- Email -->
-            <!-- <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= $row2['email'] ?>" required>
-            </div> -->
-            
             <!-- Tempat Lahir -->
             <div class="mb-3">
                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
