@@ -1,5 +1,6 @@
-<?php include "sidebar.php"; ?>
-
+<?php 
+    include "sidebar.php"; 
+?>
 
 <div class="main-content p-4">
     <div class="container-fluid">

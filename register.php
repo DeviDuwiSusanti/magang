@@ -1,77 +1,89 @@
-<?php 
-    include "functions.php";
+<?php
+include "functions.php";
 
+// Ambil data sekolah dan perguruan tinggi
+$sekolah = query("SELECT id_pendidikan, nama_pendidikan, jurusan FROM tb_pendidikan WHERE fakultas IS NULL OR fakultas = '' ");
+$perguruan_tinggi = query("SELECT id_pendidikan, nama_pendidikan, fakultas, jurusan FROM tb_pendidikan WHERE fakultas IS NOT NULL AND fakultas != '' ");
 
-    // Ambil data sekolah dan perguruan tinggi
-    $sekolah = query("SELECT id_pendidikan, nama_pendidikan, jurusan FROM tb_pendidikan WHERE fakultas IS NULL OR fakultas = '' ");
-    $perguruan_tinggi = query("SELECT id_pendidikan, nama_pendidikan, fakultas, jurusan FROM tb_pendidikan WHERE fakultas IS NOT NULL AND fakultas != '' ");
+// Struktur data sekolah
+$sekolahData = [];
+foreach ($sekolah as $school) {
+    $sekolahData[$school['nama_pendidikan']][] = [
+        'id_pendidikan' => $school['id_pendidikan'],
+        'jurusan' => $school['jurusan']
+    ];
+}
 
+// Struktur data perguruan tinggi
+$universitasData = [];
+foreach ($perguruan_tinggi as $kampus) {
+    $universitasData[$kampus['nama_pendidikan']][$kampus['fakultas']][] = [
+        'id_pendidikan' => $kampus['id_pendidikan'],
+        'jurusan' => $kampus['jurusan']
+    ];
+}
 
-    // Struktur data sekolah
-    $sekolahData = [];
-    foreach ($sekolah as $school) {
-        $sekolahData[$school['nama_pendidikan']][] = [
-            'id_pendidikan' => $school['id_pendidikan'],
-            'jurusan' => $school['jurusan']
-        ];
+// Status register
+$status = "";
+if (isset($_POST["register"])) {
+    if (register($_POST) > 0) {
+        $status = "success";
+    } else {
+        $status = "error";
     }
-
-    // Struktur data perguruan tinggi
-        $universitasData = [];
-        foreach ($perguruan_tinggi as $kampus) {
-            $universitasData[$kampus['nama_pendidikan']][$kampus['fakultas']][] = [
-                'id_pendidikan' => $kampus['id_pendidikan'],
-                'jurusan' => $kampus['jurusan']
-            ];
-        }
-
-
-    
-    if(isset($_POST["register"])) {
-        if(register($_POST) > 0) {
-            echo "
-                <script>
-                    alert('berhasil')
-                    document.location.href = 'login.php';
-                </script>
-            ";
-        }
-        else {
-            echo "
-                <script>
-                    alert('gagal')
-                    document.location.href = 'register.php';
-                </script>
-            ";
-        }
-    }
-
-    
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/register.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./assets/js/alert.js"></script>
     <title>Register</title>
     <style>
-        select, input {
+        select,
+        input {
             width: 100%;
             padding: 2px;
             margin: 2px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         .form-group {
             margin-bottom: 10px;
         }
     </style>
 </head>
+
 <body>
+    <?php if (isset($_GET['error'])): ?>
+        <script>
+            Swal.fire({
+                title: 'Error!',
+                text: <?php
+                        // Tangkap pesan berdasarkan nilai error
+                        if ($_GET['error'] === 'email_terdaftar') {
+                            echo "'Email sudah terdaftar. Silakan gunakan email lain.'";
+                        } elseif ($_GET['error'] === 'nik_terdaftar') {
+                            echo "'NIK sudah terdaftar. Silakan gunakan NIK lain.'";
+                        } elseif ($_GET['error'] === 'nisn_terdaftar') {
+                            echo "'NISN sudah terdaftar. Silakan gunakan NISN lain.'";
+                        }
+                        ?>,
+                icon: 'error',
+                confirmButtonText: 'Coba Lagi'
+            });
+        </script>
+    <?php endif; ?>
+
+
     <div class="wrapper">
         <div class="container main">
             <div class="row">
@@ -89,18 +101,18 @@
                             <label for="email">Email </label>
                         </div>
                         <div class="input-field">
-                            <input type="text" class="input" name="nik" maxlength="16" required>
+                            <input type="number" class="input" name="nik" maxlength="16" required>
                             <label for="nik">NIK (16)</label>
                         </div>
                         <div class="input-field">
-                            <input type="text" maxlength="10" class="input" name="nisn" required>
+                            <input type="number" maxlength="10" class="input" name="nisn" required>
                             <label for="nisn">NISN (10)</label>
                         </div>
 
 
                         <div class="mb-3">
                             <label class="form-label">Pilih Pendidikan</label>
-                            <select class="form-select" id="educationSelect">
+                            <select class="form-select" id="educationSelect" required>
                                 <option value="">Pilih Pendidikan</option>
                                 <option value="sekolah">Sekolah</option>
                                 <option value="universitas">Perguruan Tinggi</option>
@@ -113,7 +125,7 @@
                                 <label class="form-label">Nama Sekolah</label>
                                 <select class="form-select" id="schoolSelect">
                                     <option value="">Pilih Sekolah</option>
-                                    <?php foreach(array_keys($sekolahData) as $namaSekolah) : ?>
+                                    <?php foreach (array_keys($sekolahData) as $namaSekolah) : ?>
                                         <option value="<?= $namaSekolah ?>"><?= $namaSekolah ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -131,7 +143,7 @@
                                 <label class="form-label">Nama Universitas</label>
                                 <select class="form-select" id="universitySelect">
                                     <option value="">Pilih Universitas</option>
-                                    <?php foreach(array_keys($universitasData) as $namaUniversitas) : ?>
+                                    <?php foreach (array_keys($universitasData) as $namaUniversitas) : ?>
                                         <option value="<?= $namaUniversitas ?>"><?= $namaUniversitas ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -147,10 +159,10 @@
                                 </select>
 
                             </div>
-                                <div class="input-field mt-3">
-                                    <input type="text" class="input" name="nim" maxlength="15">
-                                    <label for="nim">NIM</label>
-                                </div>
+                            <div class="input-field mt-3">
+                                <input type="text" class="input" name="nim" maxlength="15">
+                                <label for="nim">NIM</label>
+                            </div>
                         </div>
 
                         <div class="mt-3">
@@ -184,9 +196,9 @@
                         </div>
 
                         <div>
-                        <label for="tanggal_lahir">Tanggal Lahir</label>
+                            <label for="tanggal_lahir">Tanggal Lahir</label>
                             <div class="input-field">
-                                <input type="date" class="input" name="tanggal_lahir" required>
+                                <input type="date" class="input" name="tanggal_lahir">
                             </div>
                         </div>
 
@@ -194,10 +206,10 @@
                             <textarea name="alamat" id="address" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="text" class="input" name="telepone" maxlength="15">
+                            <input type="number" class="input" name="telepone" maxlength="15" required>
                             <label for="telepone">Telephone</label>
                         </div>
-                        
+
                         <input type="hidden" name="level" id="level" value="3">
                         <!-- Upload Foto Profil -->
                         <div class="input-field">
@@ -215,33 +227,41 @@
         </div>
     </div>
 
-<script>
-function validateFile() {
-        const fileInput = document.getElementById('image');
-        const previewContainer = document.getElementById('imagePreview');
-        const previewImage = document.getElementById('previewImage');
-        const file = fileInput.files[0];
+    <script>
+        <?php if ($status === "success"): ?>
+            alertSuccessRegister('Registrasi berhasil dilakukan.', 'login.php');
+        <?php elseif ($status === "error"): ?>
+            alertErrorRegister('Registrasi gagal dilakukan.', 'register.php');
+        <?php endif; ?>
+    </script>
 
-        if (file) {
-            if (file.size > 1048576) { // 1MB = 1048576 bytes
-                alert("Ukuran file terlalu besar! Maksimal 1MB.");
-                fileInput.value = ""; // Reset file input
-                previewImage.src = ""; // Hapus pratinjau
-                previewContainer.style.display = "none";
-                return;
+    <script>
+        function validateFile() {
+            const fileInput = document.getElementById('image');
+            const previewContainer = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const file = fileInput.files[0];
+
+            if (file) {
+                if (file.size > 1048576) { // 1MB = 1048576 bytes
+                    alert("Ukuran file terlalu besar! Maksimal 1MB.");
+                    fileInput.value = ""; // Reset file input
+                    previewImage.src = ""; // Hapus pratinjau
+                    previewContainer.style.display = "none";
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = "block";
+                };
+                reader.readAsDataURL(file);
             }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                previewImage.src = e.target.result;
-                previewContainer.style.display = "block";
-            };
-            reader.readAsDataURL(file);
         }
-    }
 
-       // Kirim data PHP ke JavaScript
-       const sekolahData = <?= json_encode($sekolahData) ?>;
+        // Kirim data PHP ke JavaScript
+        const sekolahData = <?= json_encode($sekolahData) ?>;
         const universitasData = <?= json_encode($universitasData) ?>;
 
         // Event listener untuk pilihan pendidikan
@@ -340,7 +360,7 @@ function validateFile() {
             if (selectedId) {
                 // Tampilkan ID Pendidikan di span
                 document.getElementById("idPendidikanResult").textContent = selectedId;
-                
+
                 // Isi value input hidden
                 document.getElementById("idPendidikanInput").value = selectedId;
             } else {
@@ -348,8 +368,7 @@ function validateFile() {
                 document.getElementById("idPendidikanInput").value = ""; // Kosongkan jika tidak valid
             }
         });
-
-
-</script>
+    </script>
 </body>
+
 </html>

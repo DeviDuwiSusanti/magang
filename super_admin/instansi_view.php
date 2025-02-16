@@ -1,5 +1,7 @@
 <?php 
     include "sidebar.php";
+    $instansi = query("SELECT * FROM tb_instansi WHERE status_active = 'Y'");
+    $no = 1;
 ?>
 
 
@@ -24,144 +26,41 @@
                 <thead >
                     <tr>
                         <th>No.</th>
-                        <th>Nama</th>
-                        <th>Alamat</th>
-                        <th>Deskripsi</th>
-                        <th>Telepon</th>
-                        <th>Gambar</th>
-                        <th colspan="2">Aksi</th>
+                        <th>Id Instansi</th>
+                        <th>Nama Pendek</th>
+                        <th>Nama Panjang</th>
+                        <th>Group Instansi</th>
+                        <th>Gambar Instansi</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <?php foreach($instansi as $opd) : ?>
                     <tr>
-                        <td>1</td>
-                        <td>Diskominfo</td>
-                        <td>Jl.Sidoarjo</td>
-                        <td>Dinas ini berdiri sejak tahun sekian</td>
-                        <td>0891234432</td>
-                        <td>
-                            <img src="../assets/img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
-                        </td>
-                        <td>
-                            <a href="instansi_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
+                        <td><?= $no++ ?></td>
+                        <td><?= $opd["id_instansi"] ?></td>
+                        <td><?= $opd["nama_pendek"] ?></td>
+                        <td><?= $opd["nama_panjang"] ?></td>
+                        <td><?= $opd["group_instansi"] ?></td>
+                        <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi"></td>
+
+                        <td class="d-flex justify-content-center gap-2">
+                            <a href="user_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
                                 <i class="bi bi-trash"></i> Hapus
                             </a>
-                        </td>
-                        <td>
-                            <a href="instansi_edit.php" class="btn btn-warning btn-sm">
+                            <a href="user_edit.php" class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil"></i> Edit
                             </a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Diskominfo</td>
-                        <td>Jl.Sidoarjo</td>
-                        <td>Dinas ini berdiri sejak tahun sekian</td>
-                        <td>0891234432</td>
-                        <td>
-                            <img src="../assets/img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
-                        </td>
-                        <td>
-                            <a href="instansi_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
-                                <i class="bi bi-trash"></i> Hapus
-                            </a>
-                        </td>
-                        <td>
-                            <a href="instansi_edit.php" class="btn btn-warning btn-sm">
-                                <i class="bi bi-pencil"></i> Edit
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Diskominfo</td>
-                        <td>Jl.Sidoarjo</td>
-                        <td>Dinas ini berdiri sejak tahun sekian</td>
-                        <td>0891234432</td>
-                        <td>
-                            <img src="../assets/img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
-                        </td>
-                        <td>
-                            <a href="instansi_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
-                                <i class="bi bi-trash"></i> Hapus
-                            </a>
-                        </td>
-                        <td>
-                            <a href="instansi_edit.php" class="btn btn-warning btn-sm">
-                                <i class="bi bi-pencil"></i> Edit
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Diskominfo</td>
-                        <td>Jl.Sidoarjo</td>
-                        <td>Dinas ini berdiri sejak tahun sekian</td>
-                        <td>0891234432</td>
-                        <td>
-                            <img src="../assets/img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
-                        </td>
-                        <td>
-                            <a href="instansi_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
-                                <i class="bi bi-trash"></i> Hapus
-                            </a>
-                        </td>
-                        <td>
-                            <a href="instansi_edit.php" class="btn btn-warning btn-sm">
-                                <i class="bi bi-pencil"></i> Edit
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Diskominfo</td>
-                        <td>Jl.Sidoarjo</td>
-                        <td>Dinas ini berdiri sejak tahun sekian</td>
-                        <td>0891234432</td>
-                        <td>
-                            <img src="../assets/img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
-                        </td>
-                        <td>
-                            <a href="instansi_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
-                                <i class="bi bi-trash"></i> Hapus
-                            </a>
-                        </td>
-                        <td>
-                            <a href="instansi_edit.php" class="btn btn-warning btn-sm">
-                                <i class="bi bi-pencil"></i> Edit
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Diskominfo</td>
-                        <td>Jl.Sidoarjo</td>
-                        <td>Dinas ini berdiri sejak tahun sekian</td>
-                        <td>0891234432</td>
-                        <td>
-                            <img src="../assets/img/login.jpeg" alt="Gambar Instansi" class="img-thumbnail" style="width: 100px;">
-                        </td>
-                        <td>
-                            <a href="instansi_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
-                                <i class="bi bi-trash"></i> Hapus
-                            </a>
-                        </td>
-                        <td>
-                            <a href="instansi_edit.php" class="btn btn-warning btn-sm">
-                                <i class="bi bi-pencil"></i> Edit
-                            </a>
-                        </td>
-                    </tr>
-                    <!-- Tambahkan data lain di sini -->
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-    
-    <?php include "footer.php" ?>
+<?php include "footer.php" ?>
 
 <script>
     $(document).ready(function() {
@@ -171,7 +70,7 @@
             "ordering" : true,
             "info" : true,
             "lengthMenu" : [5, 10, 25, 50, 100],
-            "columnDefs" : [{"orderable" : false, "targets" : [1, 2, 3, 4, 5, 6, 7]}],
+            "columnDefs" : [{"orderable" : false, "targets" : [ 1, 2, 3, 4, 5, 6]}], // Perbaiki indeks kolom
             "language" : {
                 "search" : "Cari : ",
                 "lengthMenu" : "Tampilkan _MENU_  data Per Halaman",
@@ -196,7 +95,6 @@
                     }
                 }
             ]
-        })
-    })
-
+        });
+    });
 </script>

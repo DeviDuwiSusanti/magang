@@ -1,3 +1,27 @@
+<?php 
+    session_start();
+    include "../functions.php";
+    
+    if (!isset($_SESSION['email']) || !isset($_SESSION['id_user'])) {
+        header("Location: ../login.php");
+        exit();
+    }
+
+    $email = $_SESSION['email'];
+    $query = "SELECT * FROM tb_user WHERE email = '$email'";
+    $result = $conn->query($query);
+    $user = $result->fetch_assoc();
+
+    if ($user['level'] != 1) {
+        header("Location: ../login.php");
+        exit();
+    }
+
+    $id_user = $user["id_user"];
+    $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0];
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,7 +134,7 @@
 
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="../assets/img/login.jpeg" alt="avatar" class="avatar rounded-circle">
+                                <img src="../assets/img/user/<?= $pengguna["gambar"] ?>"  alt="avatar" class="avatar rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                 <a href="profile_view.php" class="dropdown-item">
