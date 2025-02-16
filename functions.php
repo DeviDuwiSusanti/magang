@@ -1,5 +1,4 @@
 <?php
-
     $conn = mysqli_connect("localhost", "root", "", "db_magang");
 
     function query($query) {
@@ -12,9 +11,7 @@
     }
 
 
-    function generateUserId($conn)
-    {
-        // Ambil tanggal dan jam saat ini
+    function generateUserId($conn) {
         $date = date("ymd");
         $hour = date("H"); 
         $baseId = $date . $hour;
@@ -24,12 +21,9 @@
         $result = mysqli_query($conn, $query);
 
         if ($result && mysqli_num_rows($result) > 0) {
-
             $lastId = mysqli_fetch_assoc($result)['id_user'];
-            $lastCounter = intval(substr($lastId, -2)); // Convert ke integer
+            $lastCounter = intval(substr($lastId, -2));
             $newCounter = $lastCounter + 1;
-
-            // Format counter menjadi 2 digit (misal: 01, 02, ..., 10, 11)
             $newCounter = str_pad($newCounter, 2, "0", STR_PAD_LEFT);
         } else {
             $newCounter = "01";
@@ -37,6 +31,7 @@
         $newId = $baseId . $newCounter;
         return $newId;
     }
+
 
 
     function uploadImage($file, $old_img, $directory) {
@@ -49,26 +44,21 @@
             throw new Exception("Ukuran file melebihi 1 MB.");
         }
 
-        // Validasi tipe file (hanya gambar)
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
         if (!in_array($file['type'], $allowedTypes)) {
             throw new Exception("Hanya file JPEG, PNG, atau GIF yang diizinkan.");
         }
 
-        // Generate nama file random
-        $extension = pathinfo($file['name'], PATHINFO_EXTENSION); // Ambil ekstensi file
-        $randomName = uniqid() . "." . $extension; // Nama file random + ekstensi
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $randomName = uniqid() . "." . $extension;
 
-        // Lokasi penyimpanan file
         $uploadPath = $directory . $randomName;
-
-        // Pindahkan file ke folder tujuan
         if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
             throw new Exception("Gagal mengupload file.");
         }
-
         return $randomName;
     }
+
 
 
     function isEmailRegistered($conn, $email) {
@@ -118,7 +108,7 @@
             header("Location: register.php?error=nisn_terdaftar");
             exit;
         }
-
+        
         $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
         $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar, id_pendidikan, create_by, telepone)
                         VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
@@ -128,8 +118,10 @@
     }
 
 
-
-
+    
+    
+    // =========================================================== SUPER ADMIN ========================================================
+    // ================================ PROFILE SUPER ADMIN ================================
     function edit_profile_1($POST_edit){
         global $conn;
         $id_user = $POST_edit["id_user"];
@@ -140,10 +132,9 @@
         $alamat_user = $POST_edit["alamat_user"];
         $jenis_kelamin = $POST_edit["jenis_kelamin"];
         $gambar_lama = $POST_edit["gambar_lama"];
-
         $gambar = uploadImage($_FILES["gambar"], $gambar_lama, "../assets/img/user/");
 
-        $query = "UPDATE tb_profile_user SET
+        $query = "UPDATE tb_profile_user SET 
                 nama_user = '$nama_user',
                 tempat_lahir = '$tempat_lahir',
                 tanggal_lahir = '$tanggal_lahir',
@@ -159,4 +150,64 @@
     }
 
 
+    // ================================ INSTANSI SUPER ADMIN =================================
+    function tambah_instansi($POST) {
+        global $conn;
+        $id_user = $POST["id_user"];
+        $id_instansi = $POST["id_instansi"];
+        $nama_pendek = $POST["nama_pendek"];
+        $nama_panjang = $POST["nama_panjang"];
+        $group_instansi = $POST["group_instansi"];
+        $alamat_instansi = $POST["alamat_instansi"];
+        $deskripsi_instansi = $POST["deskripsi_instansi"];
+        $lokasi_instansi = $POST["lokasi_instansi"];
+        $telepone_instansi = $POST["telepone_instansi"];
+        $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "avatar_instansi.jpg", "../assets/img/instansi/");
+
+        $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
+        VALUES ('$id_instansi', '$nama_pendek', '$nama_panjang', '$group_instansi', '$alamat_instansi', '$lokasi_instansi', '$telepone_instansi', '$deskripsi_instansi', '$gambar_instansi', '$id_user')";
+        mysqli_query($conn, $query);
+        return mysqli_affected_rows($conn);
+    }
+
+    function edit_instansi($POST) {
+        global $conn;
+        $id_user = $POST["id_user"];
+        $id_instansi = $POST["id_instansi"];
+        $nama_pendek = $POST["nama_pendek"];
+        $nama_panjang = $POST["nama_panjang"];
+        $group_instansi = $POST["group_instansi"];
+        $alamat_instansi = $POST["alamat_instansi"];
+        $deskripsi_instansi = $POST["deskripsi_instansi"];
+        $lokasi_instansi = $POST["lokasi_instansi"];
+        $telepone_instansi = $POST["telepone_instansi"];
+        $gambar_lama = $POST["gambar_instansi"];
+        $gambar_instansi = uploadImage($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/");
+
+        $query = "UPDATE tb_instansi SET
+                id_instansi = '$id_instansi',
+                nama_pendek = '$nama_pendek',
+                nama_panjang = '$nama_panjang',
+                group_instansi = '$group_instansi',
+                alamat_instansi = '$alamat_instansi',
+                lokasi_instansi = '$lokasi_instansi',
+                deskripsi_instansi = '$deskripsi_instansi',
+                telepone_instansi = '$telepone_instansi',
+                gambar_instansi = '$gambar_instansi',
+                change_by = '$id_user'
+                WHERE id_instansi = '$id_instansi' ";
+        mysqli_query($conn, $query);
+        return mysqli_affected_rows($conn);
+    }
+
+    function hapus_instansi($id_instansi,$id_user) {
+        global $conn;
+        $query = "UPDATE tb_instansi SET 
+                status_active = 'N',
+                change_by = '$id_user'
+                WHERE id_instansi = $id_instansi
+                ";
+        mysqli_query($conn, $query);
+        return mysqli_affected_rows($conn);
+    }
 ?>
