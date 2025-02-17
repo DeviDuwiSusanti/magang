@@ -1,5 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "db_magang");
+$conn = mysqli_connect("localhost", "root", "", "magang_database");
 
 
 function query($query)
@@ -76,7 +76,7 @@ function isEmailRegistered($conn, $email)
 function isNIKRegistered($conn, $nik)
 {
     $nik = mysqli_real_escape_string($conn, $nik);
-    $result = mysqli_query($conn, "SELECT nik FROM tb_profile_user WHERE nik = '$nik'");
+    $result = mysqli_query($conn, "SELECT nik_user FROM tb_profile_user WHERE nik_user = '$nik'");
     return mysqli_num_rows($result) > 0;
 }
 
@@ -119,7 +119,7 @@ function register($POST)
     }
 
     $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
-    $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar, id_pendidikan, create_by, telepone)
+    $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone)
                         VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
     mysqli_query($conn, $query1);
     mysqli_query($conn, $query2);
@@ -148,7 +148,7 @@ function edit_profile_1($POST_edit)
                 telepone = '$telepone',
                 jenis_kelamin = '$jenis_kelamin',
                 alamat_user = '$alamat_user',
-                gambar = '$gambar',
+                gambar_user = '$gambar',
                 change_by = '$id_user'
                 WHERE id_user = '$id_user'
         ";
@@ -170,7 +170,7 @@ function tambah_instansi($POST)
     $deskripsi_instansi = $POST["deskripsi_instansi"];
     $lokasi_instansi = $POST["lokasi_instansi"];
     $telepone_instansi = $POST["telepone_instansi"];
-    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "avatar_instansi.jpg", "../assets/img/instansi/");
+    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
     $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
         VALUES ('$id_instansi', '$nama_pendek', '$nama_panjang', '$group_instansi', '$alamat_instansi', '$lokasi_instansi', '$telepone_instansi', '$deskripsi_instansi', '$gambar_instansi', '$id_user')";

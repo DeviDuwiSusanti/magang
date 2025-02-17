@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'functions.php'; // Pastikan koneksi database tersedia
+require 'functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -13,18 +13,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         $user = mysqli_fetch_assoc($result);
         
         if ($user['status_active'] == 'Y' || $user['status_active'] == 'y' ) {
-            // Generate OTP (6 digit angka)
+
             $otp = rand(100000, 999999);
             $otp_expired = date("Y-m-d H:i:s", strtotime("+7 hours +2 minutes"));
-            
-            // Update OTP di database
             $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email'";
             mysqli_query($conn, $updateQuery);
             
-            // Simpan email di sesi untuk verifikasi OTP
             $_SESSION['email'] = $email;
-            
-            // Redirect ke halaman OTP verification
             header("Location: otp.php");
             exit();
         } else {

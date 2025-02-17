@@ -13,7 +13,7 @@
     <div class="container mt-5 mb-5">
         <div class="card mx-auto shadow" style="max-width: 500px;">
             <div class="card-body">
-                <img src="../assets/img/user/<?= $profile["gambar"] ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                <img src="../assets/img/user/<?= $profile["gambar_user"] ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                 <h4 class="card-title"><?= $profile["nama_user"] ?></h4>
                 <p class="text-muted"><?= $profile["email"] ?></p>
                 
@@ -31,7 +31,7 @@
                             </tr>
                             <tr>
                                 <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
-                                <td><?= $profile["telepone"] ?></td>
+                                <td><?= $profile["telepone_user"] ?></td>
                             </tr>
                             <tr>
                                 <td><i class="bi bi-gender-ambiguous"></i> <strong>Gender</strong></td>
