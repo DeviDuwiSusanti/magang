@@ -27,20 +27,14 @@ function showDeleteConfirmation(
 window.showDeleteConfirmation = showDeleteConfirmation;
 
 // Alert edit profile
-function alertEdit(linkHref, successMessage = "Data berhasil diperbarui.") {
+function alertEdit(successMessage = "Data berhasil diperbarui.") {
   Swal.fire({
     icon: "success",
     title: "Berhasil!",
     text: successMessage,
     confirmButtonColor: "#3085d6",
     confirmButtonText: "OK",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      if (linkHref) {
-        window.location.href = linkHref;
-      }
-    }
-  });
+  })
 }
 
 // Ekspor ke global scope
@@ -95,3 +89,17 @@ function alertErrorRegister(message) {
 
 // Ekspor ke global scope 
 window.alertErrorRegister = alertErrorRegister;
+
+function alertSuccessEdit(message, redirectUrl) {
+  Swal.fire({
+    title: "Berhasil!",
+    text: message,
+    icon: "success",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if (result.isConfirmed && redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  });
+}
