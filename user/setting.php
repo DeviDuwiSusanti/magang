@@ -38,9 +38,14 @@
             </label>
         </div>
         <div class="mt-3">
-            <button class="btn btn-danger"><i class="bi bi-box-arrow-right"></i> Logout dari Semua Perangkat</button>
+            <!-- Form Logout -->
+            <form id="logoutForm" action="../logout.php" method="POST">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right"></i> Logout dari Semua Perangkat
+                </button>
+            </form>
         </div>
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php" ?>
+<?php include "../layout/footerDashboard.php"; ?>
