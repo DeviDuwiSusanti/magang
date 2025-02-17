@@ -68,7 +68,7 @@ include "functions.php";
                 <div class="lowongan">
                     <div class="lowongans" data-aos="fade-down">
                         <?php
-                        $query = getBidangInstansi($conn);
+                        $query = getBidangInstansi($conn, 6);
                         while ($row = mysqli_fetch_assoc($query)){  
                             $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
                             ?>
@@ -81,7 +81,7 @@ include "functions.php";
                                     <hr style="border: 1px solid #ddd; margin: 10px 0;">
                                     <p class="popular__details">
                                         <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: <span class="total-pendaftar"><?= $pemagang_aktif ?></span><br>
-                                        <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= $row['bidang_change_date'] ?></span>
+                                        <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: <span class="creation-date"><?= date('Y-m-d', strtotime($row['bidang_change_date'])) ?></span>
                                     </p>
                                     <a href="detaillow.php?id_bidang=<?= $row['id_bidang'] ?>"><button class="details-button">Lihat Detail →</button></a>
                                 </div>
