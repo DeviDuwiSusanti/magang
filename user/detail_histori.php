@@ -1,14 +1,29 @@
-<?php include "../layout/sidebarUser.php" ?>
-  
+<?php
+include "../koneksi.php";
+include "../layout/sidebarUser.php"; 
+
+// Query untuk mengambil data pengajuan yang statusnya selesai berdasarkan ID user
+$sql = "SELECT *
+        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang, tb_user
+        WHERE tb_pengajuan.id_user = tb_profile_user.id_user
+        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        AND tb_pengajuan.id_user = tb_user.id_user
+        AND tb_pengajuan.status_pengajuan = 'Selesai'
+        AND tb_pengajuan.id_user = '$id_user'";
+
+$query = mysqli_query($conn, $sql); 
+$row = mysqli_fetch_assoc($query); 
+?>
+
 <div class="main-content p-4">
-    <!-- Heading Dashboard -->
     <div class="container-fluid">
-        <h1 class="mb-4">Histori</h1>
+    <h1 class="mb-4">Histori</h1>
         <ol class="breadcrumb mb-3">
             <li class="breadcrumb-item active">Histori Kegiatan</li>
         </ol>
 
-        <!-- Tombol Kembali -->
         <div class="dropdown-divider"></div>
         <div class="mb-4 text-end">
             <a href="histori.php" class="btn btn-danger">
@@ -16,45 +31,72 @@
                 Kembali
             </a>
         </div>
+        
+        <!-- Menampilkan informasi user dalam bentuk kartu -->
+        <div class="container mt-5 mb-5">
+            <div class="card mx-auto" style="max-width: 600px;">
+                <div class="card-body top text-center">
+                    <!-- Foto profil -->
+                    <img src="../assets/img/user/<?= isset($row['gambar']) ? $row['gambar'] : 'default.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
+                    <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
 
-        <div class="card mx-auto position-relative shadow-sm" style="max-width: 600px;">
-            <div class="card-body text-center">
-                <img src="../assets/img/login.jpeg" class="rounded-circle mb-3 shadow" alt="Profile Picture" style="width: 100px; height: 100px;">
-                <h4 class="card-title mb-1">Hendra Hartono</h4>
-                <p class="text-muted mb-3">hendra815@gmail.com</p>
+                    <hr>
+                    <div class="card-body">
+                        <!-- Tabel informasi pengguna -->
+                        <table class="table">
+                            <tbody class="text-start">
+                                <tr>
+                                    <td><i class="bi bi-person"></i> <strong>Nama</strong></td>
+                                    <td><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-mortarboard"></i> <strong>Universitas</strong></td>
+                                    <td><?= isset($row['nama_pendidikan']) ? $row['nama_pendidikan'] : 'Tidak Diketahui' ?></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-building"></i> <strong>Perusahaan</strong></td>
+                                    <td><?= isset($row['nama_panjang']) ? $row['nama_panjang'] : 'Tidak Diketahui' ?></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-shield-lock"></i> <strong>Bidang</strong></td>
+                                    <td><?= isset($row['nama_bidang']) ? $row['nama_bidang'] : 'Tidak Diketahui' ?></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-hourglass-split"></i> <strong>Durasi</strong></td>
+                                    <td class="text-start">
+                                        <?php 
+                                            // Hitung durasi magang
+                                            if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
+                                                $start_date = new DateTime($row['tanggal_mulai']);
+                                                $end_date = new DateTime($row['tanggal_selesai']);
+                                                $interval = $start_date->diff($end_date);
+                                                echo $interval->m + ($interval->y * 12) . " Bulan";
+                                            } else {
+                                                echo "Durasi Tidak Diketahui";
+                                            }
+                                        ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><i class="bi bi-calendar-event"></i> <strong>Periode</strong></td>
+                                    <td>
+                                        <?php 
+                                            // Format tanggal mulai dan selesai
+                                            if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
+                                                echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
+                                            } else {
+                                                echo "Periode Tidak Diketahui";
+                                            }
+                                        ?>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <hr>
-                <table class="table table-borderless">
-                    <tbody class="text-start">
-                        <tr>
-                            <td><i class="bi bi-person me-2"></i> <strong>Nama</strong></td>
-                            <td>Hendra</td>
-                        </tr>
-                        <tr>
-                            <td><i class="bi bi-mortarboard me-2"></i> <strong>Universitas</strong></td>
-                            <td>Universitas Trunojoyo Madura</td>
-                        </tr>
-                        <tr>
-                            <td><i class="bi bi-building me-2"></i> <strong>Perusahaan</strong></td>
-                            <td>Dinas Komunikasi dan Informatika</td>
-                        </tr>
-                        <tr>
-                            <td><i class="bi bi-shield-lock me-2"></i> <strong>Bidang</strong></td>
-                            <td>Cyber Security</td>
-                        </tr>
-                        <tr>
-                            <td><i class="bi bi-hourglass-split me-2"></i> <strong>Durasi</strong></td>
-                            <td>3 Bulan</td>
-                        </tr>
-                        <tr>
-                            <td><i class="bi bi-calendar-event me-2"></i> <strong>Periode</strong></td>
-                            <td>02 Januari - 02 Mei</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <!-- Tombol Aksi -->
-                <div class="d-flex justify-content-center gap-2 mt-4">
+                    <!-- Tombol untuk unggah logbook dan laporan akhir -->
+                    <div class="d-flex justify-content-center gap-2 mt-4">
                     <a href="path/to/sertifikat.pdf" class="btn btn-outline-success btn-sm px-3" download>
                         <i class="bi bi-printer"></i> Sertifikat
                     </a>
@@ -65,9 +107,10 @@
                         <i class="bi bi-book"></i> Logbook
                     </a>
                 </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php" ?>
+<?php include "../layout/footerDashboard.php";?>

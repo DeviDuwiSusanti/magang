@@ -1,4 +1,20 @@
-<?php include "../layout/sidebarUser.php" ?>
+<?php
+include "../koneksi.php"; 
+include "../layout/sidebarUser.php"; 
+
+// Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
+$sql = "SELECT *
+        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 
+        WHERE tb_pengajuan.id_user = tb_profile_user.id_user
+        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        AND tb_pengajuan.status_pengajuan = 'Selesai' 
+        AND tb_pengajuan.id_user = '$id_user'";  
+
+$query = mysqli_query($conn, $sql);
+$no = 1;
+?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
@@ -24,36 +40,32 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Data 1 -->
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td>Hendra Hartono</td>
-                        <td>Kominfo Sidoarjo</td>
-                        <td>Cyber Security</td>
-                        <td class="text-center">3 Bulan</td>
-                        <td>02 Januari - 02 Mei</td>
-                        <td class="text-center">
-                        <a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
-                        </td>
-                    </tr>
-                    <!-- Data 2 -->
-                    <tr>
-                        <td class="text-center">2</td>
-                        <td>Hendra Hartono</td>
-                        <td>Kominfo Medan</td>
-                        <td>Website Developer</td>
-                        <td class="text-center">6 Bulan</td>
-                        <td>02 Januari - 02 Mei</td>
-                        <td class="text-center">
-                        <a href="detail_histori.php" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye" style="font-size: 20px;"></i></a></td>
-                        </td>
-                    </tr>
+                    <?php while ($data = mysqli_fetch_assoc($query)) { ?>
+                        <tr>
+                            <td class="text-center"><?= $no++ ?></td>
+                            <td><?= $data['nama_user'] ?></td>
+                            <td><?= $data['nama_panjang'] ?></td>
+                            <td><?= $data['nama_bidang'] ?></td>
+                            <td class="text-center">
+                                <?php 
+                                    $start_date = new DateTime($data['tanggal_mulai']);
+                                    $end_date = new DateTime($data['tanggal_selesai']);
+                                    $interval = $start_date->diff($end_date);
+                                    echo $interval->m + ($interval->y * 12) . " Bulan";
+                                ?>
+                            </td>   
+                            <td><?= date('d F Y', strtotime($data['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($data['tanggal_selesai'])) ?></td>                       
+                            <td class="text-center">
+                                <a href="detail_histori.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
+                                    <i class="bi bi-eye" style="font-size: 20px;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php" ?>
+<?php include "../layout/footerDashboard.php"; ?>
