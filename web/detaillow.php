@@ -75,7 +75,7 @@ if(isset($_GET['id_bidang'])){
 
                 <h3>Lokasi Instansi</h3>
                 <div class="maps-container">
-                    <iframe src="<?= $row['lokasi'] ?>" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <?php echo $row['lokasi_instansi']; ?>
                 </div>
                 
                 <div class="d-flex justify-content-left mt-4">

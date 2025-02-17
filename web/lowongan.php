@@ -1,18 +1,6 @@
 <?php
 include "../koneksi.php";
-$sql = "SELECT * FROM tb_bidang  WHERE status_active = 'Y'" ;
-$query = mysqli_query($conn, $sql);
-
-// PEMAGANG AKTIF DARI TIAP INSTANSI TIAP BIDANG
-function getPemagangAktif1($conn, $id_instansi, $id_bidang) {
-    $sql = "SELECT COUNT(*) FROM tb_pengajuan WHERE status_active = 'Y' AND id_instansi = '$id_instansi' 
-            AND id_bidang = '$id_bidang'";
-
-    $result = mysqli_query($conn, $sql);
-    $count1 = mysqli_fetch_array($result)[0]; // Ambil hasil COUNT(*)
-
-    return $count1;
-}
+include "functions.php";
 
 ?>
 
@@ -107,27 +95,21 @@ function getPemagangAktif1($conn, $id_instansi, $id_bidang) {
             <div class="lowongan">
                 <div class="lowongans" data-aos="fade-down">
                 <?php
-                // Looping buat nampilin semua data lowongan
-                while ($row = mysqli_fetch_assoc($query)) {
-                    // Panggil fungsi buat ngitung jumlah pemagang aktif berdasarkan instansi & bidangnya
+                $query = getBidangInstansi($conn);
+                while ($row = mysqli_fetch_assoc($query)){  
                     $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
-
-                    // Ambil data instansi berdasarkan id_instansi yang ada di lowongan
-                    $sql2 = "SELECT * FROM tb_instansi WHERE id_instansi = '$row[id_instansi]'";
-                    $query2 = mysqli_query($conn, $sql2);
-                    $row2 = mysqli_fetch_assoc($query2);
-                ?>
+                    ?>
                     <!-- Buat satu kartu lowongan -->
                     <article class="popular__card swiper-slide">
                         <!-- Logo instansi (sementara pake gambar default) -->
                         <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                         <!-- Nama instansi -->
-                        <p class="instansi"> <?= $row2['nama_panjang'] ?> </p>
+                        <p class="instansi"> <?= $row['nama_panjang'] ?> </p>
                         <div class="popular__data">
                             <!-- Nama bidang magang -->
                             <h3 class="popular__title">Internship - <?= $row['nama_bidang'] ?></h3>
                             <!-- Alamat instansi -->
-                            <p class="popular__description"> <?= $row2['alamat_instansi'] ?> </p>
+                            <p class="popular__description"> <?= $row['alamat_instansi'] ?> </p>
                             <hr style="border: 1px solid #ddd; margin: 10px 0;">
                             <!-- Info jumlah pemagang aktif & tanggal dibuatnya lowongan -->
                             <p class="popular__details">
