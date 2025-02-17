@@ -6,34 +6,9 @@
 
     <!-- Menu Navigasi -->
     <nav class="nav nav-pills justify-content-center mb-4">
-        <a class="nav-link active" href="#akun"><i class="bi bi-person-circle"></i> Akun</a>
         <a class="nav-link" href="#sistem"><i class="bi bi-sliders"></i> Sistem</a>
         <a class="nav-link" href="#keamanan"><i class="bi bi-shield-lock"></i> Keamanan</a>
     </nav>
-
-    <!-- Pengaturan Akun -->
-    <div id="akun" class="card p-4 mb-4">
-        <h4><i class="bi bi-person-circle"></i> Pengaturan Akun</h4>
-        <form>
-            <div class="mb-3">
-                <label for="nama" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama" value="Hendra hartono">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" value="hendra815@gmail.com">
-            </div>
-            <div class="mb-3">
-                <label for="telepon" class="form-label">Telepon</label>
-                <input type="text" class="form-control" id="telepon" value="085760786535">
-            </div>
-            <div class="mb-3">
-                <label for="foto" class="form-label">Foto Profil</label>
-                <input type="file" class="form-control" id="foto" accept="image/*">
-            </div>
-            <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Simpan Perubahan</button>
-        </form>
-    </div>
 
     <!-- Pengaturan Sistem -->
     <div id="sistem" class="card p-4 mb-4">
@@ -63,9 +38,14 @@
             </label>
         </div>
         <div class="mt-3">
-            <button class="btn btn-danger"><i class="bi bi-box-arrow-right"></i> Logout dari Semua Perangkat</button>
+            <!-- Form Logout -->
+            <form id="logoutForm" action="../logout.php" method="POST">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-box-arrow-right"></i> Logout dari Semua Perangkat
+                </button>
+            </form>
         </div>
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php" ?>
+<?php include "../layout/footerDashboard.php"; ?>

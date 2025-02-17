@@ -2,15 +2,18 @@
 include "../koneksi.php";
 include "../layout/sidebarUser.php"; 
 
+// Ambil id_user dari session atau parameter URL
+$id_user = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : (isset($_GET['id_user']) ? $_GET['id_user'] : null);
+
 // Query untuk mengambil data pengajuan yang masih aktif berdasarkan ID user
-$sql = "SELECT tb_pengajuan.*, tb_profile_user.*, tb_pendidikan.*, tb_instansi.*, tb_bidang.*, tb_user.email 
+$sql = "SELECT *
         FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang, tb_user 
         WHERE tb_pengajuan.id_user = tb_profile_user.id_user 
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang 
         AND tb_pengajuan.id_user = tb_user.id_user 
-        AND tb_pengajuan.status_active = 'Y' 
+        AND tb_pengajuan.status_pengajuan = 'Diterima' 
         AND tb_pengajuan.id_user = '$id_user'";
 
 $query = mysqli_query($conn, $sql); 
@@ -37,7 +40,7 @@ $row = mysqli_fetch_assoc($query);
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top text-center">
                     <!-- Foto profil -->
-                    <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/user/<?= isset($row['gambar']) ? $row['gambar'] : 'default.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                     <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
                     <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
 
@@ -97,10 +100,10 @@ $row = mysqli_fetch_assoc($query);
 
                     <!-- Tombol untuk unggah logbook dan laporan akhir -->
                     <div class="mb-3">
-                        <a href="logbook_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-primary btn-sm me-2">
+                        <a href="logbook_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary btn-sm me-2">
                             <i class="bi bi-file-earmark-text me-1"></i> Unggah Logbook
                         </a>
-                        <a href="laporan_akhir.php" class="btn btn-success btn-sm">
+                        <a href="laprak_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-success btn-sm">
                             <i class="bi bi-file-earmark-check me-1"></i> Unggah Laporan Akhir
                         </a>
                     </div>

@@ -2,21 +2,19 @@
 include "../koneksi.php"; 
 include "../layout/sidebarUser.php"; 
 
-// Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
+// Ambil id_user dari session yang sudah diset saat login
+$id_user = $_SESSION['id_user']; 
+
+// Query untuk mengambil data pengajuan magang yang masih aktif dan sesuai dengan id_user yang login
 $sql = "SELECT * 
         FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 
-        WHERE tb_pengajuan.id_user = tb_profile_user.id_user 
+        WHERE tb_pengajuan.id_user = tb_profile_user.id_user
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        AND tb_pengajuan.status_active = 'Y' 
-        AND tb_pengajuan.id_user = '$id_user'";  
-
-$query = mysqli_query($conn, $sql); 
-if (!$query) {
-    die("Query Error: " . mysqli_error($conn));
-}
-
+        AND tb_pengajuan.status_pengajuan = 'Diterima'
+        AND tb_pengajuan.id_user = '$id_user'";  // Menambahkan filter berdasarkan id_user
+$query = mysqli_query($conn, $sql);
 $no = 1;
 ?>
 
@@ -66,7 +64,7 @@ $no = 1;
                             <?= date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai'])) ?>
                         </td>
                         <td class="text-center">
-                            <a href="detail_aktif.php" class="text-decoration-none" title="Lihat Detail">
+                            <a href="detail_aktif.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="text-decoration-none" title="Lihat Detail">
                                 <i class="bi bi-eye" style="font-size: 20px;"></i>
                             </a>
                         </td>

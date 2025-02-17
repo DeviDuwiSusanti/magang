@@ -1,0 +1,90 @@
+/* DataTables tema terang */
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    background-color: #f0f8ff; /* putih biru langit */
+    color: #000;
+    border: 1px solid #7dcdff; /* biru terang */
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background-color: transparent; /* menghapus warna biru */
+    color: #000; /* warna teks tetap hitam */
+    border: 1px solid #ccc; /* border abu-abu terang */
+    border-radius: 5px;
+    margin: 2px;
+    padding: 5px 10px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #f8f9fa; /* warna hover lebih netral */
+}
+
+table {
+    color: #000; 
+    width: 100%;
+    border-collapse: collapse;
+}
+th {
+    background-color: #afd9f9; /* biru langit pastel */
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #000; /* border hitam untuk th */
+}
+
+td {
+    background-color: #fff; /* putih */
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #000; /* border hitam untuk td */
+}
+
+.pagination {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+.pagination button {
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 0 5px;
+
+}
+
+
+/* DataTables tema gelap */
+body.dark-theme .dataTables_wrapper .dataTables_filter input,
+body.dark-theme .dataTables_wrapper .dataTables_length select {
+    background-color: #333; /* abu gelap */
+    color: #ccc; /* abu terang */
+    border: 1px solid #555; /* abu lebih gelap */
+}
+
+body.dark-theme .dataTables_wrapper .dataTables_paginate .paginate_button {
+    background-color: #555; /* abu gelap */
+    color: white !important;
+}
+
+body.dark-theme .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background-color: #777; /* abu terang */
+}
+
+body.dark-theme table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+body.dark-theme th {
+    background-color: #3c3b3b; /* abu gelap */
+    color: #ccc; /* teks abu terang */
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #000; /* border hitam untuk th pada tema gelap */
+}
+
+body.dark-theme td {
+    background-color: #767474; /* abu gelap */
+    color: #ffffff; /* teks abu terang */
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #000; /* border hitam untuk td pada tema gelap */
+}

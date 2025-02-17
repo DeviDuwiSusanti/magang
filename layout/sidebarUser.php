@@ -98,7 +98,7 @@ if (!isset($_SESSION['email'])) {
                 ?>
             </ul>
             <div class="sidebar-footer">
-                <a href="logout.php" class="sidebar-link">
+                <a href="../logout.php" class="sidebar-link">
                     <i class="bi bi-box-arrow-left"></i>
                     <span>Logout</span>
                 </a>
@@ -143,7 +143,7 @@ if (!isset($_SESSION['email'])) {
                                         <i class="bi bi-question-circle"></i>
                                         <span>Pusat Bantuan</span>
                                     </a>
-                                    <a href="#" class="dropdown-item">
+                                    <a href="../logout.php" class="dropdown-item">
                                         <i class="bi bi-box-arrow-right"></i>
                                         <span>Logout</span>
                                     </a>

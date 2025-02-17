@@ -25,16 +25,16 @@
                             <a href="#" class="footer__link text-gray-400 hover:text-white">Home</a>
                             </li>
                             <li>
-                            <a href="#" class="footer__link text-gray-400 hover:text-white">Cari Lowongan</a>
+                            <a href="lowongan.php" class="footer__link text-gray-400 hover:text-white">Cari Lowongan</a>
                             </li>
                             <li>
-                            <a href="#" class="footer__link text-gray-400 hover:text-white">Pengajuan</a>
+                            <a href="../user/status_pengajuan.php" class="footer__link text-gray-400 hover:text-white">Pengajuan</a>
                             </li>
                             <li>
-                            <a href="#" class="footer__link text-gray-400 hover:text-white">Tentang Kami</a>
+                            <a href="tentang.php" class="footer__link text-gray-400 hover:text-white">Tentang Kami</a>
                             </li>
                             <li>
-                            <a href="#" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
+                            <a href="../user/detail_histori.php" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
                             </li>
                         </ul>
                     </div>

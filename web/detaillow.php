@@ -44,7 +44,7 @@ if(isset($_GET['id_bidang'])){
             <div class="blog__detail">
                 <h3>Internship - <?= $row['nama_bidang'] ?></h3>
                 <table class="detail-table">
-                    <tr><td><b>Perusahaan</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
+                    <tr><td><b>Instansi</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
                     <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat_instansi'] ?></td></tr>
                     <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td><?= $pemagang_aktif ?></td></tr>
                     <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota'] ?></td></tr>
@@ -75,7 +75,7 @@ if(isset($_GET['id_bidang'])){
 
                 <h3>Lokasi Instansi</h3>
                 <div class="maps-container">
-                    <iframe src="<?= $row['lokasi'] ?>" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <?php echo $row['lokasi_instansi']; ?>
                 </div>
                 
                 <div class="d-flex justify-content-left mt-4">

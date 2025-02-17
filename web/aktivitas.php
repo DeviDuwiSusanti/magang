@@ -2,12 +2,13 @@
 include "../koneksi.php"; 
 
 // Query untuk mengambil data pengajuan magang yang masih aktif
-$sql = "SELECT * FROM tb_pengajuan 
-        JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
-        JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
-        JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
-        JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.status_active = 'Y'";
+$sql = "SELECT * 
+        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 
+        WHERE tb_pengajuan.id_user = tb_profile_user.id_user
+        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        AND tb_pengajuan.status_pengajuan = 'Diterima'";
 $query = mysqli_query($conn, $sql);
 $no = 1; 
 ?>
@@ -27,7 +28,7 @@ $no = 1;
     
     <!-- Import CSS tambahan buat tampilan halaman -->
     <link rel="stylesheet" href="../assets/css/style2.css" />
-    <link rel="stylesheet" href="../assets/css/aktiv.css" />
+    <link rel="stylesheet" href="../assets/css/aktif.css" />
     <link rel="stylesheet" href="../assets/css/low.css" />
     
     <!-- Import DataTables CSS biar tabel bisa interaktif -->
@@ -43,7 +44,7 @@ $no = 1;
         <h1 class="text-center mb-4">Tabel Kegiatan Aktif</h1>
         
         <!-- Tabel buat menampilkan data -->
-        <table id="myTable" class="table table-bordered table-striped">
+        <table id="myTable">
             <thead class="table-primary">
                 <tr>
                     <th class="text-center">No</th>

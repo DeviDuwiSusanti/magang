@@ -9,8 +9,18 @@ if (isset($_POST['unggah_logbook'])) {
     $kegiatan = $_POST['kegiatan'];
     $keterangan = $_POST['keterangan'];
 
-    // Query INSERT, id_logbook tidak perlu dimasukkan karena auto-increment
-    $sql = "INSERT INTO tb_logbook (`tanggal_logbook`, `kegiatan_logbook`, `keterangan_logbook`, `id_pengajuan`, `id_user`) VALUES ('$tanggal', '$kegiatan', '$keterangan', '$id_pengajuan', '$id_user')";
+    // Ambil jumlah logbook yang sudah ada untuk id_pengajuan ini
+    $sql_count = "SELECT COUNT(*) as jumlah FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan'";
+    $result = mysqli_query($conn, $sql_count);
+    $row = mysqli_fetch_assoc($result);
+    $counter = str_pad($row['jumlah'], 2, '0', STR_PAD_LEFT); // Ubah ke 2 digit (00, 01, 02, ...)
+
+    // Buat id_logbook: 10 digit id_pengajuan + 2 digit counter
+    $id_logbook = $id_pengajuan . $counter;
+
+    // Query INSERT dengan id_logbook yang sudah dibuat
+    $sql = "INSERT INTO tb_logbook (`id_logbook`, `tanggal_logbook`, `kegiatan_logbook`, `keterangan_logbook`, `id_pengajuan`, `id_user`) 
+            VALUES ('$id_logbook', '$tanggal', '$kegiatan', '$keterangan', '$id_pengajuan', '$id_user')";
     
     $query = mysqli_query($conn, $sql);
 
