@@ -1,5 +1,9 @@
 <?php 
     include "sidebar.php";
+    $pengajuan = query("SELECT u.nama_user, i.nama_panjang, b.nama_bidang, p.* 
+                        FROM tb_pengajuan p, tb_profile_user u, tb_instansi i, tb_bidang b
+                        WHERE u.id_user = p.id_user AND i.id_instansi = p.id_instansi AND b.id_bidang = p.id_bidang");
+    $no = 1;
 ?>
 
 <main>
@@ -24,86 +28,29 @@
                             <th>Calon Pelamar</th>
                             <th>Tanggal Mulai</th>
                             <th>Tanggal Selesai</th>
+                            <th>Status Pengajuan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php foreach($pengajuan as $aju) : ?>
                         <tr>
-                            <td>1</td>
-                            <td>Mishbahus Surur</td>
-                            <td>Diskominfo Sidoarjo</td>
-                            <td>Bidang Informatika</td>
-                            <td>Magang</td>
-                            <td>4</td>
-                            <td>02-01-2025</td>
-                            <td>02-05-2025</td>
+                            <td><?= $no++ ?></td>
+                            <td><?= $aju["nama_user"] ?></td>
+                            <td><?= $aju["nama_panjang"] ?></td>
+                            <td><?= $aju["nama_bidang"] ?></td>
+                            <td><?= $aju["jenis_pengajuan"] ?></td>
+                            <td><?= $aju["jumlah_pelamar"] ?></td>
+                            <td><?= $aju["tanggal_mulai"] ?></td>
+                            <td><?= $aju["tanggal_selesai"] ?></td>
+                            <td><?= $aju["status_pengajuan"] ?></td>
                             <td>
                                 <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
                             </td>
                         </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Mishbahus Surur</td>
-                            <td>Diskominfo Sidoarjo</td>
-                            <td>Bidang Informatika</td>
-                            <td>Magang</td>
-                            <td>4</td>
-                            <td>02-01-2025</td>
-                            <td>02-05-2025</td>
-                            <td>
-                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Mishbahus Surur</td>
-                            <td>Diskominfo Sidoarjo</td>
-                            <td>Bidang Informatika</td>
-                            <td>Magang</td>
-                            <td>4</td>
-                            <td>02-01-2025</td>
-                            <td>02-05-2025</td>
-                            <td>
-                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Mishbahus Surur</td>
-                            <td>Diskominfo Sidoarjo</td>
-                            <td>Bidang Informatika</td>
-                            <td>Magang</td>
-                            <td>4</td>
-                            <td>02-01-2025</td>
-                            <td>02-05-2025</td>
-                            <td>
-                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Mishbahus Surur</td>
-                            <td>Diskominfo Sidoarjo</td>
-                            <td>Bidang Informatika</td>
-                            <td>Magang</td>
-                            <td>4</td>
-                            <td>02-01-2025</td>
-                            <td>02-05-2025</td>
-                            <td>
-                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        <!-- Tambahkan data lain di sini -->
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
