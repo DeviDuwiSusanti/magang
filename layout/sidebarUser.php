@@ -125,7 +125,9 @@ if (!isset($_SESSION['email'])) {
                         
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="../assets/img/user/<?= $row['gambar_user'] ?>" alt="foto profil" class="avatar img-fluid rounded-circle">
+                            <img src="../assets/img/user/<?= !empty($row['gambar_user']) ? $row['gambar_user'] : 'avatar.png' ?>" 
+                                alt="foto profil" class="avatar img-fluid rounded-circle">
+
                             </a>
                             <?php 
                             if ($level == 3){?>
