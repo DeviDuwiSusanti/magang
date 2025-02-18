@@ -5,7 +5,7 @@ include '../koneksi.php';  // Pastikan file koneksi ke database sudah benar
 $id_user = $_SESSION['id_user'];  // Ambil ID user dari session
 
 // Query untuk mengambil data laporan dari database
-$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'laporan akhir'";
+$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'laprak'";
 $result = mysqli_query($conn, $sql);
 ?>
 
