@@ -95,7 +95,7 @@ if (isset($_POST["edit_profile"])) {
     <?php if ($status === "success"): ?>
         alertSuccessEdit('Data profile berhasil diperbarui.', 'view_profile.php');
     <?php elseif ($status === "error"): ?>
-        alertErrorRegister('Registrasi gagal dilakukan.', 'register.php');
+        alertSuccessEdit('Tidak ada perubahan. Data profile disimpan.', 'view_profile.php');
     <?php endif; ?>
 
 
@@ -107,7 +107,8 @@ if (isset($_POST["edit_profile"])) {
 
         if (file) {
             if (file.size > 1048576) { // 1MB = 1048576 bytes
-                alert("Ukuran file terlalu besar! Maksimal 1MB.");
+                // alert("Ukuran file terlalu besar! Maksimal 1MB.");
+                alertErrorRegister('Ukuran file terlalu besar! Maksimal 1MB.', 'edit_profile.php');
                 fileInput.value = ""; // Reset file input
                 previewImage.src = ""; // Hapus pratinjau
                 previewContainer.style.display = "none";

@@ -17,7 +17,8 @@ $sql = "SELECT
         FROM tb_pengajuan
         INNER JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
         INNER JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.id_instansi = '$id_instansi' AND tb_pengajuan.status_active = 'Y'
+        WHERE tb_pengajuan.id_instansi = '$id_instansi'
+        AND tb_pengajuan.status_active = 'Y'
         ORDER BY tb_pengajuan.id_pengajuan DESC";
 
 $result = mysqli_query($conn, $sql);
