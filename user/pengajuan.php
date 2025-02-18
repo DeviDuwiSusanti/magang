@@ -42,10 +42,10 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
             $nim = $anggota_nim[$index];
             $id_user4 = generateIdUser($conn);
         
-            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan')";
+            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, id_pengajuan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_user')";
             $query_anggota1 = mysqli_query($conn, $sql_anggota1);
             
-            $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level) VALUES ('$id_user4', '$email', 4)";
+            $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', 4, '$id_user')";
             $query_anggota2 = mysqli_query($conn, $sql_anggota2);
         }
     }

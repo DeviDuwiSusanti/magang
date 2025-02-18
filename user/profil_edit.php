@@ -131,7 +131,7 @@ if (ISSET($_POST['update_profil'])){
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik'] ?>" required>
+                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik_user'] ?>" required>
             </div>
             
             <!-- Asal Studi -->
@@ -187,7 +187,7 @@ if (ISSET($_POST['update_profil'])){
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telepon" class="form-label">Telepon</label>
-                <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone'] ?>" required>
+                <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone_user'] ?>" required>
             </div>
             <!-- Alamat -->
             <div class="mb-3">
@@ -199,7 +199,7 @@ if (ISSET($_POST['update_profil'])){
             <div class="mb-3">
                 <label for="image">Foto Profil</label><br><br>
                 <div class="image-preview" id="imagePreview">
-                    <img src="<?= !empty($row2['gambar']) ? '../assets/img/user/'.$row2['gambar'] : '../assets/img/user/avatar.png' ?>" 
+                    <img src="<?= !empty($row2['gambar']) ? '../assets/img/user/'.$row2['gambar_user'] : '../assets/img/user/avatar.png' ?>" 
                         id="previewImage" 
                         class="rounded-circle mb-3" 
                         style="width: 120px; height: 120px; object-fit: cover; object-position: top;">

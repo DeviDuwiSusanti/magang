@@ -45,7 +45,7 @@ if(isset($_GET['id_bidang'])){
                     <tr><td><b>Instansi</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
                     <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat_instansi'] ?></td></tr>
                     <tr><td><b>Pemagang Aktif</b></td><td>:</td><td><?= $pemagang_aktif ?></td></tr>
-                    <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota'] ?></td></tr>
+                    <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota_bidang'] ?></td></tr>
                     <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_change_date'] ?></td></tr>
                 </table>
                 
@@ -56,7 +56,7 @@ if(isset($_GET['id_bidang'])){
                 <ul class="list">
                     <?php
                     // perulangan untuk data list di database 
-                    $kriteria = isset($row['kriteria']) ? explode(',', $row['kriteria']) : [];
+                    $kriteria = isset($row['kriteria_bidang']) ? explode(',', $row['kriteria_bidang']) : [];
                     foreach ($kriteria as $item) : ?>
                         <li><?= $item ?></li>
                     <?php endforeach; ?>
