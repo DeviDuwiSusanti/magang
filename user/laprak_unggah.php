@@ -1,56 +1,57 @@
 <?php 
 include "../layout/sidebarUser.php"; 
-include '../koneksi.php';  // Pastikan koneksi ke database sudah benar
+include "functions.php";  // Pastikan untuk meng-include file functions.php
 
-// Cek apakah id_user ada dalam query string atau sesi
-if (isset($_GET['id_user'])) {
-    $id_user = $_GET['id_user'];
-} elseif (isset($_SESSION['id_user'])) {
-    $id_user = $_SESSION['id_user'];
-} else {
-    echo "id_user tidak ditemukan.";
-    exit;  // Jika id_user tidak ada, hentikan proses
+// Pastikan koneksi ke database sudah ada, misalnya:
+$conn = mysqli_connect("localhost", "root", "", "magang_database");
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
-// Proses unggah file
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['laporan_akhir'])) {
-    $file = $_FILES['laporan_akhir'];  // Ambil file yang diunggah
-    $file_name = basename($file['name']);
-    $file_tmp = $file['tmp_name'];
-    $file_error = $file['error'];
-    $file_size = $file['size'];
+if (isset($_POST['submit_laporan'])) {
+    // Mengambil id_user dari query string atau session
+    if (isset($_GET['id_user'])) {
+        $id_user = $_GET['id_user'];
+    } elseif (isset($_SESSION['id_user'])) {
+        $id_user = $_SESSION['id_user'];
+    } else {
+        echo "<script>alert('id_user tidak ditemukan.');</script>";
+        exit;  // Jika id_user tidak ada, hentikan proses
+    }
 
-    // Tentukan direktori tujuan penyimpanan file
-    $upload_dir = 'uploads/';
-    $file_path = $upload_dir . $file_name;
+    // Mengambil id_pengajuan dari session
+    if (isset($_SESSION['id_pengajuan'])) {
+        $id_pengajuan = $_SESSION['id_pengajuan'];
+    } else {
+        echo "<script>alert('ID Pengajuan tidak ditemukan.');</script>";
+        exit;  // Hentikan eksekusi jika id_pengajuan tidak ditemukan
+    }
+    
 
-    // Validasi file
-    if ($file_error === 0) {
-        if ($file_size < 5000000) {  // Batas ukuran file 5MB
-            // Pastikan folder upload ada
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0777, true);  // Membuat folder jika belum ada
-            }
+    // Validasi file PDF
+    if (isset($_FILES['laporan_akhir']) && $_FILES['laporan_akhir']['error'] == 0) {
+        $laporan_akhir = uploadFile($_FILES['laporan_akhir']); // Fungsi upload file yang ada di functions.php
 
-            // Pindahkan file ke direktori tujuan
-            if (move_uploaded_file($file_tmp, $file_path)) {
-                // Menyimpan data ke database dengan ID User
-                $jenis_dokumen = 'laprak';  // Jenis dokumen
+        // Dapatkan nama dan path file yang ter-upload
+        $laporan_name = $laporan_akhir['name'];
+        $laporan_path = $laporan_akhir['path'];
 
-                $stmt = $conn->prepare("INSERT INTO tb_dokumen (nama_dokumen, jenis_dokumen, file_path, id_user, create_date) 
-                                       VALUES (?, ?, ?, ?, NOW())");
-                $stmt->bind_param("sssi", $file_name, $jenis_dokumen, $file_path, $id_user);
+        // Generate ID dokumen berdasarkan id_pengajuan atau id_user
+        $id_dokumen_laporan = generateIdDokumen($conn, $id_user); 
 
-                if ($stmt->execute()) {
-                    // Jika berhasil, tampilkan alert
-                    echo "<script>alert('Laporan berhasil diunggah!'); window.location.href='laprak_daftar.php?id_user=$id_user';</script>";
-                }
-            } else {
-                echo "<script>alert('Gagal mengunggah file.');</script>";
-            }
+        // Simpan informasi dokumen di database, termasuk change_date
+        $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
+                VALUES ('$id_dokumen_laporan', '$laporan_name', 'laporan', '$laporan_path', $id_pengajuan, '$id_user', '$id_user', 'Y', NOW(), NOW())";
+
+        $query = mysqli_query($conn, $sql);
+
+        if ($query) {
+            echo "<script>alert('Laporan berhasil diunggah'); window.location.href='laprak_daftar.php?id_user=$id_user';</script>";
+        } else {
+            echo "<script>alert('Gagal mengunggah laporan');</script>";
         }
     } else {
-        echo "<script>alert('Terjadi kesalahan saat mengunggah file.');</script>";
+        echo "<script>alert('Pilih file laporan terlebih dahulu');</script>";
     }
 }
 ?>
@@ -73,35 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['laporan_akhir'])) {
                 <small class="text-muted">Pilih file laporan akhir (PDF)</small>
             </div>
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Unggah Laporan</button>
+            <button type="submit" name="submit_laporan" class="btn btn-primary">Unggah Laporan</button>
         </form>
     </div>
 </div>
-
-<script>
-    let fileCount = 1;
-    function addFileInput() {
-        fileCount++;
-        let container = document.getElementById("file-container");
-        let div = document.createElement("div");
-        div.className = "file-input-group d-flex align-items-center mb-2";
-        div.innerHTML = `        
-            <!-- Input type file untuk mengunggah dokumen -->
-            <input type="file" class="form-control me-2" name="laporan_akhir[]" accept=".pdf" required>
-            <!-- Input tersembunyi untuk mengirimkan jenis dokumen ke server -->
-            <input type="hidden" name="jenis_dokumen[]" value="laprak">
-            <!-- Tombol untuk menghapus input -->
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
-        `;
-        container.appendChild(div);
-    }
-
-    function removeFileInput(button) {
-        let container = document.getElementById("file-container");
-        if (container.children.length > 1) {
-            button.parentElement.remove();
-        }
-    }
-</script>
 
 <?php include "../layout/footerDashboard.php"; ?>

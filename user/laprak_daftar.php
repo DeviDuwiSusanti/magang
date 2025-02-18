@@ -5,7 +5,7 @@ include '../koneksi.php';  // Pastikan file koneksi ke database sudah benar
 $id_user = $_SESSION['id_user'];  // Ambil ID user dari session
 
 // Query untuk mengambil data laporan dari database
-$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'laprak'";
+$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'laporan'";
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -17,7 +17,7 @@ $result = mysqli_query($conn, $sql);
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
-            <a href="laprak_unggah.php?id_user=<?= $id_user ?>" class="btn btn-primary">
+            <a href="laprak_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-1"></i>
                 Tambah Laporan Akhir
             </a>
