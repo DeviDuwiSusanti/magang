@@ -16,12 +16,6 @@ if (isset($_GET['id_bidang'])) {
     $row = mysqli_fetch_assoc($query);
 }
 
-
-// Ambil daftar anggota
-$anggotaQuery = "SELECT * FROM tb_user u, tb_profile_user p WHERE u.id_user = p.id_user AND u.id_user LIKE '$id_user%'";
-$anggotaResult = mysqli_query($conn, $anggotaQuery);
-$jumlahAnggota = mysqli_num_rows($anggotaResult);
-
 if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
     $id_pengajuan = generateIdPengajuan($conn);
     $id_dokumen_ktp = generateIdDokumen($conn, $id_pengajuan);
@@ -142,6 +136,12 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
                     </select>
                 </div>
 
+                <div class="mb-3">
+                    <label for="jumlah_anggota" class="form-label">Jumlah Anggota (Termasuk Kamu)</label>
+                    <input type="number"  class="form-control" id="jumlah_anggota" name="jumlah_anggota" required>
+                </div>
+
+
                 <!-- Tanggal Mulai dan Selesai -->
                 <div class="mb-3">
                     <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
@@ -170,23 +170,11 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
 
             <!-- Step 2 -->
             <div id="step2" style="display: none;">
-                <h4>Step 2: Informasi Anggota (<?= $jumlahAnggota ?> Anggota)</h4>
-                <div class="row">
-                    <?php while ($anggota = mysqli_fetch_assoc($anggotaResult)) : ?>
-                        <div class="col-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title"> <?= $anggota['nama_user'] ?> </h5>
-                                    <p><?= $anggota['email'] ?></p>
-                                    <button class="btn btn-warning btn-sm">Edit</button>
-                                    <button class="btn btn-danger btn-sm">Hapus</button>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endwhile; ?>
-                </div>
-                <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                <button type="submit" name="pengajuan_kelompok" class="btn btn-success">Kirim</button>
+                <h4>Step 2: Informasi Anggota (Kecuali Kamu)</h4>
+                <div id="anggotaContainer"></div>
+                
+                <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
+                <button type="submit" name="pengajuan_kelompok" class="btn btn-success btn-sm">Kirim</button>
             </div>
         </form>
     </div>
@@ -197,57 +185,42 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const kelompokPribadi = document.getElementById("kelompok_pribadi");
+        const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
+        const jumlahAnggotaContainer = jumlahAnggotaInput.closest(".mb-3");
         const nextButton = document.getElementById("nextButton");
         const submitButton = document.getElementById("submitButton");
         const step1 = document.getElementById("step1");
         const step2 = document.getElementById("step2");
         const anggotaContainer = document.getElementById("anggotaContainer");
 
-        // Sembunyikan Step 2 di awal
+        // Sembunyikan jumlah anggota & Step 2 di awal
+        jumlahAnggotaContainer.style.display = "none";
         step2.style.display = "none";
 
         kelompokPribadi.addEventListener("change", function() {
             if (this.value === "Kelompok") {
+                jumlahAnggotaContainer.style.display = "block"; // Tampilkan input jumlah anggota
                 nextButton.style.display = "inline-block"; // Tampilkan tombol Next
                 submitButton.style.display = "none"; // Sembunyikan tombol Kirim
+                jumlahAnggotaInput.required = true; 
             } else {
+                jumlahAnggotaContainer.style.display = "none"; // Sembunyikan input jumlah anggota
                 step2.style.display = "none"; // Sembunyikan Step 2
                 nextButton.style.display = "none"; // Sembunyikan tombol Next
                 submitButton.style.display = "inline-block"; // Tampilkan tombol Kirim
+                jumlahAnggotaInput.required = false; 
             }
         });
 
         function nextStep() {
-            // Ambil data anggota dari database
-            fetch(`get_anggota.php?id_user=<?= $id_user ?>`)
-                .then(response => response.json())
-                .then(data => {
-                    anggotaContainer.innerHTML = ""; // Bersihkan isi sebelumnya
+            const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
+            anggotaContainer.innerHTML = ""; // Bersihkan isi sebelumnya
 
-                    if (data.length > 0) {
-                        data.forEach((anggota, index) => {
-                            const anggotaHTML = `
-                                <div class="col-3 mb-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">${anggota.nama_user}</h5>
-                                            <p class="card-text">${anggota.email}</p>
-                                            <p class="card-text">${anggota.nik_user}</p>
-                                            <p class="card-text">${anggota.nim}</p>
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="editAnggota('${anggota.id_user}')">Edit</button>
-                                            <button type="button" class="btn btn-danger btn-sm" onclick="hapusAnggota('${anggota.id_user}')">Hapus</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
-                        });
-                    }
-
-                    // Tambahkan form untuk menambahkan anggota baru
-                    const tambahAnggotaHTML = `
-                        <div class="col-12 mb-3">
-                            <h5>Tambah Anggota</h5>
+            if (jumlahAnggota > 1) {
+                for (let i = 1; i < jumlahAnggota; i++) { // Dimulai dari 1 agar pendaftar utama tidak dihitung
+                    const anggotaHTML = `
+                        <div class="mb-3 anggota-group">
+                            <label class="form-label">Anggota ${i}</label>
                             <div class="row">
                                 <div class="col">
                                     <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" required>
@@ -264,8 +237,9 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
                             </div>
                         </div>
                     `;
-                    anggotaContainer.insertAdjacentHTML("beforeend", tambahAnggotaHTML);
-                });
+                    anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
+                }
+            }
 
             step1.style.display = "none"; // Sembunyikan Step 1
             step2.style.display = "block"; // Tampilkan Step 2

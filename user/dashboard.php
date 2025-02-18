@@ -5,20 +5,27 @@ $sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '
 $query2 = mysqli_query($conn, $sql2);
 $total_pengajuan = mysqli_fetch_array($query2)['jumlah_pengajuan'];
 
-// akses dokumen
-$sql2 = "SELECT COUNT(*) FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan";
-$query2 = mysqli_query($conn, $sql);
-$jumlah_dokumen = mysqli_fetch_assoc($query2);
+// akses sertifikat/nilai
+$sql2 = "SELECT COUNT(*) jumlah_nilai FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = 'nilai'";
+$query2 = mysqli_query($conn, $sql2);
+$total_nilai = mysqli_fetch_assoc($query2)['jumlah_nilai'];
 
-// akses histori kegiatan
-$sql3 = "SELECT COUNT(*) FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Diterima' AND status_active != 'Y'";
-$query3 = mysqli_query($conn, $sql);
-$jumlah_kegiatan = mysqli_fetch_assoc($query2);
+// akses histori
+$sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Selesai'";
+$query3 = mysqli_query($conn, $sql3);
+$total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
 
 // akses logbook
 $sql4 = "SELECT COUNT(*) AS jumlah_logbook FROM tb_logbook WHERE id_user = '$id_user'";
 $query4 = mysqli_query($conn, $sql4);
 $total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
+
+// akses laporan akhir
+$sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = 'laporan'";
+$query5 = mysqli_query($conn, $sql5);
+$total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
+
+
 ?>
 
 <div class="main-content p-4">
@@ -84,7 +91,7 @@ $total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Histori</h5>
-                        <h2 class="card-text text-danger"><?= $jumlah_kegiatan ?: 0 ?></h2>
+                        <h2 class="card-text text-danger"><?= $total_histori ?: 0 ?></h2>
                         <p class="text-muted">Jumlah Kegiatan</p>
                         <a href="histori.php" class="btn btn-danger mt-3 detail">View Details</a>
                     </div>
