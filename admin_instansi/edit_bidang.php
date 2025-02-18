@@ -42,13 +42,13 @@ if(isset($_POST["edit_bidang"])) {
             <!-- Kriteria -->
             <div class="mb-3">
                 <label for="kriteria" class="form-label">Kriteria</label>
-                <textarea class="form-control" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang" required><?= $edit_bidang["kriteria"] ?></textarea>
+                <textarea class="form-control" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang" required><?= $edit_bidang["kriteria_bidang"] ?></textarea>
             </div>
 
             <!-- Kuota -->
             <div class="mb-3">
                 <label for="kuota" class="form-label">Kuota</label>
-                <input type="number" class="form-control" id="kuota" name="kuota" placeholder="Masukkan kuota bidang" required value="<?= $edit_bidang["kuota"] ?>">
+                <input type="number" class="form-control" id="kuota" name="kuota" placeholder="Masukkan kuota bidang" required value="<?= $edit_bidang["kuota_bidang"] ?>">
             </div>
 
             <!-- Dokumen -->

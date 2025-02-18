@@ -399,6 +399,10 @@ table {
 
 }
 
+hr {
+    color: var(--text-color);
+}
+
 table th {
     color: var(--text-color);
 }
@@ -406,6 +410,7 @@ table th {
 td {
     font-size: 14px;
     color: var(--td-tabel);
+    /* border: 3px solid #4e73df; */
 }
 
 p {

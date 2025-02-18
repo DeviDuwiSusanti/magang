@@ -1,7 +1,27 @@
 <?php include "../layout/header.php"; 
 
-// var_dump($_SESSION["id_instansi"]);
+$id_instansi = $_SESSION["id_instansi"];
 
+// data instansi
+$instansi_admin = query("SELECT COUNT(*) AS total 
+    FROM tb_instansi
+    JOIN tb_profile_user 
+        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
+    WHERE tb_profile_user.id_user = '$id_user'")[0];
+
+// data pemagang
+$pemagang = query("SELECT COUNT(*) AS total 
+    FROM tb_instansi
+    JOIN tb_profile_user 
+        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
+    WHERE tb_profile_user.id_user = '$id_user'")[0];
+
+// data bidang
+$bidang_admin = query("SELECT COUNT(*) AS total 
+    FROM tb_bidang
+    JOIN tb_instansi 
+        ON tb_bidang.id_instansi = tb_instansi.id_instansi
+    WHERE tb_instansi.id_instansi = tb_bidang.id_instansi")[0];
 ?>
 
 
@@ -16,7 +36,7 @@
                 <div class="card border-0">
                     <div class="card-body">
                         <h5 class="card-title">Kelola Instansi</h5>
-                        <h2 class="card-text text-primary">1</h2>
+                        <h2 class="card-text text-primary"><?= $instansi_admin["total"] ?></h2>
                         <p class="text-muted">Kelola data instansi</p>
                         <a href="view_instansi.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
@@ -26,7 +46,7 @@
                 <div class="card border-0">
                     <div class="card-body">
                         <h5 class="card-title">Jumlah Pemagang</h5>
-                        <h2 class="card-text text-success">55</h2>
+                        <h2 class="card-text text-success"><?= $bidang_admin["total"] ?></h2>
                         <p class="text-muted">Lihat data pemagang</p>
                         <a href="view_user.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
@@ -36,7 +56,7 @@
                 <div class="card border-0">
                     <div class="card-body">
                         <h5 class="card-title">Kelola Bidang</h5>
-                        <h2 class="card-text text-warning">8</h2>
+                        <h2 class="card-text text-warning"><?= $bidang_admin["total"] ?></h2>
                         <p class="text-muted">Kelola data bidang</p>
                         <a href="view_bidang.php" class="btn btn-warning mt-3 detail">View Details</a>
                     </div>
