@@ -15,7 +15,7 @@ $gender = ($profile["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki-Laki")
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top">
-                    <img src="../assets/img/user/<?= $profile["gambar"] ?: 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top;">
+                    <img src="../assets/img/user/<?= $profile["gambar_user"] ?: 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top;">
                     <h4 class="card-title"><?= $profile["nama_user"] ?></h4>
                     <p class="text-muted"><?= $profile["email"] ?></p>
 
@@ -33,7 +33,7 @@ $gender = ($profile["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki-Laki")
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
-                                    <td><?= $profile["telepone"] ?></td>
+                                    <td><?= $profile["telepone_user"] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-gender-ambiguous"></i> <strong>Gender</strong></td>

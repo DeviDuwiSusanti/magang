@@ -1,19 +1,14 @@
 <?php 
 include "../layout/header.php"; 
 
-// Cek apakah id_instansi ada dalam session
-if (!isset($_SESSION["id_instansi"])) {
-    die("Anda tidak memiliki akses!");
-}
-
 $id_instansi = $_SESSION['id_instansi'];
-$no = 1;
+$no = 1;    
 
 $sql = "SELECT
             tb_profile_user.nama_user,
             tb_bidang.nama_bidang,
             tb_pengajuan.jenis_pengajuan,
-            tb_pengajuan.calon_pelamar,
+            tb_pengajuan.jumlah_pelamar,
             tb_pengajuan.tanggal_mulai,
             tb_pengajuan.tanggal_selesai,
             tb_pengajuan.id_pengajuan,

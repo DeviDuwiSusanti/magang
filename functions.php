@@ -145,7 +145,7 @@ function edit_profile_1($POST_edit)
                 nama_user = '$nama_user',
                 tempat_lahir = '$tempat_lahir',
                 tanggal_lahir = '$tanggal_lahir',
-                telepone = '$telepone',
+                telepone_user = '$telepone',
                 jenis_kelamin = '$jenis_kelamin',
                 alamat_user = '$alamat_user',
                 gambar_user = '$gambar',
@@ -251,8 +251,8 @@ function edit_bidang($POST) {
                 id_bidang = '$id_bidang',
                 nama_bidang = '$nama_bidang',
                 deskripsi_bidang = '$deskripsi',
-                kriteria = '$kriteria',
-                kuota = '$kuota',
+                kriteria_bidang = '$kriteria',
+                kuota_bidang = '$kuota',
                 dokumen_prasyarat = '$dokumen_prasyarat',
                 change_by = '$id_user'
                 WHERE id_bidang = '$id_bidang'";
@@ -266,6 +266,37 @@ function hapus_bidang($id_bidang, $id_user) {
                 status_active = 'N',
                 change_by = '$id_user'
                 WHERE id_bidang = '$id_bidang'";
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
+function edit_instansi_1($POST)
+{
+    global $conn;
+    $id_user = $POST["id_user"];
+    $id_instansi = $POST["id_instansi"];
+    $nama_pendek = $POST["nama_pendek"];
+    $nama_panjang = $POST["nama_panjang"];
+    $group_instansi = $POST["group_instansi"];
+    $alamat_instansi = $POST["alamat_instansi"];
+    $deskripsi_instansi = $POST["deskripsi_instansi"];
+    $lokasi_instansi = $POST["lokasi_instansi"];
+    $telepone_instansi = $POST["telepone_instansi"];
+    $gambar_lama = $POST["gambar_instansi"];
+    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/");
+
+    $query = "UPDATE tb_instansi SET
+                id_instansi = '$id_instansi',
+                nama_pendek = '$nama_pendek',
+                nama_panjang = '$nama_panjang',
+                group_instansi = '$group_instansi',
+                alamat_instansi = '$alamat_instansi',
+                lokasi_instansi = '$lokasi_instansi',
+                deskripsi_instansi = '$deskripsi_instansi',
+                telepone_instansi = '$telepone_instansi',
+                gambar_instansi = '$gambar_instansi',
+                change_by = '$id_user'
+                WHERE id_instansi = '$id_instansi' ";
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
 }

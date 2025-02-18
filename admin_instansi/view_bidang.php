@@ -42,8 +42,8 @@ $no = 1;
                                 <td><?= $no++ ?></td>
                                 <td><?= $bd["nama_bidang"] ?></td>
                                 <td><?= $bd["deskripsi_bidang"] ?></td>
-                                <td><?= $bd["kriteria"] ?></td>
-                                <td><?= $bd["kuota"] ?></td>
+                                <td><?= $bd["kriteria_bidang"] ?></td>
+                                <td><?= $bd["kuota_bidang"] ?></td>
                                 <td><?= $bd["dokumen_prasyarat"] ?></td>
                                 <td style="width: 150px;">
                                     <a href="edit_bidang.php?id_bidang=<?= $bd["id_bidang"] ?>" class="btn btn-warning btn-sm">

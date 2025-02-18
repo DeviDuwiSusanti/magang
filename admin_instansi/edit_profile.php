@@ -63,7 +63,7 @@ if (isset($_POST["edit_profile"])) {
             <!-- Telepone -->
             <div class="mb-3">
                 <label for="no_telepone" class="form-label">No. Telepone</label>
-                <input type="text" class="form-control" id="no_telepone" name="telepone" value="<?= $edit_profile["telepone"] ?>">
+                <input type="text" class="form-control" id="no_telepone" name="telepone" value="<?= $edit_profile["telepone_user"] ?>">
             </div>
 
             <!-- Alamat -->
@@ -76,8 +76,8 @@ if (isset($_POST["edit_profile"])) {
             <div class="mb-3">
                 <label for="image">Foto Profil</label><br><br>
                 <div class="image-preview" id="imagePreview">
-                    <img src="../assets/img/user/<?= $edit_profile["gambar"] ?: 'avatar.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
-                    <input type="hidden" name="gambar_lama" id="gambar_lama" value="<?= $edit_profile["gambar"] ?>">
+                    <img src="../assets/img/user/<?= $edit_profile["gambar_user"] ?: 'avatar.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
+                    <input type="hidden" name="gambar_lama" id="gambar_lama" value="<?= $edit_profile["gambar_user"] ?>">
                 </div>
                 <input type="file" class="input form-control" id="image" name="gambar" accept="image/*" onchange="previewFile()">
                 <small class="text-muted">Kosong Jika tidak ingin di ganti</small>

@@ -1,4 +1,15 @@
-<?php include "../layout/header.php"; ?>
+<?php
+include "../layout/header.php";
+
+$instansi = "SELECT * 
+    FROM tb_instansi
+    JOIN tb_profile_user 
+        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
+    WHERE tb_profile_user.id_user = '$id_user'";
+
+$query = mysqli_query($conn, $instansi);
+$instansi = mysqli_fetch_assoc($query);
+?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
@@ -11,8 +22,8 @@
             <!-- shadow -->
             <div class="card mx-auto" style="max-width: 950px;">
                 <div class="card-body top-2">
-                    <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
-                    <h4 class="card-title judul">Dinas Komunikasi dan Informatika Kabupaten Sidoarjo</h4>
+                    <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <h4 class="card-title judul"><?= $instansi["nama_panjang"] ?></h4>
 
                     <hr>
                     <div class="card-body">
@@ -20,19 +31,19 @@
                             <tbody class="text-start">
                                 <tr>
                                     <td><i class="bi bi-buildings"></i> <strong>Nama Instansi</strong></td>
-                                    <td>Dinas Komunikasi dan Informatika Kabupaten Sidoarjo</td>
+                                    <td><?= $instansi["nama_panjang"] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-card-text"></i> <strong>Deskripsi</strong></td>
-                                    <td>Dinas Kominfo Sidoarjo adalah lembaga yang berada di Kabupaten Sidoarjo</td>
+                                    <td><?= $instansi["deskripsi_instansi"] ?: 'Deskripsi belum diatur' ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-geo-alt"></i> <strong>Alamat</strong></td>
-                                    <td>Jl. Diponegoro No.139, Lemah Putro, Sidoarjo</td>
+                                    <td><?= $instansi["alamat_instansi"] ?: 'Alamat belum diatur' ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-calendar"></i> <strong>Telepon</strong></td>
-                                    <td>085876453211</td>
+                                    <td><?= $instansi["telepone_instansi"] ?: 'Telepon belum diatur' ?></td>
                                 </tr>
                             </tbody>
                         </table>
