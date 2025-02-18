@@ -1,5 +1,7 @@
 <?php 
     include "sidebar.php";
+    $pendidikan = query("SELECT * FROM tb_pendidikan");
+    $no = 1;
 ?>
 
 <main>
@@ -40,26 +42,27 @@
                             <th>Fakultas</th>
                             <th>Jurusan / Prodi</th>
                             <th>Alamat</th>
-                            <th >Aksi</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php foreach ($pendidikan as $studi) : ?>
                         <tr>
-                            <td>1</td>
-                            <td>Universitas Trunojoyo</td>
-                            <td>Fakultas Teknik</td>
-                            <td>Teknik Informatika</td>
-                            <td>Jl. Raya Telang No 1 Kecamaan Kamal</td>
+                            <td><?= $no++ ?></td>
+                            <td><?= $studi["nama_pendidikan"] ?></td>
+                            <td><?= $studi["fakultas"] ?></td>
+                            <td><?= $studi["jurusan"] ?></td>
+                            <td><?= $studi["alamat_pendidikan"] ?></td>
                             <td class="d-flex justify-content-center gap-2">
-                                <a href="study_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
+                                <a href="study_hapus.php?id_pendidikan=<?= $studi["id_pendidikan"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
-                                <a href="study_edit.php" class="btn btn-warning btn-sm">
+                                <a href="study_edit.php?id_pendidikan=<?= $studi["id_pendidikan"] ?>" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
                             </td>
                         </tr>
-
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

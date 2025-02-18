@@ -1,5 +1,7 @@
 <?php 
     include "sidebar.php";
+    $admin_instansi = query("SELECT * FROM tb_user u, tb_profile_user p WHERE p.id_user = u.id_user AND u.level = '2' AND (p.id_instansi IS NULL OR p.id_instansi = '') ");
+    $no = 1;
 ?>
 
 <main>
@@ -28,160 +30,28 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php foreach($admin_instansi as $calon) : 
+                            $jenis_kelamin = ($calon["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki - Laki");
+                            $level = ($calon["level"] == '2' ? "Admin Instansi" : "Bukan Admin Instansi");
+                        ?>
                         <tr>
-                            <td>1</td>
-                            <td>Hendra Hartono</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
+                            <td><?= $no++ ?></td>
+                            <td><?= $calon["nama_user"] ?></td>
+                            <td><?= $jenis_kelamin ?></td>
+                            <td><?= $calon["tempat_lahir"] ?>, <?= $calon["tanggal_lahir"] ?></td>
+                            <td><?= $calon["telepone_user"] ?></td>
+                            <td><?= $calon["alamat_user"] ?></td>
                             <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/user/<?= $calon["gambar_user"] ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
-                            <td>2. Admin Instansi</td>
+                            <td><?= $level ?></td>
                             <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
+                                <a href="admin_instansi_generate.php?id_user=<?= $calon["id_user"] ?>" class="btn btn-success btn-sm">
                                     <i class="bi bi-wrench"></i> Jadikan Admin Instansi
                                 </a>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>Habibur Rohman</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Istansi
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Saiful Anam</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Instansi
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Saiful Anam</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Instansi
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Saiful Anam</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Instansi
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Saiful Anam</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Instansi
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Saiful Anam</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Instansi
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Saiful Anam</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Instansi
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Saiful Anam</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi</td>
-                            <td>
-                                <a href="admin_instansi_generate.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-wrench"></i> Jadikan Admin Instansi
-                                </a>
-                            </td>
-                        </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
