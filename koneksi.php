@@ -1,2 +1,2 @@
 <?php
-    $conn = mysqli_connect("localhost", "root", "", "db_magang");
+    $conn = mysqli_connect("localhost", "root", "", "magang_database");
