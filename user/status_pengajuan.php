@@ -5,8 +5,7 @@ include "../layout/sidebarUser.php";
 if ($level != 3){
     echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='dashboard.php?id_user=$id_user'; </script>";
 }
-// Ambil id_user dari session yang sudah diset saat login
-$id_user = $_SESSION['id_user']; 
+
 
 // Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
 $sql = "SELECT * 

@@ -2,10 +2,7 @@
 session_start();
 include "../koneksi.php";
 
-if (!isset($_SESSION['email'])) {
-    echo "<script> window.location.href='../login.php' </script>";
-    exit;
-} else {
+if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
     $email = $_SESSION['email'];
     $sql = "SELECT * FROM tb_user 
             JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user 
@@ -14,6 +11,9 @@ if (!isset($_SESSION['email'])) {
     $row = mysqli_fetch_array($hasil);
     $id_user = $row['id_user']; // Ambil id_user dari sesi login
     $level = $row['level'];
+} else {
+    echo "<script> window.location.href='../login.php' </script>";
+    exit;
 }
 ?>
 
