@@ -2,7 +2,8 @@
 include "../koneksi.php"; 
 
 // Query untuk mengambil data pengajuan magang yang masih aktif
-$sql = "SELECT * FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 
+$sql = "SELECT * 
+        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 
         WHERE tb_pengajuan.id_user = tb_profile_user.id_user
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi

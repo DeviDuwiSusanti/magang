@@ -81,7 +81,7 @@
             </div>
             
             <div class="text-center mt-3">
-                <button type="submit" name="edit_instansi" class="btn btn-success w-100">Tambah Instansi</button>
+                <button type="submit" name="edit_instansi" class="btn btn-success w-100">Edit Data Instansi</button>
             </div>
         </form>
         <a href="instansi_view.php" class="btn btn-danger mb-4 bi bi-arrow-left-circle"> Kembali</a>

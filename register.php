@@ -167,7 +167,7 @@ if (isset($_POST["register"])) {
 
                         <div class="mt-3">
                             <!-- <h6>ID Pendidikan:</h6> -->
-                            <span id="idPendidikanResult"></span>
+                            <!-- <span id="idPendidikanResult"></span> -->
                             <input type="hidden" id="idPendidikanInput" name="pendidikan">
                         </div>
                     </div>
@@ -219,7 +219,6 @@ if (isset($_POST["register"])) {
                             </div>
                             <input type="file" class="input" id="image" name="gambar" accept="image/*" onchange="validateFile()">
                         </div>
-                        <!-- <input type="submit" class="submit" name="register" value="Sign Up"> -->
                         <button type="submit" name="register" class="submit" id="submitBtn">Signup</button>
                     </div>
                 </form>

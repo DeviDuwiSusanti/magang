@@ -61,7 +61,7 @@
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="no_telepone" class="form-label">No. Telepone</label>
-                <input type="text" class="form-control" id="no_telepone" name="telepone" value="<?= $profile_edit["telepone"] ?>">
+                <input type="text" class="form-control" id="no_telepone" name="telepone" value="<?= $profile_edit["telepone_user"] ?>">
             </div>
 
             <!-- Alamat -->
@@ -74,8 +74,8 @@
             <div class="input-field ">
                 <label for="image">Edit Foto Profil (Max 1MB)</label><br><br>
                 <div class="image-preview" id="imagePreview">
-                    <img src="../assets/img/user/<?= $profile_edit["gambar"] ?>" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
-                    <input type="hidden" name="gambar_lama" id="gambar_lama" value="<?= $profile_edit["gambar"] ?>">
+                    <img src="../assets/img/user/<?= $profile_edit["gambar_user"] ?>" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                    <input type="hidden" name="gambar_lama" id="gambar_lama" value="<?= $profile_edit["gambar_user"] ?>">
                 </div>
                 <input type="file" class="input" id="image" name="gambar" accept="image/*" onchange="validateFile()">
             </div>

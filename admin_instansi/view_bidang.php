@@ -1,4 +1,9 @@
-<?php include "../layout/header.php"; ?>
+<?php
+include "../layout/header.php";
+
+$bidang = query("SELECT * FROM tb_bidang WHERE status_active = 'Y'");
+$no = 1;
+?>
 
 <div class="main-content p-3">
     <div class="container-fluid">
@@ -27,40 +32,29 @@
                             <th>Deskripsi</th>
                             <th>Kriteria</th>
                             <th>Kuota</th>
+                            <th>Dokumen Prasyarat</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Bidang Teknologi Informasi</td>
-                            <td>Mengelola pengembangan sistem dan infrastruktur teknologi</td>
-                            <td>Minimal 3 orang</td>
-                            <td>3</td>
-                            <td>
-                                <a href="edit_bidang.php" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                                <a href="view_bidang.php" class="btn btn-danger btn-sm" onclick="event.preventDefault(); showDeleteConfirmation(this.href);">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Bidang Pemasaran</td>
-                            <td>Mengelola kegiatan pemasaran dan promosi instansi</td>
-                            <td>Minimal 2 orang</td>
-                            <td>2</td>
-                            <td>
-                                <a href="edit_bidang.php" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                                <a href="view_bidang.php" class="btn btn-danger btn-sm" onclick="event.preventDefault(); showDeleteConfirmation(this.href);">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                            </td>
-                        </tr>
+                        <?php foreach ($bidang as $bd) : ?>
+                            <tr>
+                                <td><?= $no++ ?></td>
+                                <td><?= $bd["nama_bidang"] ?></td>
+                                <td><?= $bd["deskripsi_bidang"] ?></td>
+                                <td><?= $bd["kriteria"] ?></td>
+                                <td><?= $bd["kuota"] ?></td>
+                                <td><?= $bd["dokumen_prasyarat"] ?></td>
+                                <td style="width: 150px;">
+                                    <a href="edit_bidang.php?id_bidang=<?= $bd["id_bidang"] ?>" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <a href="hapus_bidang.php?id_bidang=<?= $bd["id_bidang"] ?>" onclick="confirmDelete(event)" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -69,3 +63,27 @@
 </div>
 
 <?php include "footer.php"; ?>
+
+<script>
+    function confirmDelete(event) {
+        event.preventDefault(); // Mencegah aksi default link
+
+        const url = event.currentTarget.href; // Ambil URL dari atribut href
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data bidang akan dihapus!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika dikonfirmasi, alihkan ke URL hapus
+                window.location.href = url;
+            }
+        });
+    }
+</script>

@@ -5,6 +5,8 @@ include "../layout/sidebarUser.php";
 if ($level != 3){
     echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='dashboard.php?id_user=$id_user'; </script>";
 }
+// Ambil id_user dari session yang sudah diset saat login
+$id_user = $_SESSION['id_user']; 
 
 // Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
 $sql = "SELECT * 
@@ -68,7 +70,7 @@ $no = 1;
                             ?>
                         </td>
                         <td class="text-center">
-                            <a href="detail_status.php" class="text-decoration-none" title="Lihat Detail">
+                            <a href="detail_status.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="text-decoration-none" title="Lihat Detail">
                                 <i class="bi bi-eye" style="font-size: 20px;"></i>
                             </a>
                         </td>

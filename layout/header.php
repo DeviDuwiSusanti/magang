@@ -1,3 +1,26 @@
+<?php
+session_start();
+include "../functions.php";
+
+if (!isset($_SESSION['email']) || !isset($_SESSION['id_user'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+$email = $_SESSION['email'];
+$query = "SELECT * FROM tb_user WHERE email = '$email'";
+$result = $conn->query($query);
+$user = $result->fetch_assoc();
+
+if ($user['level'] != 2) {
+    header("Location: ../login.php");
+    exit();
+}
+
+$id_user = $user["id_user"];
+$pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,6 +36,8 @@
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/alert.js"></script>
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -89,7 +114,7 @@
                 </li>
             </ul>
             <div class="sidebar-footer">
-                <a href="logout.php" class="sidebar-link">
+                <a href="../admin_instansi/logout.php" class="sidebar-link">
                     <i class="bi bi-box-arrow-left"></i>
                     <span>Logout</span>
                 </a>
@@ -110,10 +135,10 @@
 
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="../assets/img/login.jpeg" alt="avatar" class="avatar img-fluid rounded-circle">
+                                <img src="../assets/img/user/<?= $pengguna["gambar"] ?: 'avatar.png' ?>" alt="avatar" class="avatar img-fluid rounded-circle" style="object-fit: cover; object-position: top;">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="view_profile.php" class="dropdown-item">
+                                <a href="edit_profile.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Edit Profile</span>
                                 </a>
@@ -126,7 +151,7 @@
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>
-                                <a href="../logout.php" class="dropdown-item">
+                                <a href="../admin_instansi/logout.php" class="dropdown-item">
                                     <i class="bi bi-box-arrow-right"></i>
                                     <span>Logout</span>
                                 </a>
@@ -135,59 +160,71 @@
                     </ul>
                 </div>
             </nav>
-        <!-- </div>
+            <!-- </div>
     </div> -->
-    <script src="../assets/js/script.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+            <script src="../assets/js/script.js"></script>
 
-    <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-    <!-- Inisialisasi DataTables -->
-    <script>
-        $(document).ready(function() {
-            $('#myTable').DataTable();
-        });
-    </script>
+            <!-- Select2 JS -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            var table = $('#myTable').DataTable();
+            <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-            $('#myTable tbody').on('click', 'a.show-detail', function(e) {
-                e.preventDefault();
-
-                var detailData = $(this).data('detail');
-                var detailHtml = '<ul>';
-                $.each(detailData, function(index, name) {
-                    detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+            <!-- Inisialisasi DataTables -->
+            <script>
+                $(document).ready(function() {
+                    $('#myTable').DataTable();
                 });
-                detailHtml += '</ul>';
+            </script>
 
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
-
-                if (!row.child.isShown()) {
-                    $('#myTable tbody tr.shown').not(tr).each(function() {
-                        table.row(this).child.hide();
-                        $(this).removeClass('shown');
+            <script>
+                $(document).ready(function() {
+                    $('#bidang').select2({
+                        placeholder: "Pilih Bidang",
+                        allowClear: true
                     });
-                }
+                });
+            </script>
 
-                if (row.child.isShown()) {
-                    row.child.hide();
-                    tr.removeClass('shown');
-                } else {
-                    row.child(detailHtml).show();
-                    tr.addClass('shown');
-                }
-            });
-        });
-    </script>
+            <script>
+                $(document).ready(function() {
+                    var table = $('#myTable').DataTable();
+
+                    $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+                        e.preventDefault();
+
+                        var detailData = $(this).data('detail');
+                        var detailHtml = '<ul>';
+                        $.each(detailData, function(index, name) {
+                            detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+                        });
+                        detailHtml += '</ul>';
+
+                        var tr = $(this).closest('tr');
+                        var row = table.row(tr);
+
+                        if (!row.child.isShown()) {
+                            $('#myTable tbody tr.shown').not(tr).each(function() {
+                                table.row(this).child.hide();
+                                $(this).removeClass('shown');
+                            });
+                        }
+
+                        if (row.child.isShown()) {
+                            row.child.hide();
+                            tr.removeClass('shown');
+                        } else {
+                            row.child(detailHtml).show();
+                            tr.addClass('shown');
+                        }
+                    });
+                });
+            </script>
 </body>
 
 </html>

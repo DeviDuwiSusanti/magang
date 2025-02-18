@@ -74,7 +74,7 @@
             <div class="input-field ">
                 <label for="image">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
                 <div class="image-preview" id="imagePreview">
-                    <img src="../assets/img/instansi/avatar_instansi" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
                 </div>
                 <input type="file" class="input" id="image" name="gambar_instansi" accept="image/*" onchange="validateFile()">
             </div>

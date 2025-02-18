@@ -1,4 +1,15 @@
-<?php include "../layout/header.php"; ?>
+<?php 
+include "../layout/header.php"; 
+
+$status = "";
+if (isset($_POST["tambah_bidang"])) {
+    if(tambah_bidang($_POST) > 0) {
+        $status = "success";
+    } else {
+        $status = "error";
+    }
+}
+?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
@@ -14,7 +25,8 @@
             </a>
         </div>
         
-        <form action="update_profile.php" class="form-profile" method="POST" enctype="multipart/form-data">
+        <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
             <!-- Nama Bidang -->
             <div class="mb-3">
                 <label for="nama_bidang" class="form-label">Nama Bidang</label>
@@ -39,10 +51,24 @@
                 <input type="number" class="form-control" id="kuota" name="kuota" placeholder="Masukkan kuota bidang" required>
             </div>
 
+            <!-- Dokumen -->
+            <div class="mb-3">
+                <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
+                <textarea class="form-control" id="dokumen" name="dokumen" rows="3" placeholder="Masukkan dokumen prasyarat" required></textarea>
+            </div>
+
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary edit" onclick="event.preventDefault(); alertTambah(this.href);"><i class="bi bi-floppy me-1"></i>  Simpan Perubahan</button>
+            <button type="submit" class="btn btn-primary edit" name="tambah_bidang"><i class="bi bi-plus-circle me-1"></i> Tambah Bidang</button>
         </form>
     </div>
 </div>
 
 <?php include "footer.php"; ?>
+
+<script>
+    <?php if ($status === "success"): ?>
+        alertSuccessEdit('Data bidang berhasil ditambahkan.', 'view_bidang.php');
+    <?php elseif ($status === "error"): ?>
+        alertErrorRegister('Registrasi gagal dilakukan.', 'register.php');
+    <?php endif; ?>
+</script>

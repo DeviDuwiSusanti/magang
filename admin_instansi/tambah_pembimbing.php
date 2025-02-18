@@ -24,11 +24,11 @@
             <!-- Bidang -->
             <div class="mb-3">
                 <label for="bidang" class="form-label">Pilih Bidang</label>
-                <select id="bidang" class="form-select">
+                <select id="bidang" class="form-select select2">
                     <option selected disabled>Pilih Bidang</option>
-                    <option>Teknologi Informasi</option>
-                    <option>Akuntansi</option>
-                    <option>Manajemen</option>
+                    <option value="Teknologi Informasi">Teknologi Informasi</option>
+                    <option value="Akuntansi">Akuntansi</option>
+                    <option value="Manajemen">Manajemen</option>
                 </select>
             </div>
 

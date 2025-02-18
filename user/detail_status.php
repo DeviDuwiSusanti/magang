@@ -3,9 +3,7 @@ include "../koneksi.php";
 include "../layout/sidebarUser.php"; 
 
 // Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
-$sql = "SELECT tb_user.email, tb_profile_user.nama_user, tb_instansi.nama_panjang, 
-               tb_bidang.nama_bidang, tb_pengajuan.status_pengajuan, 
-               tb_pengajuan.tanggal_mulai, tb_pengajuan.tanggal_selesai
+$sql = "SELECT *
         FROM tb_pengajuan, tb_profile_user, tb_user, tb_instansi, tb_bidang
         WHERE tb_pengajuan.id_user = tb_profile_user.id_user
         AND tb_profile_user.id_user = tb_user.id_user
@@ -37,8 +35,8 @@ $row = mysqli_fetch_assoc($query);
         <div class="container mt-5 mb-5">
             <div class="card mx-auto position-relative" style="max-width: 600px;">
                 <div class="card-body top text-center">
-                    <img src="../assets/img/login.jpeg" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
-                    <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
+                <img src="../assets/img/user/<?= isset($row['gambar']) ? $row['gambar'] : 'default.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
                     <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
 
                     <hr>
@@ -88,7 +86,7 @@ $row = mysqli_fetch_assoc($query);
                         </table>
 
                         <!-- Tombol kecil di pojok kanan bawah -->
-                        <a href="unggah_persyaratan.php" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 10px;">
+                        <a href="persyaratan_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 10px;">
                             <i class="bi bi-upload"></i> Lengkapi Dokumen
                         </a>
                     </div>
