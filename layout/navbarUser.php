@@ -13,8 +13,8 @@ if (isset($_SESSION['email'])) {
     $hasil = mysqli_query($conn, $sql);
     if ($row = mysqli_fetch_array($hasil)) {
         // Jika ada gambar di database, gunakan gambar tersebut
-        if (!empty($row['gambar']) && file_exists("../assets/img/user/" . $row['gambar'])) {
-            $user_image = "../assets/img/user/" . $row['gambar'];
+        if (!empty($row['gambar_user']) && file_exists("../assets/img/user/" . $row['gambar_user'])) {
+            $user_image = "../assets/img/user/" . $row['gambar_user'];
         }
     }
 }
