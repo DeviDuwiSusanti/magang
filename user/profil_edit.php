@@ -48,7 +48,7 @@ if (ISSET($_POST['update_profil'])){
         $target_file = $target_dir . basename($image_name);
         
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            $gambar_update = ", gambar = '$image_name'";
+            $gambar_update = ", gambar_user = '$image_name'";
         } else {
             $gambar_update = "";
         }
@@ -62,11 +62,11 @@ if (ISSET($_POST['update_profil'])){
         tempat_lahir = '$tempat_lahir',
         tanggal_lahir = '$tanggal_lahir',
         jenis_kelamin = '$jenis_kelamin',
-        nik = '$nik',
+        nik_user = '$nik',
         nim = '$nim',
         nisn = '$nisn',
         id_pendidikan = '$id_pendidikan',
-        telepone = '$telepone',
+        telepone_user = '$telepone',
         alamat_user = '$alamat_user' 
         $gambar_update
         WHERE id_user = '$id_user'";

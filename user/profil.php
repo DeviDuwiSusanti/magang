@@ -16,7 +16,7 @@ $row2 = mysqli_fetch_assoc($query2);
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top">
-                    <img src="../assets/img/user/<?= $row2['gambar'] ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/user/<?= $row2['gambar_user'] ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>
 
@@ -42,7 +42,7 @@ $row2 = mysqli_fetch_assoc($query2);
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-credit-card"></i> <strong>NIK</strong></td>
-                                    <td><?= $row2['nik'] ?></td>
+                                    <td><?= $row2['nik_user'] ?></td>
                                 </tr>
                                 <tr>
                                 <tr>
@@ -69,7 +69,7 @@ $row2 = mysqli_fetch_assoc($query2);
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
-                                    <td><?= $row2['telepone'] ?></td>
+                                    <td><?= $row2['telepone_user'] ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-geo-alt"></i> <strong>Alamat</strong></td>
