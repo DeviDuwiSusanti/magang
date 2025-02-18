@@ -48,7 +48,7 @@ if (ISSET($_POST['update_profil'])){
         $target_file = $target_dir . basename($image_name);
         
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            $gambar_update = ", gambar = '$image_name'";
+            $gambar_update = ", gambar_user = '$image_name'";
         } else {
             $gambar_update = "";
         }
@@ -62,11 +62,11 @@ if (ISSET($_POST['update_profil'])){
         tempat_lahir = '$tempat_lahir',
         tanggal_lahir = '$tanggal_lahir',
         jenis_kelamin = '$jenis_kelamin',
-        nik = '$nik',
+        nik_user = '$nik',
         nim = '$nim',
         nisn = '$nisn',
         id_pendidikan = '$id_pendidikan',
-        telepone = '$telepone',
+        telepone_user = '$telepone',
         alamat_user = '$alamat_user' 
         $gambar_update
         WHERE id_user = '$id_user'";
@@ -131,7 +131,7 @@ if (ISSET($_POST['update_profil'])){
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik'] ?>" required>
+                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik_user'] ?>" required>
             </div>
             
             <!-- Asal Studi -->
@@ -187,7 +187,7 @@ if (ISSET($_POST['update_profil'])){
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telepon" class="form-label">Telepon</label>
-                <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone'] ?>" required>
+                <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone_user'] ?>" required>
             </div>
             <!-- Alamat -->
             <div class="mb-3">
@@ -199,7 +199,7 @@ if (ISSET($_POST['update_profil'])){
             <div class="mb-3">
                 <label for="image">Foto Profil</label><br><br>
                 <div class="image-preview" id="imagePreview">
-                    <img src="<?= !empty($row2['gambar']) ? '../assets/img/user/'.$row2['gambar'] : '../assets/img/user/avatar.png' ?>" 
+                    <img src="<?= !empty($row2['gambar']) ? '../assets/img/user/'.$row2['gambar_user'] : '../assets/img/user/avatar.png' ?>" 
                         id="previewImage" 
                         class="rounded-circle mb-3" 
                         style="width: 120px; height: 120px; object-fit: cover; object-position: top;">

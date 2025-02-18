@@ -3,7 +3,7 @@ function getBidangInstansi($conn, $limit = NULL) {
     // Query dasar tanpa LIMIT
     $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.change_date AS bidang_change_date 
             FROM tb_bidang, tb_instansi 
-            WHERE tb_bidang.status_active = 'Y' AND tb_bidang.kuota != 0 
+            WHERE tb_bidang.status_active = 'Y' AND tb_bidang.kuota_bidang != 0 
             AND tb_bidang.id_instansi = tb_instansi.id_instansi";
     
     // Jika parameter limit diberikan, tambahkan LIMIT ke query

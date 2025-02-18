@@ -15,7 +15,7 @@ $sql = "SELECT *
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        AND tb_pengajuan.status_active = 'Y' 
+        AND tb_pengajuan.status_pengajuan IN ('Diterima', 'Menunggu') 
         AND tb_pengajuan.id_user = '$id_user'";  
 
 $query = mysqli_query($conn, $sql); 
@@ -33,7 +33,7 @@ $no = 1;
 
         <!-- Tombol Tambah Pengajuan -->
         <div class="d-flex justify-content-end mb-4">
-            <a href="pengajuan.php" class="btn btn-primary">Tambah Pengajuan</a>
+            <a href="../web/lowongan.php" class="btn btn-primary">Tambah Pengajuan</a>
         </div>
 
         <!-- Tabel -->
@@ -44,6 +44,7 @@ $no = 1;
                         <th class="text-center">No</th>
                         <th class="text-center">Perusahaan</th>
                         <th class="text-center">Bidang</th>
+                        <th class="text-center">Jenis Pengajuan</th>
                         <th class="text-center">Status Lamaran</th>
                         <th class="text-center">Durasi</th>
                         <th class="text-center">Aksi</th>
@@ -55,6 +56,7 @@ $no = 1;
                         <td class="text-center"><?= $no++; ?></td>
                         <td><?= isset($row['nama_panjang']) ? $row['nama_panjang'] : 'Data tidak tersedia'; ?></td> 
                         <td><?= isset($row['nama_bidang']) ? $row['nama_bidang'] : 'Data tidak tersedia'; ?></td> 
+                        <td><?= isset($row['jenis_pengajuan']) ? $row['jenis_pengajuan'] : 'Data tidak tersedia'; ?></td> 
                         <td><?= isset($row['status_pengajuan']) ? $row['status_pengajuan'] : 'Status tidak diketahui'; ?></td>
                         <td class="text-center">
                             <?php 

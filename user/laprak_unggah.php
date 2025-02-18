@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['laporan_akhir'])) {
             // Pindahkan file ke direktori tujuan
             if (move_uploaded_file($file_tmp, $file_path)) {
                 // Menyimpan data ke database dengan ID User
-                $jenis_dokumen = 'Laporan Akhir';  // Jenis dokumen
+                $jenis_dokumen = 'laprak';  // Jenis dokumen
 
                 $stmt = $conn->prepare("INSERT INTO tb_dokumen (nama_dokumen, jenis_dokumen, file_path, id_user, create_date) 
                                        VALUES (?, ?, ?, ?, NOW())");
@@ -58,17 +58,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['laporan_akhir'])) {
 <div class="main-content p-4">
     <div class="container-fluid">
         <!-- Heading Dashboard -->
-        <h1 class="mb-4">Unggah Laporan Akhir</h1>
+        <h1 class="mb-4">Unggah laporan akhir</h1>
         <ol class="breadcrumb mb-4 d-flex justify-content-between align-items-center">
-            <li class="breadcrumb-item active">Unggah Laporan Akhir Kegiatan</li>
-            <a href="laprak_daftar.php?id_user=<?= $id_user ?>" class="btn btn-secondary">Lihat Daftar Laporan Akhir</a>
+            <li class="breadcrumb-item active">Unggah laprak Kegiatan</li>
+            <a href="laprak_daftar.php?id_user=<?= $id_user ?>" class="btn btn-secondary">Lihat Daftar laporan akhir</a>
         </ol>
         <div class="dropdown-divider"></div><br><br>
 
         <!-- Form Unggah Laporan -->
         <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="laporan_akhir" class="form-label">Unggah Laporan Akhir (PDF)</label>
+                <label for="laporan_akhir" class="form-label">Unggah laporan akhir (PDF)</label>
                 <input type="file" class="form-control" id="laporan_akhir" name="laporan_akhir" accept=".pdf" required>
                 <small class="text-muted">Pilih file laporan akhir (PDF)</small>
             </div>
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['laporan_akhir'])) {
             <!-- Input type file untuk mengunggah dokumen -->
             <input type="file" class="form-control me-2" name="laporan_akhir[]" accept=".pdf" required>
             <!-- Input tersembunyi untuk mengirimkan jenis dokumen ke server -->
-            <input type="hidden" name="jenis_dokumen[]" value="laporan akhir">
+            <input type="hidden" name="jenis_dokumen[]" value="laprak">
             <!-- Tombol untuk menghapus input -->
             <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
         `;

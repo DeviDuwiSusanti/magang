@@ -44,16 +44,19 @@
                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
                 <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $profile_edit["tanggal_lahir"] ?>">
             </div>
-
-            <!-- Gender -->
+            
+            <!-- gender -->
             <div class="mb-3">
-                <label for="gender" class="form-label">Jenis Kelamin</label>
+            <label for="gender" class="form-label">Jenis Kelamin</label>
                 <div class="form-check">
-                    <input type="radio" name="jenis_kelamin" id="gender_l" class="form-check-input" value="<?= $profile_edit["jenis_kelamin"] ?>" checked>
+                    <input type="radio" name="jenis_kelamin" id="gender_l" class="form-check-input" value="L" 
+                        <?= ($pengguna["jenis_kelamin"] == "L") ? "checked" : "" ?>>
                     <label for="gender_l" class="form-check-label">Laki - Laki</label>
                 </div>
+
                 <div class="form-check">    
-                    <input type="radio" name="jenis_kelamin" id="gender_p" class="form-check-input" value="<?= $profile_edit["jenis_kelamin"] ?>" checked>
+                    <input type="radio" name="jenis_kelamin" id="gender_p" class="form-check-input" value="P" 
+                        <?= ($pengguna["jenis_kelamin"] == "P") ? "checked" : "" ?>>
                     <label for="gender_p" class="form-check-label">Perempuan</label>
                 </div>
             </div>

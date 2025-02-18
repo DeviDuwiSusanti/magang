@@ -1,5 +1,5 @@
 <div class="accordion accordion-flush" id="accordionFlushExample" data-aos="fade-down">
-  <div class="accordion-item">
+  <!-- <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingOne">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
       Apakah saya bisa mendaftar lebih dari satu lowongan?
@@ -8,7 +8,7 @@
     <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">Setiap peserta hanya diperkenankan mendaftar satu lowongan magang saja. Kamu bisa kembali mendaftar lowongan magang lain apabila kamu dinyatakan tidak lolos pada salah satu lowongan magang sebelumnya.</div>
     </div>
-  </div>
+  </div> -->
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingTwo">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
@@ -25,6 +25,7 @@
       </div>
     </div>
   </div>
+
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingThree">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
@@ -39,6 +40,7 @@
       </div>
     </div>
   </div>
+
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingFour">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
@@ -54,6 +56,7 @@
       </div>
     </div>
   </div>
+
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingFive">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
@@ -66,5 +69,20 @@
       </div>
     </div>
   </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingSix">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+      Apakah anggota kelompok lain juga perlu register ke sistem?
+      </button>
+    </h2>
+    <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        Tidak perlu, untuk anggota kelompok yang lain, bisa langsung login dengan email yang sudah didaftarkan oleh perwakilan
+        kelompok sewaktu melakukan pendaftaran magang untuk melakukan unggah logbook harian, cek nilai, sertifikat, dan mengunggah laporan akhir magang <br>
+      </div>
+    </div>
+  </div>
+
 </div>
 

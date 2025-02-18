@@ -5,7 +5,7 @@ include '../koneksi.php';
 $id_user = $_SESSION['id_user'];  // Ambil ID user dari session
 
 // Query untuk mendapatkan daftar dokumen dengan jenis 'persyaratan' yang sudah diunggah
-$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'persyaratan'";
+$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'prasyarat'";
 $result = mysqli_query($conn, $sql);
 
 // Query untuk mendapatkan id_pengajuan

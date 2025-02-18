@@ -1,5 +1,7 @@
 <?php 
     include "sidebar.php";
+    $user = query("SELECT * FROM tb_profile_user p , tb_user u WHERE p.id_user = u.id_user");
+    $no = 1;
 ?>
 
 <main>
@@ -35,90 +37,43 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php foreach($user as $u) :
+                            $jenis_kelamin = ($u["jenis_kelamin"] == "P" ? "Perempuan" : "Laki - Laki");
+                            $level = "";
+                            if($u["level"] == "1") {
+                                $level = "Super Admin";
+                            }
+                            if($u["level"] == "2") {
+                                $level = "Admin Instansi";
+                            }
+                            if($u["level"] == "3") {
+                                $level = "User Ketua";
+                            }
+                            if($u["level"] == "4") {
+                                $level = "User Kelompok";
+                            }
+                        ?>
                         <tr>
-                            <td>1</td>
-                            <td>Mishbahus Surur</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
+                            <td><?= $no++ ?></td>
+                            <td><?= $u["nama_user"] ?></td>
+                            <td><?= $jenis_kelamin ?></td>
+                            <td><?= $u["tempat_lahir"] ?>, <?= $u["tanggal_lahir"] ?></td>
+                            <td><?= $u["telepone_user"] ?></td>
+                            <td><?= $u["alamat_user"] ?></td>
                             <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/user/<?= $u["gambar_user"] ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
                             </td>
-                            <td>1. Super Admin</td>
+                            <td><?= $level ?></td>
                             <td class="d-flex justify-content-center gap-2">
-                                <a href="user_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                <a href="user_hapus.php?id_user=<?= $u["id_user"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
-                                <a href="user_edit.php" class="btn btn-warning btn-sm">
+                                <a href="user_edit.php?id_user=<?= $u["id_user"] ?>" class="btn btn-warning btn-sm">
                                     <i class="bi bi-pencil"></i> Edit
                                 </a>
                             </td>
                         </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>Devi Duwi Susanti</td>
-                            <td>Perempuan</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>3. User Biasa</td>
-                            <td class="d-flex justify-content-center gap-2">
-                                <a href="user_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                                <a href="user_edit.php" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>3</td>
-                            <td>Hendra Hartono</td>
-                            <td>Laki Laki</td>
-                            <td>Bangkalan, 30-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>2. Admin Instansi Diskominfo sidoarjo</td>
-                            <td class="d-flex justify-content-center gap-2">
-                                <a href="user_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                                <a href="user_edit.php" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>4</td>
-                            <td>Revika Syariqatun Alifia</td>
-                            <td>Perempuan</td>
-                            <td>dangkalan, 9-05-2004</td>
-                            <td>0891234432</td>
-                            <td>Jl.sakera sepulu</td>
-                            <td>
-                                <img src="../assets/img/login.jpeg" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
-                            </td>
-                            <td>3. User Biasa</td>
-                            <td class="d-flex justify-content-center gap-2">
-                                <a href="user_hapus.php" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                                <a href="user_edit.php" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
-                            </td>
-                        </tr>
-
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

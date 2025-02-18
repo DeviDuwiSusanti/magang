@@ -97,11 +97,8 @@ $row = mysqli_fetch_assoc($query);
 
                     <!-- Tombol untuk unggah logbook dan laporan akhir -->
                     <div class="d-flex justify-content-center gap-2 mt-4">
-                    <a href="path/to/sertifikat.pdf" class="btn btn-outline-success btn-sm px-3" download>
-                        <i class="bi bi-printer"></i> Sertifikat
-                    </a>
-                    <a href="path/to/nilai.pdf" class="btn btn-outline-primary btn-sm px-3" download>
-                        <i class="bi bi-printer"></i> Nilai
+                    <a href="path/to/sertifikat.pdf" class="btn btn-outline-primary btn-sm px-3" download>
+                        <i class="bi bi-printer"></i> Sertifikat & Nilai
                     </a>
                     <a href="logbook_daftar.php" class="btn btn-outline-info btn-sm px-3">
                         <i class="bi bi-book"></i> Logbook
