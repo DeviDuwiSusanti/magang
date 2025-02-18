@@ -73,7 +73,7 @@ include "functions.php";
                             $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
                             ?>
                             <article class="popular__card swiper-slide">
-                                <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                                <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                 <p><?= $row['nama_panjang'] ?></p>
                                 <div class="popular__data">
                                     <h3 class="popular__title">Internship - <?= $row['nama_bidang'] ?></h3>
