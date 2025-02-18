@@ -1,8 +1,6 @@
 <?php
 include "../koneksi.php";
 include "functions.php";
-
-
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +44,7 @@ if(isset($_GET['id_bidang'])){
                 <table class="detail-table">
                     <tr><td><b>Instansi</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
                     <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat_instansi'] ?></td></tr>
-                    <tr><td><b>Total Pemagang Aktif</b></td><td>:</td><td><?= $pemagang_aktif ?></td></tr>
+                    <tr><td><b>Pemagang Aktif</b></td><td>:</td><td><?= $pemagang_aktif ?></td></tr>
                     <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota'] ?></td></tr>
                     <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_change_date'] ?></td></tr>
                 </table>
@@ -79,7 +77,7 @@ if(isset($_GET['id_bidang'])){
                 </div>
                 
                 <div class="d-flex justify-content-left mt-4">
-                    <a href="../user/pengajuan.php" class="btn btn-primary">Daftar Sekarang</a>
+                    <a href="../user/pengajuan.php?id_bidang=<?= $row['id_bidang'] ?>" class="btn btn-primary">Daftar Sekarang</a>
                 </div>
             </div>
         </div>

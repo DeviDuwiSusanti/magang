@@ -41,7 +41,7 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title">Asal Sekolah / Universitas</h5>
+                        <h5 class="card-title">Daftar Pendidikan</h5>
                         <h2 class="card-text text-primary"><?= $pendidikan["total"] ?></h2>
                         <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p>
                         <a href="study_view.php" class="btn btn-primary mt-3 detail">View Details</a>
@@ -53,7 +53,7 @@
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title">Pengajuan</h5>
+                        <h5 class="card-title">Pengajuan User</h5>
                         <h2 class="card-text text-danger"><?= $pengajuan["total"] ?></h2>
                         <p class="text-muted">Daftar Pengajuan Pengguna</p>
                         <a href="pengajuan_view.php" class="btn btn-danger mt-3 detail">View Details</a>

@@ -11,14 +11,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $otp = $conn->real_escape_string($_POST['otp']);
     $email = $_SESSION['email'];
 
-    // Cek OTP & waktu kedaluwarsa
-    $query = "SELECT * FROM tb_user WHERE email = '$email' AND otp = '$otp' AND otp_expired > NOW()";
+    // Cek OTP & waktu kedaluwarsa / aku rubah ini
+    $query = "SELECT u.id_user, p.id_instansi, u.level 
+            FROM tb_user u
+            LEFT JOIN tb_profile_user p ON u.id_user = p.id_user
+            WHERE u.email = '$email' AND u.otp = '$otp' AND u.otp_expired > NOW()";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
         $_SESSION["id_user"] = $user["id_user"];
+        $_SESSION["id_instansi"] = $user["id_instansi"];
 
         // Reset OTP setelah verifikasi
         $conn->query("UPDATE tb_user SET otp = NULL, otp_expired = NULL WHERE email = '$email'");

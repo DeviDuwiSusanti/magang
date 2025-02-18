@@ -1,4 +1,32 @@
-<?php include "../layout/header.php"; ?>
+<?php 
+include "../layout/header.php"; 
+
+// Cek apakah id_instansi ada dalam session
+if (!isset($_SESSION["id_instansi"])) {
+    die("Anda tidak memiliki akses!");
+}
+
+$id_instansi = $_SESSION['id_instansi'];
+$no = 1;
+
+$sql = "SELECT
+            tb_profile_user.nama_user,
+            tb_bidang.nama_bidang,
+            tb_pengajuan.jenis_pengajuan,
+            tb_pengajuan.calon_pelamar,
+            tb_pengajuan.tanggal_mulai,
+            tb_pengajuan.tanggal_selesai,
+            tb_pengajuan.id_pengajuan,
+            tb_pengajuan.status_pengajuan,
+            tb_pengajuan.status_active
+        FROM tb_pengajuan
+        INNER JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
+        INNER JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        WHERE tb_pengajuan.id_instansi = '$id_instansi' AND tb_pengajuan.status_active = 'Y'
+        ORDER BY tb_pengajuan.id_pengajuan DESC";
+
+$result = mysqli_query($conn, $sql);
+?>
 
 <div class="main-content p-3">
     <div class="container-fluid">
@@ -24,11 +52,12 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                         <tr>
-                            <td>1</td>
-                            <td>Mishbahus Surur</td>
-                            <td>Teknologi Informasi</td>
-                            <td>Magang</td>
+                            <td><?= $no++ ?></td>
+                            <td><?= $row['nama_user'] ?></td>
+                            <td><?= $row['nama_bidang'] ?></td>
+                            <td><?= $row['jenis_pengajuan'] ?></td>
                             <td>
                                 <a href="#" class="show-detail" title="Lihat Detail" data-detail='["Mishbahus Surur", "Revika Syariqatun Alifia", "Devi Dwi Susanti", "Hendra Hartono"]'>4</a>
                             </td>
@@ -43,8 +72,8 @@
                                     Lihat Dokumen
                                 </a>
                             </td>
-                            <td>02-01-2025</td>
-                            <td>02-05-2025</td>
+                            <td><?= $row['tanggal_mulai'] ?></td>
+                            <td><?= $row['tanggal_selesai'] ?></td>
                             <td>
                                 <a href="terima.php" class="btn btn-success btn-sm">
                                     <i class="bi bi-check-circle"></i> Terima
@@ -54,34 +83,7 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Syaiful Hidayat</td>
-                            <td>Teknologi Informasi</td>
-                            <td>Magang</td>
-                            <td>
-                                <a href="#" class="show-detail" title="Lihat Detail" data-detail='["Syaiful Hidayat", "Siti Aisyah", "Andi Zainuri"]'>3</a>
-                            </td>
-                            <td>
-                                <a href="#" class="show-doc" title="Lihat Dokumen"
-                                    data-doc='[
-                                     {"name": "KTP", "url": "dokumen/ktp.pdf"},
-                                     {"name": "Ijazah", "url": "dokumen/ijazah.pdf"}
-                                   ]'>
-                                    Lihat Dokumen
-                                </a>
-                            </td>
-                            <td>02-01-2025</td>
-                            <td>02-05-2025</td>
-                            <td>
-                                <a href="terima.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check-circle"></i> Terima
-                                </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-x-circle"></i> Tolak
-                                </a>
-                            </td>
-                        </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>

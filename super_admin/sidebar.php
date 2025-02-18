@@ -94,7 +94,7 @@
                 <li class="sidebar-item">
                     <a href="study_view.php" class="sidebar-link text-decoration-none">
                         <i class="bi bi-mortarboard"></i>
-                        <span>Sekolah / Universitas</span>
+                        <span>Pendidikan</span>
                     </a>
                 </li>
 
@@ -114,7 +114,7 @@
             </ul>
             
             <div class="sidebar-footer">
-                <a href="logout.php" class="sidebar-link text-decoration-none">
+                <a href="../logout.php" class="sidebar-link text-decoration-none">
                     <i class="bi bi-box-arrow-left"></i>
                     <span>Logout</span>
                 </a>
@@ -134,17 +134,17 @@
 
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
-                                <img src="../assets/img/user/<?= $pengguna["gambar"] ?>"  alt="avatar" class="avatar rounded-circle">
+                                <img src="../assets/img/user/<?= $pengguna["gambar_user"] ?>"  alt="avatar" class="avatar rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                 <a href="profile_view.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
                                     <span>My Profile</span>
                                 </a>
-                                <a href="admin_instansi_view.php" class="dropdown-item">
+                                <!-- <a href="admin_instansi_view.php" class="dropdown-item">
                                     <i class="bi bi-person-check"></i>
                                     <span>Admin Instansi</span>
-                                </a>
+                                </a> -->
                                 <div class="dropdown-divider"></div>
                                 <a href="settings.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
@@ -155,7 +155,7 @@
                                     <span>Pusat Bantuan</span>
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a href="logout.php" class="dropdown-item">
+                                <a href="../logout.php" class="dropdown-item">
                                     <i class="bi bi-box-arrow-left"></i>
                                     <span>Logout</span>
                                 </a>

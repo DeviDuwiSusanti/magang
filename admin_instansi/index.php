@@ -1,4 +1,8 @@
-<?php include "../layout/header.php"; ?>
+<?php include "../layout/header.php"; 
+
+// var_dump($_SESSION["id_instansi"]);
+
+?>
 
 
 <div class="main-content p-4">
