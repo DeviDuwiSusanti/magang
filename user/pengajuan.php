@@ -3,12 +3,13 @@
 include "../layout/sidebarUser.php";
 include "functions.php"; 
 
-if ($level != 3){
-    echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='dashboard.php?id_user=$id_user'; </script>";
-}
 
 if (isset($_GET['id_bidang'])) {
     $id_bidang = $_GET['id_bidang'];
+
+    if ($level != 3){
+        echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='../web/detaillow.php?id_bidang={$id_bidang}'</script>";
+    }
 
     // Mengambil informasi bidang berdasarkan id_bidang
     $sql = "SELECT * FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_bidang.id_instansi = tb_instansi.id_instansi";
