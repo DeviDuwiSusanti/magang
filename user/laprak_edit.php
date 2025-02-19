@@ -1,12 +1,12 @@
 <?php
-include '../koneksi.php'; // Pastikan file koneksi sudah benar
+include '../koneksi.php'; 
 include '../layout/sidebarUser.php';
 
-// Periksa apakah parameter id_dokumen ada di URL
+
 if (isset($_GET['id_dokumen'])) {
     $id_dokumen = $_GET['id_dokumen'];
     
-    // Ambil data laporan berdasarkan id_dokumen
+    // ngambil data laporan berdasarkan id_dokumen
     $query = "SELECT * FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
     $result = mysqli_query($conn, $query);
     $data = mysqli_fetch_assoc($result);
