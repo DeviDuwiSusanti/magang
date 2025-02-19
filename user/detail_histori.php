@@ -37,7 +37,11 @@ $row = mysqli_fetch_assoc($query);
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top text-center">
                     <!-- Foto profil -->
-                    <img src="../assets/img/user/avatar.png" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/user/<?= !empty($row['gambar_user']) ? $row['gambar_user'] : 'avatar.png' ?>" 
+     class="rounded-circle mb-3" 
+     alt="Profile Picture" 
+     style="width: 100px; height: 100px;">
+
                     <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
                     <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
 
