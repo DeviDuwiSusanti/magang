@@ -14,7 +14,7 @@ $sql = "SELECT *
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        AND tb_pengajuan.status_pengajuan IN ('Diterima', 'Menunggu') 
+        AND tb_pengajuan.status_pengajuan = 'Menunggu'
         AND tb_pengajuan.id_user = '$id_user'";  
 
 $query = mysqli_query($conn, $sql); 
