@@ -100,6 +100,9 @@ $row = mysqli_fetch_assoc($query);
                     <a href="path/to/sertifikat.pdf" class="btn btn-outline-primary btn-sm px-3" download>
                         <i class="bi bi-printer"></i> Sertifikat & Nilai
                     </a>
+                    <a href="laprak_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-outline-info btn-sm px-3">
+                        <i class="bi bi-book"></i> Laporan
+                    </a>
                     <a href="logbook_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-outline-info btn-sm px-3">
                         <i class="bi bi-book"></i> Logbook
                     </a>

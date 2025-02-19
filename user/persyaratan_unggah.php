@@ -30,7 +30,7 @@ if (isset($_POST['submit_persyaratan'])) {
                 
                 // Simpan informasi dokumen ke database
                 $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
-                        VALUES ('$id_dokumen', '$file_name', 'persyaratan', '$file_path', '$id_pengajuan', '$id_user', '$id_user', 'Y', NOW(), NOW())";
+                        VALUES ('$id_dokumen', '$file_name', 'prasyarat', '$file_path', '$id_pengajuan', '$id_user', '$id_user', 'Y', NOW(), NOW())";
                 
                 $query = mysqli_query($conn, $sql);
                 if (!$query) {
