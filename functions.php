@@ -302,3 +302,68 @@ function edit_instansi_1($POST)
 }
 
 
+
+function generate_admin_instansi($POST) {
+    global $conn;
+    $id_super_admin = $POST["id_super_admin"];
+    $id_user = $POST["id_user"];
+    $id_instansi = $POST["id_instansi"];
+    mysqli_query($conn, "UPDATE tb_profile_user SET id_instansi = '$id_instansi', change_by = '$id_super_admin' WHERE id_user = '$id_user'");
+    return mysqli_affected_rows($conn);
+}
+
+
+
+function tambah_admin_instansi($POST) {
+    global $conn;
+    $create_by = $POST["id_user"];
+    $id_user = generateUserId($conn);
+    $nama_user = $POST["nama_user"];
+    $nik_user = $POST["nik_user"];
+    $gender = $POST["jenis_kelamin"];
+    $email = $POST["email"];
+    $tempat_lahir = $POST["tempat_lahir"];
+    $tanggal_lahir = $POST["tanggal_lahir"];
+    $telepone_user = $POST["telepone_user"];
+    $alamat_user = $POST["alamat_user"];
+    $gambar_user = uploadImage($_FILES["gambar_instansi"], "avatar.png", "../assets/img/user/");
+
+    mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
+    mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik_user, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
+                        VALUES ('$id_user', '$nama_user', '$nik_user', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
+    return mysqli_affected_rows($conn);
+}
+
+
+
+function super_admin_edit($POST) {
+    global $conn;
+    $id_user = $POST["id_user"];
+    $nama_user = $POST["nama_user"];
+    $tanggal_lahir = $POST["tanggal_lahir"];
+    $tempat_lahir = $POST["tempat_lahir"];
+    $telepone_user = $POST["telepone_user"];
+    $alamat_user = $POST["alamat_user"];
+    $jenis_kelamin = $POST["jenis_kelamin"];
+    $gambar_lama = $POST["gambar_lama"];
+    $gambar_user = uploadImage($_FILES["gambar_user"], $gambar_lama, "../assets/img/user/");
+    mysqli_query($conn, "UPDATE tb_profile_user SET
+                        nama_user = '$nama_user',
+                        jenis_kelamin = '$jenis_kelamin',
+                        tempat_lahir = '$tempat_lahir',
+                        tanggal_lahir = '$tanggal_lahir',
+                        alamat_user = '$alamat_user',
+                        telepone_user = '$telepone_user',
+                        gambar_user = '$gambar_user'
+                        WHERE id_user = '$id_user'");
+    return mysqli_affected_rows($conn);
+}
+
+
+function super_admin_hapus_user($id_user, $change_by)
+{
+    global $conn;
+    mysqli_query($conn, "UPDATE tb_user SET status_active = 'N', change_by = '$change_by' WHERE id_user = '$id_user'");
+    mysqli_query($conn, "UPDATE tb_user SET status_active = 'N', change_by = '$change_by' WHERE id_user = '$id_user'");
+    return mysqli_affected_rows($conn);
+}

@@ -33,7 +33,7 @@ if (isset($_POST["edit_instansi"])) {
             <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
             <input type="hidden" name="id_instansi" value="<?= $edit_instansi["id_instansi"] ?>">
             <input type="hidden" id="group_instansi" name="group_instansi" value="<?= $edit_instansi["group_instansi"] ?>">
-            <input type="hidden" id="lokasi_instansi" name="lokasi_instansi" rows="3"><?= $edit_instansi["lokasi_instansi"] ?></input>
+            <!-- <input type="hidden" id="lokasi_instansi" name="lokasi_instansi" rows="3"><?= $edit_instansi["lokasi_instansi"] ?></input> -->
             <!-- Nama Instansi Panjang-->
             <div class="mb-3">
                 <label for="nama_panjang" class="form-label">Nama Lengkap Instansi</label>
@@ -64,9 +64,15 @@ if (isset($_POST["edit_instansi"])) {
                 <input type="text" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon" value="<?= $edit_instansi["telepone_instansi"] ?>">
             </div>
 
+            <!-- Lokasi Instansi -->
+            <div class="mb-3">
+                <label for="lokasi_instansi" class="form-label">Link Lokasi</label>
+                <textarea class="form-control" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan link lokasi"><?= $edit_instansi["lokasi_instansi"] ?></textarea>
+            </div>
+
             <!-- Upload Foto Profil -->
             <div class="mb-3">
-                <label for="gambar_instansi">Foto Profil</label><br><br>
+                <label for="gambar_instansi" class="form-label">Foto Profil</label><br><br>
                 <div class="image-preview" id="imagePreview">
                     <img src="../assets/img/instansi/<?= $edit_instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
                     <input type="hidden" name="gambar_instansi" id="gambar_instansi" value="<?= $edit_instansi["gambar_instansi"] ?>">
@@ -87,7 +93,7 @@ if (isset($_POST["edit_instansi"])) {
     <?php if ($status === "success"): ?>
         alertSuccessEdit('Data instansi berhasil diperbarui.', 'view_instansi.php');
     <?php elseif ($status === "error"): ?>
-        alertErrorRegister('Registrasi gagal dilakukan.', 'register.php');
+        alertSuccessEdit('Tidak ada perubahan. Data instansi disimpan.', 'view_instansi.php');
     <?php endif; ?>
 
     function previewFile() {

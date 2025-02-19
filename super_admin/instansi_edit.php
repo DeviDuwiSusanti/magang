@@ -2,6 +2,7 @@
     include "sidebar.php";
     $id_instansi = $_GET["id_instansi"];
     $instansi = query("SELECT * FROM tb_instansi WHERE id_instansi = $id_instansi")[0];
+    echo $id_user;
 
 
     if(isset($_POST["edit_instansi"])) {
@@ -32,7 +33,7 @@
             <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">ID Instansi</label>
-                <input type="text" class="form-control" id="id_instansi" name="id_instansi" value="<?= $instansi["id_instansi"] ?>">
+                <input type="text" class="form-control" id="id_instansi" name="id_instansi" value="<?= $instansi["id_instansi"] ?>" readonly>
             </div>
 
             <div class="mb-3">

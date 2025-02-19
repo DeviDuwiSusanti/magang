@@ -1,5 +1,7 @@
 <?php 
     include "sidebar.php";
+    $super_admin = query("SELECT * FROM tb_user WHERE id_user = '$id_user'")[0];
+    $admin_instansi = query("SELECT * FROM tb_profile_user , tb_user  WHERE tb_profile_user.id_user = tb_user.id_user AND tb_user.level = '2'");
 ?>
 
 <div class="container mt-4">
@@ -11,8 +13,8 @@
             <!-- Edit Email Super Admin -->
             <div class="card mb-4 p-4">
                 <h4><i class="bi bi-envelope"></i> Edit Email</h4>
-                <p>Email Saat Ini: <strong>superadmin@example.com</strong></p>
-                <form>
+                <p>Email Saat Ini: <strong><?= $super_admin["email"] ?></strong></p>
+                <form action="" method="POST">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Baru</label>
                         <input type="email" class="form-control" id="email" placeholder="Masukkan email baru">
@@ -27,14 +29,14 @@
             <div class="card p-4">
                 <h4><i class="bi bi-person-gear"></i> Jadikan Super Admin</h4>
                 <p>Pilih pengguna untuk dijadikan Super Admin.</p>
-                <form>
+                <form action="" method="POST">
                     <div class="mb-3">
                         <label for="user" class="form-label">Pilih User</label>
-                        <select class="form-select" id="user">
+                        <select class="form-select select2" id="user">
                             <option selected disabled>Pilih User</option>
-                            <option value="1">Saiful Anam</option>
-                            <option value="2">Rina Wijaya</option>
-                            <option value="3">Budi Santoso</option>
+                            <?php foreach($admin_instansi as $calon) : ?>
+                            <option value="<?= $calon["id_user"] ?>"><?= $calon["nama_user"] ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-warning"><i class="bi bi-person-badge"></i> Jadikan Super Admin</button>
@@ -45,47 +47,48 @@
         <!-- Tambah Super Admin Baru -->
         <div class="col-md-12"></div>
             <h4 class="mt-5"><i class="bi bi-person-plus"></i> Tambah Super Admin Baru</h4>
-            <form action="profile_view.php" class="form-profile" method="POST" enctype="multipart/form-data">
+            <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
             
+            <input type="hidden" name="id_super_admin" id="id_super_admin" value="<?= $super_admin["id_user"] ?>">
             <!-- Nama -->
             <div class="mb-3">
                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" placeholder="Masukkan Nama Lengkap Calon Admin Instansi" required>
+                <input type="text" class="form-control" id="nama_lengkap" name="nama_user" placeholder="Masukkan Nama Lengkap Calon Admin Instansi" required>
             </div>
 
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik_admin_instansi" class="form-label">NIK</label>
-                <input type="text" class="form-control" id="nik_admin_instansi" name="nik_admin_instansi" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
+                <input type="text" class="form-control" id="nik_user" inputmode="numeric" name="nik_user" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
             </div>
 
             <!-- Email -->
             <div class="mb-3">
                 <label for="email_admin_instansi" class="form-label">Email</label>
-                <input type="text" class="form-control" id="email_admin_instansi" name="email_admin_instansi" placeholder="Masukkan Email Calon Admin Instansi" required>
+                <input type="text" class="form-control" id="email_admin_instansi" name="email" placeholder="Masukkan Email Calon Admin Instansi" required>
             </div>
 
             <!-- Tempat Lahir -->
             <div class="mb-3">
                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Masukkan Tempat Lahir Calon Admin Instansi"  required>
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" placeholder="Masukkan Tempat Lahir Calon Admin Instansi">
             </div>
 
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="Masukkan Tanggal Lahir Calon Admin Instansi" required>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" placeholder="Masukkan Tanggal Lahir Calon Admin Instansi">
             </div>
 
             <!-- Gender -->
             <div class="mb-3">
                 <label for="gender" class="form-label"> Jenis Kelamin </label>
                 <div class="form-check">
-                    <input type="radio" name="gender" id="gender_l" value="L" class="form-check-input">
+                    <input type="radio" name="jenis_kelamin" id="gender_l" value="L" class="form-check-input" required>
                     <label for="gender_l" class="form-check-label">Laki - Laki</label>
                 </div>
                 <div class="form-check">
-                    <input type="radio" name="gender" id="gender_p" value="P" class="form-check-input">
+                    <input type="radio" name="jenis_kelamin" id="gender_p" value="P" class="form-check-input" required>
                     <label for="gender_p" class="form-check-label">Perempuan</label>
                 </div>
             </div>
@@ -93,25 +96,86 @@
             <!-- Tempat Lahir -->
             <div class="mb-3">
                 <label for="no_telepon" class="form-label">No. Telepon</label>
-                <input type="text" class="form-control" id="no_telepon" name="no_telepon" placeholder="Masukkan Nomor telepone Calon Admin Instansi" required>
+                <input type="text" class="form-control" id="telepon_user" inputmode="numeric" maxlength="15" name="telepone_user" placeholder="Masukkan Nomor telepone Calon Admin Instansi">
             </div>
 
             <!-- Alamat -->
             <div class="mb-3">
                 <label for="alamat" class="form-label">Alamat</label>
-                <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Masukkan Alamat Calon Admin Instansi" required></textarea>
+                <textarea class="form-control" id="alamat" name="alamat_user" rows="3" placeholder="Masukkan Alamat Calon Admin Instansi"></textarea>
             </div>
 
-            <!-- Upload Image -->
-            <div class="mb-3">
-                <img src="../assets/img/login.jpeg" alt="gambaredit" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
-                <input type="file" class="form-control" id="image" name="image" accept="image/*" placeholder="Masukkan Gambar (OPSIONAL)">
+            <!-- Upload Foto Profil -->
+            <div class="input-field ">
+                <label for="image">Upload Foto (Max 1MB)</label><br><br>
+                <div class="image-preview" id="imagePreview">
+                    <img src="../assets/img/user/avatar.png" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                </div>
+                <input type="file" class="input" id="image" name="gambar_instansi" accept="image/*" onchange="validateFile()">
             </div>
+
 
             <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary edit">Tambah Data</button>
+            <button type="submit" class="btn btn-primary edit">Tambah Data Super Admin</button>
         </form>
     </div>
 </div>
-
 <?php include "footer.php" ?>
+
+
+<script>
+    $(document).ready(function() {
+        // Inisialisasi Select2 pada elemen <select>
+        $('.select2').select2({
+            placeholder: "Cari User...", // Placeholder untuk input pencarian
+            allowClear: true, // Memungkinkan user menghapus pilihan
+            width: '100%', // Lebar dropdown
+            minimumResultsForSearch: 1 // Menampilkan fitur pencarian bahkan jika hanya ada 1 opsi
+        });
+
+        // Menambahkan pesan jika tidak ada hasil pencarian
+        $('.select2').on('select2:open', function() {
+            const searchInput = document.querySelector('.select2-search__field');
+            searchInput.setAttribute('placeholder', 'Ketik untuk mencari...');
+        });
+
+        $('.select2').on('select2:close', function() {
+            const noResults = document.querySelector('.select2-results__message');
+            if (noResults) {
+                noResults.textContent = 'Tidak ditemukan';
+            }
+        });
+    });
+
+    function validateFile() {
+            const fileInput = document.getElementById('image');
+            const previewContainer = document.getElementById('imagePreview');
+            const previewImage = document.getElementById('previewImage');
+            const file = fileInput.files[0];
+
+            if (file) {
+                if (file.size > 1048576) { // 1MB = 1048576 bytes
+                    alert("Ukuran file terlalu besar! Maksimal 1MB.");
+                    fileInput.value = ""; // Reset file input
+                    previewImage.src = ""; // Hapus pratinjau
+                    previewContainer.style.display = "none";
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        document.getElementById("nik_user").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        });
+        document.getElementById("telepone_user").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        });
+
+</script>

@@ -33,6 +33,15 @@
     background-color: #212529;
 }
 
+.dark-mode input:focus,
+.dark-mode textarea:focus,
+.dark-mode select:focus {
+    background-color: #343a40;
+    color: var(--text-color);
+}
+
+
+
 .mode-toggle {
     cursor: pointer;
     border: none;
@@ -458,6 +467,10 @@ p {
     font-size: 14px;
     font-weight: bold;
     border-radius: 5px;
+}
+
+.form-label {
+    font-weight: 550;
 }
 
 .form-check-input {

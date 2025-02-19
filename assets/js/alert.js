@@ -95,7 +95,7 @@ function alertSuccessEdit(message, redirectUrl) {
     title: "Berhasil!",
     text: message,
     icon: "success",
-    confirmButtonColor: "#3085d6",
+    confirmButtonColor: "#4e73df",
     confirmButtonText: "OK",
   }).then((result) => {
     if (result.isConfirmed && redirectUrl) {

@@ -1,7 +1,18 @@
 <?php
 include "../layout/header.php";
 
-$bidang = query("SELECT * FROM tb_bidang WHERE status_active = 'Y'");
+$bidang = "SELECT *
+    FROM tb_bidang
+    JOIN tb_instansi 
+        ON tb_bidang.id_instansi = tb_instansi.id_instansi
+    JOIN tb_profile_user 
+        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
+    WHERE tb_profile_user.id_user = '$id_user'
+    AND tb_bidang.status_active = 'Y'
+    ORDER BY tb_bidang.id_bidang DESC";
+
+$query = mysqli_query($conn, $bidang);
+$bidang = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $no = 1;
 ?>
 

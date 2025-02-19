@@ -64,7 +64,7 @@
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="no_telepone" class="form-label">No. Telepone</label>
-                <input type="text" class="form-control" id="no_telepone" name="telepone" value="<?= $profile_edit["telepone_user"] ?>">
+                <input type="text" maxlength="15" inputmode="numeric" class="form-control" id="no_telepone" name="telepone" value="<?= $profile_edit["telepone_user"] ?>">
             </div>
 
             <!-- Alamat -->
@@ -118,4 +118,8 @@ function validateFile() {
             reader.readAsDataURL(file);
         }
     }
+
+    document.getElementById("no_telepone").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        });
 </script>
