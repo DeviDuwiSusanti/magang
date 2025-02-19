@@ -37,7 +37,7 @@ $row = mysqli_fetch_assoc($query);
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top text-center">
                     <!-- Foto profil -->
-                    <img src="../assets/img/user/<?= isset($row['gambar']) ? $row['gambar'] : 'default.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/user/<?= isset($row['gambar_user']) ? $row['gambar_user'] : 'default.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                     <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
                     <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
 
@@ -100,7 +100,7 @@ $row = mysqli_fetch_assoc($query);
                     <a href="path/to/sertifikat.pdf" class="btn btn-outline-primary btn-sm px-3" download>
                         <i class="bi bi-printer"></i> Sertifikat & Nilai
                     </a>
-                    <a href="logbook_daftar.php" class="btn btn-outline-info btn-sm px-3">
+                    <a href="logbook_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-outline-info btn-sm px-3">
                         <i class="bi bi-book"></i> Logbook
                     </a>
                 </div>

@@ -4,6 +4,12 @@ include '../koneksi.php';  // Pastikan file koneksi ke database sudah benar
 
 $id_user = $_SESSION['id_user'];  // Ambil ID user dari session
 
+// Ambil id_pengajuan terlebih dahulu
+$sql_pengajuan = "SELECT id_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' LIMIT 1";
+$result_pengajuan = mysqli_query($conn, $sql_pengajuan);
+$row_pengajuan = mysqli_fetch_assoc($result_pengajuan);
+$id_pengajuan = $row_pengajuan['id_pengajuan'] ?? null; // Jika tidak ada, set null
+
 // Query untuk mengambil data laporan dari database
 $sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'laporan'";
 $result = mysqli_query($conn, $sql);
@@ -17,7 +23,7 @@ $result = mysqli_query($conn, $sql);
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
-            <a href="laprak_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary">
+            <a href="laprak_unggah.php?id_user=<?= $id_user ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-1"></i>
                 Tambah Laporan Akhir
             </a>
@@ -40,13 +46,10 @@ $result = mysqli_query($conn, $sql);
                             $no = 1;
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr>";
-                                echo "<td>" . $no++ . "</td>";
-                                echo "<td>" . date('d/m/Y', strtotime($row['create_date'])) . "</td>"; 
-                                
-                                // Menampilkan nama file sebagai link
-                                echo "<td><a href='" . $row['file_path'] . "' target='_blank'>" . $row['nama_dokumen'] . "</a></td>";
-
-                                echo "<td>" . $row['jenis_dokumen'] . "</td>"; 
+                                echo "<td>" . $no++ . "</td>"; // No
+                                echo "<td>" . date('d/m/Y', strtotime($row['create_date'])) . "</td>"; // Tanggal
+                                echo "<td><a href='" . $row['file_path'] . "' target='_blank'>" . htmlspecialchars($row['nama_dokumen']) . "</a></td>"; // Nama Dokumen
+                                echo "<td>" . htmlspecialchars($row['jenis_dokumen']) . "</td>"; // Jenis Dokumen
                                 echo "<td>
                                         <a href='laprak_edit.php?id_dokumen=" . $row['id_dokumen'] . "' class='btn btn-warning btn-sm'>
                                             <i class='bi bi-pencil'></i> Edit
@@ -54,12 +57,10 @@ $result = mysqli_query($conn, $sql);
                                         <a href='laprak_hapus.php?id_dokumen=" . $row['id_dokumen'] . "' onclick='return confirm(\"Anda yakin akan menghapus laporan ini?\")' class='btn btn-danger btn-sm'>
                                             <i class='bi bi-trash'></i> Hapus
                                         </a>
-                                      </td>";
+                                    </td>"; // Aksi
                                 echo "</tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='5' class='text-center'>Tidak ada laporan yang tersedia.</td></tr>";
-                        }
+                        } 
                         ?>
                     </tbody>
                 </table>
