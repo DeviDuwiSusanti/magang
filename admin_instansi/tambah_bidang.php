@@ -69,6 +69,6 @@ if (isset($_POST["tambah_bidang"])) {
     <?php if ($status === "success"): ?>
         alertSuccessEdit('Data bidang berhasil ditambahkan.', 'view_bidang.php');
     <?php elseif ($status === "error"): ?>
-        alertErrorRegister('Registrasi gagal dilakukan.', 'register.php');
+        alertSuccessEdit('Tidak ada perubahan. Data bidang disimpan.', 'view_bidang.php');
     <?php endif; ?>
 </script>

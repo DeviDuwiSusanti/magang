@@ -301,4 +301,62 @@ function edit_instansi_1($POST)
     return mysqli_affected_rows($conn);
 }
 
+function tambah_pembimbing($POST) {
+    global $conn;
+    $id_user = $POST["id_user"];
+    $nama_pembimbing = $POST["nama_pembimbing"];
+    $nik_pembimbing = $POST["nik_pembimbing"];
+    $nip = $POST["nip"];
+    $jabatan = $POST["jabatan"];
+    $telepone_pembimbing = $POST["telepone_pembimbing"];
+    $id_bidang = $POST["id_bidang"];
+
+    $query = "INSERT INTO tb_pembimbing
+            (id_pembimbing, nama_pembimbing, nik_pembimbing, nip, jabatan, telepone_pembimbing, id_bidang, create_by)
+            VALUES ('', '$nama_pembimbing', '$nik_pembimbing', '$nip', '$jabatan', '$telepone_pembimbing', '$id_bidang', '$id_user')";
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
+function edit_pembimbing($POST) {
+    global $conn;
+
+    // Ambil data dari form
+    $id_user = $POST["id_user"]; // Untuk mencatat siapa yang mengedit data
+    $id_pembimbing = $POST["id_pembimbing"];
+    $nama_pembimbing = $POST["nama_pembimbing"];
+    $nik_pembimbing = $POST["nik_pembimbing"];
+    $nip = $POST["nip"];
+    $jabatan = $POST["jabatan"];
+    $telepone_pembimbing = $POST["telepone_pembimbing"];
+    $id_bidang = $POST["id_bidang"];
+
+    // Query untuk update data pembimbing
+    $query = "UPDATE tb_pembimbing
+              SET nama_pembimbing = '$nama_pembimbing',
+                  nik_pembimbing = '$nik_pembimbing',
+                  nip = '$nip',
+                  jabatan = '$jabatan',
+                  telepone_pembimbing = '$telepone_pembimbing',
+                  id_bidang = '$id_bidang',
+                  change_by = '$id_user'
+              WHERE id_pembimbing = '$id_pembimbing'";
+
+    // Eksekusi query
+    mysqli_query($conn, $query);
+
+    // Kembalikan jumlah baris yang terpengaruh
+    return mysqli_affected_rows($conn);
+}
+
+function hapus_pembimbing($id_pembimbing, $id_user) {
+    global $conn;
+    $query = "UPDATE tb_pembimbing SET
+                status_active = 'N',
+                change_by = '$id_user'
+                WHERE id_pembimbing = '$id_pembimbing'";
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
 
