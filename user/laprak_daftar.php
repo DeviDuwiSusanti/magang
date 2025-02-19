@@ -1,16 +1,16 @@
 <?php 
 include "../layout/sidebarUser.php";
-include '../koneksi.php';  // Pastikan file koneksi ke database sudah benar
+include '../koneksi.php';
 
-$id_user = $_SESSION['id_user'];  // Ambil ID user dari session
+$id_user = $_SESSION['id_user'];  
 
-// Ambil id_pengajuan terlebih dahulu
+// ngambil id_pengajuan terlebih dahulu
 $sql_pengajuan = "SELECT id_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' LIMIT 1";
 $result_pengajuan = mysqli_query($conn, $sql_pengajuan);
 $row_pengajuan = mysqli_fetch_assoc($result_pengajuan);
-$id_pengajuan = $row_pengajuan['id_pengajuan'] ?? null; // Jika tidak ada, set null
+$id_pengajuan = $row_pengajuan['id_pengajuan'] ?? null; 
 
-// Query untuk mengambil data laporan dari database
+
 $sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = 'laporan'";
 $result = mysqli_query($conn, $sql);
 ?>
