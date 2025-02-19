@@ -15,6 +15,15 @@ $sql = "SELECT *
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
         AND tb_pengajuan.status_pengajuan = 'Diterima'
         AND tb_pengajuan.id_user = '$id_user'";
+if ($level == 4) {
+    // Hanya ambil pengajuan yang ID-nya ada di profile user (untuk user level 4)
+    $sql .= " AND tb_pengajuan.id_pengajuan IN (
+                    SELECT id_pengajuan FROM tb_profile_user WHERE id_user = '$id_user'
+                )";
+} else {
+    // Jika level 3 atau lainnya, ambil semua data yang sesuai
+    $sql .= " AND tb_pengajuan.id_user = '$id_user'";
+}
 $query = mysqli_query($conn, $sql); 
 $row = mysqli_fetch_assoc($query); 
 

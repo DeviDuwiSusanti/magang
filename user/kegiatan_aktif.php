@@ -1,17 +1,25 @@
 <?php
 include "../koneksi.php"; 
 include "../layout/sidebarUser.php"; 
- 
 
-// Query untuk mengambil data pengajuan magang yang masih aktif dan sesuai dengan id_user yang login
 $sql = "SELECT * 
         FROM tb_pengajuan, tb_profile_user, tb_instansi, tb_bidang, tb_pendidikan 
         WHERE tb_pengajuan.id_user = tb_profile_user.id_user
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        AND tb_pengajuan.status_pengajuan = 'Diterima'
-        AND tb_pengajuan.id_user = '$id_user'";  // Menambahkan filter berdasarkan id_user
+        AND tb_pengajuan.status_pengajuan = 'Diterima'";
+
+if ($level == 4) {
+    // Hanya ambil pengajuan yang ID-nya ada di profile user (untuk user level 4)
+    $sql .= " AND tb_pengajuan.id_pengajuan IN (
+                 SELECT id_pengajuan FROM tb_profile_user WHERE id_user = '$id_user'
+             )";
+} else {
+    // Jika level 3 atau lainnya, ambil semua data yang sesuai
+    $sql .= " AND tb_pengajuan.id_user = '$id_user'";
+}
+
 $query = mysqli_query($conn, $sql);
 $no = 1;
 ?>
