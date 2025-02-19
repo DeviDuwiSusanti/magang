@@ -10,18 +10,25 @@ $instansi_admin = query("SELECT COUNT(*) AS total
     WHERE tb_profile_user.id_user = '$id_user'")[0];
 
 // data pemagang
-$pemagang = query("SELECT COUNT(*) AS total 
-    FROM tb_instansi
-    JOIN tb_profile_user 
-        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
-    WHERE tb_profile_user.id_user = '$id_user'")[0];
+// $pemagang = query("SELECT COUNT(*) AS total 
+//     FROM tb_instansi
+//     JOIN tb_profile_user 
+//         ON tb_instansi.id_instansi = tb_profile_user.id_instansi
+//     WHERE tb_profile_user.id_user = '$id_user'")[0];
 
 // data bidang
 $bidang_admin = query("SELECT COUNT(*) AS total 
     FROM tb_bidang
     JOIN tb_instansi 
         ON tb_bidang.id_instansi = tb_instansi.id_instansi
-    WHERE tb_instansi.id_instansi = tb_bidang.id_instansi")[0];
+    WHERE tb_instansi.id_instansi = '$id_instansi'")[0];
+
+// Query untuk menghitung total pengajuan
+$total_pengajuan = query("SELECT COUNT(*) AS total 
+    FROM tb_pengajuan
+    JOIN tb_instansi 
+        ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+    WHERE tb_instansi.id_instansi = '$id_instansi'")[0];
 ?>
 
 
@@ -66,7 +73,7 @@ $bidang_admin = query("SELECT COUNT(*) AS total
                 <div class="card border-0">
                     <div class="card-body">
                         <h5 class="card-title">Pengajuan Baru</h5>
-                        <h2 class="card-text text-danger">3</h2>
+                        <h2 class="card-text text-danger"><?= $total_pengajuan["total"] ?></h2>
                         <p class="text-muted">Lihat pengajuan baru</p>
                         <a href="pengajuan.php" class="btn btn-danger mt-3 detail">View Details</a>
                     </div>

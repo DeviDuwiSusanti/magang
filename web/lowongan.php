@@ -102,7 +102,7 @@ include "functions.php";
                     <!-- Buat satu kartu lowongan -->
                     <article class="popular__card swiper-slide">
                         <!-- Logo instansi (sementara pake gambar default) -->
-                        <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                        <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                         <!-- Nama instansi -->
                         <p class="instansi"> <?= $row['nama_panjang'] ?> </p>
                         <div class="popular__data">

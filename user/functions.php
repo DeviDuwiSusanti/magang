@@ -30,22 +30,20 @@ function generateIdDokumen($conn, $id_pengajuan) {
     return $id_pengajuan . $nomorUrut;
 }
 
-function generateIdUser($conn) {
-    // Ambil tanggal & jam saat ini dalam format YYMMDDHH
-    $id_prefix = date('ymdH'); 
-
-    // Hitung jumlah user yang terdaftar dalam jam tersebut
-    $query = "SELECT COUNT(*) AS total FROM tb_user WHERE id_user LIKE '$id_prefix%'";
+function generateIdUser4($conn, $id_user) {
+    // Ambil jumlah ID yang sudah ada untuk pengguna ini
+    $query = "SELECT COUNT(*) AS total FROM tb_user WHERE id_user LIKE '$id_user%'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
-    $totalUser = $row['total'] + 1; // Urutan berikutnya
+    $totalCount = $row['total'] + 1; // Urutan berikutnya
 
-    // Format XX menjadi dua digit (01, 02, 03, ...)
-    $nomorUrut = str_pad($totalUser, 2, "0", STR_PAD_LEFT);
+    // Format menjadi dua digit (01, 02, 03, ...)
+    $counter = str_pad($totalCount, 2, "0", STR_PAD_LEFT);
 
-    // Gabungkan untuk mendapatkan id_user
-    return $id_prefix . $nomorUrut;
+    // Gabungkan untuk mendapatkan id_user4
+    return $id_user . $counter;
 }
+
 
 function uploadFile($file) {
     $target_dir = "../assets/doc/";  // Update path here

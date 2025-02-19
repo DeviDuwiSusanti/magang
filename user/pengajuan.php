@@ -45,7 +45,7 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
             $email = $anggota_email[$index];
             $nik = $anggota_nik[$index];
             $nim = $anggota_nim[$index];
-            $id_user4 = generateIdUser($conn);
+            $id_user4 = generateIdUser4($conn, $id_user);
 
             $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
             $result = mysqli_query($conn, $pendidikan);
