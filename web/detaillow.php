@@ -95,25 +95,7 @@ include "functions.php";
 
                     <h3>Lokasi Instansi</h3>
                     <div class="maps-container">
-                        <?php
-                        if (!empty($row['lokasi_instansi'])) {
-                            // Ambil URL langsung dari database
-                            $embed_url = $row['lokasi_instansi'];
-
-                            // Tampilkan iframe Google Maps
-                            echo "<iframe 
-                                src='$embed_url' 
-                                width='600' 
-                                height='450' 
-                                style='border:0;' 
-                                allowfullscreen='' 
-                                loading='lazy' 
-                                referrerpolicy='no-referrer-when-downgrade'>
-                            </iframe>";
-                        } else {
-                            echo "<p>Lokasi instansi tidak tersedia.</p>";
-                        }
-                        ?>
+                        <?php echo $row['lokasi_instansi']; ?>
                     </div>
 
                     <div class="d-flex justify-content-left mt-4">

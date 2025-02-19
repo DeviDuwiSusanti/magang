@@ -117,7 +117,7 @@ include "functions.php";
                             ?>
                             <article class="popular__card swiper-slide" style="text-align: center;">
                                 <a href="<?= $row['deskripsi_instansi'] ?>" target="_blank">
-                                    <img src="../assets/img/instansi/dinas.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                                    <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                     <div class="popular__data">
                                         <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
                                         <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
