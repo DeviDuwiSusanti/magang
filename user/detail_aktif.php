@@ -100,7 +100,7 @@ $row = mysqli_fetch_assoc($query);
                             <a href="logbook_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary btn-sm me-2">
                                 <i class="bi bi-file-earmark-text me-1"></i> Unggah Logbook
                             </a>
-                            <a href="laprak_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-success btn-sm">
+                            <a href="laprak_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-success btn-sm">
                                 <i class="bi bi-file-earmark-check me-1"></i> Unggah Laporan Akhir
                             </a>
                         <?php } else { ?>
