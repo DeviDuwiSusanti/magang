@@ -3,11 +3,12 @@ include "../layout/sidebarUser.php";
 include "functions.php";  // Pastikan untuk meng-include file functions.php
 
 // Inisialisasi variabel agar tidak undefined
-$id_user = $_GET['id_user'] ?? $_SESSION['id_user'] ?? null;
-$id_pengajuan = $_SESSION['id_pengajuan'] ?? $_GET['id_pengajuan'] ?? null;
+if (ISSET($_GET['id_user']) && ISSET($_GET['id_pengajuan'])){
+    $id_user = $_GET['id_user'];
+    $id_pengajuan = $_GET['id_pengajuan'];
+}else{
+    echo "<script>alert('ID User atau ID Pengajuan tidak ditemukan.'); window.history.back();</script>";
 
-if (!$id_user || !$id_pengajuan) {
-    die("<script>alert('ID User atau ID Pengajuan tidak ditemukan.'); window.history.back();</script>");
 }
 
 if (isset($_POST['submit_persyaratan'])) {
