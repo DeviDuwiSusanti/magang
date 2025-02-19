@@ -1,7 +1,20 @@
 <?php include "sidebar.php";
-    $id_user = $_GET["id_user"];
-    $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0];
+    $id_user_ini = $_GET["id_user"];
+    $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user_ini'")[0];
 
+    if(isset($_POST["edit_data_user"])) {
+        if(super_admin_edit($_POST)) {
+            echo "<script>
+                alert('Super Admin Berhasil Edit Data User');
+            document.location.href = 'user_view.php';
+        </script>";
+    } else {
+        echo "<script>
+            alert ('Super Admin Gagal Edit Data User');
+                document.location.href = 'user_view.php';
+        </script>";
+    }
+    }
 ?>
 
 <div class="main-content p-4">
@@ -11,12 +24,12 @@
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Halaman Edit User</li>
         </ol>
-        <form action="profile_view.php" class="form-profile" method="POST" enctype="multipart/form-data">
-            
+        <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_user" id="id_user" value="<?= $id_user_ini ?>">
             <!-- Nama -->
             <div class="mb-3">
                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="nama_lengkap" name="nama_user" required value="<?= $pengguna["nama_user"] ?>">
+                <input type="text" class="form-control" id="nama_lengkap" name="nama_user" value="<?= $pengguna["nama_user"] ?>">
             </div>
 
             <!-- Tempat Lahir -->
@@ -51,13 +64,13 @@
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="no_telepone" class="form-label">No. Telepone</label>
-                <input type="text" class="form-control" id="no_telepone" name="telepone_user" value="<?= $pengguna["telepone_user"] ?>" required>
+                <input type="text" inputmode="numeric" maxlength="15" class="form-control" id="no_telepone" name="telepone_user" value="<?= $pengguna["telepone_user"] ?>">
             </div>
 
             <!-- Alamat -->
             <div class="mb-3">
                 <label for="alamat" class="form-label">Alamat</label>
-                <textarea class="form-control" id="alamat" name="alamat" rows="3" required><?= $pengguna["alamat_user"] ?></textarea>
+                <textarea class="form-control" id="alamat" name="alamat_user" rows="3"><?= $pengguna["alamat_user"] ?></textarea>
             </div>
 
             <!-- Upload Foto Profil -->
@@ -71,7 +84,7 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" name="Edit_user" class="btn btn-primary edit">Simpan Perubahan</button>
+            <button type="submit" name="edit_data_user" class="btn btn-primary edit">Simpan Perubahan</button>
         </form>
         <a href="user_view.php" class="btn btn-danger bi bi-arrow-left-circle"> Kembali</a>
     </div>
@@ -103,4 +116,9 @@ function validateFile() {
             reader.readAsDataURL(file);
         }
     }
+
+    document.getElementById("no_telepone").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        });
+
 </script>
