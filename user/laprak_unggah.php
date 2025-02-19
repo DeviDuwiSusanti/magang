@@ -2,15 +2,12 @@
 include "../layout/sidebarUser.php"; 
 include "functions.php";  // Pastikan untuk meng-include file functions.php
 
-if (isset($_POST['submit_laporan'])) {
-    // Mengambil id_user dari query string atau session
-    if (isset($_GET['id_user'])) {
+    if (ISSET($_GET['id_user']) && ISSET($_GET['id_pengajuan'])){
         $id_user = $_GET['id_user'];
-    } elseif (isset($_SESSION['id_user'])) {
-        $id_user = $_SESSION['id_user'];
-    } else {
-        echo "<script>alert('id_user tidak ditemukan.');</script>";
-        exit;  // Jika id_user tidak ada, hentikan proses
+        $id_pengajuan = $_GET['id_pengajuan'];
+    }else{
+        echo "<script>alert('ID User atau ID Pengajuan tidak ditemukan.'); window.history.back();</script>";
+
     }
     
     // Validasi file PDF
@@ -25,8 +22,8 @@ if (isset($_POST['submit_laporan'])) {
         $id_dokumen_laporan = generateIdDokumen($conn, $id_user); 
 
         // Simpan informasi dokumen di database
-        $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_user, create_by, status_active, create_date, change_date) 
-                VALUES ('$id_dokumen_laporan', '$laporan_name', 'laporan', '$laporan_path', '$id_user', '$id_user', 'Y', NOW(), NOW())";
+        $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
+                VALUES ('$id_dokumen_laporan', '$laporan_name', 'laporan', '$laporan_path', '$id_pengajuan', '$id_user', '$id_user', 'Y', NOW(), NOW())";
 
         $query = mysqli_query($conn, $sql);
 
@@ -38,7 +35,6 @@ if (isset($_POST['submit_laporan'])) {
     } else {
         echo "<script>alert('Pilih file laporan terlebih dahulu');</script>";
     }
-}
 ?>
 
 <div class="main-content p-4">
