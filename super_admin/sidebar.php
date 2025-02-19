@@ -36,6 +36,10 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/style_super_admin.css">
 
+    <!-- Include Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    
+
     <!-- DataTables CSS + Bootstrap Theme -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
@@ -141,10 +145,6 @@
                                     <i class="bi bi-pencil-square"></i>
                                     <span>My Profile</span>
                                 </a>
-                                <!-- <a href="admin_instansi_view.php" class="dropdown-item">
-                                    <i class="bi bi-person-check"></i>
-                                    <span>Admin Instansi</span>
-                                </a> -->
                                 <div class="dropdown-divider"></div>
                                 <a href="settings.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
@@ -190,6 +190,9 @@
     <!-- DataTables Buttons Export to PDF -->
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+    <!-- Include Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </body>
 
 </html>

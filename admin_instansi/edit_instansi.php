@@ -77,7 +77,7 @@ if (isset($_POST["edit_instansi"])) {
                     <img src="../assets/img/instansi/<?= $edit_instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
                     <input type="hidden" name="gambar_instansi" id="gambar_instansi" value="<?= $edit_instansi["gambar_instansi"] ?>">
                 </div>
-                <input type="file" class="input form-control" id="gambar_instansi" name="gambar_instansi" accept="image/*" onchange="previewFile()">
+                <input type="file" class="input form-control" id="image" name="gambar_instansi" accept="image/*" onchange="previewFile()">
                 <small class="text-muted">Kosong Jika tidak ingin di ganti</small>
             </div>
 

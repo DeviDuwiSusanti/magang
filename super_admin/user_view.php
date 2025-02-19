@@ -1,6 +1,9 @@
 <?php 
     include "sidebar.php";
-    $user = query("SELECT * FROM tb_profile_user p , tb_user u WHERE p.id_user = u.id_user");
+    $user = query("SELECT u.*, p.*, i.nama_pendek FROM tb_profile_user p JOIN tb_user u ON  p.id_user = u.id_user 
+                LEFT JOIN tb_instansi i ON p.id_instansi = i.id_instansi
+                WHERE (u.status_active = 'Y' OR u.status_active = 'y') 
+                AND (p.status_active = 'Y' OR p.status_active = 'y')");
     $no = 1;
 ?>
 
@@ -39,12 +42,13 @@
                     <tbody>
                         <?php foreach($user as $u) :
                             $jenis_kelamin = ($u["jenis_kelamin"] == "P" ? "Perempuan" : "Laki - Laki");
+                            $admin_instansi = (($u["id_instansi"] == "") ? "Calon Admin Instansi" : "Admin " . $u["nama_pendek"]);
                             $level = "";
                             if($u["level"] == "1") {
                                 $level = "Super Admin";
                             }
                             if($u["level"] == "2") {
-                                $level = "Admin Instansi";
+                                $level = $admin_instansi;
                             }
                             if($u["level"] == "3") {
                                 $level = "User Ketua";
@@ -65,12 +69,19 @@
                             </td>
                             <td><?= $level ?></td>
                             <td class="d-flex justify-content-center gap-2">
-                                <a href="user_hapus.php?id_user=<?= $u["id_user"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
-                                    <i class="bi bi-trash"></i> Hapus
-                                </a>
-                                <a href="user_edit.php?id_user=<?= $u["id_user"] ?>" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
-                                </a>
+                                <?php if($u["level"] == '1' || $u["level"] == '2') { ?>
+                                    <a href="user_hapus.php?id_user=<?= $u["id_user"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </a>
+                                    <a href="user_edit.php?id_user=<?= $u["id_user"] ?>" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil"></i> Edit
+                                    </a>
+                                    <?php } else { ?>
+                                        <a href="user_hapus.php?id_user=<?= $u["id_user"] ?>" class="btn btn-danger btn-md p-2" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </a>
+                                <?php } ?>
+                                
                             </td>
                         </tr>
                         <?php endforeach; ?>

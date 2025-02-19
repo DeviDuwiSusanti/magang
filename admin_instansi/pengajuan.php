@@ -1,9 +1,10 @@
 <?php 
-include "../layout/header.php"; 
+include "../layout/header.php";
 
 $id_instansi = $_SESSION['id_instansi'];
-$no = 1;    
+$no = 1;
 
+// Query untuk data utama pengajuan
 $sql = "SELECT
             tb_profile_user.nama_user,
             tb_bidang.nama_bidang,
@@ -22,6 +23,22 @@ $sql = "SELECT
         ORDER BY tb_pengajuan.id_pengajuan DESC";
 
 $result = mysqli_query($conn, $sql);
+
+// Query untuk mendapatkan daftar nama pengaju
+$sql2 = "SELECT p.id_pengajuan, GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
+        FROM tb_pengajuan p
+        JOIN tb_profile_user pu ON p.id_pengajuan = pu.id_pengajuan
+        WHERE p.id_instansi = '$id_instansi'
+        GROUP BY p.id_pengajuan
+        ORDER BY p.id_pengajuan DESC";
+
+$nama_pengaju = [];
+$result2 = mysqli_query($conn, $sql2);
+while ($row2 = mysqli_fetch_assoc($result2)) {
+    $nama_pengaju[$row2['id_pengajuan']] = $row2['daftar_nama'];
+}
+
+$json_nama_pengaju = json_encode($nama_pengaju);
 ?>
 
 <div class="main-content p-3">
@@ -44,6 +61,8 @@ $result = mysqli_query($conn, $sql);
                             <th>Dokumen</th>
                             <th>Tanggal Mulai</th>
                             <th>Tanggal Selesai</th>
+                            <!-- <th>Status Pengajuan</th>
+                            <th>Update Status</th> -->
                             <th style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
@@ -55,7 +74,10 @@ $result = mysqli_query($conn, $sql);
                             <td><?= $row['nama_bidang'] ?></td>
                             <td><?= $row['jenis_pengajuan'] ?></td>
                             <td>
-                                <a href="#" class="show-detail" title="Lihat Detail" data-detail='["Mishbahus Surur", "Revika Syariqatun Alifia", "Devi Dwi Susanti", "Hendra Hartono"]'>4</a>
+                                <a href="#" class="show-detail" title="Lihat Detail"
+                                    data-detail='<?= isset($nama_pengaju[$row['id_pengajuan']]) ? json_encode(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : '[]' ?>'>
+                                    <?= isset($nama_pengaju[$row['id_pengajuan']]) ? count(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : 0 ?>
+                                </a>
                             </td>
                             <td>
                                 <!-- Data dokumen diubah menjadi array of object dengan nama dan URL -->
@@ -68,6 +90,8 @@ $result = mysqli_query($conn, $sql);
                                     Lihat Dokumen
                                 </a>
                             </td>
+                            <!-- <td></td>
+                            <td></td> -->
                             <td><?= $row['tanggal_mulai'] ?></td>
                             <td><?= $row['tanggal_selesai'] ?></td>
                             <td>
@@ -106,3 +130,4 @@ $result = mysqli_query($conn, $sql);
 </div>
 
 <?php include "footer.php"; ?>
+

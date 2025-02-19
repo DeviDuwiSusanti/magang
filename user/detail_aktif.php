@@ -7,8 +7,9 @@ $id_user = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : (isset($_GET['id
 
 // Query untuk mengambil data pengajuan yang masih aktif berdasarkan ID user
 $sql = "SELECT * 
-        FROM tb_pengajuan, tb_profile_user, tb_instansi, tb_bidang, tb_pendidikan 
+        FROM tb_pengajuan, tb_profile_user, tb_user, tb_instansi, tb_bidang, tb_pendidikan 
         WHERE tb_pengajuan.id_user = tb_profile_user.id_user
+        AND tb_profile_user.id_user = tb_user.id_user
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
@@ -38,7 +39,7 @@ $row = mysqli_fetch_assoc($query);
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top text-center">
                     <!-- Foto profil -->
-                    <img src="../assets/img/user/<?= isset($row['gambar']) ? $row['gambar'] : 'default.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/user/<?= isset($row['gambar_user']) ? $row['gambar_user'] : 'default.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                     <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
                     <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
 
