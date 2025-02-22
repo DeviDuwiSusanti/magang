@@ -32,7 +32,7 @@ $no = 1;
 
         <!-- Tombol Tambah Pengajuan -->
         <div class="d-flex justify-content-end mb-4">
-            <a href="../web/lowongan.php" class="btn btn-primary">Tambah Pengajuan</a>
+            <a href="pengajuan.php" class="btn btn-primary">Tambah Pengajuan</a>
         </div>
 
         <!-- Tabel -->
