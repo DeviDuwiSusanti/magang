@@ -2,13 +2,13 @@
 include "../layout/sidebarUser.php"; 
 include "functions.php";  // Pastikan untuk meng-include file functions.php
 
-    if (ISSET($_GET['id_user']) && ISSET($_GET['id_pengajuan'])){
-        $id_user = $_GET['id_user'];
-        $id_pengajuan = $_GET['id_pengajuan'];
-    }else{
-        echo "<script>alert('ID User atau ID Pengajuan tidak ditemukan.'); window.history.back();</script>";
+if (ISSET($_GET['id_user']) && ISSET($_GET['id_pengajuan'])){
+    $id_user = $_GET['id_user'];
+    $id_pengajuan = $_GET['id_pengajuan'];
+}else{
+    echo "<script>alert('ID User atau ID Pengajuan tidak ditemukan.'); window.history.back();</script>";
 
-    }
+}
     
     // Validasi file PDF
     if (isset($_FILES['laporan_akhir']) && $_FILES['laporan_akhir']['error'] == 0) {

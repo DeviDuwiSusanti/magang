@@ -2,7 +2,13 @@
 include "../koneksi.php"; 
 
 // Query untuk mengambil data pengajuan magang yang masih aktif
-$sql = "SELECT * FRom tb_profile_user, tb_pengajuan, tb_pendidikan, tb_bidang, tb_instansi WHERE tb_profile_user.id_pengajuan = tb_pengajuan.id_pengajuan AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan AND tb_pengajuan.id_instansi = tb_instansi.id_instansi AND tb_bidang.id_bidang = tb_pengajuan.id_bidang AND status_pengajuan = 'Diterima';";
+$sql = "SELECT * 
+        FROM tb_profile_user, tb_pengajuan, tb_pendidikan, tb_bidang, tb_instansi 
+        WHERE tb_profile_user.id_pengajuan = tb_pengajuan.id_pengajuan 
+        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
+        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
+        AND tb_bidang.id_bidang = tb_pengajuan.id_bidang 
+        AND status_pengajuan = 'Diterima'";
 $no = 1; 
 $query = mysqli_query($conn, $sql); 
 $row = mysqli_fetch_assoc($query); 

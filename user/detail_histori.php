@@ -3,7 +3,8 @@ include "../koneksi.php";
 include "../layout/sidebarUser.php"; 
 
 // Query untuk mengambil data pengajuan yang statusnya selesai berdasarkan ID user
-$sql = "SELECT * FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_user, tb_instansi, tb_bidang 
+$sql = "SELECT * 
+        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_user, tb_instansi, tb_bidang 
         WHERE tb_pengajuan.id_pengajuan = tb_profile_user.id_pengajuan 
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
@@ -37,11 +38,7 @@ $row = mysqli_fetch_assoc($query);
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top text-center">
                     <!-- Foto profil -->
-                    <img src="../assets/img/user/<?= !empty($row['gambar_user']) ? $row['gambar_user'] : 'avatar.png' ?>" 
-     class="rounded-circle mb-3" 
-     alt="Profile Picture" 
-     style="width: 100px; height: 100px;">
-
+                    <img src="../assets/img/user/avatar.png" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                     <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
                     <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
 
