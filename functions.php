@@ -66,65 +66,81 @@ function uploadImage($file, $old_img, $directory)
 
 
 
-function isEmailRegistered($conn, $email)
+function checking($conn, $table, $column, $value)
 {
-    $email = mysqli_real_escape_string($conn, $email);
-    $result = mysqli_query($conn, "SELECT email FROM tb_user WHERE email = '$email'");
+    $column = mysqli_real_escape_string($conn, $column);
+    $value = mysqli_real_escape_string($conn, $value);
+
+    $query = "SELECT $column FROM $table WHERE $column = '$value'";
+    $result = mysqli_query($conn, $query);
+
     return mysqli_num_rows($result) > 0;
 }
 
-function isNIKRegistered($conn, $nik)
-{
-    $nik = mysqli_real_escape_string($conn, $nik);
-    $result = mysqli_query($conn, "SELECT nik_user FROM tb_profile_user WHERE nik_user = '$nik'");
-    return mysqli_num_rows($result) > 0;
-}
-
-function isNISNRegistered($conn, $nisn)
-{
-    $nisn = mysqli_real_escape_string($conn, $nisn);
-    $result = mysqli_query($conn, "SELECT nisn FROM tb_profile_user WHERE nisn = '$nisn'");
-    return mysqli_num_rows($result) > 0;
-}
 
 function register($POST)
 {
     global $conn;
     $id_user = generateUserId($conn);
-    $nama = $POST["nama"];
+    $nama = $POST["nama_user"];
     $email = $POST["email"];
-    $nik = $POST["nik"];
+    $nik = $POST["nik_user"];
     $nisn = $POST["nisn"];
-    $pendidikan = $POST["pendidikan"];
+    $pendidikan = $POST["id_pendidikan"];
     $jenis_kelamin = $POST["jenis_kelamin"];
     $tempat_lahir = $POST["tempat_lahir"];
     $tanggal_lahir = $POST["tanggal_lahir"];
-    $alamat = $POST["alamat"];
-    $telepone = $POST["telepone"];
+    $alamat = $POST["alamat_user"];
+    $telepone = $POST["telepone_user"];
     $level = $POST["level"];
     $nim = $POST["nim"];
-    $gambar = uploadImage($_FILES["gambar"], "avatar.png", "assets/img/user/");
+    $gambar = uploadImage($_FILES["gambar_user"], "avatar.png", "assets/img/user/");
 
-    if (isEmailRegistered($conn, $email)) {
+    if (checking($conn, 'tb_user', 'email', $email)) {
         header("Location: register.php?error=email_terdaftar");
         exit;
     }
-    if (isNIKRegistered($conn, $nik)) {
+    if (checking($conn, 'tb_profile_user', 'nik_user', $nik)) {
         header("Location: register.php?error=nik_terdaftar");
         exit;
     }
-    if (isNISNRegistered($conn, $nisn)) {
+    if (checking($conn, 'tb_profile_user', 'nisn', $nisn)) {
         header("Location: register.php?error=nisn_terdaftar");
         exit;
     }
 
+    if (empty($nik) || strlen($nik) !== 16 || !ctype_digit($nik)) {
+        header("Location: register.php?error=nik_tidak_sesuai");
+        exit;
+    }
+
+    if (empty($nisn) || strlen($nisn) !== 10 || !ctype_digit($nisn)) {
+        header("Location: register.php?error=nisn_tidak_sesuai");
+        exit;
+    }
+
     $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
-    $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone)
+    $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
                         VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
     mysqli_query($conn, $query1);
     mysqli_query($conn, $query2);
     return mysqli_affected_rows($conn);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // =========================================================== SUPER ADMIN ========================================================
 // ================================ PROFILE SUPER ADMIN ================================
