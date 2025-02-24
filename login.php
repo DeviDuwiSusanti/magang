@@ -1,34 +1,35 @@
 <?php
-session_start();
-require 'functions.php';
+    session_start();
+    require 'koneksi.php';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    
-    // Cek apakah email ada di database
-    $query = "SELECT * FROM tb_user WHERE email = '$email'";
-    $result = mysqli_query($conn, $query);
-    
-    if (mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
+    if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
         
-        if ($user['status_active'] == 'Y' || $user['status_active'] == 'y' ) {
-
-            $otp = rand(100000, 999999);
-            $otp_expired = date("Y-m-d H:i:s", strtotime("+7 hours +2 minutes"));
-            $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email'";
-            mysqli_query($conn, $updateQuery);
+        // Cek apakah email ada di database
+        $query = "SELECT * FROM tb_user WHERE email = '$email'";
+        $result = mysqli_query($conn, $query);
+        
+        if (mysqli_num_rows($result) > 0) {
+            $user = mysqli_fetch_assoc($result);
             
-            $_SESSION['email'] = $email;
-            header("Location: otp.php");
-            exit();
+            if ($user['status_active'] == '1') {
+
+                $otp = rand(100000, 999999);
+                $otp_expired = date("Y-m-d H:i:s", strtotime("+7 hours +2 minutes"));
+                $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email'";
+                mysqli_query($conn, $updateQuery);
+                
+                $_SESSION['email'] = $email;
+                header("Location: otp.php");
+                exit();
+            } else {
+                echo "<script>alert('Akun tidak aktif!'); window.location='login.php';</script>";
+            }
         } else {
-            echo "<script>alert('Akun tidak aktif!'); window.location='login.php';</script>";
+            echo "<script>alert('Email tidak ditemukan!'); window.location='login.php';</script>";
         }
-    } else {
-        echo "<script>alert('Email tidak ditemukan!'); window.location='login.php';</script>";
     }
-}
+
 ?>
 
 
