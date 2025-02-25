@@ -2,7 +2,7 @@
     include "sidebar.php";
 
     $profile = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user = '$id_user'")[0];
-    $jenis_kelamin = ($profile["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki - Laki")
+    $jenis_kelamin = ($profile["jenis_kelamin"] == 0 ? "Perempuan" : "Laki - Laki")
 ?>
 
 <div class="container">

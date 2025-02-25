@@ -40,9 +40,12 @@
             </div>
 
             <!-- Tanggal Lahir -->
+            <?php 
+                $format_tanggal = date('Y-m-d', strtotime(str_replace("/", "-", $profile_edit["tanggal_lahir"])));
+            ?>
             <div class="mb-3">
                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $profile_edit["tanggal_lahir"] ?>">
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $format_tanggal ?>">
             </div>
             
             <!-- gender -->
@@ -50,13 +53,13 @@
             <label for="gender" class="form-label">Jenis Kelamin</label>
                 <div class="form-check">
                     <input type="radio" name="jenis_kelamin" id="gender_l" class="form-check-input" value="L" 
-                        <?= ($pengguna["jenis_kelamin"] == "L") ? "checked" : "" ?>>
+                        <?= ($pengguna["jenis_kelamin"] == 1) ? "checked" : "" ?>>
                     <label for="gender_l" class="form-check-label">Laki - Laki</label>
                 </div>
 
                 <div class="form-check">    
                     <input type="radio" name="jenis_kelamin" id="gender_p" class="form-check-input" value="P" 
-                        <?= ($pengguna["jenis_kelamin"] == "P") ? "checked" : "" ?>>
+                        <?= ($pengguna["jenis_kelamin"] == 0) ? "checked" : "" ?>>
                     <label for="gender_p" class="form-check-label">Perempuan</label>
                 </div>
             </div>

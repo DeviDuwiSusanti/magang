@@ -2,7 +2,7 @@
     include "sidebar.php";
     $id_admin_instansi = $_GET["id_user"];
     $user = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_admin_instansi'")[0];
-    $jenis_kelamin = ($user["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki - Laki");
+    $jenis_kelamin = ($user["jenis_kelamin"] == 0 ? "Perempuan" : "Laki - Laki");
 
     $instansi_available = query("SELECT i.id_instansi, i.nama_panjang FROM tb_instansi i LEFT JOIN tb_profile_user p ON p.id_instansi = i.id_instansi WHERE p.id_instansi IS NULL OR p.id_instansi = '' ");
     $instansi_selected = query("SELECT DISTINCT i.nama_panjang FROM tb_instansi i INNER JOIN tb_profile_user p ON i.id_instansi = p.id_instansi");

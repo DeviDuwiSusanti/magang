@@ -2,8 +2,7 @@
     include "sidebar.php";
     $user = query("SELECT u.*, p.*, i.nama_pendek FROM tb_profile_user p JOIN tb_user u ON  p.id_user = u.id_user 
                 LEFT JOIN tb_instansi i ON p.id_instansi = i.id_instansi
-                WHERE (u.status_active = 'Y' OR u.status_active = 'y') 
-                AND (p.status_active = 'Y' OR p.status_active = 'y')");
+                WHERE u.status_active = '1' AND p.status_active = '1' ");
     $no = 1;
 ?>
 
@@ -41,7 +40,7 @@
                     </thead>
                     <tbody>
                         <?php foreach($user as $u) :
-                            $jenis_kelamin = ($u["jenis_kelamin"] == "P" ? "Perempuan" : "Laki - Laki");
+                            $jenis_kelamin = ($u["jenis_kelamin"] == "0" ? "Perempuan" : "Laki - Laki");
                             $admin_instansi = (($u["id_instansi"] == "") ? "Calon Admin Instansi" : "Admin " . $u["nama_pendek"]);
                             $level = "";
                             if($u["level"] == "1") {

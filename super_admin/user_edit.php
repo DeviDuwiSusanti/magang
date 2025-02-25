@@ -49,13 +49,13 @@
             <label for="gender" class="form-label">Jenis Kelamin</label>
                 <div class="form-check">
                     <input type="radio" name="jenis_kelamin" id="gender_l" class="form-check-input" value="L" 
-                        <?= ($pengguna["jenis_kelamin"] == "L") ? "checked" : "" ?>>
+                        <?= ($pengguna["jenis_kelamin"] == 1) ? "checked" : "" ?>>
                     <label for="gender_l" class="form-check-label">Laki - Laki</label>
                 </div>
 
                 <div class="form-check">    
                     <input type="radio" name="jenis_kelamin" id="gender_p" class="form-check-input" value="P" 
-                        <?= ($pengguna["jenis_kelamin"] == "P") ? "checked" : "" ?>>
+                        <?= ($pengguna["jenis_kelamin"] == 0) ? "checked" : "" ?>>
                     <label for="gender_p" class="form-check-label">Perempuan</label>
                 </div>
             </div>
