@@ -59,6 +59,28 @@ function uploadFile($file) {
     ];
 }
 
+function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
+    // Ambil file lama dari database
+    $query = "SELECT file_path FROM tb_dokumen 
+               WHERE id_pengajuan = '$id_pengajuan' 
+               AND id_user = '$id_user'
+               AND jenis_dokumen = '$jenis_dokumen'";
+    $result = mysqli_query($conn, $query);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $file_path = $row['file_path'];
+        if (file_exists($file_path)) {
+            unlink($file_path); // Hapus file fisik
+        }
+    }
+
+    // Hapus record lama di database
+    $deleteQuery = "DELETE FROM tb_dokumen 
+                    WHERE id_pengajuan = '$id_pengajuan' 
+                    AND id_user = '$id_user'
+                    AND jenis_dokumen = '$jenis_dokumen'";
+    mysqli_query($conn, $deleteQuery);
+}
 
 function getBidangByInstansi($id_instansi) {
     global $conn;

@@ -17,6 +17,15 @@ if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
     exit;
 }
 
+// Ambil data instansi yang memiliki kuota
+$sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS total_kuota 
+                 FROM tb_instansi i 
+                 JOIN tb_bidang b ON i.id_instansi = b.id_instansi 
+                 WHERE b.kuota_bidang > 0 
+                 GROUP BY i.id_instansi, i.nama_panjang 
+                 ORDER BY total_kuota DESC";
+$result_instansi = mysqli_query($conn, $sql_instansi);
+
 if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
     $id_pengajuan = generateIdPengajuan($conn);
     $id_dokumen_ktp = generateIdDokumen($conn, $id_pengajuan);
@@ -63,13 +72,13 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
     $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', 'Menunggu', 'Y', '$id_user', NOW(), '', '')";
     $query2 = mysqli_query($conn, $sql2);
 
-    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', 'prasyarat', '$ktp[path]', '$id_pengajuan', '$id_user', 'Y', '$id_user', NOW(), '', '')";
+    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', 'Y', '$id_user', NOW(), '', '')";
     $query3 = mysqli_query($conn, $sql3);
     
 
     if ($query2 && $query3){
         $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
-        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', '$cv[name]', 'prasyarat', '$cv[path]', '$id_pengajuan', '$id_user', 'Y', '$id_user', NOW(), '', '')";
+        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', '$cv[name]', 'identitas', '$cv[path]', '$id_pengajuan', '$id_user', 'Y', '$id_user', NOW(), '', '')";
         $query4 = mysqli_query($conn, $sql4);
 
         $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
@@ -84,15 +93,6 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
     }
 }
 
-
-// Ambil data instansi yang memiliki kuota
-$sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS total_kuota 
-                 FROM tb_instansi i 
-                 JOIN tb_bidang b ON i.id_instansi = b.id_instansi 
-                 WHERE b.kuota_bidang > 0 
-                 GROUP BY i.id_instansi, i.nama_panjang 
-                 ORDER BY total_kuota DESC";
-$result_instansi = mysqli_query($conn, $sql_instansi);
 
 // Cek jika ada request AJAX dari JavaScript untuk mengambil bidang
 if (isset($_POST["id_instansi"])) {
@@ -150,6 +150,7 @@ if (isset($_POST["id_bidang"])) {
         display: none;
     }
 </style>
+
 </head>
 <body>
 
@@ -165,6 +166,7 @@ if (isset($_POST["id_bidang"])) {
                 <i class="bi bi-arrow-left-circle me-1"></i> Kembali
             </a>
         </div>
+
 
         <div class="form-container center-form" id="formContainer">
             <div class="form-wrapper" id="formWrapper">
@@ -256,7 +258,7 @@ if (isset($_POST["id_bidang"])) {
         </div>
 
             <!-- Card Detail Lowongan -->
-            <div class="card border-0 shadow-sm rounded-lg p-3 mb-4" style="background: #f9f9f9;" id="detailBidangContainer" style="display: none;">
+            <div class="col-md-6" id="detailBidangContainer" style="display: none;">
                 <div class="card" id="detailBidangCard">
                     <div class="card-body">
                         <h5 class="card-title" id="bidangNama"></h5>
