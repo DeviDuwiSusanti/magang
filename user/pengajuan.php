@@ -72,7 +72,7 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
     $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', 'Menunggu', 'Y', '$id_user', NOW(), '', '')";
     $query2 = mysqli_query($conn, $sql2);
 
-    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', 'Y', '$id_user', NOW(), '', '')";
+    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
     $query3 = mysqli_query($conn, $sql3);
     
 
