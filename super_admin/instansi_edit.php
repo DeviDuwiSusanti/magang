@@ -2,11 +2,11 @@
     include "sidebar.php";
     $id_instansi = $_GET["id_instansi"];
     $instansi = query("SELECT * FROM tb_instansi WHERE id_instansi = $id_instansi")[0];
-    echo $id_user;
+    // echo $id_user;
 
 
     if(isset($_POST["edit_instansi"])) {
-        if(edit_instansi($_POST)) {
+        if(edit_instansi_super($_POST)) {
             echo "<script>
                 alert ('Berhasil Edit Data Instansi');
                 document.location.href = 'instansi_view.php';
@@ -47,7 +47,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="nama_instansi" class="form-label">Gruop Instansi</label>
+                <label for="nama_instansi" class="form-label">Group Instansi</label>
                 <input type="text" class="form-control" id="group_instansi" name="group_instansi" value="<?= $instansi["group_instansi"] ?>">
             </div>
     

@@ -1,6 +1,8 @@
 <?php
 include "../koneksi.php"; 
 include "../layout/sidebarUser.php"; 
+include "functions.php"; 
+
 
 // Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
 $sql = "SELECT * FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_user, tb_instansi, tb_bidang 
@@ -8,11 +10,9 @@ $sql = "SELECT * FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_user, tb_
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        AND tb_pengajuan.status_pengajuan = 'Selesai' 
+        AND tb_pengajuan.status_pengajuan = 3
         AND tb_profile_user.id_user = '$id_user'
         AND tb_user.id_user = '$id_user'";  // Menambahkan filter berdasarkan id_user
- 
-
 $query = mysqli_query($conn, $sql);
 $no = 1;
 ?>
@@ -49,10 +49,18 @@ $no = 1;
                             <td><?= $data['nama_bidang'] ?></td>
                             <td class="text-center">
                                 <?php 
-                                    $start_date = new DateTime($data['tanggal_mulai']);
-                                    $end_date = new DateTime($data['tanggal_selesai']);
-                                    $interval = $start_date->diff($end_date);
-                                    echo $interval->m + ($interval->y * 12) . " Bulan";
+                                    if (!empty($data['tanggal_mulai']) && !empty($data['tanggal_selesai'])) {
+                                        $start_date = new DateTime($data['tanggal_mulai']);
+                                        $end_date = new DateTime($data['tanggal_selesai']);
+                                        $interval = $start_date->diff($end_date);
+                                        
+                                        $months = $interval->m + ($interval->y * 12);
+                                        $days = $interval->d;
+                                        
+                                        echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
+                                    } else {
+                                        echo "Durasi Tidak Diketahui";
+                                    } 
                                 ?>
                             </td>   
                             <td><?= date('d F Y', strtotime($data['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($data['tanggal_selesai'])) ?></td>                       

@@ -1,6 +1,6 @@
 <?php 
     include "sidebar.php";
-    $instansi = query("SELECT * FROM tb_instansi WHERE status_active = 'Y'");
+    $instansi = query("SELECT * FROM tb_instansi WHERE status_active = 1");
     $no = 1;
 ?>
 
@@ -70,7 +70,17 @@
             "ordering" : true,
             "info" : true,
             "lengthMenu" : [5, 10, 25, 50, 100],
-            "columnDefs" : [{"orderable" : false, "targets" : [ 1, 2, 3, 4, 5, 6]}], // Perbaiki indeks kolom
+            "columnDefs" : [
+                {
+                    "orderable" : false,
+                    "targets" : [ 1, 2, 3, 4],
+                    render: function(data, type, row) {
+                        if(type === 'display' && data.length > 50) {
+                            return data.substr(0, 50) + '...';
+                        } return data;
+                    }
+                }
+            ],
             "language" : {
                 "search" : "Cari : ",
                 "lengthMenu" : "Tampilkan _MENU_  data Per Halaman",

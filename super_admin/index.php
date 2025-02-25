@@ -1,9 +1,9 @@
 <?php 
     include "sidebar.php"; 
-    $instansi = query("SELECT COUNT(*) AS total FROM tb_instansi WHERE status_active = 'Y' OR status_active = 'y'")[0];
-    $pendidikan = query("SELECT COUNT(*) AS total FROM tb_pendidikan WHERE status_active = 'Y' OR status_active = 'y'")[0];
-    $pengajuan = query("SELECT COUNT(*) AS total FROM tb_pengajuan WHERE status_active = 'Y' OR status_active = 'y'")[0];
-    $user = query("SELECT COUNT(*) AS total FROM tb_user WHERE status_active = 'Y' OR status_active = 'y'")[0];
+    $instansi = query("SELECT COUNT(*) AS total FROM tb_instansi WHERE status_active = 1")[0];
+    $pendidikan = query("SELECT COUNT(*) AS total FROM tb_pendidikan WHERE status_active = 1")[0];
+    $pengajuan = query("SELECT COUNT(*) AS total FROM tb_pengajuan WHERE status_active = 1")[0];
+    $user = query("SELECT COUNT(*) AS total FROM tb_user WHERE status_active = 1")[0];
 ?>
 
 <div class="main-content p-4">

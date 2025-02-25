@@ -31,7 +31,7 @@
                     </thead>
                     <tbody>
                         <?php foreach($admin_instansi as $calon) : 
-                            $jenis_kelamin = ($calon["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki - Laki");
+                            $jenis_kelamin = ($calon["jenis_kelamin"] == 0 ? "Perempuan" : "Laki - Laki");
                             $level = ($calon["level"] == '2' ? "Admin Instansi" : "Bukan Admin Instansi");
                         ?>
                         <tr>
