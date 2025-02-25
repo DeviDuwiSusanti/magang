@@ -14,8 +14,9 @@ $sql = "SELECT *
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        AND tb_pengajuan.status_pengajuan = 'Menunggu'
-        AND tb_pengajuan.id_user = '$id_user'";  
+        AND tb_pengajuan.status_pengajuan = 3 
+        AND tb_pengajuan.id_user = '$id_user'";
+
 
 $query = mysqli_query($conn, $sql); 
 $no = 1; 
@@ -59,15 +60,18 @@ $no = 1;
                         <td><?= isset($row['status_pengajuan']) ? $row['status_pengajuan'] : 'Status tidak diketahui'; ?></td>
                         <td class="text-center">
                             <?php 
-                                // Hitung durasi magang dalam bulan
                                 if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
                                     $start_date = new DateTime($row['tanggal_mulai']);
                                     $end_date = new DateTime($row['tanggal_selesai']);
                                     $interval = $start_date->diff($end_date);
-                                    echo $interval->m + ($interval->y * 12) . " Bulan";
+                                    
+                                    $months = $interval->m + ($interval->y * 12);
+                                    $days = $interval->d;
+                                    
+                                    echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
                                 } else {
                                     echo "Durasi Tidak Diketahui";
-                                }
+                                } 
                             ?>
                         </td>
                         <td class="text-center">
