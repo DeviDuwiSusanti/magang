@@ -3,6 +3,7 @@ session_start();
 include "functions.php"; 
 include "../koneksi.php"; // Pastikan koneksi ke database
 
+
 if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
     $email = $_SESSION['email'];
     $sql = "SELECT * FROM tb_user 
@@ -41,6 +42,8 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])) {
     $result_anggota = mysqli_query($conn, $query_anggota);
     $anggotaData = mysqli_fetch_all($result_anggota, MYSQLI_ASSOC);
 }
+
+include "pengajuan_update.php";
 // Ambil data instansi yang memiliki kuota
 $sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS total_kuota 
                  FROM tb_instansi i 
@@ -123,7 +126,7 @@ if (isset($_POST["id_bidang"])) {
 
         <div class="form-container center-form" id="formContainer">
             <div class="form-wrapper" id="formWrapper">
-            <form id="pengajuanForm" action="pengajuan_update.php" class="form-profile" method="POST" enctype="multipart/form-data">
+            <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data">
                 <div id="step1">
                     <h4>Step 1: Daftar Pengajuan</h4>
                     <div class="mb-3">
@@ -177,7 +180,7 @@ if (isset($_POST["id_bidang"])) {
                     <!-- Upload CV -->
                     <div class="mb-3">
                         <label for="cv" class="form-label">Upload CV</label>
-                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" required>
+                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
                             <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
                     </div>
 

@@ -23,7 +23,7 @@ if (ISSET($_GET['id_user']) && ISSET($_GET['id_pengajuan'])){
 
         // Simpan informasi dokumen di database
         $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
-                VALUES ('$id_dokumen_laporan', '$laporan_name', 'laporan', '$laporan_path', '$id_pengajuan', '$id_user', '$id_user', 'Y', NOW(), NOW())";
+                VALUES ('$id_dokumen_laporan', '$laporan_name', 'laporan', '$laporan_path', '$id_pengajuan', '$id_user', '$id_user', '1', NOW(), NOW())";
 
         $query = mysqli_query($conn, $sql);
 
