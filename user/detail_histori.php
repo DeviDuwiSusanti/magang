@@ -1,6 +1,8 @@
 <?php
 include "../koneksi.php";
 include "../layout/sidebarUser.php"; 
+include "functions.php"; 
+
 
 // Query untuk mengambil data pengajuan yang statusnya selesai berdasarkan ID user
 $sql = "SELECT * 
@@ -9,7 +11,7 @@ $sql = "SELECT *
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        AND tb_pengajuan.status_pengajuan = 'Selesai' 
+        AND tb_pengajuan.status_pengajuan = 3
         AND tb_profile_user.id_user = '$id_user'
         AND tb_user.id_user = '$id_user'";  // Menambahkan filter berdasarkan id_user
 

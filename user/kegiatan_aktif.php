@@ -1,6 +1,7 @@
 <?php
 include "../koneksi.php"; 
 include "../layout/sidebarUser.php"; 
+include "functions.php"; 
  
 
 // Query untuk mengambil data pengajuan magang yang masih aktif dan sesuai dengan id_user yang login
@@ -9,7 +10,7 @@ $sql = "SELECT * FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_user, tb_
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        AND tb_pengajuan.status_pengajuan = 'Diterima' 
+        AND tb_pengajuan.status_pengajuan = 2
         AND tb_profile_user.id_user = '$id_user'
         AND tb_user.id_user = '$id_user'"; 
 $query = mysqli_query($conn, $sql);
