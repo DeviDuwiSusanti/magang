@@ -328,7 +328,7 @@
     function super_admin_hapus_user($id_user, $change_by) {
         global $conn;
         mysqli_query($conn, "UPDATE tb_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
-        mysqli_query($conn, "UPDATE tb_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
+        mysqli_query($conn, "UPDATE tb_profile_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
         return mysqli_affected_rows($conn);
     }
 

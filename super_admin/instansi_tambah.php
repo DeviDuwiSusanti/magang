@@ -32,17 +32,17 @@
             <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">ID Instansi</label>
-                <input type="text" class="form-control" id="id_instansi" name="id_instansi" placeholder="Masukkan ID instansi" required>
+                <input type="text" inputmode="numeric" maxlength="10" class="form-control" id="id_instansi" name="id_instansi" placeholder="Masukkan ID instansi" required>
             </div>
 
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">Nama Pendek Instansi</label>
-                <input type="text" class="form-control" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama Pendek instansi" required>
+                <input type="text" maxlength="100" class="form-control" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama Pendek instansi" required>
             </div>
 
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">Nama Panjang Instansi</label>
-                <input type="text" class="form-control" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama Panjang instansi" required>
+                <input type="text" maxlength="255" class="form-control" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama Panjang instansi" required>
             </div>
 
             <div class="mb-3">
@@ -91,7 +91,7 @@
 
 
 <script>
-function validateFile() {
+    function validateFile() {
         const fileInput = document.getElementById('image');
         const previewContainer = document.getElementById('imagePreview');
         const previewImage = document.getElementById('previewImage');
@@ -114,4 +114,8 @@ function validateFile() {
             reader.readAsDataURL(file);
         }
     }
+
+    document.getElementById("id_instansi").addEventListener("input", function (e) {
+            this.value = this.value.replace(/\D/g, "");
+        });
 </script>
