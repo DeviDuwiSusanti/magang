@@ -12,7 +12,7 @@ $sql = "SELECT *
         AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
         AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
         AND tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        AND tb_pengajuan.status_pengajuan = 'Diterima' 
+        AND tb_pengajuan.status_pengajuan = 2
         AND tb_profile_user.id_user = '$id_user'
         AND tb_user.id_user = '$id_user'";  // Menambahkan filter berdasarkan id_user
 $query = mysqli_query($conn, $sql); 
@@ -72,11 +72,15 @@ $row = mysqli_fetch_assoc($query);
                                                 $start_date = new DateTime($row['tanggal_mulai']);
                                                 $end_date = new DateTime($row['tanggal_selesai']);
                                                 $interval = $start_date->diff($end_date);
-                                                echo ($interval->m + ($interval->y * 12)) . " Bulan";
+                                                
+                                                $months = $interval->m + ($interval->y * 12);
+                                                $days = $interval->d;
+                                                
+                                                echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
                                             } else {
                                                 echo "Durasi Tidak Diketahui";
-                                            }
-                                        ?>
+                                            } 
+                                            ?>
                                     </td>
                                 </tr>
                                 <tr>

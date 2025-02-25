@@ -3,19 +3,19 @@ include "../koneksi.php";
 
 // Query untuk mengambil data pengajuan magang yang masih aktif
 $sql = "SELECT * 
-        FROM tb_profile_user, tb_pengajuan, tb_pendidikan, tb_bidang, tb_instansi 
-        WHERE tb_profile_user.id_pengajuan = tb_pengajuan.id_pengajuan 
-        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
-        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
-        AND tb_bidang.id_bidang = tb_pengajuan.id_bidang 
-        AND status_pengajuan = 'Diterima'";
-$no = 1; 
+        FROM tb_profile_user 
+        JOIN tb_pengajuan ON tb_profile_user.id_pengajuan = tb_pengajuan.id_pengajuan
+        JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        WHERE tb_pengajuan.status_pengajuan = 2";
+
 $query = mysqli_query($conn, $sql); 
-$row = mysqli_fetch_assoc($query); 
+$no = 1;
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,7 +45,7 @@ $row = mysqli_fetch_assoc($query);
         <h1 class="text-center mb-4">Tabel Kegiatan Aktif</h1>
         
         <!-- Tabel buat menampilkan data -->
-        <table id="myTable">
+        <table id="myTable" class="table table-bordered">
             <thead class="table-primary">
                 <tr>
                     <th class="text-center">No</th>
@@ -58,33 +58,40 @@ $row = mysqli_fetch_assoc($query);
                 </tr>
             </thead>
             <tbody>
-                <?php while($row = mysqli_fetch_assoc($query)): ?> 
+                <?php if (mysqli_num_rows($query) > 0): ?>
+                    <?php while ($row = mysqli_fetch_assoc($query)): ?> 
+                        <tr>
+                            <td class="text-center"><?= $no++; ?></td> 
+                            <td class="text-center"><?= $row['nama_user'] ?></td> 
+                            <td class="text-center"><?= $row['nama_pendidikan'] ?></td> 
+                            <td class="text-center"><?= $row['nama_panjang'] ?></td> 
+                            <td class="text-center"><?= $row['nama_bidang'] ?></td> 
+                            <td class="text-center">
+                                <?php 
+                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
+                                        $start_date = new DateTime($row['tanggal_mulai']);
+                                        $end_date = new DateTime($row['tanggal_selesai']);
+                                        $interval = $start_date->diff($end_date);
+                                        
+                                        $months = $interval->m + ($interval->y * 12);
+                                        $days = $interval->d;
+                                        
+                                        echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
+                                    } else {
+                                        echo "Durasi Tidak Diketahui";
+                                    } 
+                                ?>
+                            </td>
+                            <td class="text-center">
+                                <?= date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai'])) ?>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
                     <tr>
-                        <td class="text-center"><?= $no++; ?></td> 
-                        <td><?= $row['nama_user'] ?></td> 
-                        <td><?= $row['nama_pendidikan'] ?></td> 
-                        <td><?= $row['nama_panjang'] ?></td> 
-                        <td><?= $row['nama_bidang'] ?></td> 
-                        <td class="text-center">
-                            <?php 
-                                // Cek apakah tanggal mulai dan selesai ada atau tidak
-                                if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                    $start_date = new DateTime($row['tanggal_mulai']);
-                                    $end_date = new DateTime($row['tanggal_selesai']);
-                                    $interval = $start_date->diff($end_date);
-                                    // Hitung durasi dalam bulan (tahun dikonversi ke bulan)
-                                    echo $interval->m + ($interval->y * 12) . " Bulan";
-                                } else {
-                                    echo "Durasi Tidak Diketahui"; // Kalau tanggalnya kosong
-                                }
-                            ?>
-                        </td>
-                        <td>
-                            <!-- Format tanggal biar lebih gampang dibaca -->
-                            <?= date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai'])) ?>
-                        </td>
+                        <td colspan="7" class="text-center">Tidak ada data pengajuan aktif</td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>
@@ -92,6 +99,7 @@ $row = mysqli_fetch_assoc($query);
 
 <!-- Menampilkan footer-->
 <?php include "../layout/footerUser.php" ?>
+
 <!-- Import jQuery buat fungsi interaktif -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Import DataTables buat bikin tabel lebih interaktif -->
