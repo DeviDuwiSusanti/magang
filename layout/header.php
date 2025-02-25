@@ -175,26 +175,18 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
             <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-            <!-- Inisialisasi DataTables -->
             <script>
                 $(document).ready(function() {
-                    $('#myTable').DataTable();
-                });
-            </script>
+                    // Inisialisasi DataTables
+                    var table = $('#myTable').DataTable();
 
-            <script>
-                $(document).ready(function() {
+                    // Inisialisasi Select2 untuk dropdown bidang
                     $('#bidang').select2({
                         placeholder: "Pilih Bidang",
                         allowClear: true
                     });
-                });
-            </script>
 
-            <script>
-                $(document).ready(function() {
-                    var table = $('#myTable').DataTable();
-
+                    // Event handler untuk tombol "show-detail"
                     $('#myTable tbody').on('click', 'a.show-detail', function(e) {
                         e.preventDefault();
 
@@ -208,6 +200,7 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                         var tr = $(this).closest('tr');
                         var row = table.row(tr);
 
+                        // Sembunyikan detail yang lain sebelum menampilkan yang baru
                         if (!row.child.isShown()) {
                             $('#myTable tbody tr.shown').not(tr).each(function() {
                                 table.row(this).child.hide();
@@ -215,6 +208,7 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                             });
                         }
 
+                        // Tampilkan atau sembunyikan detail dari baris yang diklik
                         if (row.child.isShown()) {
                             row.child.hide();
                             tr.removeClass('shown');
@@ -225,6 +219,7 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                     });
                 });
             </script>
+
 </body>
 
 </html>

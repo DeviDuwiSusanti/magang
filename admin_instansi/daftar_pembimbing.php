@@ -1,7 +1,8 @@
 <?php include "../layout/header.php";
 
 // Query pembimbing bidang
-$bidang = "SELECT tb_pembimbing.id_pembimbing, tb_pembimbing.nama_pembimbing, 
+$bidang = "SELECT tb_pembimbing.id_pembimbing, 
+    tb_pembimbing.nama_pembimbing, 
     tb_pembimbing.nik_pembimbing, 
     tb_pembimbing.nip, tb_pembimbing.jabatan, 
     tb_pembimbing.telepone_pembimbing, tb_bidang.nama_bidang
@@ -14,6 +15,7 @@ $bidang = "SELECT tb_pembimbing.id_pembimbing, tb_pembimbing.nama_pembimbing,
         ON tb_instansi.id_instansi = tb_profile_user.id_instansi
     WHERE tb_profile_user.id_user = '$id_user'
     AND tb_bidang.status_active = 'Y'
+    AND tb_pembimbing.status_active = 'Y'
     ORDER BY tb_bidang.id_bidang DESC";
 
 $query = mysqli_query($conn, $bidang);
@@ -62,7 +64,7 @@ $no = 1;
                                         <a href="edit_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-warning btn-sm">
                                             <i class="bi bi-pencil"></i> Edit
                                         </a>
-                                        <a href="hapus_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-danger btn-sm">
+                                        <a href="hapus_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-danger btn-sm" onclick="confirmDelete(event)">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                     </td>
@@ -77,3 +79,27 @@ $no = 1;
 </div>
 
 <?php include "footer.php"; ?>
+
+<script>
+    function confirmDelete(event) {
+        event.preventDefault(); // Mencegah aksi default link
+
+        const url = event.currentTarget.href; // Ambil URL dari atribut href
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data pembimbing akan dihapus!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika dikonfirmasi, alihkan ke URL hapus
+                window.location.href = url;
+            }
+        });
+    }
+</script>

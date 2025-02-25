@@ -1,24 +1,58 @@
 <?php
 session_start();
-require 'functions.php';
+require 'koneksi.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+include './assets/phpmailer/src/PHPMailer.php';
+include './assets/phpmailer/src/Exception.php';
+include './assets/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-    
+
     // Cek apakah email ada di database
     $query = "SELECT * FROM tb_user WHERE email = '$email'";
     $result = mysqli_query($conn, $query);
-    
+
     if (mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
-        
-        if ($user['status_active'] == 'Y' || $user['status_active'] == 'y' ) {
 
+        if ($user['status_active'] == '1') {
+            // Generate OTP
             $otp = rand(100000, 999999);
             $otp_expired = date("Y-m-d H:i:s", strtotime("+7 hours +2 minutes"));
+
+            // Simpan OTP ke database
             $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email'";
             mysqli_query($conn, $updateQuery);
-            
+
+            // Kirim OTP melalui email
+            $email_pengirim = 'moneyuang25@gmail.com';
+            $nama_pengirim = 'Diskominfo Sidoarjo';
+            $email_penerima = $email;
+            $subject = 'OTP Verification';
+            $message = 'Kode OTP Anda adalah: ' . $otp;
+
+            $mail = new PHPMailer();
+            $mail->isSMTP();
+
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Username = $email_pengirim;
+            $mail->Password = 'leeufuyyxfovbqtb';
+            $mail->Port = 465;
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'ssl';
+
+            $mail->setFrom($email_pengirim, $nama_pengirim);
+            $mail->addAddress($email_penerima);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $message;
+
+            $send = $mail->send();
+
             $_SESSION['email'] = $email;
             header("Location: otp.php");
             exit();
@@ -29,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         echo "<script>alert('Email tidak ditemukan!'); window.location='login.php';</script>";
     }
 }
+
 ?>
 
 
@@ -37,14 +72,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <link rel="stylesheet" href="assets/css/sign_in.css">
-    <style> 
+    <style>
 
     </style>
     <title>Login</title>
@@ -78,4 +114,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         </div>
     </div>
 </body>
+
 </html>

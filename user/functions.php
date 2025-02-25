@@ -58,3 +58,64 @@ function uploadFile($file) {
         'name' => basename($file["name"])
     ];
 }
+
+function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
+    // Ambil file lama dari database
+    $query = "SELECT file_path FROM tb_dokumen 
+               WHERE id_pengajuan = '$id_pengajuan' 
+               AND id_user = '$id_user'
+               AND jenis_dokumen = '$jenis_dokumen'";
+    $result = mysqli_query($conn, $query);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $file_path = $row['file_path'];
+        if (file_exists($file_path)) {
+            unlink($file_path); // Hapus file fisik
+        }
+    }
+
+    // Hapus record lama di database
+    $deleteQuery = "DELETE FROM tb_dokumen 
+                    WHERE id_pengajuan = '$id_pengajuan' 
+                    AND id_user = '$id_user'
+                    AND jenis_dokumen = '$jenis_dokumen'";
+    mysqli_query($conn, $deleteQuery);
+}
+
+function getBidangByInstansi($id_instansi) {
+    global $conn;
+    
+    $sql = "SELECT id_bidang, nama_bidang 
+            FROM tb_bidang 
+            WHERE id_instansi = '$id_instansi' 
+            AND kuota_bidang > 0 
+            ORDER BY nama_bidang ASC";
+    
+    $result = mysqli_query($conn, $sql);
+    
+    if (!$result) {
+        return '<option value="" disabled>Terjadi kesalahan</option>';
+    }
+
+    $options = "";
+    while ($row = mysqli_fetch_assoc($result)) {
+        $options .= '<option value="'.$row['id_bidang'].'">'.$row['nama_bidang'].'</option>';
+    }
+
+    return $options ?: '<option value="" disabled>Bidang tidak tersedia</option>';
+}
+
+function getDetailBidang($id_bidang, $conn) {
+    $sql_bidang = "SELECT nama_bidang, deskripsi_bidang, kriteria_bidang, dokumen_prasyarat, kuota_bidang 
+                   FROM tb_bidang 
+                   WHERE id_bidang = '$id_bidang'";
+    $result = mysqli_query($conn, $sql_bidang);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        return mysqli_fetch_assoc($result);
+    } else {
+        return ["error" => "Data bidang tidak ditemukan."];
+    }
+}
+
+

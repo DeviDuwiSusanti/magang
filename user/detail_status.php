@@ -96,6 +96,9 @@ $row = mysqli_fetch_assoc($query);
                         <a href="persyaratan_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 10px;">
                             <i class="bi bi-upload"></i> Lengkapi Dokumen
                         </a>
+                        <a href="pengajuan_edit.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 200px;">
+                            <i class="bi bi-upload"></i> Edit Pengajuan
+                        </a>
                     </div>
                 </div>
             </div>
