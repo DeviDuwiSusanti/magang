@@ -49,10 +49,18 @@ $no = 1;
                             <td><?= $data['nama_bidang'] ?></td>
                             <td class="text-center">
                                 <?php 
-                                    $start_date = new DateTime($data['tanggal_mulai']);
-                                    $end_date = new DateTime($data['tanggal_selesai']);
-                                    $interval = $start_date->diff($end_date);
-                                    echo $interval->m + ($interval->y * 12) . " Bulan";
+                                    if (!empty($data['tanggal_mulai']) && !empty($data['tanggal_selesai'])) {
+                                        $start_date = new DateTime($data['tanggal_mulai']);
+                                        $end_date = new DateTime($data['tanggal_selesai']);
+                                        $interval = $start_date->diff($end_date);
+                                        
+                                        $months = $interval->m + ($interval->y * 12);
+                                        $days = $interval->d;
+                                        
+                                        echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
+                                    } else {
+                                        echo "Durasi Tidak Diketahui";
+                                    } 
                                 ?>
                             </td>   
                             <td><?= date('d F Y', strtotime($data['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($data['tanggal_selesai'])) ?></td>                       

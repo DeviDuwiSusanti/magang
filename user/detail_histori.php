@@ -67,15 +67,18 @@ $row = mysqli_fetch_assoc($query);
                                     <td><i class="bi bi-hourglass-split"></i> <strong>Durasi</strong></td>
                                     <td class="text-start">
                                         <?php 
-                                            // Hitung durasi magang
                                             if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
                                                 $start_date = new DateTime($row['tanggal_mulai']);
                                                 $end_date = new DateTime($row['tanggal_selesai']);
                                                 $interval = $start_date->diff($end_date);
-                                                echo $interval->m + ($interval->y * 12) . " Bulan";
+                                                
+                                                $months = $interval->m + ($interval->y * 12);
+                                                $days = $interval->d;
+                                                
+                                                echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
                                             } else {
                                                 echo "Durasi Tidak Diketahui";
-                                            }
+                                            } 
                                         ?>
                                     </td>
                                 </tr>
