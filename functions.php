@@ -392,12 +392,12 @@
         return mysqli_affected_rows($conn);
     }
 
-    function hapus_bidang($id_bidang, $id_user) {
+    function hapus_bidang($id, $id_user) {
         global $conn;
         $query = "UPDATE tb_bidang SET
                     status_active = '0',
                     change_by = '$id_user'
-                    WHERE id_bidang = '$id_bidang'";
+                    WHERE id_bidang = '$id'";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
     }
@@ -458,12 +458,12 @@
 
 
 
-    function hapus_pembimbing($id_pembimbing, $id_user) {
+    function hapus_pembimbing($id, $id_user) {
         global $conn;
         $query = "UPDATE tb_pembimbing SET
-                    status_active = 'N',
+                    status_pengajuan = 'N',
                     change_by = '$id_user'
-                    WHERE id_pembimbing = '$id_pembimbing'";
+                    WHERE id_pembimbing = '$id'";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
     }
