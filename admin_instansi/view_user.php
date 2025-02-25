@@ -61,7 +61,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                             <th>Nama User</th>
                             <th>Nama Bidang</th>
                             <th>Jenis Kegiatan</th>
-                            <th>Pemagang Aktif</th>
+                            <th>Pemagang</th>
                             <th>Periode</th>
                             <th>Durasi</th>
                             <th>Status</th>

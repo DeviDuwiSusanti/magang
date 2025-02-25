@@ -11,7 +11,7 @@ $edit_instansi = mysqli_fetch_assoc($query);
 
 $status = "";
 if (isset($_POST["edit_instansi"])) {
-    if (edit_instansi_1($_POST) > 0) {
+    if (edit_instansi($_POST) > 0) {
         $status = "success";
     } else {
         $status = "error";
