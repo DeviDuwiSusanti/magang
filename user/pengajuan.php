@@ -234,12 +234,18 @@ if (isset($_POST["id_bidang"])) {
                     <div class="mb-3">
                         <label for="ktp" class="form-label">Upload KTP</label>
                         <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf" required>
+                        <small class="form-text text-muted">
+                            *Format nama file: <strong>KTP_NamaLengkap.pdf</strong>
+                        </small>
                     </div>
 
                     <!-- Upload CV -->
                     <div class="mb-3">
                         <label for="cv" class="form-label">Upload CV</label>
                         <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" required>
+                        <small class="form-text text-muted">
+                            *Format nama file: <strong>CV_NamaLengkap.pdf</strong>
+                        </small>
                     </div>
 
                         <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep()">Next</button>

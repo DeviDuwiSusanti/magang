@@ -44,6 +44,7 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])) {
 }
 
 include "pengajuan_update.php";
+
 // Ambil data instansi yang memiliki kuota
 $sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS total_kuota 
                  FROM tb_instansi i 
