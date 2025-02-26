@@ -122,7 +122,9 @@ function getStatusText($status) {
     $statusList = [
         1 => "Diajukan",
         2 => "Diterima",
-        3 => "Selesai",
+        3 => "Ditolak",
+        4 => "Berlangsung",
+        5 => "Selesai",
     ];
     return $statusList[$status] ?? "Tidak Diketahui";
 }
