@@ -1,15 +1,15 @@
 <?php
 include "../layout/header.php";
 
-$bidang = "SELECT *
-    FROM tb_bidang
-    JOIN tb_instansi 
-        ON tb_bidang.id_instansi = tb_instansi.id_instansi
-    JOIN tb_profile_user 
-        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
-    WHERE tb_profile_user.id_user = '$id_user'
-    AND tb_bidang.status_active = 'Y'
-    ORDER BY tb_bidang.id_bidang DESC";
+$bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidang, b.kuota_bidang, b.kriteria_bidang, b.dokumen_prasyarat,
+                  i.id_instansi, i.nama_panjang, 
+                  pu.id_user 
+            FROM tb_bidang AS b
+            JOIN tb_instansi AS i ON b.id_instansi = i.id_instansi
+            JOIN tb_profile_user AS pu ON i.id_instansi = pu.id_instansi
+            WHERE pu.id_user = '$id_user'
+            AND b.status_active = '1'
+            ORDER BY b.id_bidang ASC";
 
 $query = mysqli_query($conn, $bidang);
 $bidang = mysqli_fetch_all($query, MYSQLI_ASSOC);
@@ -66,6 +66,11 @@ $no = 1;
                                 </td>
                             </tr>
                         <?php endforeach; ?>
+                        <!-- <?php if (empty($bidang)) : ?>
+                            <tr>
+                                <td colspan="7" class="text-center">Tidak ada data bidang</td>
+                            </tr>
+                        <?php endif; ?> -->
                     </tbody>
                 </table>
             </div>
@@ -77,9 +82,11 @@ $no = 1;
 
 <script>
     function confirmDelete(event) {
-        event.preventDefault(); // Mencegah aksi default link
+        // Mencegah aksi default link
+        event.preventDefault();
 
-        const url = event.currentTarget.href; // Ambil URL dari atribut href
+        // Mendapatkan URL yang akan dihapus
+        const url = event.currentTarget.href;
 
         Swal.fire({
             title: 'Apakah Anda yakin?',

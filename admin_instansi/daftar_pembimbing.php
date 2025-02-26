@@ -1,27 +1,32 @@
 <?php include "../layout/header.php";
 
-// Query pembimbing bidang
-$bidang = "SELECT tb_pembimbing.id_pembimbing, 
-    tb_pembimbing.nama_pembimbing, 
-    tb_pembimbing.nik_pembimbing, 
-    tb_pembimbing.nip, tb_pembimbing.jabatan, 
-    tb_pembimbing.telepone_pembimbing, tb_bidang.nama_bidang
-    FROM tb_pembimbing
-    JOIN tb_bidang 
-        ON tb_pembimbing.id_bidang = tb_bidang.id_bidang
-    JOIN tb_instansi 
-        ON tb_bidang.id_instansi = tb_instansi.id_instansi
-    JOIN tb_profile_user 
-        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
-    WHERE tb_profile_user.id_user = '$id_user'
-    -- AND tb_bidang.status_active = 'Y'
-    AND tb_pembimbing.status_active = 'Y'
-    ORDER BY tb_bidang.id_bidang DESC";
+// Ambil id_instansi admin yang sedang login
+$get_instansi = "SELECT id_instansi FROM tb_profile_user WHERE id_user = '$id_user'";
+$query_instansi = mysqli_query($conn, $get_instansi);
+$instansi = mysqli_fetch_assoc($query_instansi);
+$id_instansi_admin = $instansi["id_instansi"];
+
+// Query untuk mendapatkan daftar bidang
+$bidang = "SELECT 
+            pu.id_user AS id_pembimbing, 
+            pu.nama_user AS nama_pembimbing, 
+            pu.nik AS nik_pembimbing, 
+            pu.nip, 
+            pu.jabatan, 
+            pu.telepone_user AS telepone_pembimbing, 
+            b.nama_bidang
+        FROM tb_profile_user AS pu
+        JOIN tb_bidang AS b
+            ON pu.id_bidang = b.id_bidang
+        JOIN tb_instansi AS i
+            ON b.id_instansi = i.id_instansi
+        WHERE pu.status_active = '1'
+        AND i.id_instansi = '$id_instansi_admin'
+        ORDER BY b.id_bidang ASC";
 
 $query = mysqli_query($conn, $bidang);
 $bidang_list = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $no = 1;
-
 ?>
 
 <div class="main-content p-3">

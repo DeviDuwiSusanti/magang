@@ -3,7 +3,7 @@
 $id_pembimbing = $_GET["id"];
 $id_instansi = $_SESSION["id_instansi"];
 
-$edit_pembimbing = query("SELECT * FROM tb_pembimbing WHERE id_pembimbing = $id_pembimbing")[0];
+$edit_pembimbing = query("SELECT * FROM tb_profile_user WHERE id_user = $id_pembimbing")[0];
 $list_bidang = query("SELECT * FROM tb_bidang WHERE id_instansi = '$id_instansi'");
 
 $id_bidang_terpilih = "";
@@ -38,13 +38,13 @@ if (isset($_POST["edit_pembimbing"])) {
             <!-- Nama Pembimbing -->
             <div class="mb-3">
                 <label for="nama_pembimbing" class="form-label">Nama Pembimbing</label>
-                <input type="text" class="form-control" id="nama_pembimbing" name="nama_pembimbing" placeholder="Masukkan nama pembimbing" value="<?= $edit_pembimbing["nama_pembimbing"] ?>">
+                <input type="text" class="form-control" id="nama_pembimbing" name="nama_pembimbing" placeholder="Masukkan nama pembimbing" value="<?= $edit_pembimbing["nama_user"] ?>">
             </div>
 
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik_pembimbing" class="form-label">NIK Pembimbing</label>
-                <input type="text" class="form-control" id="nik_pembimbing" name="nik_pembimbing" placeholder="Masukkan NIK pembimbing" value="<?= $edit_pembimbing["nik_pembimbing"] ?>">
+                <input type="text" class="form-control" id="nik_pembimbing" name="nik_pembimbing" placeholder="Masukkan NIK pembimbing" value="<?= $edit_pembimbing["nik"] ?>">
             </div>
 
             <!-- NIP -->
@@ -62,7 +62,7 @@ if (isset($_POST["edit_pembimbing"])) {
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telepone_pembimbing" class="form-label">Telepon</label>
-                <input type="text" class="form-control" id="telepone_pembimbing" name="telepone_pembimbing" placeholder="Masukkan nomor telepon" value="<?= $edit_pembimbing["telepone_pembimbing"] ?>">
+                <input type="text" class="form-control" id="telepone_pembimbing" name="telepone_pembimbing" placeholder="Masukkan nomor telepon" value="<?= $edit_pembimbing["telepone_user"] ?>">
             </div>
 
             <!-- Bidang -->

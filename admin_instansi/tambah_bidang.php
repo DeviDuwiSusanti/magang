@@ -1,7 +1,10 @@
 <?php 
-include "../layout/header.php"; 
+include "../layout/header.php";
+
+$id_instansi = $_SESSION['id_instansi'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
+    $id_bidang         = generateIdBidang($conn, $id_instansi);
     $id_user           = $_POST['id_user'];
     $nama_bidang       = $_POST['nama_bidang'];
     $deskripsi_bidang  = $_POST['deskripsi'];
@@ -9,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
     $kuota             = $_POST['kuota'];
     $dokumen_prasyarat = $_POST['dokumen'];
 
-    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, dokumen_prasyarat, create_by)
-              VALUES ('','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$dokumen_prasyarat', '$id_user')";
+    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_prasyarat, create_by)
+              VALUES ('$id_bidang','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$id_instansi', '$dokumen_prasyarat', '$id_user')";
     mysqli_query($conn, $query);
 
     if (mysqli_affected_rows($conn) > 0) {

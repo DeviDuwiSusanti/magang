@@ -19,7 +19,6 @@ $instansi = mysqli_fetch_assoc($query);
         </ol>
         <div class="dropdown-divider"></div>
         <div class="container mt-5 mb-5">
-            <!-- shadow -->
             <div class="card mx-auto" style="max-width: 950px;">
                 <div class="card-body top-2">
                     <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">

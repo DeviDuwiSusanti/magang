@@ -358,6 +358,28 @@
 
 // =============================== BIDANG ADMIN INSTANSI =================================
 
+    function generateIdBidang($conn, $id_instansi) {
+        // Cari bidang terakhir dalam instansi tersebut
+        $query_bidang = "SELECT id_bidang FROM tb_bidang WHERE id_bidang LIKE '$id_instansi%' ORDER BY id_bidang DESC LIMIT 1";
+        $result_bidang = mysqli_query($conn, $query_bidang);
+        $row_bidang = mysqli_fetch_assoc($result_bidang);
+
+        if ($row_bidang) {
+            // Ambil 2 digit terakhir dari ID Bidang terakhir
+            $last_counter = intval(substr($row_bidang['id_bidang'], -2));
+            $new_counter = $last_counter + 1; // Tambah 1
+        } else {
+            $new_counter = 1; // Jika belum ada bidang, mulai dari 01
+        }
+
+        // Format nomor urut menjadi dua digit (01, 02, 03, ...)
+        $nomorUrut = str_pad($new_counter, 2, "0", STR_PAD_LEFT);
+
+        // Gabungkan ID Instansi dengan nomor urut baru
+        return $id_instansi . $nomorUrut;
+    }
+
+    
     function edit_profile($POST_edit) {
         global $conn;
         $id_user = $POST_edit["id_user"];
@@ -471,15 +493,15 @@
         $id_bidang = $POST["id_bidang"];
 
         // Query untuk update data pembimbing
-        $query = "UPDATE tb_pembimbing
-                SET nama_pembimbing = '$nama_pembimbing',
-                    nik_pembimbing = '$nik_pembimbing',
+        $query = "UPDATE tb_profile_user
+                SET nama_user = '$nama_pembimbing',
+                    nik = '$nik_pembimbing',
                     nip = '$nip',
                     jabatan = '$jabatan',
-                    telepone_pembimbing = '$telepone_pembimbing',
+                    telepone_user = '$telepone_pembimbing',
                     id_bidang = '$id_bidang',
                     change_by = '$id_user'
-                WHERE id_pembimbing = '$id_pembimbing'";
+                WHERE id_user = '$id_pembimbing'";
 
         // Eksekusi query
         mysqli_query($conn, $query);

@@ -112,25 +112,12 @@ $daftar_dokumen_json = json_encode($daftar_dokumen);
                                 </td>
 
                                 <td>
-                                    <?php
-                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        // Konversi tanggal ke format yang diinginkan
-                                        $start_date = new DateTime($row['tanggal_mulai']);
-                                        $end_date = new DateTime($row['tanggal_selesai']);
-
-                                        // Format tanggal dalam bahasa Indonesia
-                                        $bulanIndo = [
-                                            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                                        ];
-
-                                        $tanggal_mulai = $start_date->format('d') . ' ' . $bulanIndo[$start_date->format('n') - 1] . ' ' . $start_date->format('Y');
-                                        $tanggal_selesai = $end_date->format('d') . ' ' . $bulanIndo[$end_date->format('n') - 1] . ' ' . $end_date->format('Y');
-
-                                        echo $tanggal_mulai . " - " . $tanggal_selesai;
-                                    } else {
-                                        echo "Periode Tidak Diketahui";
-                                    }
+                                    <?php 
+                                        if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
+                                            echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
+                                        } else {
+                                            echo "Periode Tidak Diketahui";
+                                        }
                                     ?>
                                 </td>
                                 <td>

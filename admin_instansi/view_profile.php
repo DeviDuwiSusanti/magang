@@ -1,8 +1,12 @@
 <?php
 include "../layout/header.php";
 
-$profile = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user = '$id_user'")[0];
-$gender = ($profile["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki-Laki")
+$profile = query("SELECT * FROM tb_profile_user AS pu, tb_user AS u
+                WHERE pu.id_user = '$id_user' 
+                AND u.id_user = '$id_user'")[0]
+;
+
+$gender = ($profile["jenis_kelamin"] == '0' ? "Perempuan" : "Laki - Laki");
 ?>
 
 <div class="main-content p-4">
@@ -15,7 +19,8 @@ $gender = ($profile["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki-Laki")
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top">
-                    <img src="../assets/img/user/<?= $profile["gambar_user"] ?: 'avatar_admin.jpg' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
+                    <img src="../assets/img/user/<?= $profile["gambar_user"] ?: 'avatar_admin.jpg' ?>" 
+                        class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
                     <h4 class="card-title"><?= $profile["nama_user"] ?></h4>
                     <p class="text-muted"><?= $profile["email"] ?></p>
                     <hr>
@@ -50,20 +55,9 @@ $gender = ($profile["jenis_kelamin"] == 'P' ? "Perempuan" : "Laki-Laki")
                                         <?= $profile["tempat_lahir"] ?>,
                                         <?php
                                         if (!empty($profile['tanggal_lahir'])) {
-                                            // Membuat objek DateTime dari tanggal lahir
-                                            $birth_date = new DateTime($profile['tanggal_lahir']);
-
-                                            // Array nama bulan dalam bahasa Indonesia
-                                            $bulanIndo = [
-                                                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                                                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                                            ];
-
-                                            // Mendapatkan format tanggal: dd Bulan yyyy
-                                            $tanggal_lahir = $birth_date->format('d') . ' ' . $bulanIndo[(int)$birth_date->format('n') - 1] . ' ' . $birth_date->format('Y');
-                                            echo $tanggal_lahir;
+                                            echo date('d F Y', strtotime($profile['tanggal_lahir']));
                                         } else {
-                                            echo "Periode Tidak Diketahui";
+                                            echo "Tanggal Lahir Tidak Diketahui";
                                         }
                                         ?>
                                     </td>

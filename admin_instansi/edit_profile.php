@@ -1,6 +1,11 @@
 <?php
 include "../layout/header.php";
-$edit_profile = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user = '$id_user'")[0];
+$edit_profile = query("SELECT * 
+                FROM tb_profile_user 
+                INNER JOIN tb_user 
+                ON tb_profile_user.id_user = tb_user.id_user 
+                WHERE tb_profile_user.id_user = '$id_user'
+                ")[0];
 
 $status = "";
 if (isset($_POST["edit_profile"])) {
@@ -50,11 +55,11 @@ if (isset($_POST["edit_profile"])) {
                 <label for="gender" class="form-label">Jenis Kelamin</label>
                 <div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_l" value="L" <?= $edit_profile["jenis_kelamin"] == "L" ? "checked" : "" ?>>
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_l" value="1" <?= $edit_profile["jenis_kelamin"] == "1" ? "checked" : "" ?>>
                         <label class="form-check-label" for="gender_l">Laki-Laki</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_p" value="P" <?= $edit_profile["jenis_kelamin"] == "P" ? "checked" : "" ?>>
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_p" value="0" <?= $edit_profile["jenis_kelamin"] == "0" ? "checked" : "" ?>>
                         <label class="form-check-label" for="gender_p">Perempuan</label>
                     </div>
                 </div>

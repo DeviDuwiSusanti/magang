@@ -1,12 +1,12 @@
 <?php
 include "../layout/header.php";
 
-require '../assets/phpmailer/src/PHPMailer.php';
-require '../assets/phpmailer/src/Exception.php';
-require '../assets/phpmailer/src/SMTP.php';
-
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
+include '../assets/phpmailer/src/PHPMailer.php';
+include '../assets/phpmailer/src/Exception.php';
+include '../assets/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["id_pengajuan"]);
