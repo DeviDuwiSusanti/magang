@@ -38,17 +38,17 @@
 
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">Nama Pendek Instansi</label>
-                <input type="text" class="form-control" id="nama_pendek" name="nama_pendek" value="<?= $instansi["nama_pendek"] ?>">
+                <input type="text" maxlength="100" class="form-control" id="nama_pendek" name="nama_pendek" value="<?= $instansi["nama_pendek"] ?>">
             </div>
 
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">Nama Panjang Instansi</label>
-                <input type="text" class="form-control" id="nama_panjang" name="nama_panjang" value="<?= $instansi["nama_panjang"] ?>">
+                <input type="text" maxlength="255" class="form-control" id="nama_panjang" name="nama_panjang" value="<?= $instansi["nama_panjang"] ?>">
             </div>
 
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">Group Instansi</label>
-                <input type="text" class="form-control" id="group_instansi" name="group_instansi" value="<?= $instansi["group_instansi"] ?>">
+                <input type="text" maxlength="100" class="form-control" id="group_instansi" name="group_instansi" value="<?= $instansi["group_instansi"] ?>">
             </div>
     
             <div class="mb-3">
@@ -68,7 +68,7 @@
 
             <div class="mb-3">
                 <label for="telepon_instansi" class="form-label">Telepon Instansi</label>
-                <input type="tel" class="form-control" id="telepone_instansi" name="telepone_instansi" value="<?= $instansi["telepone_instansi"] ?>">
+                <input type="tel" pattern="[0-9]{8,15}" class="form-control" id="telepone_instansi" name="telepone_instansi" value="<?= $instansi["telepone_instansi"] ?>">
             </div>
 
             <!-- Upload Foto Profil -->
@@ -90,3 +90,8 @@
 </main>
 <?php include "footer.php" ?>
 
+<script>
+    document.getElementById("telepone_instansi").addEventListener('input', function (e) {
+        this.value = this.value.replace(/\D/g, "");
+    });
+</script>
