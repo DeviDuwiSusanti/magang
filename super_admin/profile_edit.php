@@ -5,13 +5,12 @@
 
 
     if (isset($_POST["edit_profile"])) {
-        if (edit_profile_1($_POST) > 0) {
-            ECHO "<script>
-                    alert('berhasil di edit');
-                    document.location.href = 'profile_view.php' ;
-                </script>";
-        } else {
-            ECHO "<script>alert('gagal di edit'); document.location.href = profile_edit.php</script>";
+        if (edit_profile_super_admin($_POST) > 0) { ?>
+            <script>edit_profile_super_admin_success()</script>
+        <?php
+        } else { ?> 
+            <script>edit_profile_super_admin_gagal()</script>
+        <?php
         }
     }
 ?>
@@ -39,26 +38,22 @@
                 <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= $profile_edit["tempat_lahir"] ?>">
             </div>
 
-            <!-- Tanggal Lahir -->
-            <?php 
-                $format_tanggal = date('Y-m-d', strtotime(str_replace("/", "-", $profile_edit["tanggal_lahir"])));
-            ?>
             <div class="mb-3">
                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $format_tanggal ?>">
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $profile_edit["tanggal_lahir"] ?>">
             </div>
             
             <!-- gender -->
             <div class="mb-3">
             <label for="gender" class="form-label">Jenis Kelamin</label>
                 <div class="form-check">
-                    <input type="radio" name="jenis_kelamin" id="gender_l" class="form-check-input" value="L" 
+                    <input type="radio" name="jenis_kelamin" id="gender_l" class="form-check-input" value="1" 
                         <?= ($pengguna["jenis_kelamin"] == 1) ? "checked" : "" ?>>
                     <label for="gender_l" class="form-check-label">Laki - Laki</label>
                 </div>
 
                 <div class="form-check">    
-                    <input type="radio" name="jenis_kelamin" id="gender_p" class="form-check-input" value="P" 
+                    <input type="radio" name="jenis_kelamin" id="gender_p" class="form-check-input" value="0" 
                         <?= ($pengguna["jenis_kelamin"] == 0) ? "checked" : "" ?>>
                     <label for="gender_p" class="form-check-label">Perempuan</label>
                 </div>
