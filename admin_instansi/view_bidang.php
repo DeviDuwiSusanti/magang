@@ -60,7 +60,7 @@ $no = 1;
                                     <a href="edit_bidang.php?id_bidang=<?= $bd["id_bidang"] ?>" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
-                                    <a href="hapus_bidang.php?id_bidang=<?= $bd["id_bidang"] ?>" onclick="confirmDelete(event)" class="btn btn-danger btn-sm">
+                                    <a href="hapus.php?id=<?= $bd["id_bidang"] ?>&type=bidang" onclick="confirmDelete(event)" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i> Hapus
                                     </a>
                                 </td>

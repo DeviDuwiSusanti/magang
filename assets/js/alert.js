@@ -103,3 +103,68 @@ function alertSuccessEdit(message, redirectUrl) {
     }
   });
 }
+
+
+
+
+// =================================== SWEET ALERT SUPER ADMIN LEVEL(1) =======================================
+function edit_profile_super_admin_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil",
+    text: "Edit Profile Berhasil Dilakukan",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "profile_view.php";
+    }
+  })
+}
+
+function edit_profile_super_admin_gagal() {
+  Swal.fire({
+    icon: "error",
+    title: "Gagal",
+    text: "Edit Profile Gagal Dilakukan",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "profile_edit.php";
+    }
+  })
+}
+
+function tambah_instansi_super_admin_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil",
+    text: "Tambah Instansi Berhasil Dilakukan",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi_view.php";
+    }
+  })
+}
+
+
+function tambah_instansi_super_admin_gagal() {
+  Swal.fire({
+    icon: "error",
+    title: "Gagal",
+    text: "Tambah Instansi Gagal Dilakukan",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi_tambah.php";
+    }
+  })
+}
+
+
+
+

@@ -180,12 +180,6 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                     // Inisialisasi DataTables
                     var table = $('#myTable').DataTable();
 
-                    // Inisialisasi Select2 untuk dropdown bidang
-                    $('#bidang').select2({
-                        placeholder: "Pilih Bidang",
-                        allowClear: true
-                    });
-
                     // Event handler untuk tombol "show-detail"
                     $('#myTable tbody').on('click', 'a.show-detail', function(e) {
                         e.preventDefault();
@@ -217,9 +211,14 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                             tr.addClass('shown');
                         }
                     });
+
+                    // Inisialisasi Select2 untuk dropdown bidang
+                    $('#bidang').select2({
+                        placeholder: "Pilih Bidang",
+                        allowClear: true
+                    });
                 });
             </script>
-
 </body>
 
 </html>

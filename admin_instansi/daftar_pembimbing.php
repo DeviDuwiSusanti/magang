@@ -14,7 +14,7 @@ $bidang = "SELECT tb_pembimbing.id_pembimbing,
     JOIN tb_profile_user 
         ON tb_instansi.id_instansi = tb_profile_user.id_instansi
     WHERE tb_profile_user.id_user = '$id_user'
-    AND tb_bidang.status_active = 'Y'
+    -- AND tb_bidang.status_active = 'Y'
     AND tb_pembimbing.status_active = 'Y'
     ORDER BY tb_bidang.id_bidang DESC";
 
@@ -22,7 +22,6 @@ $query = mysqli_query($conn, $bidang);
 $bidang_list = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $no = 1;
 
-// var_dump($bidang_list);
 ?>
 
 <div class="main-content p-3">
@@ -64,7 +63,7 @@ $no = 1;
                                         <a href="edit_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-warning btn-sm">
                                             <i class="bi bi-pencil"></i> Edit
                                         </a>
-                                        <a href="hapus_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-danger btn-sm" onclick="confirmDelete(event)">
+                                        <a href="hapus.php?id=<?= $pembimbing['id_pembimbing'] ?>&type=pembimbing" class="btn btn-danger btn-sm" onclick="confirmDelete(event)">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                     </td>

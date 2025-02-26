@@ -14,7 +14,9 @@
         </script>";
     }
 }
+
 ?>
+
 
 <div class="main-content p-4">
     <div class="container-fluid">
@@ -34,7 +36,15 @@
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="text" inputmode="numeric" class="form-control" id="nik" name="nik_user" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
+                <input type="text" inputmode="numeric" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
+                <span id="nik_error" class="text-danger"></span>
+            </div>
+
+            <!-- NIP -->
+            <div class="mb-3">
+                <label for="nik" class="form-label">NIP</label>
+                <input type="text" inputmode="numeric" class="form-control" id="nip" name="nip" placeholder="Masukkan NIP Calon Admin Instansi (18)" required maxlength="18">
+                <span id="nip_error" class="text-danger"></span>
             </div>
 
             <!-- Email -->
@@ -98,6 +108,7 @@
 <?php include "footer.php" ?>
 
 
+
 <script>
 function validateFile() {
         const fileInput = document.getElementById('image');
@@ -126,7 +137,41 @@ function validateFile() {
     document.getElementById("nik").addEventListener("input", function (e) {
         this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
     });
+    document.getElementById("nip").addEventListener("input", function (e) {
+        this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+    });
     document.getElementById("telepone_user").addEventListener("input", function (e) {
         this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
     });
+
+
+    $(document).ready(function() {
+            // Validasi real-time untuk NIK
+            $('#nik').on('input', function() {
+                let nik = $(this).val().trim(); // Ambil nilai dan hilangkan spasi
+                let nikError = $('#nik_error');
+
+                if (nik.length === 0) {
+                    nikError.text('NIK tidak boleh kosong!').show();
+                } else if (nik.length < 16) {
+                    nikError.text('NIK harus 16 digit!').show();
+                } else {
+                    nikError.hide();
+                }
+            });
+
+            // Validasi real-time untuk NISN
+            $('#nip').on('input', function() {
+                let nisn = $(this).val().trim(); // Ambil nilai dan hilangkan spasi
+                let nisnError = $('#nip_error');
+
+                if (nisn.length === 0) {
+                    nisnError.text('NISN tidak boleh kosong!').show();
+                } else if (nisn.length < 18) {
+                    nisnError.text('NISN harus 18 digit!').show();
+                } else {
+                    nisnError.hide();
+                }
+            });
+        });
 </script>

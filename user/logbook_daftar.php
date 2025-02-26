@@ -2,13 +2,19 @@
 
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
-
+    
     $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
     $query = mysqli_query($conn, $sql);
 
     $no = 1;
 }
 
+// akses status_pengajuan
+$sql3 = "SELECT status_pengajuan FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
+$query3 = mysqli_query($conn, $sql3);
+$status_pengajuan = mysqli_fetch_assoc($query3)['status_pengajuan'];
+
+// HAPUS LOGBOOK
 if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
     $id_logbook = $_GET['id_logbook'];
     $id_pengajuan = $_GET['id_pengajuan'];
@@ -29,10 +35,15 @@ if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
-            <a href="logbook_unggah.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
-                <i class="bi bi-plus-circle me-1"></i>
-                Tambah Logbook
-            </a>
+            <?php
+            if ($status_pengajuan!= '3'){?>
+                <a href="logbook_unggah.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Tambah Logbook
+                </a>
+            <?php
+            }
+            ?>
             <a href="logbook_print.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>" class="btn btn-success">
                 <i class="bi bi-printer me-1"></i>
                 Cetak

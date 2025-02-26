@@ -1,17 +1,17 @@
 <?php include '../layout/sidebarUser.php';
 
 // Query dapat jumlah pengajuan user
-$sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Menunggu'";
+$sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '1'";
 $query2 = mysqli_query($conn, $sql2);
 $total_pengajuan = mysqli_fetch_array($query2)['jumlah_pengajuan'];
 
 // akses sertifikat/nilai
-$sql2 = "SELECT COUNT(*) jumlah_nilai FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = 'nilai'";
+$sql2 = "SELECT COUNT(*) jumlah_nilai FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = '4'";
 $query2 = mysqli_query($conn, $sql2);
 $total_nilai = mysqli_fetch_assoc($query2)['jumlah_nilai'];
 
 // akses histori
-$sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Selesai'";
+$sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '4'";
 $query3 = mysqli_query($conn, $sql3);
 $total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
 

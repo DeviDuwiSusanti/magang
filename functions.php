@@ -138,7 +138,7 @@
 // =========================================================== SUPER ADMIN LEVEL (1) ========================================================
 
 // ================================ PROFILE SUPER ADMIN ================================
-    function edit_profile_1($POST_edit) {
+    function edit_profile_super_admin($POST_edit) {
         global $conn;
         $id_user = $POST_edit["id_user"];
         $nama_user = $POST_edit["nama_user"];
@@ -167,7 +167,7 @@
 
 
 // ================================ INSTANSI SUPER ADMIN =================================
-    function tambah_instansi($POST) {
+    function tambah_instansi_super_admin($POST) {
         global $conn;
         $id_user = $POST["id_user"];
         $id_instansi = $POST["id_instansi"];
@@ -180,6 +180,10 @@
         $telepone_instansi = $POST["telepone_instansi"];
         $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
+        if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
+            header("Location: instansi_tambah.php?error=id_instansi_terdaftar");
+            exit;
+        }
         $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
             VALUES ('$id_instansi', '$nama_pendek', '$nama_panjang', '$group_instansi', '$alamat_instansi', '$lokasi_instansi', '$telepone_instansi', '$deskripsi_instansi', '$gambar_instansi', '$id_user')";
         mysqli_query($conn, $query);
@@ -283,7 +287,8 @@
         $create_by = $POST["id_user"];
         $id_user = generateUserId($conn);
         $nama_user = $POST["nama_user"];
-        $nik_user = $POST["nik_user"];
+        $nik = $POST["nik"];
+        $nip = $POST["nip"];
         $gender = $POST["jenis_kelamin"];
         $email = $POST["email"];
         $tempat_lahir = $POST["tempat_lahir"];
@@ -293,8 +298,8 @@
         $gambar_user = uploadImage($_FILES["gambar_instansi"], "avatar.png", "../assets/img/user/");
     
         mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
-        mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik_user, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
-                            VALUES ('$id_user', '$nama_user', '$nik_user', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
+        mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik_user, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
+                            VALUES ('$id_user', '$nama_user', '$nik', '$nip', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
         return mysqli_affected_rows($conn);
     }
     
@@ -392,12 +397,12 @@
         return mysqli_affected_rows($conn);
     }
 
-    function hapus_bidang($id_bidang, $id_user) {
+    function hapus_bidang($id, $id_user) {
         global $conn;
         $query = "UPDATE tb_bidang SET
                     status_active = '0',
                     change_by = '$id_user'
-                    WHERE id_bidang = '$id_bidang'";
+                    WHERE id_bidang = '$id'";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
     }
@@ -458,12 +463,12 @@
 
 
 
-    function hapus_pembimbing($id_pembimbing, $id_user) {
+    function hapus_pembimbing($id, $id_user) {
         global $conn;
         $query = "UPDATE tb_pembimbing SET
-                    status_active = 'N',
+                    status_pengajuan = 'N',
                     change_by = '$id_user'
-                    WHERE id_pembimbing = '$id_pembimbing'";
+                    WHERE id_pembimbing = '$id'";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
     }

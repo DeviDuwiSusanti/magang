@@ -1,4 +1,4 @@
-<?php 
+<?php
 include "../layout/header.php";
 
 $id_instansi = $_SESSION['id_instansi'];
@@ -13,13 +13,15 @@ $sql = "SELECT
             tb_pengajuan.tanggal_mulai,
             tb_pengajuan.tanggal_selesai,
             tb_pengajuan.id_pengajuan,
+            tb_pengajuan.id_user,
             tb_pengajuan.status_pengajuan,
             tb_pengajuan.status_active
         FROM tb_pengajuan
         INNER JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
         INNER JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
         WHERE tb_pengajuan.id_instansi = '$id_instansi'
-        AND tb_pengajuan.status_active = 'Y'
+        AND tb_pengajuan.status_active = '1'
+        AND tb_pengajuan.status_pengajuan = '1'
         ORDER BY tb_pengajuan.id_pengajuan DESC";
 
 $result = mysqli_query($conn, $sql);
@@ -39,6 +41,21 @@ while ($row2 = mysqli_fetch_assoc($result2)) {
 }
 
 $json_nama_pengaju = json_encode($nama_pengaju);
+
+$sql3 = "SELECT d.id_pengajuan, d.id_user, 
+                GROUP_CONCAT(CONCAT('../assets/doc/', d.nama_dokumen) SEPARATOR ', ') AS daftar_dokumen
+         FROM tb_dokumen d
+         JOIN tb_pengajuan p ON d.id_pengajuan = p.id_pengajuan
+         WHERE p.id_instansi = '$id_instansi'
+         GROUP BY d.id_pengajuan, d.id_user";
+
+$daftar_dokumen = [];
+$result3 = mysqli_query($conn, $sql3);
+while ($row3 = mysqli_fetch_assoc($result3)) {
+    $daftar_dokumen[$row3['id_user']][$row3['id_pengajuan']] = explode(', ', $row3['daftar_dokumen']);
+}
+
+$daftar_dokumen_json = json_encode($daftar_dokumen);
 ?>
 
 <div class="main-content p-3">
@@ -59,50 +76,104 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                             <th>Jenis Pengajuan</th>
                             <th>Calon Pelamar</th>
                             <th>Dokumen</th>
-                            <th>Tanggal Mulai</th>
-                            <th>Tanggal Selesai</th>
-                            <!-- <th>Status Pengajuan</th>
-                            <th>Update Status</th> -->
+                            <th>Periode</th>
+                            <th>Durasi</th>
                             <th style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
-                        <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= $row['nama_user'] ?></td>
-                            <td><?= $row['nama_bidang'] ?></td>
-                            <td><?= $row['jenis_pengajuan'] ?></td>
-                            <td>
-                                <a href="#" class="show-detail" title="Lihat Detail"
-                                    data-detail='<?= isset($nama_pengaju[$row['id_pengajuan']]) ? json_encode(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : '[]' ?>'>
-                                    <?= isset($nama_pengaju[$row['id_pengajuan']]) ? count(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : 0 ?>
-                                </a>
-                            </td>
-                            <td>
-                                <!-- Data dokumen diubah menjadi array of object dengan nama dan URL -->
-                                <a href="#" class="show-doc" title="Lihat Dokumen"
-                                    data-doc='[
-                                     {"name": "KTP", "url": "dokumen/ktp.pdf"},
-                                     {"name": "Kartu Keluarga", "url": "dokumen/kk.pdf"},
-                                     {"name": "Ijazah", "url": "dokumen/ijazah.pdf"}
-                                   ]'>
-                                    Lihat Dokumen
-                                </a>
-                            </td>
-                            <!-- <td></td>
-                            <td></td> -->
-                            <td><?= $row['tanggal_mulai'] ?></td>
-                            <td><?= $row['tanggal_selesai'] ?></td>
-                            <td>
-                                <a href="terima.php" class="btn btn-success btn-sm">
-                                    <i class="bi bi-check-circle"></i> Terima
-                                </a>
-                                <a href="hapus_bidang.php" class="btn btn-danger btn-sm">
-                                    <i class="bi bi-x-circle"></i> Tolak
-                                </a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td><?= $no++ ?></td>
+                                <td><?= $row['nama_user'] ?></td>
+                                <td><?= $row['nama_bidang'] ?></td>
+                                <td><?= $row['jenis_pengajuan'] ?></td>
+                                <td>
+                                    <a href="#" class="show-detail" title="Lihat Detail"
+                                        data-detail='<?= isset($nama_pengaju[$row['id_pengajuan']]) ? json_encode(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : '[]' ?>'>
+                                        <?= isset($nama_pengaju[$row['id_pengajuan']]) ? count(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : 0 ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="#" class="show-doc" title="Lihat Dokumen"
+                                        data-doc='<?= isset($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
+                                                        ? htmlspecialchars(json_encode($daftar_dokumen[$row['id_user']][$row['id_pengajuan']]), ENT_QUOTES, 'UTF-8')
+                                                        : '[]' ?>'>
+                                        Lihat Dokumen
+                                    </a>
+                                </td>
+
+                                <td>
+                                    <?php
+                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
+                                        // Konversi tanggal ke format yang diinginkan
+                                        $start_date = new DateTime($row['tanggal_mulai']);
+                                        $end_date = new DateTime($row['tanggal_selesai']);
+
+                                        // Format tanggal dalam bahasa Indonesia
+                                        $bulanIndo = [
+                                            "Januari",
+                                            "Februari",
+                                            "Maret",
+                                            "April",
+                                            "Mei",
+                                            "Juni",
+                                            "Juli",
+                                            "Agustus",
+                                            "September",
+                                            "Oktober",
+                                            "November",
+                                            "Desember"
+                                        ];
+
+                                        $tanggal_mulai = $start_date->format('d') . ' ' . $bulanIndo[$start_date->format('n') - 1] . ' ' . $start_date->format('Y');
+                                        $tanggal_selesai = $end_date->format('d') . ' ' . $bulanIndo[$end_date->format('n') - 1] . ' ' . $end_date->format('Y');
+
+                                        echo $tanggal_mulai . " - " . $tanggal_selesai;
+                                    } else {
+                                        echo "Periode Tidak Diketahui";
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
+                                        $start_date = new DateTime($row['tanggal_mulai']);
+                                        $end_date = new DateTime($row['tanggal_selesai']);
+                                        $interval = $start_date->diff($end_date);
+
+                                        $years = $interval->y;
+                                        $months = $interval->m;
+                                        $days = $interval->d;
+
+                                        $hasil = "";
+
+                                        if ($years > 0) {
+                                            $hasil .= "$years Tahun ";
+                                        }
+                                        if ($months > 0) {
+                                            $hasil .= "$months Bulan ";
+                                        }
+                                        if ($days > 0) {
+                                            $hasil .= "$days Hari";
+                                        }
+
+                                        echo trim($hasil); // Hapus spasi berlebih di akhir
+                                    } else {
+                                        echo "Durasi Tidak Diketahui";
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm terima-btn"
+                                        data-id="<?= $row['id_pengajuan'] ?>">
+                                        <i class="bi bi-check-circle"></i> Terima
+                                    </button>
+                                    <button class="btn btn-danger btn-sm tolak-btn" data-id="<?= $row['id_pengajuan'] ?>">
+                                        <i class="bi bi-x-circle"></i> Tolak
+                                    </button>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -111,12 +182,12 @@ $json_nama_pengaju = json_encode($nama_pengaju);
     </div>
 </div>
 
-<!-- Modal untuk menampilkan dokumen (opsional jika ingin menggunakan modal) -->
+<!-- Modal untuk Menampilkan Daftar Dokumen -->
 <div class="modal fade" id="dokumenModal" tabindex="-1" aria-labelledby="dokumenModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="dokumenModalLabel">Dokumen yang dilengkapi</h5>
+                <h5 class="modal-title" id="dokumenModalLabel">Dokumen yang Dilengkapi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
@@ -129,5 +200,223 @@ $json_nama_pengaju = json_encode($nama_pengaju);
     </div>
 </div>
 
+<!-- Modal untuk Menolak Pengajuan -->
+<div class="modal fade" id="tolakModal" tabindex="-1" aria-labelledby="tolakModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tolakModalLabel">Tolak Pengajuan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <form id="tolakForm">
+                    <input type="hidden" name="id_pengajuan" id="id_pengajuan_tolak">
+                    <div class="mb-3">
+                        <label for="alasan_tolak" class="form-label tolak-label">Alasan Penolakan</label>
+                        <textarea class="form-control" name="alasan_tolak" id="alasan_tolak" rows="3" required></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Kirim Penolakan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <?php include "footer.php"; ?>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let dokumenModal = document.getElementById("dokumenModal");
+        let dokumenList = document.getElementById("dokumenList");
+        let originalModalBody = dokumenModal.querySelector(".modal-body").innerHTML; // Simpan isi awal modal hanya sekali
+
+        document.querySelectorAll(".show-doc").forEach(function(element) {
+            element.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                let docData = this.getAttribute("data-doc");
+                let docList = [];
+
+                try {
+                    docList = JSON.parse(docData);
+                    if (!Array.isArray(docList)) {
+                        docList = [];
+                    }
+                } catch (e) {
+                    console.error("Error parsing JSON:", e);
+                    docList = [];
+                }
+
+                // Bersihkan daftar sebelum menambahkan dokumen baru
+                dokumenList.innerHTML = "";
+
+                if (docList.length === 0) {
+                    dokumenList.innerHTML = "<p class='text-muted'>Tidak ada dokumen tersedia.</p>";
+                } else {
+                    docList.forEach(function(doc) {
+                        let listItem = document.createElement("li");
+                        let link = document.createElement("a");
+
+                        link.href = doc;
+                        link.textContent = doc.split('/').pop(); // Menampilkan nama file
+                        link.classList.add("doc-link");
+
+                        if (doc.toLowerCase().endsWith(".pdf")) {
+                            link.addEventListener("click", function(event) {
+                                event.preventDefault();
+                                showPreview(doc);
+                            });
+                        } else {
+                            link.setAttribute("target", "_blank");
+                        }
+
+                        listItem.appendChild(link);
+                        dokumenList.appendChild(listItem);
+                    });
+                }
+
+                // Tampilkan modal
+                let modal = new bootstrap.Modal(dokumenModal);
+                modal.show();
+            });
+        });
+
+
+        // Fungsi untuk menampilkan preview dokumen PDF di modal
+        function showPreview(url) {
+            let modalBody = dokumenModal.querySelector(".modal-body");
+
+            // Tambahkan preview tanpa menghapus daftar dokumen
+            let preview = document.createElement("embed");
+            preview.src = url;
+            preview.type = "application/pdf";
+            preview.width = "100%";
+            preview.height = "500px";
+            preview.id = "pdfPreview"; // Beri ID agar bisa dihapus nanti
+
+            // Hapus preview sebelumnya jika ada
+            let oldPreview = document.getElementById("pdfPreview");
+            if (oldPreview) {
+                oldPreview.remove();
+            }
+
+            modalBody.appendChild(preview);
+        }
+
+        // Reset hanya bagian daftar dokumen, bukan seluruh modal
+        dokumenModal.addEventListener("hidden.bs.modal", function() {
+            let preview = document.getElementById("pdfPreview");
+
+            // Hapus backdrop modal yang tertinggal
+            document.querySelectorAll(".modal-backdrop").forEach(function(backdrop) {
+                backdrop.remove();
+            });
+
+            if (preview) {
+                preview.remove(); // Hapus preview saat modal ditutup
+            }
+
+            document.body.classList.remove("modal-open"); // Hapus class yang mencegah scrolling
+            document.body.style.paddingRight = ""; // Hapus padding tambahan jika ada
+        });
+    });
+
+    // Fungsi untuk menampilkan modal penolakan
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".tolak-btn").forEach(function(button) {
+            button.addEventListener("click", function() {
+                let idPengajuan = this.getAttribute("data-id");
+                document.getElementById("id_pengajuan_tolak").value = idPengajuan;
+
+                let modal = new bootstrap.Modal(document.getElementById("tolakModal"));
+                modal.show();
+            });
+        });
+    });
+
+    function confirmDelete() {
+        event.preventDefault(); // Mencegah form langsung terkirim
+
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Data pengajuan akan ditolak!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, tolak!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Ambil data dari form
+                var id_pengajuan = document.getElementById("id_pengajuan_tolak").value;
+                var alasan_tolak = document.getElementById("alasan_tolak").value;
+
+                // Kirim data dengan AJAX
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "tolak_pengajuan.php", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                xhr.onload = function() {
+                    if (xhr.status == 200) {
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Pengajuan telah ditolak.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload(); // Refresh halaman
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'Terjadi kesalahan, coba lagi.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                };
+
+                xhr.send("id_pengajuan=" + id_pengajuan + "&alasan_tolak=" + alasan_tolak);
+            }
+        });
+    }
+
+    // Alert untuk penerimaan pengajuan
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".terima-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                let id_pengajuan = this.getAttribute("data-id");
+
+                Swal.fire({
+                    title: "Konfirmasi",
+                    text: "Apakah Anda yakin ingin menerima pengajuan ini?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Terima!",
+                    cancelButtonText: "Batal"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect ke terima.php dengan POST
+                        let form = document.createElement("form");
+                        form.method = "POST";
+                        form.action = "terima_pengajuan.php";
+
+                        let input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = "id_pengajuan";
+                        input.value = id_pengajuan;
+
+                        form.appendChild(input);
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
+            });
+        });
+    });
+</script>

@@ -1,20 +1,14 @@
 <?php 
     include "sidebar.php";
 
-
     if(isset($_POST["tambah_instansi"])) {
-        if(tambah_instansi($_POST)) {
-            echo "<script>
-                alert ('Berhasil Tambah Data Instansi');
-                document.location.href = 'instansi_view.php';
-            </script>";
-        } else {
-            echo "<script>
-                alert ('Gagal Tambah Data Instansi');
-                document.location.href = 'instansi_view.php';
-            </script>";
-        }
+        if(tambah_instansi_super_admin($_POST) > 0) { ?>
+            <script>tambah_instansi_super_admin_success()</script>
+        <?php } else { ?>
+            <script>tambah_instansi_super_admin_gagal()</script>
+        <?php }
     }
+
 ?>
 
 
@@ -47,7 +41,7 @@
 
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">Gruop Instansi</label>
-                <input type="text" class="form-control" id="group_instansi" name="group_instansi" placeholder="Masukkan Group instansi" required>
+                <input type="text" maxlength="100" class="form-control" id="group_instansi" name="group_instansi" placeholder="Masukkan Group instansi" required>
             </div>
     
             <div class="mb-3">
@@ -67,7 +61,7 @@
 
             <div class="mb-3">
                 <label for="telepon_instansi" class="form-label">Telepon Instansi</label>
-                <input type="tel" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon instansi" required>
+                <input type="text" inputmode="numeric" maxlength="15" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon instansi" required>
             </div>
 
             <!-- Upload Foto Profil -->
@@ -116,6 +110,10 @@
     }
 
     document.getElementById("id_instansi").addEventListener("input", function (e) {
-            this.value = this.value.replace(/\D/g, "");
+        this.value = this.value.replace(/\D/g, "");
         });
+
+    document.getElementById("telepone_instansi").addEventListener("input", function (e) {
+        this.value = this.value.replace(/\D/g, "");
+    });
 </script>

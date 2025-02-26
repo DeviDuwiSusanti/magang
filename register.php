@@ -185,11 +185,11 @@ if (isset($_POST["register"])) {
                             <label class="form-label">Pilih Jenis Kelamin:</label>
                             <div class="d-flex">
                                 <div class="form-check me-3">
-                                    <input class="form-check-input" type="radio" id="male" name="jenis_kelamin" value="L" required>
+                                    <input class="form-check-input" type="radio" id="male" name="jenis_kelamin" value="1" required>
                                     <label class="form-check-label" for="male">Laki-laki</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="female" name="jenis_kelamin" value="P" required>
+                                    <input class="form-check-input" type="radio" id="female" name="jenis_kelamin" value="0" required>
                                     <label class="form-check-label" for="female">Perempuan</label>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@ if (isset($_POST["register"])) {
                             <textarea name="alamat_user" id="alamat_user" required class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="text" class="input" name="telepone_user" id="telepone_user" inputmode="numeric"  maxlength="15" required>
+                            <input type="tel" pattern="[0-9]{8-15}" class="input" name="telepone_user" id="telepone_user" inputmode="numeric"  maxlength="15" required>
                             <label for="telepone_user">No. Telepone</label>
                         </div>
 

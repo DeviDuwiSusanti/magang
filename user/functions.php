@@ -75,11 +75,11 @@ function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
     }
 
     // Hapus record lama di database
-    $deleteQuery = "DELETE FROM tb_dokumen 
-                    WHERE id_pengajuan = '$id_pengajuan' 
-                    AND id_user = '$id_user'
-                    AND jenis_dokumen = '$jenis_dokumen'";
-    mysqli_query($conn, $deleteQuery);
+    // $deleteQuery = "DELETE FROM tb_dokumen 
+    //                 WHERE id_pengajuan = '$id_pengajuan' 
+    //                 AND id_user = '$id_user'
+    //                 AND jenis_dokumen = '$jenis_dokumen'";
+    // mysqli_query($conn, $deleteQuery);
 }
 
 function getBidangByInstansi($id_instansi) {
@@ -121,10 +121,8 @@ function getDetailBidang($id_bidang, $conn) {
 function getStatusText($status) {
     $statusList = [
         1 => "Diajukan",
-        2 => "Ditolak",
-        3 => "Diterima",
-        4 => "Berlangsung",
-        5 => "Selesai",
+        2 => "Diterima",
+        3 => "Selesai",
     ];
     return $statusList[$status] ?? "Tidak Diketahui";
 }
