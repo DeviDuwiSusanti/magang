@@ -1,7 +1,7 @@
 <?php include '../layout/sidebarUser.php';
 
 // Query dapat jumlah pengajuan user
-$sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = 'Menunggu'";
+$sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '1'";
 $query2 = mysqli_query($conn, $sql2);
 $total_pengajuan = mysqli_fetch_array($query2)['jumlah_pengajuan'];
 

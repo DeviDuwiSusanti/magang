@@ -59,10 +59,8 @@ if (ISSET($_POST['update_pengajuan'])){
         deleteOldDocument($conn, $jenis_pengajuan, $id_user, 'identitas');
         $ktpData = uploadFile($_FILES['ktp']);
         if ($ktpData) {
-            $id_dokumen = generateIdDokumen($conn, $jenis_pengajuan);
-            $sql_insert_ktp = "INSERT INTO tb_dokumen (id_dokumen, id_pengajuan, id_user, nama_dokumen, file_path, jenis_dokumen)
-                                VALUES ('$id_dokumen', '$jenis_pengajuan', '$id_user', '{$ktpData['name']}', '{$ktpData['path']}', 'identitas')";
-            $updateKTP = mysqli_query($conn, $sql_insert_ktp);
+            $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]' WHERE nama_dokumen = 'ktp' AND id_pengajuan = '$id_pengajuan'";
+            $updateKTP = mysqli_query($conn, $sql_updateKTP);
         }
     }
 
@@ -72,9 +70,8 @@ if (ISSET($_POST['update_pengajuan'])){
         $cvData = uploadFile($_FILES['cv']);
         if ($cvData) {
             $id_dokumen = generateIdDokumen($conn, $jenis_pengajuan);
-            $sql_insert_cv = "INSERT INTO tb_dokumen (id_dokumen, id_pengajuan, id_user, nama_dokumen, file_path, jenis_dokumen)
-                              VALUES ('$id_dokumen', '$jenis_pengajuan', '$id_user', '{$cvData['name']}', '{$cvData['path']}', 'identitas')";
-            $updateCV = mysqli_query($conn, $sql_insert_cv);
+            $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]' WHERE nama_dokumen = 'cv' AND id_pengajuan = '$id_pengajuan'";
+            $updateCV = mysqli_query($conn, $sql_updateCV);
         }
     } 
 

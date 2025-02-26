@@ -107,7 +107,7 @@ if (!$row) {
                     <a href="persyaratan_unggah.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 10px;">
                         <i class="bi bi-upload"></i> Lengkapi Dokumen
                     </a>
-                    <a href="pengajuan_edit.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 200px;">
+                    <a href="pengajuan_edit.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 200px;">
                         <i class="bi bi-pencil-square"></i> Edit Pengajuan
                     </a>
                 </div>
