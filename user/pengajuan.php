@@ -61,7 +61,7 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
             $result = mysqli_query($conn, $pendidikan);
             $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
         
-            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
             $query_anggota1 = mysqli_query($conn, $sql_anggota1);
             
             $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', 4, '$id_user')";
@@ -72,13 +72,13 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
     $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
     $query2 = mysqli_query($conn, $sql2);
 
-    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
     $query3 = mysqli_query($conn, $sql3);
     
 
     if ($query2 && $query3){
         $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
-        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', 'identitas', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
         $query4 = mysqli_query($conn, $sql4);
 
         $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
