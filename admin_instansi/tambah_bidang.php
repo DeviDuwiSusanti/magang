@@ -1,12 +1,48 @@
 <?php 
 include "../layout/header.php"; 
 
-$status = "";
-if (isset($_POST["tambah_bidang"])) {
-    if(tambah_bidang($_POST) > 0) {
-        $status = "success";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
+    $id_user           = $_POST['id_user'];
+    $nama_bidang       = $_POST['nama_bidang'];
+    $deskripsi_bidang  = $_POST['deskripsi'];
+    $kriteria          = $_POST['kriteria'];
+    $kuota             = $_POST['kuota'];
+    $dokumen_prasyarat = $_POST['dokumen'];
+
+    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, dokumen_prasyarat, create_by)
+              VALUES ('','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$dokumen_prasyarat', '$id_user')";
+    mysqli_query($conn, $query);
+
+    if (mysqli_affected_rows($conn) > 0) {
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Bidang berhasil ditambahkan!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location = 'view_bidang.php';
+                    }
+                });
+            </script>
+        ";
     } else {
-        $status = "error";
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Bidang gagal ditambahkan!',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location = 'view_bidang.php';
+                    }
+                });
+            </script>
+        ";
     }
 }
 ?>
@@ -65,10 +101,10 @@ if (isset($_POST["tambah_bidang"])) {
 
 <?php include "footer.php"; ?>
 
-<script>
+<!-- <script>
     <?php if ($status === "success"): ?>
         alertSuccessEdit('Data bidang berhasil ditambahkan.', 'view_bidang.php');
     <?php elseif ($status === "error"): ?>
         alertSuccessEdit('Tidak ada perubahan. Data bidang disimpan.', 'view_bidang.php');
     <?php endif; ?>
-</script>
+</script> -->

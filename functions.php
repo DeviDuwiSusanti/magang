@@ -357,6 +357,34 @@
 // ========================================= ADMIN INSTANSI LEVEL(2) ================================================
 
 // =============================== BIDANG ADMIN INSTANSI =================================
+
+    function edit_profile($POST_edit) {
+        global $conn;
+        $id_user = $POST_edit["id_user"];
+        $nama_user = $POST_edit["nama_user"];
+        $tempat_lahir = $POST_edit["tempat_lahir"];
+        $tanggal_lahir = $POST_edit["tanggal_lahir"];
+        $telepone = $POST_edit["telepone"];
+        $alamat_user = $POST_edit["alamat_user"];
+        $jenis_kelamin = $POST_edit["jenis_kelamin"];
+        $gambar_lama = $POST_edit["gambar_lama"];
+        $gambar = uploadImage($_FILES["gambar"], $gambar_lama, "../assets/img/user/");
+
+        $query = "UPDATE tb_profile_user SET 
+                    nama_user = '$nama_user',
+                    tempat_lahir = '$tempat_lahir',
+                    tanggal_lahir = '$tanggal_lahir',
+                    telepone_user = '$telepone',
+                    jenis_kelamin = '$jenis_kelamin',
+                    alamat_user = '$alamat_user',
+                    gambar_user = '$gambar',
+                    change_by = '$id_user'
+                    WHERE id_user = '$id_user'
+            ";
+        mysqli_query($conn, $query);
+        return mysqli_affected_rows($conn);
+    }
+    
     function tambah_bidang($POST) {
         global $conn;
         $id_user = $POST["id_user"];

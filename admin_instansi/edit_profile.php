@@ -4,7 +4,7 @@ $edit_profile = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_u
 
 $status = "";
 if (isset($_POST["edit_profile"])) {
-    if (edit_profile_1($_POST) > 0) {
+    if (edit_profile($_POST) > 0) {
         $status = "success";
     } else {
         $status = "error";

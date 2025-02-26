@@ -6,35 +6,35 @@ $no = 1;
 
 // Query untuk data utama pengajuan
 $sql = "SELECT
-            tb_profile_user.nama_user,
-            tb_bidang.nama_bidang,
-            tb_pengajuan.jenis_pengajuan,
-            tb_pengajuan.jumlah_pelamar,
-            tb_pengajuan.tanggal_mulai,
-            tb_pengajuan.tanggal_selesai,
-            tb_pengajuan.id_pengajuan,
-            tb_pengajuan.id_user,
-            tb_pengajuan.status_pengajuan,
-            tb_pengajuan.status_active
-        FROM tb_pengajuan
-        INNER JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
-        INNER JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.id_instansi = '$id_instansi'
-        AND tb_pengajuan.status_active = '1'
-        AND tb_pengajuan.status_pengajuan = '2'
-        OR tb_pengajuan.status_pengajuan = '3'
-        OR tb_pengajuan.status_pengajuan = '4'
-        ORDER BY tb_pengajuan.id_pengajuan DESC";
+            pu.nama_user,
+            b.nama_bidang,
+            p.jenis_pengajuan,
+            p.jumlah_pelamar,
+            p.tanggal_mulai,
+            p.tanggal_selesai,
+            p.id_pengajuan,
+            p.id_user,
+            p.status_pengajuan,
+            p.status_active
+        FROM tb_pengajuan AS p
+        INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
+        INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+        WHERE p.id_instansi = '$id_instansi'
+          AND p.status_active = '1'
+          AND (p.status_pengajuan = '2' OR p.status_pengajuan = '3' OR p.status_pengajuan = '4')
+        ORDER BY p.id_pengajuan DESC";
 
 $result = mysqli_query($conn, $sql);
 
 // Query untuk mendapatkan daftar nama pengaju
-$sql2 = "SELECT p.id_pengajuan, GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
-        FROM tb_pengajuan p
-        JOIN tb_profile_user pu ON p.id_pengajuan = pu.id_pengajuan
-        WHERE p.id_instansi = '$id_instansi'
-        GROUP BY p.id_pengajuan
-        ORDER BY p.id_pengajuan DESC";
+$sql2 = "SELECT 
+            p.id_pengajuan, 
+            GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
+         FROM tb_pengajuan AS p
+         JOIN tb_profile_user AS pu ON p.id_pengajuan = pu.id_pengajuan
+         WHERE p.id_instansi = '$id_instansi'
+         GROUP BY p.id_pengajuan
+         ORDER BY p.id_pengajuan DESC";
 
 $nama_pengaju = [];
 $result2 = mysqli_query($conn, $sql2);
@@ -89,18 +89,8 @@ $json_nama_pengaju = json_encode($nama_pengaju);
 
                                         // Format tanggal dalam bahasa Indonesia
                                         $bulanIndo = [
-                                            "Januari",
-                                            "Februari",
-                                            "Maret",
-                                            "April",
-                                            "Mei",
-                                            "Juni",
-                                            "Juli",
-                                            "Agustus",
-                                            "September",
-                                            "Oktober",
-                                            "November",
-                                            "Desember"
+                                            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
                                         ];
 
                                         $tanggal_mulai = $start_date->format('d') . ' ' . $bulanIndo[$start_date->format('n') - 1] . ' ' . $start_date->format('Y');
@@ -148,7 +138,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                     $tanggal_selesai = $row['tanggal_selesai'];
 
                                     date_default_timezone_set('Asia/Jakarta');
-                                    $tanggal_sekarang = date("Y-m-d"); // Tanggal hari ini dalam format YYYY-MM-DD
+                                    $tanggal_sekarang = date("Y-m-d");
 
                                     // **Cek apakah tanggal mulai sudah tiba & status masih "Diterima" (2)**
                                     if ($status_pengajuan == 2 && strtotime($tanggal_mulai) <= strtotime($tanggal_sekarang)) {
@@ -162,11 +152,9 @@ $json_nama_pengaju = json_encode($nama_pengaju);
 
                                     // **Cek apakah tanggal selesai sudah lewat & status masih "Berlangsung" (3)**
                                     if ($status_pengajuan == 3 && strtotime($tanggal_sekarang) > strtotime($tanggal_selesai)) {
-                                        // Update status menjadi "Selesai" (4) di database
                                         $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '4' WHERE id_pengajuan = '{$row['id_pengajuan']}'";
                                         mysqli_query($conn, $sql_update);
 
-                                        // Set status_pengajuan ke 4 secara manual agar kondisi berikutnya mengenali perubahan
                                         $status_pengajuan = 4;
                                     }
 
@@ -178,7 +166,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                     } elseif ($status_pengajuan == 2) {
                                         echo '<span class="badge bg-success">Diterima</span>';
                                     } else {
-                                        echo '<span class="badge bg-secondary">Menunggu</span>'; // Status default
+                                        echo '<span class="badge bg-secondary">Menunggu</span>';
                                     }
                                     ?>
                                 </td>

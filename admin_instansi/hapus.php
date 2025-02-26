@@ -1,7 +1,6 @@
 <?php 
 include "../layout/header.php";
 
-// $id_pembimbing = $_GET["id"];
 $id = $_GET["id"];
 $type = $_GET["type"];
 

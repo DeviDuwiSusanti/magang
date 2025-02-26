@@ -6,33 +6,37 @@ $no = 1;
 
 // Query untuk data utama pengajuan
 $sql = "SELECT
-            tb_profile_user.nama_user,
-            tb_bidang.nama_bidang,
-            tb_pengajuan.jenis_pengajuan,
-            tb_pengajuan.jumlah_pelamar,
-            tb_pengajuan.tanggal_mulai,
-            tb_pengajuan.tanggal_selesai,
-            tb_pengajuan.id_pengajuan,
-            tb_pengajuan.id_user,
-            tb_pengajuan.status_pengajuan,
-            tb_pengajuan.status_active
-        FROM tb_pengajuan
-        INNER JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
-        INNER JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.id_instansi = '$id_instansi'
-        AND tb_pengajuan.status_active = '1'
-        AND tb_pengajuan.status_pengajuan = '1'
-        ORDER BY tb_pengajuan.id_pengajuan DESC";
+            pu.nama_user,
+            b.nama_bidang,
+            p.jenis_pengajuan,
+            p.jumlah_pelamar,
+            p.tanggal_mulai,
+            p.tanggal_selesai,
+            p.id_pengajuan,
+            p.id_user,
+            p.status_pengajuan,
+            p.status_active
+        FROM tb_pengajuan AS p
+        INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
+        INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+        WHERE p.id_instansi = '$id_instansi'
+        AND p.status_active = '1'
+        AND p.status_pengajuan = '1'
+        ORDER BY p.id_pengajuan DESC
+";
 
 $result = mysqli_query($conn, $sql);
 
 // Query untuk mendapatkan daftar nama pengaju
-$sql2 = "SELECT p.id_pengajuan, GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
-        FROM tb_pengajuan p
-        JOIN tb_profile_user pu ON p.id_pengajuan = pu.id_pengajuan
+$sql2 = "SELECT 
+            p.id_pengajuan, 
+            GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
+        FROM tb_pengajuan AS p
+        JOIN tb_profile_user AS pu ON p.id_pengajuan = pu.id_pengajuan
         WHERE p.id_instansi = '$id_instansi'
         GROUP BY p.id_pengajuan
-        ORDER BY p.id_pengajuan DESC";
+        ORDER BY p.id_pengajuan DESC
+";
 
 $nama_pengaju = [];
 $result2 = mysqli_query($conn, $sql2);
@@ -42,12 +46,16 @@ while ($row2 = mysqli_fetch_assoc($result2)) {
 
 $json_nama_pengaju = json_encode($nama_pengaju);
 
-$sql3 = "SELECT d.id_pengajuan, d.id_user, 
-                GROUP_CONCAT(CONCAT('../assets/doc/', d.nama_dokumen) SEPARATOR ', ') AS daftar_dokumen
-         FROM tb_dokumen d
-         JOIN tb_pengajuan p ON d.id_pengajuan = p.id_pengajuan
-         WHERE p.id_instansi = '$id_instansi'
-         GROUP BY d.id_pengajuan, d.id_user";
+// Query untuk mendapatkan daftar dokumen
+$sql3 = "SELECT 
+            d.id_pengajuan, 
+            d.id_user, 
+            GROUP_CONCAT(CONCAT('../assets/doc/', d.nama_dokumen) SEPARATOR ', ') AS daftar_dokumen
+        FROM tb_dokumen AS d
+        JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
+        WHERE p.id_instansi = '$id_instansi'
+        GROUP BY d.id_pengajuan, d.id_user
+";
 
 $daftar_dokumen = [];
 $result3 = mysqli_query($conn, $sql3);
@@ -112,18 +120,8 @@ $daftar_dokumen_json = json_encode($daftar_dokumen);
 
                                         // Format tanggal dalam bahasa Indonesia
                                         $bulanIndo = [
-                                            "Januari",
-                                            "Februari",
-                                            "Maret",
-                                            "April",
-                                            "Mei",
-                                            "Juni",
-                                            "Juli",
-                                            "Agustus",
-                                            "September",
-                                            "Oktober",
-                                            "November",
-                                            "Desember"
+                                            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
                                         ];
 
                                         $tanggal_mulai = $start_date->format('d') . ' ' . $bulanIndo[$start_date->format('n') - 1] . ' ' . $start_date->format('Y');
