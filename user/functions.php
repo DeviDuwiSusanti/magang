@@ -121,8 +121,10 @@ function getDetailBidang($id_bidang, $conn) {
 function getStatusText($status) {
     $statusList = [
         1 => "Diajukan",
-        2 => "Diterima",
-        3 => "Selesai",
+        2 => "Ditolak",
+        3 => "Diterima",
+        4 => "Berlangsung",
+        5 => "Selesai",
     ];
     return $statusList[$status] ?? "Tidak Diketahui";
 }
