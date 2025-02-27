@@ -1,8 +1,17 @@
 <?php include "../layout/header.php";
 
 $id_instansi = $_SESSION["id_instansi"];
-
-$list_bidang = query("SELECT * FROM tb_bidang WHERE id_instansi = '$id_instansi'");
+// $list_bidang = query("SELECT * FROM tb_bidang WHERE id_instansi = '$id_instansi'");
+$list_bidang = query("SELECT tb_bidang.*, 
+                    IFNULL(tb_profile_user.id_user, '') AS id_pembimbing
+                FROM tb_bidang
+                LEFT JOIN tb_profile_user 
+                    ON tb_bidang.id_bidang = tb_profile_user.id_bidang
+                LEFT JOIN tb_user 
+                    ON tb_profile_user.id_user = tb_user.id_user
+                WHERE tb_bidang.id_instansi = '$id_instansi'
+                AND (tb_user.level = '5' OR tb_user.level IS NULL) -- Tetap ambil bidang meskipun tidak ada pembimbing
+");
 
 $status = "";
 if (isset($_POST["tambah_pembimbing"])) {
@@ -36,6 +45,12 @@ if (isset($_POST["tambah_pembimbing"])) {
                 <input type="text" class="form-control" id="nama_pembimbing" name="nama_pembimbing" placeholder="Masukkan nama pembimbing">
             </div>
 
+            <!-- Nama Pembimbing -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Pembimbing</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pembimbing">
+            </div>
+
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik_pembimbing" class="form-label">NIK Pembimbing</label>
@@ -54,6 +69,21 @@ if (isset($_POST["tambah_pembimbing"])) {
                 <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Masukkan jabatan pembimbing">
             </div>
 
+            <!-- Gender -->
+            <div class="mb-3">
+                <label for="gender" class="form-label">Jenis Kelamin</label>
+                <div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_l" value="1">
+                        <label class="form-check-label" for="gender_l">Laki-Laki</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_p" value="0">
+                        <label class="form-check-label" for="gender_p">Perempuan</label>
+                    </div>
+                </div>
+            </div>
+
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telepone_pembimbing" class="form-label">Telepon</label>
@@ -66,7 +96,8 @@ if (isset($_POST["tambah_pembimbing"])) {
                 <select id="bidang" name="id_bidang" class="form-select select2">
                     <option selected disabled>Pilih Bidang</option>
                     <?php foreach ($list_bidang as $bidang): ?>
-                        <option value="<?= $bidang['id_bidang']; ?>">
+                        <option value="<?= $bidang['id_bidang']; ?>"
+                            <?= !empty($bidang['id_pembimbing']) ? 'disabled' : ''; ?>>
                             <?= $bidang['nama_bidang']; ?>
                         </option>
                     <?php endforeach; ?>

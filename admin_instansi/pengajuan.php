@@ -50,7 +50,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
 $sql3 = "SELECT 
             d.id_pengajuan, 
             d.id_user, 
-            GROUP_CONCAT(CONCAT('../assets/doc/', d.nama_dokumen) SEPARATOR ', ') AS daftar_dokumen
+            GROUP_CONCAT(d.file_path SEPARATOR ', ') AS daftar_dokumen
         FROM tb_dokumen AS d
         JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
         WHERE p.id_instansi = '$id_instansi'
@@ -59,11 +59,17 @@ $sql3 = "SELECT
 
 $daftar_dokumen = [];
 $result3 = mysqli_query($conn, $sql3);
+
 while ($row3 = mysqli_fetch_assoc($result3)) {
-    $daftar_dokumen[$row3['id_user']][$row3['id_pengajuan']] = explode(', ', $row3['daftar_dokumen']);
+    $id_user = $row3['id_user'];
+    $id_pengajuan = $row3['id_pengajuan'];
+
+    $dokumen_list = explode(', ', $row3['daftar_dokumen']);
+
+    $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
 }
 
-$daftar_dokumen_json = json_encode($daftar_dokumen);
+$daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 ?>
 
 <div class="main-content p-3">
@@ -104,20 +110,19 @@ $daftar_dokumen_json = json_encode($daftar_dokumen);
                                 </td>
                                 <td>
                                     <a href="#" class="show-doc" title="Lihat Dokumen"
-                                        data-doc='<?= isset($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
-                                                        ? htmlspecialchars(json_encode($daftar_dokumen[$row['id_user']][$row['id_pengajuan']]), ENT_QUOTES, 'UTF-8')
+                                        data-doc='<?= !empty($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
+                                                        ? htmlspecialchars(json_encode($daftar_dokumen[$row['id_user']][$row['id_pengajuan']], JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8')
                                                         : '[]' ?>'>
                                         Lihat Dokumen
                                     </a>
                                 </td>
-
                                 <td>
-                                    <?php 
-                                        if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                            echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
-                                        } else {
-                                            echo "Periode Tidak Diketahui";
-                                        }
+                                    <?php
+                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
+                                        echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
+                                    } else {
+                                        echo "Periode Tidak Diketahui";
+                                    }
                                     ?>
                                 </td>
                                 <td>
@@ -215,7 +220,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen);
     document.addEventListener("DOMContentLoaded", function() {
         let dokumenModal = document.getElementById("dokumenModal");
         let dokumenList = document.getElementById("dokumenList");
-        let originalModalBody = dokumenModal.querySelector(".modal-body").innerHTML; // Simpan isi awal modal hanya sekali
 
         document.querySelectorAll(".show-doc").forEach(function(element) {
             element.addEventListener("click", function(event) {
@@ -237,7 +241,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen);
                 // Bersihkan daftar sebelum menambahkan dokumen baru
                 dokumenList.innerHTML = "";
 
-                if (docList.length === 0) {
+                if (!docList || docList.length === 0) {
                     dokumenList.innerHTML = "<p class='text-muted'>Tidak ada dokumen tersedia.</p>";
                 } else {
                     docList.forEach(function(doc) {
@@ -268,24 +272,23 @@ $daftar_dokumen_json = json_encode($daftar_dokumen);
             });
         });
 
-
         // Fungsi untuk menampilkan preview dokumen PDF di modal
         function showPreview(url) {
             let modalBody = dokumenModal.querySelector(".modal-body");
-
-            // Tambahkan preview tanpa menghapus daftar dokumen
-            let preview = document.createElement("embed");
-            preview.src = url;
-            preview.type = "application/pdf";
-            preview.width = "100%";
-            preview.height = "500px";
-            preview.id = "pdfPreview"; // Beri ID agar bisa dihapus nanti
 
             // Hapus preview sebelumnya jika ada
             let oldPreview = document.getElementById("pdfPreview");
             if (oldPreview) {
                 oldPreview.remove();
             }
+
+            // Gunakan iframe agar lebih kompatibel di semua browser
+            let preview = document.createElement("iframe");
+            preview.src = url;
+            preview.width = "100%";
+            preview.height = "500px";
+            preview.style.border = "none";
+            preview.id = "pdfPreview";
 
             modalBody.appendChild(preview);
         }

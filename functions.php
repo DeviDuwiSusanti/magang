@@ -378,8 +378,28 @@
         // Gabungkan ID Instansi dengan nomor urut baru
         return $id_instansi . $nomorUrut;
     }
-
     
+    function generateIdPembimbing($conn, $id_bidang) {
+        // Cari pembimbing terakhir dalam bidang tersebut
+        $query_pembimbing = "SELECT id_user FROM tb_profile_user WHERE id_user LIKE '$id_bidang%' ORDER BY id_user DESC LIMIT 1";
+        $result_pembimbing = mysqli_query($conn, $query_pembimbing);
+        $row_pembimbing = mysqli_fetch_assoc($result_pembimbing);
+    
+        if ($row_pembimbing) {
+            // Ambil 2 digit terakhir dari ID Pembimbing terakhir
+            $last_counter = intval(substr($row_pembimbing['id_user'], -2));
+            $new_counter = $last_counter + 1; // Tambah 1
+        } else {
+            $new_counter = 1; // Jika belum ada pembimbing, mulai dari 01
+        }
+    
+        // Format nomor urut menjadi dua digit (01, 02, 03, ...)
+        $nomorUrut = str_pad($new_counter, 2, "0", STR_PAD_LEFT);
+    
+        // Gabungkan ID Bidang dengan nomor urut baru
+        return $id_bidang . $nomorUrut;
+    }
+
     function edit_profile($POST_edit) {
         global $conn;
         $id_user = $POST_edit["id_user"];
@@ -409,20 +429,20 @@
     
     function tambah_bidang($POST) {
         global $conn;
+        $id_bidang = generateIdBidang($conn, $POST["id_instansi"]);
         $id_user = $POST["id_user"];
+        $id_instansi = $POST["id_instansi"];
         $nama_bidang = $POST["nama_bidang"];
         $deskripsi_bidang = $POST["deskripsi"];
         $kriteria = $POST["kriteria"];
         $kuota = $POST["kuota"];
         $dokumen_prasyarat = $POST["dokumen"];
 
-        $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria, kuota, dokumen_prasyarat, create_by)
-            VALUES ('','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$dokumen_prasyarat', '$id_user')";
+        $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_prasyarat, create_by)
+            VALUES ('$id_bidang','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$id_instansi', '$dokumen_prasyarat', '$id_user')";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
     }
-
-
 
     function edit_bidang($POST) {
         global $conn;
@@ -457,27 +477,27 @@
         return mysqli_affected_rows($conn);
     }
 
-
-
-
     function tambah_pembimbing($POST) {
         global $conn;
+        $id_pembimbing = generateIdPembimbing($conn, $POST["id_bidang"]);
         $id_user = $POST["id_user"];
         $nama_pembimbing = $POST["nama_pembimbing"];
+        $email = $POST["email"];
         $nik_pembimbing = $POST["nik_pembimbing"];
         $nip = $POST["nip"];
         $jabatan = $POST["jabatan"];
+        $jenis_kelamin = $POST["jenis_kelamin"];
         $telepone_pembimbing = $POST["telepone_pembimbing"];
         $id_bidang = $POST["id_bidang"];
 
-        $query = "INSERT INTO tb_pembimbing
-                (id_pembimbing, nama_pembimbing, nik_pembimbing, nip, jabatan, telepone_pembimbing, id_bidang, create_by)
-                VALUES ('', '$nama_pembimbing', '$nik_pembimbing', '$nip', '$jabatan', '$telepone_pembimbing', '$id_bidang', '$id_user')";
-        mysqli_query($conn, $query);
+        $query_pembimbing_1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_pembimbing', '$email', '5', '$id_user')";
+        $query_pembimbing_2 = "INSERT INTO tb_profile_user
+                (id_user, nama_user, nik, nip, jabatan, jenis_kelamin, telepone_user, id_bidang, create_by)
+                VALUES ('$id_pembimbing', '$nama_pembimbing', '$nik_pembimbing', '$nip', '$jabatan', '$jenis_kelamin', '$telepone_pembimbing', '$id_bidang', '$id_user')";
+        mysqli_query($conn, $query_pembimbing_1);
+        mysqli_query($conn, $query_pembimbing_2);
         return mysqli_affected_rows($conn);
     }
-
-
 
     function edit_pembimbing($POST) {
         global $conn;
@@ -510,16 +530,18 @@
         return mysqli_affected_rows($conn);
     }
 
-
-
-
     function hapus_pembimbing($id, $id_user) {
         global $conn;
-        $query = "UPDATE tb_pembimbing SET
-                    status_pengajuan = 'N',
+        $query_update_1 = "UPDATE tb_user SET
+                    status_active = '0',
                     change_by = '$id_user'
-                    WHERE id_pembimbing = '$id'";
-        mysqli_query($conn, $query);
+                    WHERE id_user = '$id'";
+        $query_update_2 = "UPDATE tb_profile_user SET
+                    status_active = '0',
+                    change_by = '$id_user'
+                    WHERE id_user = '$id'";
+        mysqli_query($conn, $query_update_1);
+        mysqli_query($conn, $query_update_2);
         return mysqli_affected_rows($conn);
     }
 

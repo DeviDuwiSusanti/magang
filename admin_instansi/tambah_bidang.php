@@ -4,29 +4,17 @@ include "../layout/header.php";
 $id_instansi = $_SESSION['id_instansi'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
-    $id_bidang         = generateIdBidang($conn, $id_instansi);
-    $id_user           = $_POST['id_user'];
-    $nama_bidang       = $_POST['nama_bidang'];
-    $deskripsi_bidang  = $_POST['deskripsi'];
-    $kriteria          = $_POST['kriteria'];
-    $kuota             = $_POST['kuota'];
-    $dokumen_prasyarat = $_POST['dokumen'];
-
-    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_prasyarat, create_by)
-              VALUES ('$id_bidang','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$id_instansi', '$dokumen_prasyarat', '$id_user')";
-    mysqli_query($conn, $query);
-
-    if (mysqli_affected_rows($conn) > 0) {
+    if (tambah_bidang($_POST) > 0) {
         echo "
             <script>
                 Swal.fire({
-                    title: 'Berhasil!',
+                    title: 'Success!',
                     text: 'Bidang berhasil ditambahkan!',
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location = 'view_bidang.php';
+                        document.location.href = 'view_bidang.php';
                     }
                 });
             </script>
@@ -35,13 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
         echo "
             <script>
                 Swal.fire({
-                    title: 'Gagal!',
+                    title: 'Error!',
                     text: 'Bidang gagal ditambahkan!',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location = 'view_bidang.php';
+                        document.location.href = 'view_bidang.php';
                     }
                 });
             </script>
@@ -66,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
         
         <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
+            <input type="hidden" name="id_instansi" id="id_instansi" value="<?= $id_instansi ?>">
             <!-- Nama Bidang -->
             <div class="mb-3">
                 <label for="nama_bidang" class="form-label">Nama Bidang</label>
@@ -103,11 +92,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
 </div>
 
 <?php include "footer.php"; ?>
-
-<!-- <script>
-    <?php if ($status === "success"): ?>
-        alertSuccessEdit('Data bidang berhasil ditambahkan.', 'view_bidang.php');
-    <?php elseif ($status === "error"): ?>
-        alertSuccessEdit('Tidak ada perubahan. Data bidang disimpan.', 'view_bidang.php');
-    <?php endif; ?>
-</script> -->

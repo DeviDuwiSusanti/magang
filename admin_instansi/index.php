@@ -9,13 +9,6 @@ $instansi_admin = query("SELECT COUNT(*) AS total
         ON tb_instansi.id_instansi = tb_profile_user.id_instansi
     WHERE tb_profile_user.id_user = '$id_user'")[0];
 
-// data pemagang
-// $pemagang = query("SELECT COUNT(*) AS total 
-//     FROM tb_instansi
-//     JOIN tb_profile_user 
-//         ON tb_instansi.id_instansi = tb_profile_user.id_instansi
-//     WHERE tb_profile_user.id_user = '$id_user'")[0];
-
 // data bidang
 $bidang_admin = query("SELECT COUNT(*) AS total 
     FROM tb_bidang
@@ -28,7 +21,16 @@ $total_pengajuan = query("SELECT COUNT(*) AS total
     FROM tb_pengajuan
     JOIN tb_instansi 
         ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
-    WHERE tb_instansi.id_instansi = '$id_instansi'")[0];
+    WHERE tb_instansi.id_instansi = '$id_instansi'
+    AND tb_pengajuan.status_pengajuan = '1'")[0];
+
+// data pemagang
+$pemagang = query("SELECT COUNT(*) AS total 
+    FROM tb_pengajuan
+    JOIN tb_instansi 
+        ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+    WHERE tb_instansi.id_instansi = '$id_instansi'
+    AND tb_pengajuan.status_pengajuan != '1'")[0];
 ?>
 
 
@@ -52,16 +54,6 @@ $total_pengajuan = query("SELECT COUNT(*) AS total
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card border-0">
                     <div class="card-body">
-                        <h5 class="card-title">Jumlah Pemagang</h5>
-                        <h2 class="card-text text-success"><?= $bidang_admin["total"] ?></h2>
-                        <p class="text-muted">Lihat data pemagang</p>
-                        <a href="view_user.php" class="btn btn-success mt-3 detail">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card border-0">
-                    <div class="card-body">
                         <h5 class="card-title">Kelola Bidang</h5>
                         <h2 class="card-text text-warning"><?= $bidang_admin["total"] ?></h2>
                         <p class="text-muted">Kelola data bidang</p>
@@ -76,6 +68,16 @@ $total_pengajuan = query("SELECT COUNT(*) AS total
                         <h2 class="card-text text-danger"><?= $total_pengajuan["total"] ?></h2>
                         <p class="text-muted">Lihat pengajuan baru</p>
                         <a href="pengajuan.php" class="btn btn-danger mt-3 detail">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="card border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">Jumlah Pemagang</h5>
+                        <h2 class="card-text text-success"><?= $pemagang["total"] ?></h2>
+                        <p class="text-muted">Lihat data pemagang</p>
+                        <a href="view_user.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>

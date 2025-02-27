@@ -20,7 +20,10 @@ $bidang = "SELECT
             ON pu.id_bidang = b.id_bidang
         JOIN tb_instansi AS i
             ON b.id_instansi = i.id_instansi
+        JOIN tb_user AS u
+            ON pu.id_user = u.id_user
         WHERE pu.status_active = '1'
+        AND u.status_active = '1'
         AND i.id_instansi = '$id_instansi_admin'
         ORDER BY b.id_bidang ASC";
 
