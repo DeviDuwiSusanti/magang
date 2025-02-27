@@ -122,7 +122,19 @@ function getStatusText($status) {
     $statusList = [
         1 => "Diajukan",
         2 => "Diterima",
-        3 => "Selesai",
+        3 => "Ditolak",
+        4 => "Berlangsung",
+        5 => "Selesai",
     ];
     return $statusList[$status] ?? "Tidak Diketahui";
+}
+
+function getKategoriText($kategori) {
+    $kategoriList = [
+        1 => "Identitas",
+        2 => "Prasyarat",
+        3 => "Laporan Akhir",
+        4 => "Nilai & Sertifikat",
+    ];
+    return $kategoriList[$kategori] ?? "Tidak Diketahui";
 }

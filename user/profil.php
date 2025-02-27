@@ -42,7 +42,7 @@ $row2 = mysqli_fetch_assoc($query2);
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-credit-card"></i> <strong>NIK</strong></td>
-                                    <td><?= $row2['nik_user'] ?></td>
+                                    <td><?= $row2['nik'] ?></td>
                                 </tr>
                                 <tr>
                                 <tr>
