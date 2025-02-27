@@ -7,20 +7,29 @@ if ($level != 3){
     echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='dashboard.php?id_user=$id_user'; </script>";
 }
 
-
-// Query untuk mengambil daftar pengajuan magang yang masih aktif berdasarkan id_user
+// Query untuk mengambil daftar pengajuan berdasarkan id_user
 $sql = "SELECT * 
-        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_instansi, tb_bidang 
-        WHERE tb_pengajuan.id_user = tb_profile_user.id_user 
-        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
-        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi
-        AND tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        AND tb_pengajuan.status_pengajuan = '1'
-        AND tb_pengajuan.id_user = '$id_user'";
-
+        FROM tb_pengajuan
+        LEFT JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
+        LEFT JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        WHERE tb_pengajuan.id_user = '$id_user'";
 
 $query = mysqli_query($conn, $sql); 
 $no = 1; 
+
+// Cek apakah ada pengajuan dengan status 1, 2, atau 4
+$disable_tambah = false;
+while ($row_check = mysqli_fetch_assoc($query)) {
+    if (in_array($row_check['status_pengajuan'], [1, 2, 4])) {
+        $disable_tambah = true;
+        break;
+    }
+}
+
+// Jalankan ulang query karena mysqli_fetch_assoc sudah digunakan sebelumnya
+$query = mysqli_query($conn, $sql);
 ?>
 
 <div class="main-content p-4">
@@ -34,7 +43,9 @@ $no = 1;
 
         <!-- Tombol Tambah Pengajuan -->
         <div class="d-flex justify-content-end mb-4">
-            <a href="pengajuan.php" class="btn btn-primary">Tambah Pengajuan</a>
+            <a href="pengajuan.php" class="btn btn-primary <?= $disable_tambah ? 'disabled' : '' ?>">
+                Tambah Pengajuan
+            </a>
         </div>
 
         <!-- Tabel -->
@@ -76,8 +87,8 @@ $no = 1;
                             ?>
                         </td>
                         <td class="text-center">
-                        <a href="detail_status.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
-                        <i class="bi bi-eye" style="font-size: 20px;"></i>
+                            <a href="detail_status.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
+                                <i class="bi bi-eye" style="font-size: 20px;"></i>
                             </a>
                         </td>
                     </tr>

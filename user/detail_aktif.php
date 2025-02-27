@@ -5,16 +5,16 @@ include "../layout/sidebarUser.php";
 // Ambil id_user dari session atau parameter URL
 $id_user = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : (isset($_GET['id_user']) ? $_GET['id_user'] : null);
 
-// Query untuk mengambil data pengajuan yang masih aktif berdasarkan ID user
+// Query untuk mengambil data pengajuan magang yang masih aktif dan sesuai dengan id_user yang login
 $sql = "SELECT * 
-        FROM tb_pengajuan, tb_profile_user, tb_pendidikan, tb_user, tb_instansi, tb_bidang 
-        WHERE tb_pengajuan.id_pengajuan = tb_profile_user.id_pengajuan 
-        AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
-        AND tb_pengajuan.id_instansi = tb_instansi.id_instansi 
-        AND tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        AND tb_pengajuan.status_pengajuan = 2
-        AND tb_profile_user.id_user = '$id_user'
-        AND tb_user.id_user = '$id_user'";  // Menambahkan filter berdasarkan id_user
+        FROM tb_pengajuan
+        LEFT JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
+        LEFT JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
+        LEFT JOIN tb_user ON tb_pengajuan.id_user = tb_user.id_user
+        LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        WHERE tb_pengajuan.status_pengajuan = '4'
+        AND tb_pengajuan.id_user = '$id_user'";
 $query = mysqli_query($conn, $sql); 
 $row = mysqli_fetch_assoc($query); 
 
@@ -102,7 +102,7 @@ $row = mysqli_fetch_assoc($query);
                     <!-- Tombol untuk unggah logbook dan laporan akhir -->
                     <div class="mb-3">
                         <?php if (!empty($row['id_pengajuan'])) { ?>
-                            <a href="logbook_unggah.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary btn-sm me-2">
+                            <a href="logbook_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary btn-sm me-2">
                                 <i class="bi bi-file-earmark-text me-1"></i> Unggah Logbook
                             </a>
                             <a href="laprak_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-success btn-sm">

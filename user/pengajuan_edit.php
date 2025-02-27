@@ -33,7 +33,7 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])) {
     $daftar_dokumen = mysqli_fetch_all($query_dokumen, MYSQLI_ASSOC);
 
     // Ambil data anggota dari tb_profile_user dan tb_user berdasarkan id_pengajuan
-    $query_anggota = "SELECT pu.nama_user, pu.nik_user, pu.nim, pu.nisn, u.email 
+    $query_anggota = "SELECT pu.nama_user, pu.nik, pu.nim, pu.nisn, u.email 
     FROM tb_profile_user pu 
     JOIN tb_user u ON pu.id_user = u.id_user 
     WHERE pu.id_pengajuan = '$id_pengajuan' 
