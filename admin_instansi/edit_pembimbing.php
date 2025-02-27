@@ -4,16 +4,71 @@ $id_pembimbing = $_GET["id"];
 $id_instansi = $_SESSION["id_instansi"];
 
 $edit_pembimbing = query("SELECT * FROM tb_profile_user WHERE id_user = $id_pembimbing")[0];
-$list_bidang = query("SELECT * FROM tb_bidang WHERE id_instansi = '$id_instansi'");
+$list_bidang = query("SELECT tb_bidang.*, 
+                    IFNULL(tb_profile_user.id_user, '') AS id_pembimbing
+                FROM tb_bidang
+                LEFT JOIN tb_profile_user 
+                    ON tb_bidang.id_bidang = tb_profile_user.id_bidang
+                LEFT JOIN tb_user 
+                    ON tb_profile_user.id_user = tb_user.id_user
+                WHERE tb_bidang.id_instansi = '$id_instansi'
+                AND (tb_user.level = '5' OR tb_user.level IS NULL)
+");
 
 $id_bidang_terpilih = "";
+foreach ($list_bidang as $bidang) {
+    if ($bidang["id_pembimbing"] == $id_pembimbing) {
+        $id_bidang_terpilih = $bidang["id_bidang"];
+    }
+}
 
-$status = "";
-if (isset($_POST["edit_pembimbing"])) {
-    if (edit_pembimbing($_POST) > 0) {
-        $status = "success";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
+    if (!isset($_POST["id_bidang"]) || empty($_POST["id_bidang"])) {
+        $_POST["id_bidang"] = $id_bidang_terpilih; 
+    }
+    // Cek apakah ada perubahan sebelum update
+    if (cek_edit_pembimbing($conn, $_POST)) {
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Tidak Ada Perubahan!',
+                    text: 'Data pembimbing telah disimpan.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            </script>
+        ";
     } else {
-        $status = "error";
+        if (edit_pembimbing($_POST) > 0) {
+            echo "
+                <script>
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Data pembimbing berhasil diperbarui!',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.location.href = 'daftar_pembimbing.php';
+                        }
+                    });
+                </script>
+            ";
+        } else {
+            echo "
+                <script>
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan, data pembimbing gagal diperbarui!',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    });
+                </script>
+            ";
+        }
     }
 }
 ?>
@@ -72,7 +127,8 @@ if (isset($_POST["edit_pembimbing"])) {
                     <option disabled>Pilih Bidang</option>
                     <?php foreach ($list_bidang as $bidang): ?>
                         <option value="<?= $bidang['id_bidang']; ?>"
-                            <?= ($bidang['id_bidang'] == $id_bidang_terpilih) ? 'selected' : ''; ?>>
+                            <?= ($bidang['id_bidang'] == $id_bidang_terpilih) ? 'selected' : ''; ?>
+                            <?= !empty($bidang['id_pembimbing']) ? 'disabled' : ''; ?>>
                             <?= $bidang['nama_bidang']; ?>
                         </option>
                     <?php endforeach; ?>
@@ -86,11 +142,3 @@ if (isset($_POST["edit_pembimbing"])) {
 </div>
 
 <?php include "footer.php"; ?>
-
-<script>
-    <?php if ($status === "success"): ?>
-        alertSuccessEdit('Data pembimbing berhasil diperbarui.', 'daftar_pembimbing.php');
-    <?php elseif ($status === "error"): ?>
-        alertSuccessEdit('Tidak ada perubahan. Data pembimbing disimpan.', 'daftar_pembimbing.php');
-    <?php endif; ?>
-</script>

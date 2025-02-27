@@ -21,7 +21,7 @@ $instansi = mysqli_fetch_assoc($query);
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 950px;">
                 <div class="card-body top-2">
-                    <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top;">
                     <h4 class="card-title judul"><?= $instansi["nama_panjang"] ?></h4>
 
                     <hr>

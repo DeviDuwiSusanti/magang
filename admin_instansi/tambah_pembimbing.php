@@ -1,7 +1,6 @@
 <?php include "../layout/header.php";
 
 $id_instansi = $_SESSION["id_instansi"];
-// $list_bidang = query("SELECT * FROM tb_bidang WHERE id_instansi = '$id_instansi'");
 $list_bidang = query("SELECT tb_bidang.*, 
                     IFNULL(tb_profile_user.id_user, '') AS id_pembimbing
                 FROM tb_bidang
@@ -10,15 +9,56 @@ $list_bidang = query("SELECT tb_bidang.*,
                 LEFT JOIN tb_user 
                     ON tb_profile_user.id_user = tb_user.id_user
                 WHERE tb_bidang.id_instansi = '$id_instansi'
-                AND (tb_user.level = '5' OR tb_user.level IS NULL) -- Tetap ambil bidang meskipun tidak ada pembimbing
+                AND (tb_user.level = '5' OR tb_user.level IS NULL)
 ");
 
-$status = "";
-if (isset($_POST["tambah_pembimbing"])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_pembimbing'])) {
+    // Cek apakah data sudah ada
+    $cek = cek_tambah_pembimbing($conn, $_POST);
+    if ($cek !== "OK") {
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Gagal Menambahkan!',
+                    text: '$cek',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#d33'
+                });
+            </script>
+        ";
+        exit; // Hentikan eksekusi jika data sudah ada
+    }
+
+    // Jika data belum ada, tambahkan pembimbing baru
     if (tambah_pembimbing($_POST) > 0) {
-        $status = "success";
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Data pembimbing berhasil ditambahkan!',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.location.href = 'daftar_pembimbing.php';
+                    }
+                });
+            </script>
+        ";
     } else {
-        $status = "error";
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: 'Terjadi kesalahan, data pembimbing gagal ditambahkan!',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#d33'
+                });
+            </script>
+        ";
     }
 }
 ?>

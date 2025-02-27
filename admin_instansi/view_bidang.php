@@ -56,12 +56,12 @@ $no = 1;
                                 <td><?= $bd["kriteria_bidang"] ?></td>
                                 <td><?= $bd["kuota_bidang"] ?></td>
                                 <td><?= $bd["dokumen_prasyarat"] ?></td>
-                                <td style="width: 150px;">
-                                    <a href="edit_bidang.php?id_bidang=<?= $bd["id_bidang"] ?>" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil"></i> Edit
+                                <td style="width: 85px;">
+                                    <a href="edit_bidang.php?id_bidang=<?= $bd["id_bidang"] ?>" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                        <i class="bi bi-pencil"></i> 
                                     </a>
-                                    <a href="hapus.php?id=<?= $bd["id_bidang"] ?>&type=bidang" onclick="confirmDelete(event)" class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Hapus
+                                    <a href="hapus.php?id=<?= $bd["id_bidang"] ?>&type=bidang" onclick="confirmDelete(event)" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
+                                        <i class="bi bi-trash"></i>
                                     </a>
                                 </td>
                             </tr>

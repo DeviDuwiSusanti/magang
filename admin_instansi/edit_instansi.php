@@ -9,12 +9,50 @@ $edit_instansi = "SELECT *
 $query = mysqli_query($conn, $edit_instansi);
 $edit_instansi = mysqli_fetch_assoc($query);
 
-$status = "";
-if (isset($_POST["edit_instansi"])) {
-    if (edit_instansi($_POST) > 0) {
-        $status = "success";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
+    // Cek apakah ada perubahan sebelum update
+    if (cek_edit_instansi($conn, $_POST)) {
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Tidak Ada Perubahan!',
+                    text: 'Data instansi telah disimpan.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            </script>
+        ";
     } else {
-        $status = "error";
+        if (edit_instansi($_POST) > 0) {
+            echo "
+                <script>
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Data instansi berhasil diperbarui!',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.location.href = 'view_instansi.php';
+                        }
+                    });
+                </script>
+            ";
+        } else {
+            echo "
+                <script>
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan, data instansi gagal diperbarui!',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    });
+                </script>
+            ";
+        }
     }
 }
 ?>

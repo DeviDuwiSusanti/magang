@@ -68,11 +68,11 @@ $no = 1;
                                     <td><?= ($pembimbing['jabatan']) ?></td>
                                     <td><?= ($pembimbing['telepone_pembimbing']) ?></td>
                                     <td>
-                                        <a href="edit_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Edit
+                                        <a href="edit_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                            <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="hapus.php?id=<?= $pembimbing['id_pembimbing'] ?>&type=pembimbing" class="btn btn-danger btn-sm" onclick="confirmDelete(event)">
-                                            <i class="bi bi-trash"></i> Hapus
+                                        <a href="hapus.php?id=<?= $pembimbing['id_pembimbing'] ?>&type=pembimbing" class="btn btn-danger btn-sm" onclick="confirmDelete(event)" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
+                                            <i class="bi bi-trash"></i>
                                         </a>
                                     </td>
                                 </tr>

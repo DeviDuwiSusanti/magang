@@ -108,12 +108,12 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         <?= isset($nama_pengaju[$row['id_pengajuan']]) ? count(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : 0 ?>
                                     </a>
                                 </td>
-                                <td>
-                                    <a href="#" class="show-doc" title="Lihat Dokumen"
+                                <td class="text-center align-middle">
+                                    <a href="#" class="show-doc btn btn-sm btn-primary" title="Lihat Dokumen" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Dokumen"
                                         data-doc='<?= !empty($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
                                                         ? htmlspecialchars(json_encode($daftar_dokumen[$row['id_user']][$row['id_pengajuan']], JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8')
                                                         : '[]' ?>'>
-                                        Lihat Dokumen
+                                        <i class="bi bi-eye-fill"></i>
                                     </a>
                                 </td>
                                 <td>
@@ -154,13 +154,16 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     }
                                     ?>
                                 </td>
-                                <td>
+                                <td class="text-center align-middle">
                                     <button type="button" class="btn btn-success btn-sm terima-btn"
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Terima Pengajuan" 
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-check-circle"></i> Terima
                                     </button>
-                                    <button class="btn btn-danger btn-sm tolak-btn" data-id="<?= $row['id_pengajuan'] ?>">
-                                        <i class="bi bi-x-circle"></i> Tolak
+                                    <button class="btn btn-danger btn-sm tolak-btn" 
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Tolak Pengajuan"
+                                        data-id="<?= $row['id_pengajuan'] ?>">
+                                        <i class="bi bi-person-x"></i> Tolak
                                     </button>
                                 </td>
                             </tr>

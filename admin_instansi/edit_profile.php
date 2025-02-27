@@ -7,12 +7,50 @@ $edit_profile = query("SELECT *
                 WHERE tb_profile_user.id_user = '$id_user'
                 ")[0];
 
-$status = "";
-if (isset($_POST["edit_profile"])) {
-    if (edit_profile($_POST) > 0) {
-        $status = "success";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
+    // Cek apakah ada perubahan sebelum update
+    if (cek_edit_profile($conn, $_POST)) {
+        echo "
+            <script>
+                Swal.fire({
+                    title: 'Tidak Ada Perubahan!',
+                    text: 'Data profile telah disimpan.',
+                    icon: 'info',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            </script>
+        ";
     } else {
-        $status = "error";
+        if (edit_profile($_POST) > 0) {
+            echo "
+                <script>
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: 'Data profile berhasil diperbarui!',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.location.href = 'view_profile.php';
+                        }
+                    });
+                </script>
+            ";
+        } else {
+            echo "
+                <script>
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: 'Terjadi kesalahan, data profile gagal diperbarui!',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
+                    });
+                </script>
+            ";
+        }
     }
 }
 ?>
@@ -97,13 +135,6 @@ if (isset($_POST["edit_profile"])) {
 <?php include "footer.php"; ?>
 
 <script>
-    <?php if ($status === "success"): ?>
-        alertSuccessEdit('Data profile berhasil diperbarui.', 'view_profile.php');
-    <?php elseif ($status === "error"): ?>
-        alertSuccessEdit('Tidak ada perubahan. Data profile disimpan.', 'view_profile.php');
-    <?php endif; ?>
-
-
     function previewFile() {
         const fileInput = document.getElementById('image');
         const previewContainer = document.getElementById('imagePreview');

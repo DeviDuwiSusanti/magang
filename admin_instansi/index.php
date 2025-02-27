@@ -14,7 +14,8 @@ $bidang_admin = query("SELECT COUNT(*) AS total
     FROM tb_bidang
     JOIN tb_instansi 
         ON tb_bidang.id_instansi = tb_instansi.id_instansi
-    WHERE tb_instansi.id_instansi = '$id_instansi'")[0];
+    WHERE tb_instansi.id_instansi = '$id_instansi'
+    AND tb_bidang.status_active = '1'")[0];
 
 // Query untuk menghitung total pengajuan
 $total_pengajuan = query("SELECT COUNT(*) AS total 

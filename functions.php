@@ -426,6 +426,32 @@
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
     }
+
+    function cek_edit_profile($conn, $data_baru) {
+        $id_user = $data_baru["id_user"];
+    
+        // Ambil data lama dari database
+        $query_check = "SELECT * FROM tb_profile_user WHERE id_user = '$id_user'";
+        $result_check = mysqli_query($conn, $query_check);
+        $data_lama = mysqli_fetch_assoc($result_check);
+    
+        // Jika data lama tidak ditemukan, anggap perubahan terjadi
+        if (!$data_lama) {
+            return false;
+        }
+    
+        // Cek apakah ada gambar baru yang diunggah
+        $gambar_baru = !empty($_FILES["gambar"]["name"]) ? $_FILES["gambar"]["name"] : $data_baru["gambar_lama"];
+
+        // Bandingkan data lama dengan data baru
+        return $data_lama['nama_user'] == $data_baru["nama_user"] &&
+            $data_lama['tempat_lahir'] == $data_baru["tempat_lahir"] &&
+            $data_lama['tanggal_lahir'] == $data_baru["tanggal_lahir"] &&
+            $data_lama['telepone_user'] == $data_baru["telepone"] &&
+            $data_lama['jenis_kelamin'] == $data_baru["jenis_kelamin"] &&
+            $data_lama['alamat_user'] == $data_baru["alamat_user"] &&
+            $data_lama['gambar_user'] == $gambar_baru;
+    }    
     
     function tambah_bidang($POST) {
         global $conn;
@@ -501,32 +527,68 @@
 
     function edit_pembimbing($POST) {
         global $conn;
-
+    
         // Ambil data dari form
-        $id_user = $POST["id_user"]; // Untuk mencatat siapa yang mengedit data
-        $id_pembimbing = $POST["id_pembimbing"];
-        $nama_pembimbing = $POST["nama_pembimbing"];
-        $nik_pembimbing = $POST["nik_pembimbing"];
-        $nip = $POST["nip"];
-        $jabatan = $POST["jabatan"];
-        $telepone_pembimbing = $POST["telepone_pembimbing"];
-        $id_bidang = $POST["id_bidang"];
-
-        // Query untuk update data pembimbing
-        $query = "UPDATE tb_profile_user
-                SET nama_user = '$nama_pembimbing',
-                    nik = '$nik_pembimbing',
-                    nip = '$nip',
-                    jabatan = '$jabatan',
-                    telepone_user = '$telepone_pembimbing',
-                    id_bidang = '$id_bidang',
-                    change_by = '$id_user'
-                WHERE id_user = '$id_pembimbing'";
-
-        // Eksekusi query
-        mysqli_query($conn, $query);
-
-        // Kembalikan jumlah baris yang terpengaruh
+        $id_user                = $POST["id_user"];
+        $id_pembimbing          = $POST["id_pembimbing"];
+        $nama_pembimbing        = $POST["nama_pembimbing"];
+        $nik_pembimbing         = $POST["nik_pembimbing"];
+        $nip                    = $POST["nip"];
+        $jabatan                = $POST["jabatan"];
+        $telepone_pembimbing    = $POST["telepone_pembimbing"];
+        $id_bidang_baru         = $POST["id_bidang"];
+    
+        // Cek bidang lama dari database
+        $query_bidang_lama = "SELECT id_bidang FROM tb_profile_user WHERE id_user = '$id_pembimbing'";
+        $result = mysqli_query($conn, $query_bidang_lama);
+        $row = mysqli_fetch_assoc($result);
+        $id_bidang_lama = $row['id_bidang'];
+    
+        // Jika bidang berubah, buat ID pembimbing baru
+        if ($id_bidang_lama != $id_bidang_baru) {
+            $query_check_bidang = "SELECT id_bidang FROM tb_bidang WHERE id_bidang = '$id_bidang_baru'";
+            mysqli_query($conn, $query_check_bidang);
+    
+            // Hitung jumlah pembimbing di bidang baru untuk menentukan counter
+            $query_count_pembimbing = "SELECT COUNT(*) as jumlah FROM tb_profile_user WHERE id_bidang = '$id_bidang_baru'";
+            $result_count = mysqli_query($conn, $query_count_pembimbing);
+            $row_count = mysqli_fetch_assoc($result_count);
+            $counter = str_pad($row_count['jumlah'] + 1, 2, '0', STR_PAD_LEFT);
+    
+            // Generate id_user baru: {id_bidang}{counter}
+            $id_user_baru = $id_bidang_baru . $counter;
+    
+            // Update id_user di tb_profile_user
+            $query_update_profile = "UPDATE tb_profile_user 
+                                    SET id_user = '$id_user_baru',
+                                        nama_user = '$nama_pembimbing',
+                                        nik = '$nik_pembimbing',
+                                        nip = '$nip',
+                                        jabatan = '$jabatan',
+                                        telepone_user = '$telepone_pembimbing',
+                                        id_bidang = '$id_bidang_baru',
+                                        change_by = '$id_user' 
+                                    WHERE id_user = '$id_pembimbing'";
+    
+            // Update id_user di tb_user
+            $query_update_user = "UPDATE tb_user SET id_user = '$id_user_baru' WHERE id_user = '$id_pembimbing'";
+    
+            mysqli_query($conn, $query_update_profile);
+            mysqli_query($conn, $query_update_user);
+        } else {
+            // Jika bidang tidak berubah, update data saja tanpa mengganti id_user
+            $query_update = "UPDATE tb_profile_user
+                            SET nama_user = '$nama_pembimbing',
+                                nik = '$nik_pembimbing',
+                                nip = '$nip',
+                                jabatan = '$jabatan',
+                                telepone_user = '$telepone_pembimbing',
+                                change_by = '$id_user'
+                            WHERE id_user = '$id_pembimbing'";
+    
+            mysqli_query($conn, $query_update);
+        }
+    
         return mysqli_affected_rows($conn);
     }
 
@@ -545,6 +607,92 @@
         return mysqli_affected_rows($conn);
     }
 
-
-
+    function cek_edit_pembimbing($conn, $data_baru) {
+        $id_pembimbing = $data_baru["id_pembimbing"];
+    
+        // Ambil data lama dari database
+        $query_check = "SELECT * FROM tb_profile_user WHERE id_user = '$id_pembimbing'";
+        $result_check = mysqli_query($conn, $query_check);
+        $data_lama = mysqli_fetch_assoc($result_check);
+    
+        // Jika data lama tidak ditemukan, anggap perubahan terjadi
+        if (!$data_lama) {
+            return false;
+        }
+    
+        // Bandingkan data lama dengan data baru
+        return $data_lama['nama_user'] == $data_baru["nama_pembimbing"] &&
+               $data_lama['nik'] == $data_baru["nik_pembimbing"] &&
+               $data_lama['nip'] == $data_baru["nip"] &&
+               $data_lama['jabatan'] == $data_baru["jabatan"] &&
+               $data_lama['telepone_user'] == $data_baru["telepone_pembimbing"] &&
+               $data_lama['id_bidang'] == $data_baru["id_bidang"];
+    }
+    
+    function cek_edit_instansi($conn, $data_baru) {
+        $id_instansi = $data_baru["id_instansi"];
+    
+        // Ambil data lama dari database
+        $query_check = "SELECT * FROM tb_instansi WHERE id_instansi = '$id_instansi'";
+        $result_check = mysqli_query($conn, $query_check);
+        $data_lama = mysqli_fetch_assoc($result_check);
+    
+        // Jika data lama tidak ditemukan, anggap perubahan terjadi
+        if (!$data_lama) {
+            return false;
+        }
+    
+        // Cek apakah ada gambar baru yang diunggah
+        $gambar_baru = !empty($_FILES["gambar_instansi"]["name"]) ? $_FILES["gambar_instansi"]["name"] : $data_baru["gambar_instansi"];
+    
+        // Bandingkan data lama dengan data baru
+        return $data_lama['nama_pendek'] == $data_baru["nama_pendek"] &&
+               $data_lama['nama_panjang'] == $data_baru["nama_panjang"] &&
+               $data_lama['group_instansi'] == $data_baru["group_instansi"] &&
+               $data_lama['alamat_instansi'] == $data_baru["alamat_instansi"] &&
+               $data_lama['lokasi_instansi'] == $data_baru["lokasi_instansi"] &&
+               $data_lama['deskripsi_instansi'] == $data_baru["deskripsi_instansi"] &&
+               $data_lama['telepone_instansi'] == $data_baru["telepone_instansi"] &&
+               $data_lama['gambar_instansi'] == $gambar_baru;
+    }
+    
+    function cek_tambah_pembimbing($conn, $POST) {
+        $email = $POST["email"];
+        $nik_pembimbing = $POST["nik_pembimbing"];
+        $nip = $POST["nip"];
+        $telepone_pembimbing = $POST["telepone_pembimbing"];
+    
+        // Cek apakah email sudah terdaftar
+        $query_email = "SELECT * FROM tb_user WHERE email = '$email'";
+        $result_email = mysqli_query($conn, $query_email);
+        if (mysqli_num_rows($result_email) > 0) {
+            return "Email sudah terdaftar!";
+        }
+    
+        // Cek apakah NIK sudah ada
+        $query_nik = "SELECT * FROM tb_profile_user WHERE nik = '$nik_pembimbing'";
+        $result_nik = mysqli_query($conn, $query_nik);
+        if (mysqli_num_rows($result_nik) > 0) {
+            return "NIK sudah terdaftar!";
+        }
+    
+        // Cek apakah NIP sudah ada (jika diisi)
+        if (!empty($nip)) {
+            $query_nip = "SELECT * FROM tb_profile_user WHERE nip = '$nip'";
+            $result_nip = mysqli_query($conn, $query_nip);
+            if (mysqli_num_rows($result_nip) > 0) {
+                return "NIP sudah terdaftar!";
+            }
+        }
+    
+        // Cek apakah nomor telepon sudah ada
+        $query_telepone = "SELECT * FROM tb_profile_user WHERE telepone_user = '$telepone_pembimbing'";
+        $result_telepone = mysqli_query($conn, $query_telepone);
+        if (mysqli_num_rows($result_telepone) > 0) {
+            return "Nomor telepon sudah digunakan!";
+        }
+    
+        return "OK"; // Tidak ada duplikasi, bisa lanjut menambahkan
+    }
+    
 
