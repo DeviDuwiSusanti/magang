@@ -61,7 +61,7 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
             $result = mysqli_query($conn, $pendidikan);
             $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
         
-            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
             $query_anggota1 = mysqli_query($conn, $sql_anggota1);
             
             $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', 4, '$id_user')";
@@ -69,16 +69,16 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
         }
     }
 
-    $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
+    $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', 'Menunggu', 'Y', '$id_user', NOW(), '', '')";
     $query2 = mysqli_query($conn, $sql2);
 
-    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
     $query3 = mysqli_query($conn, $sql3);
     
 
     if ($query2 && $query3){
         $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
-        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', '$cv[name]', 'identitas', '$cv[path]', '$id_pengajuan', '$id_user', 'Y', '$id_user', NOW(), '', '')";
         $query4 = mysqli_query($conn, $sql4);
 
         $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
@@ -175,7 +175,7 @@ if (isset($_POST["id_bidang"])) {
                     <h4>Step 1: Daftar Pengajuan</h4>
                     <div class="mb-3">
                         <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                        <select class="form-control" name="id_instansi" id="instansi">
+                        <select class="form-control" name="id_instansi" id="instansi" required>
                             <option value="" disabled selected> -- Pilih Instansi --</option>
                             <?php
                             if (mysqli_num_rows($result_instansi) > 0) {
@@ -187,17 +187,16 @@ if (isset($_POST["id_bidang"])) {
                         </select>
                     </div>
 
-
                     <div class="mb-3">
                         <label for="bidang" class="form-label">Bidang yang Dipilih</label>
-                        <select class="form-control" name="id_bidang" id="bidang">
+                        <select class="form-control" name="id_bidang" id="bidang" required>
                             <option value="" disabled selected> -- Pilih Bidang --</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
-                        <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
+                        <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan" required>
                             <option value="" disabled selected>Pilih Jenis Pengajuan</option>
                             <option value="magang">Magang</option>
                             <option value="kerja praktek">Kerja Praktek</option>
@@ -208,7 +207,7 @@ if (isset($_POST["id_bidang"])) {
 
                     <div class="mb-3">
                         <label for="kelompok_pribadi" class="form-label">Personil</label>
-                        <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi">
+                        <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi" required>
                             <option value="" disabled selected>Pilih Personil</option>
                             <option value="Kelompok">Kelompok</option>
                             <option value="Pribadi">Pribadi</option>
@@ -217,36 +216,30 @@ if (isset($_POST["id_bidang"])) {
 
                     <div class="mb-3">
                         <label for="jumlah_anggota" class="form-label">Jumlah Anggota (Termasuk Kamu)</label>
-                        <input type="number"  class="form-control" id="jumlah_anggota" name="jumlah_anggota">
+                        <input type="number"  class="form-control" id="jumlah_anggota" name="jumlah_anggota" required>
                     </div>
 
 
                     <!-- Tanggal Mulai dan Selesai -->
                     <div class="mb-3">
                         <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai">
+                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
                     </div>
                     <div class="mb-3">
                         <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai">
+                        <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" required>
                     </div>
 
                     <!-- Upload KTP -->
                     <div class="mb-3">
                         <label for="ktp" class="form-label">Upload KTP</label>
-                        <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf">
-                        <small class="form-text text-muted">
-                            *Format nama file: <strong>KTP_NamaLengkap.pdf</strong>
-                        </small>
+                        <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf" required>
                     </div>
 
                     <!-- Upload CV -->
                     <div class="mb-3">
                         <label for="cv" class="form-label">Upload CV</label>
-                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
-                        <small class="form-text text-muted">
-                            *Format nama file: <strong>CV_NamaLengkap.pdf</strong>
-                        </small>
+                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" required>
                     </div>
 
                         <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep()">Next</button>
@@ -360,140 +353,6 @@ $(document).ready(function() {
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("pengajuanForm");
-    const nextButton = document.getElementById("nextButton");
-    const submitButton = document.getElementById("submitButton");
-    const kelompokPribadi = document.getElementById("kelompok_pribadi");
-
-    // Tombol Next hanya bisa dipakai jika validasi berhasil
-    nextButton.addEventListener("click", function () {
-        if (validateStep1()) { 
-            document.getElementById("step1").style.display = "none";
-            document.getElementById("step2").style.display = "block";
-        }
-    });
-
-    // Validasi sebelum submit
-    form.addEventListener("submit", function (event) {
-        event.preventDefault(); // Mencegah form terkirim langsung
-        if (!validateStep1()) return; // Cek validasi Step 1 dulu
-
-        form.submit(); // Kirim form jika semua valid
-    });
-
-    // Menampilkan error message di bawah input
-    function showError(input, message) {
-        let errorDiv = input.parentElement.querySelector(".error-message");
-        if (!errorDiv) {
-            errorDiv = document.createElement("small");
-            errorDiv.className = "error-message";
-            errorDiv.style.color = "red";
-            input.parentElement.appendChild(errorDiv);
-        }
-        errorDiv.textContent = message;
-    }
-
-    // Menghapus semua error message
-    function clearErrors() {
-        document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
-    }
-
-    // Validasi Step 1
-    function validateStep1() {
-        clearErrors();
-
-        let isValid = true;
-        
-        const fields = [
-            { id: "instansi", message: "Pilih instansi yang dituju!" },
-            { id: "bidang", message: "Pilih bidang yang dipilih!" },
-            { id: "jenis_pengajuan", message: "Pilih jenis pengajuan!" },
-            { id: "kelompok_pribadi", message: "Pilih personil (Kelompok atau Pribadi)!" },
-            { id: "jumlah_anggota", message: "Jumlah anggota harus minimal 1 (termasuk kamu)!", min: 1 },
-            { id: "tanggal_mulai", message: "Pilih tanggal mulai!" },
-            { id: "tanggal_selesai", message: "Pilih tanggal selesai!" },
-            { id: "ktp", message: "Upload KTP dalam format PDF!" },
-            { id: "cv", message: "Upload CV dalam format PDF!" }
-        ];
-
-        fields.forEach(field => {
-            const input = document.getElementById(field.id);
-            if (!input.value || (field.min && input.value < field.min)) {
-                showError(input, field.message);
-                isValid = false;
-            }
-        });
-
-        return isValid;
-    }
-
-    // Perubahan tombol berdasarkan pilihan personil
-    kelompokPribadi.addEventListener("change", function () {
-        if (kelompokPribadi.value === "Kelompok") {
-            nextButton.style.display = "inline-block";
-            submitButton.style.display = "none";
-        } else if (kelompokPribadi.value === "Pribadi") {
-            nextButton.style.display = "none";
-            submitButton.style.display = "inline-block";
-        } else {
-            nextButton.style.display = "none";
-            submitButton.style.display = "inline-block";
-        }
-    });
-});
-
-
-function prevStep() {
-    document.getElementById("step1").style.display = "block";
-    document.getElementById("step2").style.display = "none";
-}
-</script>
-
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const kelompokPribadi = document.getElementById("kelompok_pribadi");
-    const nextButton = document.getElementById("nextButton");
-    const submitButton = document.getElementById("submitButton");
-
-    // Tampilkan tombol "Kirim" secara default jika personil belum dipilih
-    submitButton.style.display = "inline-block";
-    nextButton.style.display = "none";
-
-    // Fungsi untuk mengatur tombol berdasarkan pilihan Personil
-    function updateButtons() {
-        const personilValue = kelompokPribadi.value;
-
-        if (personilValue === "Kelompok") {
-            nextButton.style.display = "inline-block"; // Tampilkan Next
-            submitButton.style.display = "none"; // Sembunyikan Kirim
-        } else if (personilValue === "Pribadi") {
-            nextButton.style.display = "none"; // Sembunyikan Next
-            submitButton.style.display = "inline-block"; // Tampilkan Kirim
-        } else {
-            // Jika belum memilih, tombol Kirim tetap muncul
-            nextButton.style.display = "none";
-            submitButton.style.display = "inline-block";
-        }
-    }
-
-    // Perubahan pada dropdown Personil
-    kelompokPribadi.addEventListener("change", updateButtons);
-});
-
-function nextStep() {
-    document.getElementById("step1").style.display = "none";
-    document.getElementById("step2").style.display = "block";
-}
-
-function prevStep() {
-    document.getElementById("step1").style.display = "block";
-    document.getElementById("step2").style.display = "none";
-}
-</script>
-
-<script>
     document.addEventListener("DOMContentLoaded", function() {
         const kelompokPribadi = document.getElementById("kelompok_pribadi");
         const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
@@ -513,13 +372,13 @@ function prevStep() {
                 jumlahAnggotaContainer.style.display = "block"; // Tampilkan input jumlah anggota
                 nextButton.style.display = "inline-block"; // Tampilkan tombol Next
                 submitButton.style.display = "none"; // Sembunyikan tombol Kirim
-                jumlahAnggotaInput = true; 
+                jumlahAnggotaInput.required = true; 
             } else {
                 jumlahAnggotaContainer.style.display = "none"; // Sembunyikan input jumlah anggota
                 step2.style.display = "none"; // Sembunyikan Step 2
                 nextButton.style.display = "none"; // Sembunyikan tombol Next
                 submitButton.style.display = "inline-block"; // Tampilkan tombol Kirim
-                jumlahAnggotaInput = false; 
+                jumlahAnggotaInput.required = false; 
             }
         });
 
@@ -534,16 +393,16 @@ function prevStep() {
                             <label class="form-label">Anggota ${i}</label>
                             <div class="row">
                                 <div class="col">
-                                    <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama">
+                                    <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" required>
                                 </div>
                                 <div class="col">
-                                    <input type="email" class="form-control" name="anggota_email[]" placeholder="Email">
+                                    <input type="email" class="form-control" name="anggota_email[]" placeholder="Email" required>
                                 </div>
                                 <div class="col">
-                                    <input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK">
+                                    <input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK" required>
                                 </div>
                                 <div class="col">
-                                    <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN">
+                                    <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" required>
                                 </div>
                             </div>
                         </div>
@@ -564,9 +423,4 @@ function prevStep() {
         window.nextStep = nextStep;
         window.prevStep = prevStep;
     });
-</script>
-
-<!-- SCRIPT UNTUK  VALIDASI FORM -->
-<script>
-
 </script>

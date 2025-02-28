@@ -401,3 +401,39 @@ $(document).ready(function() {
     });
 </script>
 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#pengajuanForm').on('submit', function(e) {
+            e.preventDefault();
+            validateEmails();
+        });
+
+        function validateEmails() {
+            let emails = [];
+            $('input[name="anggota_email[]"]').each(function() {
+                emails.push($(this).val().trim());
+            });
+
+            let idPengajuan = <?= json_encode($pengajuan['id_pengajuan']) ?>;
+
+            $.ajax({
+                url: '',
+                type: 'POST',
+                data: { emails: emails, id_pengajuan: idPengajuan },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        alert('Ada email yang sudah terdaftar dalam pengajuan lain!');
+                    } else {
+                        $('#pengajuanForm')[0].submit();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+</script>
