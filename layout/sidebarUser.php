@@ -2,7 +2,7 @@
 session_start();
 include "../koneksi.php";
 
-if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
+if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
     $sql = "SELECT * FROM tb_user 
             JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user 
@@ -126,8 +126,7 @@ if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                             <img src="../assets/img/user/<?= !empty($row['gambar_user']) ? $row['gambar_user'] : 'avatar.png' ?>" 
-                                alt="foto profil" class="avatar img-fluid rounded-circle">
-
+                                alt="<?= $row['nama_user'] ?>" class="avatar img-fluid rounded-circle">
                             </a>
                             <?php 
                             if ($level == 3){?>

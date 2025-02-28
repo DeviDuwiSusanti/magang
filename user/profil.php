@@ -1,6 +1,6 @@
 <?php include "../layout/sidebarUser.php";
 
-$sql2 = "SELECT * FROM tb_profile_user, tb_user, tb_pendidikan WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user  = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
+$sql2 = "SELECT pu.*, u.*, p.* FROM tb_profile_user pu JOIN tb_user u ON pu.id_user = u.id_user LEFT JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan WHERE pu.id_user = '$id_user'";
 $query2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($query2);
 
@@ -38,7 +38,9 @@ $row2 = mysqli_fetch_assoc($query2);
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-gender-ambiguous"></i> <strong>Jenis Kelamin</strong></td>
-                                    <td><?= $row2['jenis_kelamin'] ?></td>
+                                    <td>
+                                        <?= ($row2['jenis_kelamin'] == 1) ? 'Laki-laki' : 'Perempuan'; ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-credit-card"></i> <strong>NIK</strong></td>

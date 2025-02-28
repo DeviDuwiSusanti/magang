@@ -13,7 +13,7 @@ $id_pengajuan = $_GET['id_pengajuan'];
 
 // Query untuk mengambil detail pengajuan berdasarkan id_pengajuan
 $sql = "SELECT *
-        FROM tb_pengajuanc
+        FROM tb_pengajuan
         JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
         JOIN tb_user ON tb_profile_user.id_user = tb_user.id_user
         JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi

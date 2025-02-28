@@ -187,6 +187,7 @@ if (isset($_POST["id_bidang"])) {
                         </select>
                     </div>
 
+
                     <div class="mb-3">
                         <label for="bidang" class="form-label">Bidang yang Dipilih</label>
                         <select class="form-control" name="id_bidang" id="bidang">
@@ -381,56 +382,50 @@ document.addEventListener("DOMContentLoaded", function () {
         form.submit(); // Kirim form jika semua valid
     });
 
+    // Menampilkan error message di bawah input
+    function showError(input, message) {
+        let errorDiv = input.parentElement.querySelector(".error-message");
+        if (!errorDiv) {
+            errorDiv = document.createElement("small");
+            errorDiv.className = "error-message";
+            errorDiv.style.color = "red";
+            input.parentElement.appendChild(errorDiv);
+        }
+        errorDiv.textContent = message;
+    }
+
+    // Menghapus semua error message
+    function clearErrors() {
+        document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
+    }
+
     // Validasi Step 1
     function validateStep1() {
-        let instansi = document.getElementById("instansi").value;
-        let bidang = document.getElementById("bidang").value;
-        let jenisPengajuan = document.getElementById("jenis_pengajuan").value;
-        let personil = kelompokPribadi.value;
-        let jumlahAnggota = document.getElementById("jumlah_anggota").value;
-        let tanggalMulai = document.getElementById("tanggal_mulai").value;
-        let tanggalSelesai = document.getElementById("tanggal_selesai").value;
-        let ktp = document.getElementById("ktp").value;
-        let cv = document.getElementById("cv").value;
+        clearErrors();
 
-        if (!instansi) {
-            alert("Pilih instansi yang dituju!");
-            return false;
-        }
-        if (!bidang) {
-            alert("Pilih bidang yang dipilih!");
-            return false;
-        }
-        if (!jenisPengajuan) {
-            alert("Pilih jenis pengajuan!");
-            return false;
-        }
-        if (!personil) {
-            alert("Pilih personil (Kelompok atau Pribadi)!");
-            return false;
-        }
-        if (!jumlahAnggota || jumlahAnggota < 1) { // Pastikan jumlah anggota minimal 1
-            alert("Jumlah anggota harus minimal 1 (termasuk kamu)!");
-            return false;
-        }
-        if (!tanggalMulai) {
-            alert("Pilih tanggal mulai!");
-            return false;
-        }
-        if (!tanggalSelesai) {
-            alert("Pilih tanggal selesai!");
-            return false;
-        }
-        if (!ktp) {
-            alert("Upload KTP dalam format PDF!");
-            return false;
-        }
-        if (!cv) {
-            alert("Upload CV dalam format PDF!");
-            return false;
-        }
+        let isValid = true;
+        
+        const fields = [
+            { id: "instansi", message: "Pilih instansi yang dituju!" },
+            { id: "bidang", message: "Pilih bidang yang dipilih!" },
+            { id: "jenis_pengajuan", message: "Pilih jenis pengajuan!" },
+            { id: "kelompok_pribadi", message: "Pilih personil (Kelompok atau Pribadi)!" },
+            { id: "jumlah_anggota", message: "Jumlah anggota harus minimal 1 (termasuk kamu)!", min: 1 },
+            { id: "tanggal_mulai", message: "Pilih tanggal mulai!" },
+            { id: "tanggal_selesai", message: "Pilih tanggal selesai!" },
+            { id: "ktp", message: "Upload KTP dalam format PDF!" },
+            { id: "cv", message: "Upload CV dalam format PDF!" }
+        ];
 
-        return true; // Jika semua terisi, lanjutkan ke step berikutnya
+        fields.forEach(field => {
+            const input = document.getElementById(field.id);
+            if (!input.value || (field.min && input.value < field.min)) {
+                showError(input, field.message);
+                isValid = false;
+            }
+        });
+
+        return isValid;
     }
 
     // Perubahan tombol berdasarkan pilihan personil
@@ -447,6 +442,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
 
 function prevStep() {
     document.getElementById("step1").style.display = "block";

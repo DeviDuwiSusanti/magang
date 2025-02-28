@@ -62,7 +62,7 @@ if (ISSET($_POST['update_profil'])){
         tempat_lahir = '$tempat_lahir',
         tanggal_lahir = '$tanggal_lahir',
         jenis_kelamin = '$jenis_kelamin',
-        nik_user = '$nik',
+        nik = '$nik',
         nim = '$nim',
         nisn = '$nisn',
         id_pendidikan = '$id_pendidikan',
@@ -118,11 +118,11 @@ if (ISSET($_POST['update_profil'])){
                 <label class="form-label">Jenis Kelamin</label>
                 <div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_l" value="L" <?= ($row2['jenis_kelamin'] == 'L') ? 'checked' : '' ?>>
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_l" value="1" <?= ($row2['jenis_kelamin'] == '1') ? 'checked' : '' ?>>
                         <label class="form-check-label" for="jenis_kelamin_l">Laki-laki</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_p" value="P" <?= ($row2['jenis_kelamin'] == 'P') ? 'checked' : '' ?>>
+                        <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_p" value="0" <?= ($row2['jenis_kelamin'] == '0') ? 'checked' : '' ?>>
                         <label class="form-check-label" for="jenis_kelamin_p">Perempuan</label>
                     </div>
                 </div>
@@ -131,7 +131,7 @@ if (ISSET($_POST['update_profil'])){
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik_user'] ?>" required>
+                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik'] ?>" required>
             </div>
             
             <!-- Asal Studi -->
