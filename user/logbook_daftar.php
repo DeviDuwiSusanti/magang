@@ -36,7 +36,7 @@ if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
             <?php
-            if ($status_pengajuan!= '3'){?>
+            if ($status_pengajuan!= '5'){?>
                 <a href="logbook_unggah.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-1"></i>
                     Tambah Logbook
