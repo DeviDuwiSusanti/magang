@@ -122,6 +122,9 @@ if (!$row) {
             <a href="pengajuan_edit.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>" class="btn btn-sm btn-primary position-absolute <?= $disable_all ?>" style="bottom: 10px; left: 200px;">
                 <i class="bi bi-pencil-square"></i> Edit Pengajuan
             </a>
+            <a href="detail_anggota.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; left: 360px;">
+                <i class="bi bi-people"></i> Anggota
+            </a>
         </div>
     </div>
 </div>

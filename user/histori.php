@@ -15,7 +15,6 @@ if ($level == '3'){
 }else if ($level == '4'){
     $sql = "SELECT * FROM tb_profile_user pu, tb_pengajuan p, tb_bidang b, tb_instansi i WHERE pu.id_user = '250217110406' AND pu.id_pengajuan = p.id_pengajuan AND p.id_bidang = b.id_bidang AND p.id_instansi = i.id_instansi";
 }
-
 $query = mysqli_query($conn, $sql);
 $no = 1;
 ?>

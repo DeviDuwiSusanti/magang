@@ -31,18 +31,25 @@ function generateIdDokumen($conn, $id_pengajuan) {
 }
 
 function generateIdUser4($conn, $id_user) {
-    // Ambil jumlah ID yang sudah ada untuk pengguna ini
-    $query = "SELECT COUNT(*) AS total FROM tb_user WHERE id_user LIKE '$id_user%'";
+    // Cari id_user terakhir yang memiliki awalan tertentu
+    $query = "SELECT id_user FROM tb_user WHERE id_user LIKE '$id_user%' ORDER BY id_user DESC LIMIT 1";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
-    $totalCount = $row['total'] + 1; // Urutan berikutnya
 
-    // Format menjadi dua digit (01, 02, 03, ...)
-    $counter = str_pad($totalCount, 2, "0", STR_PAD_LEFT);
+    if ($row) {
+        // Ambil angka dari id_user terakhir
+        $lastId = (int) substr($row['id_user'], strlen($id_user));
+        $nextId = $lastId + 1;
+    } else {
+        $nextId = 1; // Jika belum ada data, mulai dari 1
+    }
 
-    // Gabungkan untuk mendapatkan id_user4
-    return $id_user . $counter;
+    // Format dua digit (01, 02, dst.)
+    $counter = str_pad($nextId, 2, "0", STR_PAD_LEFT);
+
+    return trim($id_user) . $counter;
 }
+
 
 
 function uploadFile($file) {
