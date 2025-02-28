@@ -12,7 +12,7 @@ $query_pengajuan = mysqli_query($conn, $sql_pengajuan);
 $row = mysqli_fetch_assoc($query_pengajuan);
 
 // Mengambil daftar dokumen laporan akhir
-$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3'";
+$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3' AND id_pengajuan = '$id_pengajuan'";
 $result = mysqli_query($conn, $sql);
 
 // Cek apakah pengguna sudah mengunggah laporan akhir
