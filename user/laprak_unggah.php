@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
                     VALUES ('$id_dokumen_laporan', '$laporan_name', '3', '$laporan_path', '$id_pengajuan', '$id_user', '$id_user', '1', NOW(), NOW())";
 
             if (mysqli_query($conn, $sql)) {
-                echo "<script>alert('Laporan berhasil diunggah'); window.location.href='laprak_daftar.php?id_user=$id_user';</script>";
+                echo "<script>alert('Laporan berhasil diunggah'); window.location.href='laprak_daftar.php?id_pengajuan={$id_pengajuan}&id_user={$id_user}';</script>";
             } else {
                 echo "<script>alert('Gagal mengunggah laporan');</script>";
             }
