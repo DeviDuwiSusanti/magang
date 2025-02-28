@@ -224,11 +224,10 @@ if (isset($_POST["id_bidang"])) {
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
     const nextButton = document.getElementById("nextButton");
     const submitButton = document.getElementById("submitButton");
-    const pengajuanForm = document.getElementById("pengajuanForm");
     const step1 = document.getElementById("step1");
     const step2 = document.getElementById("step2");
     const anggotaContainer = document.getElementById("anggotaContainer");
@@ -237,9 +236,8 @@ if (isset($_POST["id_bidang"])) {
     let anggotaCount = <?= json_encode($jumlahAnggota) ?> - 1; 
     const anggotaData = <?= json_encode($anggotaData) ?>;
 
-    // --- Navigasi antar step ---
     nextButton.addEventListener("click", function() {
-        validateStep1();
+        nextStep();
     });
 
     function nextStep() {
@@ -248,14 +246,13 @@ if (isset($_POST["id_bidang"])) {
         step2.style.display = "block";
     }
 
-    window.prevStep = function() {
+    function prevStep() {
         step2.style.display = "none";
         step1.style.display = "block";
-    };
+    }
 
-    // --- Render anggota ---
     function renderAnggota() {
-        anggotaContainer.innerHTML = "";
+        anggotaContainer.innerHTML = ""; 
         for (let i = 1; i <= anggotaCount; i++) {
             const data = anggotaData[i] || {};
             const anggotaHTML = `
@@ -274,7 +271,7 @@ if (isset($_POST["id_bidang"])) {
                         <div class="col">
                             <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" value="${data.nim || ''}" required>
                         </div>
-                        <div class="col-auto">
+                         <div class="col-auto">
                             <button type="button" class="btn btn-danger btn-sm" onclick="confirmRemoveAnggota(${i})">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
@@ -284,7 +281,7 @@ if (isset($_POST["id_bidang"])) {
             `;
             anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
         }
-        jumlahAnggotaInput.value = anggotaCount + 1;
+        jumlahAnggotaInput.value = anggotaCount + 1; 
     }
 
     addMemberButton.addEventListener("click", function() {
@@ -318,61 +315,8 @@ if (isset($_POST["id_bidang"])) {
         }
     };
 
-    // --- Validasi Step 1 ---
-    function validateStep1() {
-        const formData = new FormData(pengajuanForm);
-
-        fetch('validasi.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'error') {
-                alert(formatErrors(data.errors));
-            } else {
-                nextStep();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-    // --- Validasi Step 2 ---
-    pengajuanForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-        validateStep2();
-    });
-
-    function validateStep2() {
-        const formData = new FormData(pengajuanForm);
-
-        fetch('validasi.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'error') {
-                alert(formatErrors(data.errors));
-            } else {
-                pengajuanForm.submit();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-    // --- Format error ---
-    function formatErrors(errors) {
-        let errorMessage = 'Terjadi kesalahan:\n';
-        for (const [key, value] of Object.entries(errors)) {
-            errorMessage += `- ${value}\n`;
-        }
-        return errorMessage;
-    }
+    window.nextStep = nextStep;
+    window.prevStep = prevStep;
 
     renderAnggota();
 });

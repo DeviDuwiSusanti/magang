@@ -21,7 +21,7 @@ $query4 = mysqli_query($conn, $sql4);
 $total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
 
 // akses laporan akhir
-$sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = 'laporan'";
+$sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = '3'";
 $query5 = mysqli_query($conn, $sql5);
 $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 
