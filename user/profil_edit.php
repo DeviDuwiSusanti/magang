@@ -100,12 +100,14 @@ if (ISSET($_POST['update_profil'])){
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Lengkap</label>
                 <input type="text" class="form-control" id="nama" name="nama" value="<?= $row2['nama_user'] ?>" required>
+                <div class="error-message text-danger" id="error-nama"></div>
             </div>
             
             <!-- Tempat Lahir -->
             <div class="mb-3">
                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
                 <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= $row2['tempat_lahir'] ?>" required>
+                <div class="error-message text-danger" id="error-tempat_lahir"></div>
             </div>
             
             <!-- Tanggal Lahir -->
@@ -132,6 +134,7 @@ if (ISSET($_POST['update_profil'])){
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
                 <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik'] ?>" required>
+                <div class="error-message text-danger" id="error-nik"></div>
             </div>
             
             <!-- Asal Studi -->
@@ -174,20 +177,17 @@ if (ISSET($_POST['update_profil'])){
                 </select>
             </div>
 
-            <!-- NIM -->
-            <!-- <div class="mb-3">
-                <label for="nim" class="form-label"><?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></label>
-                <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>" required>
-            </div> -->
             <div class="mb-3">
                 <label for="nim" class="form-label">NIM/NISN</label>
                 <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>" required>
+                <div class="error-message text-danger" id="error-nim"></div>
             </div>
             
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telepon" class="form-label">Telepon</label>
                 <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone_user'] ?>" required>
+                <div class="error-message text-danger" id="error-telepon"></div>
             </div>
             <!-- Alamat -->
             <div class="mb-3">
@@ -199,13 +199,14 @@ if (ISSET($_POST['update_profil'])){
             <div class="mb-3">
                 <label for="image">Foto Profil</label><br><br>
                 <div class="image-preview" id="imagePreview">
-                    <img src="<?= !empty($row2['gambar']) ? '../assets/img/user/'.$row2['gambar_user'] : '../assets/img/user/avatar.png' ?>" 
+                    <img src="<?= !empty($row2['gambar_user']) ? '../assets/img/user/'.$row2['gambar_user'] : '../assets/img/user/avatar.png' ?>" 
                         id="previewImage" 
                         class="rounded-circle mb-3" 
                         style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
                 </div>
                 <input type="file" class="input form-control" id="image" name="image" accept="image/*" onchange="previewFile()">
                 <small class="text-muted">Kosong jika tidak ingin diganti</small>
+                <div class="error-message text-danger" id="error-image"></div>
             </div>
             
             <!-- Tombol Submit -->
@@ -328,3 +329,83 @@ document.addEventListener("DOMContentLoaded", function() {
     updateFakultasJurusan();
 });
 </script>
+
+<script>
+        function showError(inputId, message) {
+            document.getElementById(`error-${inputId}`).textContent = message;
+        }
+
+        function clearError(inputId) {
+            document.getElementById(`error-${inputId}`).textContent = '';
+        }
+
+        document.querySelector('.form-profile').addEventListener('submit', function(e) {
+            let isValid = true;
+
+            // Validasi Nama (harus huruf)
+            const nama = document.getElementById('nama').value.trim();
+            if (!/^[a-zA-Z\s]+$/.test(nama)) {
+                showError('nama', 'Nama hanya boleh berisi huruf.');
+                isValid = false;
+            } else {
+                clearError('nama');
+            }
+
+
+            // Validasi Tempat Lahir (harus huruf)
+            const tempatLahir = document.getElementById('tempat_lahir').value.trim();
+            if (!/^[a-zA-Z\s]+$/.test(tempatLahir)) {
+                showError('tempat_lahir', 'Tempat lahir hanya boleh berisi huruf.');
+                isValid = false;
+            } else {
+                clearError('tempat_lahir');
+            }
+
+            // Validasi NIK (16 digit angka)
+            const nik = document.getElementById('nik').value.trim();
+            if (nik.length !== 16 || isNaN(nik)) {
+                showError('nik', 'NIK harus terdiri dari 16 angka.');
+                isValid = false;
+            } else {
+                clearError('nik');
+            }
+
+
+            // Validasi NIM/NISN (harus 10 digit)
+            const nim = document.getElementById('nim').value.trim();
+            if (!/^\d{10,12}$/.test(nim)) {
+                showError('nim', 'NIM/NISN harus terdiri dari 10-12 digit angka.');
+                isValid = false;
+            } else {
+                clearError('nim');
+            }
+
+
+            // Validasi Telepon (harus 11-12 digit)
+            const telepon = document.getElementById('telepon').value.trim();
+            if (!/^(\d{11,12})$/.test(telepon)) {
+                showError('telepon', 'Nomor telepon harus terdiri dari 11-12 digit.');
+                isValid = false;
+            } else {
+                clearError('telepon');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+
+
+            // Validasi Foto Profil (maksimal 1MB)
+            const image = document.getElementById('image').files[0];
+            if (image && image.size > 1024 * 1024) { // 1MB
+                showError('image', 'Ukuran file tidak boleh lebih dari 1MB.');
+                isValid = false;
+            } else {
+                clearError('image');
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+    </script>
