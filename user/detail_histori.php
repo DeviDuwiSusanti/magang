@@ -1,61 +1,68 @@
 <?php
-include "../koneksi.php";
-include "../layout/sidebarUser.php"; 
-include "functions.php"; 
+include "../koneksi.php"; 
+include "../layout/sidebarUser.php";
+include "functions.php";  
 
 
-// Query untuk mengambil data pengajuan yang statusnya selesai berdasarkan ID user
-$sql = "SELECT * 
+$id_pengajuan = $_GET['id_pengajuan'];
+
+// Query untuk mengambil detail pengajuan berdasarkan id_pengajuan
+$sql = "SELECT *
         FROM tb_pengajuan
-        LEFT JOIN tb_profile_user ON tb_pengajuan.id_user = tb_profile_user.id_user
-        LEFT JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
-        LEFT JOIN tb_user ON tb_pengajuan.id_user = tb_user.id_user
-        LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
-        LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.status_pengajuan = '5'
-        AND tb_pengajuan.id_user = '$id_user'";
+        JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        WHERE tb_pengajuan.id_pengajuan = '$id_pengajuan'";
 
+$query = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($query);
 
-$query = mysqli_query($conn, $sql); 
-$row = mysqli_fetch_assoc($query); 
+$sql2 = "SELECT * FROM tb_profile_user pu, tb_pendidikan p, tb_user u WHERE pu.id_user = '$id_user' AND u.id_user = '$id_user' AND pu.id_pendidikan = p.id_pendidikan";
+$query2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($query2);
+
+// Jika pengajuan tidak ditemukan, redirect kembali
+if (!$row) {
+    echo "<script>alert('Data pengajuan tidak ditemukan!'); window.location.href='status_pengajuan.php';</script>";
+    exit;
+}
 ?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
-    <h1 class="mb-4">Histori</h1>
+        <h1 class="mb-4">Lengkapi Dokumen</h1>
         <ol class="breadcrumb mb-3">
-            <li class="breadcrumb-item active">Histori Kegiatan</li>
+            <li class="breadcrumb-item active">Lengkapi Dokumen Persyaratan</li>
         </ol>
 
         <div class="dropdown-divider"></div>
         <div class="mb-4 text-end">
             <a href="histori.php" class="btn btn-danger">
-                <i class="bi bi-arrow-left-circle me-1"></i>
-                Kembali
+                <i class="bi bi-arrow-left-circle me-1"></i> Kembali
             </a>
         </div>
         
-        <!-- Menampilkan informasi user dalam bentuk kartu -->
         <div class="container mt-5 mb-5">
-            <div class="card mx-auto" style="max-width: 600px;">
-                <div class="card-body top text-center">
-                    <!-- Foto profil -->
-                    <img src="../assets/img/user/avatar.png" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
-                    <h4 class="card-title"><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></h4>
-                    <p class="text-muted"><?= isset($row['email']) ? $row['email'] : 'Tidak Ada Email' ?></p>
+    <div class="card mx-auto position-relative" style="max-width: 600px;">
+        <div class="card-body text-center">
+            <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" 
+                 class="rounded-circle mb-3" 
+                 alt="Profile Picture" 
+                 style="width: 100px; height: 100px;">
+            <h4 class="card-title"><?= isset($row2['nama_user']) ? $row2['nama_user'] : 'Tidak Diketahui' ?></h4>
+            <p class="text-muted"><?= isset($row2['email']) ? $row2['email'] : 'Tidak Ada Email' ?></p>
 
-                    <hr>
-                    <div class="card-body">
+            <hr>
+            <div class="card-body">
                         <!-- Tabel informasi pengguna -->
                         <table class="table">
                             <tbody class="text-start">
                                 <tr>
                                     <td><i class="bi bi-person"></i> <strong>Nama</strong></td>
-                                    <td><?= isset($row['nama_user']) ? $row['nama_user'] : 'Tidak Diketahui' ?></td>
+                                    <td><?= isset($row2['nama_user']) ? $row2['nama_user'] : 'Tidak Diketahui' ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-mortarboard"></i> <strong>Universitas</strong></td>
-                                    <td><?= isset($row['nama_pendidikan']) ? $row['nama_pendidikan'] : 'Tidak Diketahui' ?></td>
+                                    <td><?= isset($row2['nama_pendidikan']) ? $row2['nama_pendidikan'] : 'Tidak Diketahui' ?></td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-building"></i> <strong>Perusahaan</strong></td>

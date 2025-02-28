@@ -3,13 +3,13 @@ include "../layout/sidebarUser.php";
 include '../koneksi.php';
 include "functions.php"; 
 
-$id_user = $_SESSION['id_user'];  
+$id_pengajuan = $_GET['id_pengajuan'];
+$id_user = $_GET['id_user'];
 
 // Mengambil id_pengajuan dan status_pengajuan jika ada
-$sql_pengajuan = "SELECT id_pengajuan, status_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' LIMIT 1";
-$data_pengajuan = mysqli_fetch_assoc(mysqli_query($conn, $sql_pengajuan));
-$id_pengajuan = $data_pengajuan['id_pengajuan'] ?? null; 
-$status_pengajuan = $data_pengajuan['status_pengajuan'] ?? null;
+$sql_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
+$query_pengajuan = mysqli_query($conn, $sql_pengajuan);
+$row = mysqli_fetch_assoc($query_pengajuan);
 
 // Mengambil daftar dokumen laporan akhir
 $sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3'";
@@ -48,18 +48,22 @@ $laporan_terunggah = mysqli_num_rows($result) > 0;
                 <tbody>
                     <?php if (mysqli_num_rows($result) > 0): 
                         $no = 1;
-                        while ($row = mysqli_fetch_assoc($result)): ?>
+                        while ($row2 = mysqli_fetch_assoc($result)): ?>
                             <tr>
                                 <td><?= $no++ ?></td>
-                                <td><?= date('d/m/Y', strtotime($row['create_date'])) ?></td>
-                                <td><a href="<?= $row['file_path'] ?>" target="_blank"><?= htmlspecialchars($row['nama_dokumen']) ?></a></td>
-                                <td><?= getKategoriText($row['jenis_dokumen']); ?></td>
+                                <td><?= isset($row2['create_date']) ? date('d/m/Y', strtotime($row2['create_date'])) : '-' ?></td>
                                 <td>
-                                    <?php if ($status_pengajuan != 5): ?>
-                                        <a href="laprak_edit.php?id_dokumen=<?= $row['id_dokumen'] ?>" class="btn btn-warning btn-sm">
+                                    <a href="<?= $row2['file_path'] ?? '#' ?>" target="_blank">
+                                        <?= htmlspecialchars($row2['nama_dokumen'] ?? 'Tidak diketahui') ?>
+                                    </a>
+                                </td>
+                                <td><?= getKategoriText($row2['jenis_dokumen'] ?? ''); ?></td>
+                                <td class="text-center">
+                                    <?php if (isset($row['status_pengajuan']) && $row['status_pengajuan'] != 5): ?>
+                                        <a href="laprak_edit.php?id_dokumen=<?= $row2['id_dokumen'] ?>" class="btn btn-warning btn-sm">
                                             <i class="bi bi-pencil"></i> Edit
                                         </a>
-                                        <a href="laprak_hapus.php?id_dokumen=<?= $row['id_dokumen'] ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
+                                        <a href="laprak_hapus.php?id_dokumen=<?= $row2['id_dokumen'] ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                     <?php else: ?>
