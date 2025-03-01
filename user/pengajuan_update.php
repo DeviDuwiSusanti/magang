@@ -1,7 +1,12 @@
 <?php
+include "../koneksi.php";
+include "functions.php";
 // UPDATE
 if (ISSET($_POST['update_pengajuan'])){
 
+    $id_user = $_POST['id_user'];
+    $id_pengajuan = $_POST['id_pengajuan'];
+    $id_user = $_POST['id_user'];
     $id_instansi = $_POST['id_instansi'];
     $id_bidang = $_POST['id_bidang'];
     $jenis_pengajuan = $_POST['jenis_pengajuan'];
@@ -10,7 +15,6 @@ if (ISSET($_POST['update_pengajuan'])){
     $ktp = $_FILES['ktp'];
     $cv = $_FILES['cv'];
 
-
 // UPDATE PENGAJUAN
     $sql_update1 = "UPDATE tb_pengajuan SET 
     id_instansi = '$id_instansi',
@@ -18,13 +22,13 @@ if (ISSET($_POST['update_pengajuan'])){
     jenis_pengajuan = '$jenis_pengajuan',
     tanggal_mulai = '$tanggal_mulai',
     tanggal_selesai = '$tanggal_selesai'
-    WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+    WHERE id_pengajuan = '$id_pengajuan'";
     $query_update1 = mysqli_query($conn, $sql_update1);
 
 
     // Proses update KTP
     if (!empty($_FILES['ktp']['name'])) {
-        deleteOldDocument($conn, $jenis_pengajuan, $id_user, 'identitas');
+        deleteOldDocument($conn, $jenis_pengajuan, $id_user, '1');
         $ktpData = uploadFile($_FILES['ktp']);
         if ($ktpData) {
             $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]' WHERE nama_dokumen = 'ktp' AND id_pengajuan = '$id_pengajuan'";
@@ -34,7 +38,7 @@ if (ISSET($_POST['update_pengajuan'])){
 
     // Proses update CV
     if (!empty($_FILES['cv']['name'])) {
-        deleteOldDocument($conn, $jenis_pengajuan, $id_user, 'identitas');
+        deleteOldDocument($conn, $jenis_pengajuan, $id_user, '1');
         $cvData = uploadFile($_FILES['cv']);
         if ($cvData) {
             $id_dokumen = generateIdDokumen($conn, $jenis_pengajuan);

@@ -14,7 +14,7 @@ if (ISSET($_GET['id_pengajuan'])){
     $queryAnggota = mysqli_query($conn, $sqlAnggota);
     $jumlah_anggota = mysqli_fetch_assoc($queryAnggota)['jumlahAnggota'];
 
-    $updateJumlah = "UPDATE tb_pengajuan SET jumlah_pelamar = '$jumlah_anggota'";
+    $updateJumlah = "UPDATE tb_pengajuan SET jumlah_pelamar = '$jumlah_anggota' WHERE id_pengajuan = '$id_pengajuan'";
     $queryJumlah = mysqli_query($conn, $updateJumlah);
 
     // akses pengajuan
@@ -67,6 +67,7 @@ if (ISSET($_GET['id_pengajuan'])){
             echo "<script> alert('Data Anggota Berhasil Ditambah'); window.location.href='detail_anggota.php?id_pengajuan={$id_pengajuan}'; </script>";
         }
     }
+// FORM EDIT ANGGOTA
 }if (isset($_GET['id_userEdit']) && isset($_GET['id_pengajuan'])) {
     $id_pengajuan = $_GET['id_pengajuan'];
     $id_userEdit = $_GET['id_userEdit'];

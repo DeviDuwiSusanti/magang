@@ -1,7 +1,7 @@
 <?php
 session_start();
 include "functions.php"; 
-include "../koneksi.php"; // Pastikan koneksi ke database
+include "../koneksi.php"; 
 
 
 if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
@@ -30,35 +30,35 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])) {
     $sql_dokumen = "SELECT file_path FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuan' ORDER BY id_dokumen ASC";
     $query_dokumen = mysqli_query($conn, $sql_dokumen);
     $daftar_dokumen = mysqli_fetch_all($query_dokumen, MYSQLI_ASSOC);
+
+    // Ambil data instansi yang memiliki kuota
+    $sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS total_kuota 
+    FROM tb_instansi i 
+    JOIN tb_bidang b ON i.id_instansi = b.id_instansi 
+    WHERE b.kuota_bidang > 0 
+    GROUP BY i.id_instansi, i.nama_panjang 
+    ORDER BY total_kuota DESC";
+    $result_instansi = mysqli_query($conn, $sql_instansi);
 }
 
-include "pengajuan_update.php";
-
-// Ambil data instansi yang memiliki kuota
-$sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS total_kuota 
-                 FROM tb_instansi i 
-                 JOIN tb_bidang b ON i.id_instansi = b.id_instansi 
-                 WHERE b.kuota_bidang > 0 
-                 GROUP BY i.id_instansi, i.nama_panjang 
-                 ORDER BY total_kuota DESC";
-$result_instansi = mysqli_query($conn, $sql_instansi);
 
 // Cek jika ada request AJAX dari JavaScript untuk mengambil bidang
 if (isset($_POST["id_instansi"])) {
     header("Content-Type: text/html"); 
     echo getBidangByInstansi($_POST["id_instansi"]);
     exit;
-}
-
-// Cek jika ada request AJAX untuk mendapatkan detail bidang
-if (isset($_POST["id_bidang"])) {
+    }
+    
+    // Cek jika ada request AJAX untuk mendapatkan detail bidang
+    if (isset($_POST["id_bidang"])) {
     header("Content-Type: application/json");
     $id_bidang = mysqli_real_escape_string($conn, $_POST["id_bidang"]); // Hindari SQL Injection
     echo json_encode(getDetailBidang($id_bidang, $conn));
     exit;
-}
-?>
+    }
 
+
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -116,7 +116,10 @@ if (isset($_POST["id_bidang"])) {
 
         <div class="form-container center-form" id="formContainer">
             <div class="form-wrapper" id="formWrapper">
-            <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data">
+            <form id="pengajuanForm" action="pengajuan_update.php" class="form-profile" method="POST" enctype="multipart/form-data" novalidate>
+                <input type="hidden" name="id_pengajuan" value="<?= $pengajuan['id_pengajuan'] ?>">
+                <input type="hidden" name="id_user" value="<?= $id_user ?>">
+                
                 <div id="step1">
                     <h4>Step 1: Daftar Pengajuan</h4>
                     <div class="mb-3">
@@ -154,24 +157,28 @@ if (isset($_POST["id_bidang"])) {
                     <!-- Tanggal Mulai dan Selesai -->
                     <div class="mb-3">
                         <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= $pengajuan['tanggal_mulai'] ?>" required>
+                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= $pengajuan['tanggal_mulai'] ?>">
+                        <small class="text-danger error-message" id="error_tanggal_mulai"></small>
                     </div>
                     <div class="mb-3">
                         <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= $pengajuan['tanggal_selesai'] ?>" required>
+                        <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= $pengajuan['tanggal_selesai'] ?>">
+                        <small class="text-danger error-message" id="error_tanggal_selesai"></small>
                     </div>
 
                     <div class="mb-3">
                         <label for="ktp" class="form-label">Upload KTP</label>
                         <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf">
                         <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[0]['file_path']) ?>" target="_blank">Lihat KTP</a></p>
+                        <small class="text-danger error-message" id="error_ktp"></small>
                     </div>
 
                     <!-- Upload CV -->
                     <div class="mb-3">
                         <label for="cv" class="form-label">Upload CV</label>
                         <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
-                            <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
+                        <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
+                        <small class="text-danger error-message" id="error_cv"></small>
                     </div>
 
                     <button type="submit" name="update_pengajuan" class="btn btn-success btn-sm">Update</button>
@@ -270,6 +277,69 @@ $(document).ready(function() {
             selectedMulai.setDate(selectedMulai.getDate() + 1);
             let minDateSelesai = selectedMulai.toISOString().split("T")[0];
             tanggalSelesai.setAttribute("min", minDateSelesai);
+        });
+    });
+</script>
+
+<!-- ======= VALIDASIII ========  -->
+<script>
+    $(document).ready(function() {
+        $('#pengajuanForm').on('submit', function(e) {
+            let isValid = true;
+
+            // Clear previous error messages
+            $('.error-message').text('');
+
+            // Validasi Tanggal Mulai
+            const tanggalMulai = $('#tanggal_mulai').val();
+            if (!tanggalMulai) {
+                $('#error_tanggal_mulai').text('Tanggal mulai harus diisi.');
+                isValid = false;
+            }
+
+            // Validasi Tanggal Selesai
+            const tanggalSelesai = $('#tanggal_selesai').val();
+            if (!tanggalSelesai) {
+                $('#error_tanggal_selesai').text('Tanggal selesai harus diisi.');
+                isValid = false;
+            }
+
+            // Validasi range tanggal
+            if (tanggalMulai && tanggalSelesai && new Date(tanggalMulai) > new Date(tanggalSelesai)) {
+                $('#error_tanggal_selesai').text('Tanggal selesai harus setelah tanggal mulai.');
+                isValid = false;
+            }
+
+            // Validasi KTP (jika diisi)
+            const ktp = $('#ktp')[0].files[0];
+            if (ktp) {
+                if (ktp.size > 1024 * 1024) {
+                    $('#error_ktp').text('Ukuran KTP maksimal 1MB.');
+                    isValid = false;
+                }
+                if (ktp.type !== 'application/pdf') {
+                    $('#error_ktp').text('File KTP harus berformat PDF.');
+                    isValid = false;
+                }
+            }
+
+            // Validasi CV (jika diisi)
+            const cv = $('#cv')[0].files[0];
+            if (cv) {
+                if (cv.size > 1024 * 1024) {
+                    $('#error_cv').text('Ukuran CV maksimal 1MB.');
+                    isValid = false;
+                }
+                if (cv.type !== 'application/pdf') {
+                    $('#error_cv').text('File CV harus berformat PDF.');
+                    isValid = false;
+                }
+            }
+
+            // Jika tidak valid, cegah submit form
+            if (!isValid) {
+                e.preventDefault();
+            }
         });
     });
 </script>
