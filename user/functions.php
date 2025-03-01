@@ -31,23 +31,24 @@ function generateIdDokumen($conn, $id_pengajuan) {
 }
 
 function generateIdUser4($conn, $id_user) {
-    // Cari id_user terakhir yang memiliki awalan tertentu
-    $query = "SELECT id_user FROM tb_user WHERE id_user LIKE '$id_user%' ORDER BY id_user DESC LIMIT 1";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
+    // Loop sampai menemukan ID yang belum ada
+    $nextId = 1;
+    do {
+        $counter = str_pad($nextId, 2, "0", STR_PAD_LEFT);
+        $newId = trim($id_user) . $counter;
 
-    if ($row) {
-        // Ambil angka dari id_user terakhir
-        $lastId = (int) substr($row['id_user'], strlen($id_user));
-        $nextId = $lastId + 1;
-    } else {
-        $nextId = 1; // Jika belum ada data, mulai dari 1
-    }
+        // Cek apakah ID ini sudah ada di tb_user
+        $query = "SELECT COUNT(*) as count FROM tb_user WHERE id_user = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 's', $newId);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($result);
 
-    // Format dua digit (01, 02, dst.)
-    $counter = str_pad($nextId, 2, "0", STR_PAD_LEFT);
+        $nextId++;
+    } while ($row['count'] > 0); // Ulangi jika ID sudah ada
 
-    return trim($id_user) . $counter;
+    return $newId;
 }
 
 
@@ -123,6 +124,15 @@ function getDetailBidang($id_bidang, $conn) {
     } else {
         return ["error" => "Data bidang tidak ditemukan."];
     }
+}
+
+function cekEmail($email) {
+    global $conn;
+    $email = mysqli_real_escape_string($conn, $email);
+    $query = "SELECT * FROM tb_user WHERE email = '$email'";
+    $result = mysqli_query($conn, $query);
+
+    return mysqli_num_rows($result) > 0;
 }
 
 function getStatusText($status) {

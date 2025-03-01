@@ -4,16 +4,24 @@ include "functions.php";
 
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
-    
     $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND u.level = '4' AND pu.id_user = u.id_user";
     $query = mysqli_query($conn, $sql);
 
     $no = 1;
 
+    // update jumlah anggota magang
+    $sqlAnggota = "SELECT COUNT(*) AS jumlahAnggota FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'";
+    $queryAnggota = mysqli_query($conn, $sqlAnggota);
+    $jumlah_anggota = mysqli_fetch_assoc($queryAnggota)['jumlahAnggota'];
+
+    $updateJumlah = "UPDATE tb_pengajuan SET jumlah_pelamar = '$jumlah_anggota'";
+    $queryJumlah = mysqli_query($conn, $updateJumlah);
+
     // akses pengajuan
-    $sql3 = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
+    $sql3 = "SELECT * FROM tb_pengajuan p, tb_bidang b WHERE p.id_pengajuan = '$id_pengajuan' AND p.id_bidang = b.id_bidang";
     $query3 = mysqli_query($conn, $sql3);
     $row3 = mysqli_fetch_assoc($query3);
+
 
 }if (isset($_GET['id_userHapus']) && isset($_GET['id_pengajuan'])) {
     $id_userHapus = $_GET['id_userHapus'];
@@ -34,9 +42,9 @@ if (ISSET($_GET['id_pengajuan'])){
     $nik = $_POST['nik'];
     $nim = $_POST['nim'];
 
-    $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nim = '$nim', nisn = '$nim' WHERE id_user = '$id_userUpdate'";
+    $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nim = '$nim', nisn = '$nim', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
     if (mysqli_query($conn, $sqlUpdate)){
-        $sqlUpdate2 = "UPDATE tb_user SET email = '$email' WHERE id_user = '$id_userUpdate'";
+        $sqlUpdate2 = "UPDATE tb_user SET email = '$email', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
         if (mysqli_query($conn, $sqlUpdate2)){
             echo "<script> alert('Data Anggota Berhasil DiUpdate'); window.location.href='detail_anggota.php?id_pengajuan={$id_pengajuan}'; </script>";
         }
@@ -48,10 +56,13 @@ if (ISSET($_GET['id_pengajuan'])){
     $nik = $_POST['nik'];
     $nim = $_POST['nim'];
     $id_user4  = generateIdUser4($conn, $id_user);
+    $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
+    $result = mysqli_query($conn, $pendidikan);
+    $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
 
-    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nim', '$nim', '$id_pengajuan')";
+    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
     if (mysqli_query($conn, $sqlTambah)){
-        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level) VALUES ('$id_user4', '$email', '4')";
+        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '4', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
             echo "<script> alert('Data Anggota Berhasil Ditambah'); window.location.href='detail_anggota.php?id_pengajuan={$id_pengajuan}'; </script>";
         }
@@ -124,17 +135,17 @@ if (ISSET($_GET['id_pengajuan'])){
             
             <div class="mb-3">
                 <label for="nama_user" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama_user" name="nama_user" required>
+                <input type="text" class="form-control" id="nama_user" name="nama_user" >
             </div>
             
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" required>
+                <input type="email" class="form-control" id="email" name="email" >
             </div>
             
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="number" class="form-control" id="nik" name="nik" required>
+                <input type="number" class="form-control" id="nik" name="nik" >
             </div>
             
             <div class="mb-3">
@@ -162,7 +173,7 @@ if (ISSET($_GET['id_pengajuan'])){
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
             <?php
-            if ($row3['status_pengajuan'] == '1'){?>
+            if ($row3['status_pengajuan'] == '1' && $jumlah_anggota < $row3['kuota_bidang']){?>
                 <a href="?id_user=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-1"></i>
                     Tambah Anggota
@@ -230,3 +241,85 @@ if (ISSET($_GET['id_pengajuan'])){
 
 <?php include "../layout/footerDashboard.php" ?>
 
+
+<!-- ==========  VALIDASIIII ===============-->
+
+
+<script>
+$(document).ready(function() {
+    $(".form-profile").on("submit", function(e) {
+        let isValid = true;
+        $(".error-message").remove(); // Hapus pesan error lama
+
+        // Fungsi tambah pesan error
+        function showError(input, message) {
+            $(input).after(`<div class="error-message text-danger mt-1">${message}</div>`);
+        }
+
+        // Dapatkan id_user (kosong jika tambah anggota)
+        const id_userEdit = $("input[name='id_user']").val() || ""; // kalau tambah anggota, kosong
+
+        // Validasi Nama
+        const nama = $("#nama_user").val().trim();
+        const namaRegex = /^[a-zA-Z\s]+$/;
+        if (nama === "") {
+            isValid = false;
+            showError("#nama_user", "Nama tidak boleh kosong!");
+        } else if (!namaRegex.test(nama)) {
+            isValid = false;
+            showError("#nama_user", "Nama hanya boleh berisi huruf!");
+        }
+
+        // Validasi Email
+        const email = $("#email").val().trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email === "") {
+            isValid = false;
+            showError("#email", "Email tidak boleh kosong!");
+        } else if (!emailRegex.test(email)) {
+            isValid = false;
+            showError("#email", "Masukkan email yang valid!");
+        } else {
+            // AJAX untuk cek email
+            $.ajax({
+                url: 'cek_email.php',
+                type: 'POST',
+                data: { email: email, id_userEdit: id_userEdit }, // kirim id_userEdit (bisa kosong)
+                async: false,
+                success: function(response) {
+                    if (response === "exists") {
+                        isValid = false;
+                        showError("#email", "Email sudah digunakan!");
+                    }
+                }
+            });
+        }
+
+        // Validasi NIK
+        const nik = $("#nik").val().trim();
+        if (nik === "") {
+            isValid = false;
+            showError("#nik", "NIK tidak boleh kosong!");
+        } else if (nik.length !== 16 || isNaN(nik)) {
+            isValid = false;
+            showError("#nik", "NIK harus 16 digit angka!");
+        }
+
+        // Validasi NIM/NISN
+        const nim = $("#nim").val().trim();
+        if (nim === "") {
+            isValid = false;
+            showError("#nim", "NIM/NISN tidak boleh kosong!");
+        } else if (nim.length < 10 || nim.length > 12 || isNaN(nim)) {
+            isValid = false;
+            showError("#nim", "NIM/NISN harus 10-12 digit angka!");
+        }
+
+        // Cegah submit jika ada error
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+});
+
+</script>

@@ -23,24 +23,13 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])) {
     $id_user = $_GET['id_user'];
 
     // akses data pengajuan user
-    $sql_pengajuan = "SELECT * FROM tb_profile_user pu, tb_instansi i, tb_bidang b, tb_pengajuan p WHERE pu.id_user = '$id_user' AND p.id_instansi = i.id_instansi AND p.id_bidang = b.id_bidang AND p.id_pengajuan = '$id_pengajuan'"; 
+    $sql_pengajuan = "SELECT * FROM tb_pengajuan p, tb_bidang b, tb_instansi i WHERE p.id_pengajuan = '$id_pengajuan' AND p.id_bidang = b.id_bidang AND p.id_instansi = i.id_instansi;"; 
     $query_pengajuan = mysqli_query($conn, $sql_pengajuan);
     $pengajuan = mysqli_fetch_assoc($query_pengajuan);
-    $jumlahAnggota = max(1, $pengajuan['jumlah_pelamar']); // Minimal 1 anggota
 
     $sql_dokumen = "SELECT file_path FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuan' ORDER BY id_dokumen ASC";
     $query_dokumen = mysqli_query($conn, $sql_dokumen);
     $daftar_dokumen = mysqli_fetch_all($query_dokumen, MYSQLI_ASSOC);
-
-    // Ambil data anggota dari tb_profile_user dan tb_user berdasarkan id_pengajuan
-    $query_anggota = "SELECT pu.nama_user, pu.nik, pu.nim, pu.nisn, u.email 
-    FROM tb_profile_user pu 
-    JOIN tb_user u ON pu.id_user = u.id_user 
-    WHERE pu.id_pengajuan = '$id_pengajuan' 
-    ORDER BY pu.id_user ASC";
-
-    $result_anggota = mysqli_query($conn, $query_anggota);
-    $anggotaData = mysqli_fetch_all($result_anggota, MYSQLI_ASSOC);
 }
 
 include "pengajuan_update.php";
@@ -185,20 +174,6 @@ if (isset($_POST["id_bidang"])) {
                             <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
                     </div>
 
-                        <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep()">Next</button>
-                </div>
-
-                <!-- Step 2 -->
-                <div id="step2" style="display: none;">
-                    <h4>Step 2: Informasi Anggota (Kecuali Kamu)</h4>
-                    <div class="mb-3">
-                        <label for="jumlah_anggota" class="form-label">Jumlah Anggota (Termasuk Kamu)</label>
-                        <input type="number"  class="form-control" id="jumlah_anggota" name="jumlah_anggota" value="<?= $pengajuan['jumlah_pelamar'] ?>" required>
-                    </div>
-                    <div id="anggotaContainer"></div>
-                    <button type="button" id="addMemberButton" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"><i class="bi bi-person-plus-fill"></i>Tambah Anggota</button>
-                    <br><br>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
                     <button type="submit" name="update_pengajuan" class="btn btn-success btn-sm">Update</button>
                 </div>
             </form>
@@ -222,108 +197,6 @@ if (isset($_POST["id_bidang"])) {
         </div>
     </div>
 </div>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
-    const nextButton = document.getElementById("nextButton");
-    const submitButton = document.getElementById("submitButton");
-    const step1 = document.getElementById("step1");
-    const step2 = document.getElementById("step2");
-    const anggotaContainer = document.getElementById("anggotaContainer");
-    const addMemberButton = document.getElementById("addMemberButton");
-
-    let anggotaCount = <?= json_encode($jumlahAnggota) ?> - 1; 
-    const anggotaData = <?= json_encode($anggotaData) ?>;
-
-    nextButton.addEventListener("click", function() {
-        nextStep();
-    });
-
-    function nextStep() {
-        renderAnggota();
-        step1.style.display = "none";
-        step2.style.display = "block";
-    }
-
-    function prevStep() {
-        step2.style.display = "none";
-        step1.style.display = "block";
-    }
-
-    function renderAnggota() {
-        anggotaContainer.innerHTML = ""; 
-        for (let i = 1; i <= anggotaCount; i++) {
-            const data = anggotaData[i] || {};
-            const anggotaHTML = `
-                <div class="mb-3 anggota-group" id="anggota-${i}">
-                    <label class="form-label">Anggota ${i}</label>
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" value="${data.nama_user || ''}" required>
-                        </div>
-                        <div class="col">
-                            <input type="email" class="form-control" name="anggota_email[]" placeholder="Email" value="${data.email || ''}" required>
-                        </div>
-                        <div class="col">
-                            <input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK" value="${data.nik_user || ''}" required>
-                        </div>
-                        <div class="col">
-                            <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" value="${data.nim || ''}" required>
-                        </div>
-                         <div class="col-auto">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="confirmRemoveAnggota(${i})">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
-        }
-        jumlahAnggotaInput.value = anggotaCount + 1; 
-    }
-
-    addMemberButton.addEventListener("click", function() {
-        anggotaCount++;
-        renderAnggota();
-    });
-
-    window.confirmRemoveAnggota = function(index) {
-        const anggotaElement = document.getElementById(`anggota-${index}`);
-        const nama = anggotaElement.querySelector('input[name="anggota_nama[]"]').value;
-        const email = anggotaElement.querySelector('input[name="anggota_email[]"]').value;
-        const nik = anggotaElement.querySelector('input[name="anggota_nik[]"]').value;
-        const nim = anggotaElement.querySelector('input[name="anggota_nim[]"]').value;
-
-        if (nama || email || nik || nim) {
-            const confirmation = confirm("Anggota ini memiliki data yang sudah diisi. Apakah Anda yakin ingin menghapusnya?");
-            if (confirmation) {
-                removeAnggota(index);
-            }
-        } else {
-            removeAnggota(index);
-        }
-    };
-
-    window.removeAnggota = function(index) {
-        const anggotaElement = document.getElementById(`anggota-${index}`);
-        if (anggotaElement) {
-            anggotaElement.remove();
-            anggotaCount--;
-            renderAnggota();
-        }
-    };
-
-    window.nextStep = nextStep;
-    window.prevStep = prevStep;
-
-    renderAnggota();
-});
-
-</script>
-
-
 
 <script>
 $(document).ready(function() {
@@ -398,42 +271,5 @@ $(document).ready(function() {
             let minDateSelesai = selectedMulai.toISOString().split("T")[0];
             tanggalSelesai.setAttribute("min", minDateSelesai);
         });
-    });
-</script>
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#pengajuanForm').on('submit', function(e) {
-            e.preventDefault();
-            validateEmails();
-        });
-
-        function validateEmails() {
-            let emails = [];
-            $('input[name="anggota_email[]"]').each(function() {
-                emails.push($(this).val().trim());
-            });
-
-            let idPengajuan = <?= json_encode($pengajuan['id_pengajuan']) ?>;
-
-            $.ajax({
-                url: '',
-                type: 'POST',
-                data: { emails: emails, id_pengajuan: idPengajuan },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.exists) {
-                        alert('Ada email yang sudah terdaftar dalam pengajuan lain!');
-                    } else {
-                        $('#pengajuanForm')[0].submit();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                }
-            });
-        }
     });
 </script>
