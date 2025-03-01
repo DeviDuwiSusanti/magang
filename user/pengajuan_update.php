@@ -21,7 +21,8 @@ if (ISSET($_POST['update_pengajuan'])){
     id_bidang = '$id_bidang',
     jenis_pengajuan = '$jenis_pengajuan',
     tanggal_mulai = '$tanggal_mulai',
-    tanggal_selesai = '$tanggal_selesai'
+    tanggal_selesai = '$tanggal_selesai',
+    change_by = '$id_user'
     WHERE id_pengajuan = '$id_pengajuan'";
     $query_update1 = mysqli_query($conn, $sql_update1);
 
@@ -31,7 +32,7 @@ if (ISSET($_POST['update_pengajuan'])){
         deleteOldDocument($conn, $jenis_pengajuan, $id_user, '1');
         $ktpData = uploadFile($_FILES['ktp']);
         if ($ktpData) {
-            $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]' WHERE nama_dokumen = 'ktp' AND id_pengajuan = '$id_pengajuan'";
+            $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]', change_by = '$id_user' WHERE nama_dokumen = 'ktp' AND id_pengajuan = '$id_pengajuan'";
             $updateKTP = mysqli_query($conn, $sql_updateKTP);
         }
     }
@@ -42,7 +43,7 @@ if (ISSET($_POST['update_pengajuan'])){
         $cvData = uploadFile($_FILES['cv']);
         if ($cvData) {
             $id_dokumen = generateIdDokumen($conn, $jenis_pengajuan);
-            $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]' WHERE nama_dokumen = 'cv' AND id_pengajuan = '$id_pengajuan'";
+            $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]', change_by = '$id_user' WHERE nama_dokumen = 'cv' AND id_pengajuan = '$id_pengajuan'";
             $updateCV = mysqli_query($conn, $sql_updateCV);
         }
     } 
