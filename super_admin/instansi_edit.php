@@ -6,17 +6,11 @@
 
 
     if(isset($_POST["edit_instansi"])) {
-        if(edit_instansi_super($_POST)) {
-            echo "<script>
-                alert ('Berhasil Edit Data Instansi');
-                document.location.href = 'instansi_view.php';
-            </script>";
-        } else {
-            echo "<script>
-                alert ('Gagal Edit Data Instansi');
-                document.location.href = 'instansi_view.php';
-            </script>";
-        }
+        if(edit_instansi_super_admin($_POST) > 0) { ?>
+            <script>edit_instansi_super_admin_success()</script>
+        <?php } else { ?>
+            <script>edit_instansi_super_admin_gagal()</script>
+        <?php }
     }
 ?>
 

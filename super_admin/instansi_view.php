@@ -45,7 +45,7 @@
                         <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi"></td>
 
                         <td class="d-flex justify-content-center gap-2">
-                            <a href="instansi_hapus.php?id_instansi=<?= $opd["id_instansi"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                            <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_instansi_super_admin(<?= $opd['id_instansi'] ?>)">
                                 <i class="bi bi-trash"></i> Hapus
                             </a>
                             <a href="instansi_edit.php?id_instansi=<?= $opd["id_instansi"] ?>" class="btn btn-warning btn-sm">

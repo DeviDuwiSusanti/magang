@@ -115,9 +115,13 @@
         $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
         $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
                             VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
-        mysqli_query($conn, $query1);
-        mysqli_query($conn, $query2);
-        return mysqli_affected_rows($conn);
+        $query_user = mysqli_query($conn, $query1);
+        $query_profile = mysqli_query($conn, $query2);
+        if($query_user && $query_profile) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
 
 
@@ -161,8 +165,11 @@
                     change_by = '$id_user'
                     WHERE id_user = '$id_user'
             ";
-        mysqli_query($conn, $query);
-        return mysqli_affected_rows($conn);
+        if(mysqli_query($conn, $query)) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
 
 
@@ -186,8 +193,11 @@
         }
         $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
             VALUES ('$id_instansi', '$nama_pendek', '$nama_panjang', '$group_instansi', '$alamat_instansi', '$lokasi_instansi', '$telepone_instansi', '$deskripsi_instansi', '$gambar_instansi', '$id_user')";
-        mysqli_query($conn, $query);
-        return mysqli_affected_rows($conn);
+        if(mysqli_query($conn, $query)) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
 
 
@@ -218,8 +228,12 @@
                     gambar_instansi = '$gambar_instansi',
                     change_by = '$id_user'
                     WHERE id_instansi = '$id_instansi' ";
-        mysqli_query($conn, $query);
+    
+    if(mysqli_query($conn, $query)) {
         return mysqli_affected_rows($conn);
+    } else {
+        return 0;
+    }
     }
 
 
@@ -231,14 +245,17 @@
                     change_by = '$id_user'
                     WHERE id_instansi = $id_instansi
                     ";
-        mysqli_query($conn, $query);
-        return mysqli_affected_rows($conn);
+        if(mysqli_query($conn, $query)) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
 
 
 
 
-    function edit_instansi_super($POST) {
+    function edit_instansi_super_admin($POST) {
         global $conn;
         $id_user = $POST["id_user"];
         $id_instansi = $POST["id_instansi"];
@@ -264,8 +281,11 @@
                     gambar_instansi = '$gambar_instansi',
                     change_by = '$id_user'
                     WHERE id_instansi = '$id_instansi' ";
-        mysqli_query($conn, $query);
-        return mysqli_affected_rows($conn);
+        if(mysqli_query($conn, $query)) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
 
 
@@ -276,8 +296,12 @@
         $id_super_admin = $POST["id_super_admin"];
         $id_user = $POST["id_user"];
         $id_instansi = $POST["id_instansi"];
-        mysqli_query($conn, "UPDATE tb_profile_user SET id_instansi = '$id_instansi', change_by = '$id_super_admin' WHERE id_user = '$id_user'");
-        return mysqli_affected_rows($conn);
+        $query_profile = mysqli_query($conn, "UPDATE tb_profile_user SET id_instansi = '$id_instansi', change_by = '$id_super_admin' WHERE id_user = '$id_user'");
+        if($query_profile) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
     
     
@@ -297,10 +321,14 @@
         $alamat_user = $POST["alamat_user"];
         $gambar_user = uploadImage($_FILES["gambar_instansi"], "avatar.png", "../assets/img/user/");
     
-        mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
-        mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik_user, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
+        $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
+        $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik_user, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
                             VALUES ('$id_user', '$nama_user', '$nik', '$nip', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
-        return mysqli_affected_rows($conn);
+        if($query_user && $query_profile) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
     
     
@@ -317,7 +345,7 @@
         $jenis_kelamin = $POST["jenis_kelamin"];
         $gambar_lama = $POST["gambar_lama"];
         $gambar_user = uploadImage($_FILES["gambar_user"], $gambar_lama, "../assets/img/user/");
-        mysqli_query($conn, "UPDATE tb_profile_user SET
+        $query = mysqli_query($conn, "UPDATE tb_profile_user SET
                             nama_user = '$nama_user',
                             jenis_kelamin = '$jenis_kelamin',
                             tempat_lahir = '$tempat_lahir',
@@ -326,15 +354,23 @@
                             telepone_user = '$telepone_user',
                             gambar_user = '$gambar_user'
                             WHERE id_user = '$id_user'");
-        return mysqli_affected_rows($conn);
+        if($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
     
     
     function super_admin_hapus_user($id_user, $change_by) {
         global $conn;
-        mysqli_query($conn, "UPDATE tb_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
-        mysqli_query($conn, "UPDATE tb_profile_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
-        return mysqli_affected_rows($conn);
+        $query_user = mysqli_query($conn, "UPDATE tb_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
+        $query_profile = mysqli_query($conn, "UPDATE tb_profile_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
+        if($query_user && $query_profile) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
     }
 
 

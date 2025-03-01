@@ -111,7 +111,7 @@ function alertSuccessEdit(message, redirectUrl) {
 function edit_profile_super_admin_success() {
   Swal.fire({
     icon: "success",
-    title: "Berhasil",
+    title: "Berhasil Edit Profile Saya",
     text: "Edit Profile Berhasil Dilakukan",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "OK",
@@ -125,7 +125,7 @@ function edit_profile_super_admin_success() {
 function edit_profile_super_admin_gagal() {
   Swal.fire({
     icon: "error",
-    title: "Gagal",
+    title: "Gagal Edit Profile Saya",
     text: "Edit Profile Gagal Dilakukan",
     confirmButtonColor: "#3085d6",
     confirmButtonText: "OK",
@@ -166,5 +166,77 @@ function tambah_instansi_super_admin_gagal() {
 }
 
 
+function edit_instansi_super_admin_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil",
+    text : "Edit Data Instansi Berhasil :)",
+    confirmButtonColor : "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi_view.php";
+    }
+  })
+}
+
+function edit_instansi_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal",
+    icon: "error",
+    text: "Edit Data Instansi Gagal :(",
+    confirmButtonText : "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi_edit.php";
+    }
+  })
+}
 
 
+function confirm_hapus_instansi_super_admin(id_instansi) {
+  Swal.fire ({
+    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
+    icon: "warning",
+    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
+    confirmButtonText: "YA! Hapus",
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi_hapus.php?id_instansi=" + id_instansi;
+    }
+  });
+}
+
+
+function hapus_instansi_super_admin_success() {
+  Swal.fire({
+    title: "Berhasil!",
+    icon: "success",
+    text: "Data Instansi Berhasil Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi_view.php";
+    }
+  })
+}
+
+function hapus_instansi_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal!",
+    icon: "error",
+    text: "Data Instansi Gagal Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi_view.php";
+    }
+  })
+}
