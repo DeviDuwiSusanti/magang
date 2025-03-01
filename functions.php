@@ -438,14 +438,14 @@
 
     function edit_profile($POST_edit) {
         global $conn;
-        $id_user = $POST_edit["id_user"];
-        $nama_user = $POST_edit["nama_user"];
-        $tempat_lahir = $POST_edit["tempat_lahir"];
-        $tanggal_lahir = $POST_edit["tanggal_lahir"];
-        $telepone = $POST_edit["telepone"];
-        $alamat_user = $POST_edit["alamat_user"];
-        $jenis_kelamin = $POST_edit["jenis_kelamin"];
-        $gambar_lama = $POST_edit["gambar_lama"];
+        $id_user = mysqli_real_escape_string($conn, $POST_edit["id_user"]);
+        $nama_user = mysqli_real_escape_string($conn, $POST_edit["nama_user"]);
+        $tempat_lahir = mysqli_real_escape_string($conn, $POST_edit["tempat_lahir"]);
+        $tanggal_lahir = mysqli_real_escape_string($conn, $POST_edit["tanggal_lahir"]);
+        $telepone = mysqli_real_escape_string($conn, $POST_edit["telepone"]);
+        $alamat_user = mysqli_real_escape_string($conn, $POST_edit["alamat_user"]);
+        $jenis_kelamin = mysqli_real_escape_string($conn, $POST_edit["jenis_kelamin"]);
+        $gambar_lama = mysqli_real_escape_string($conn, $POST_edit["gambar_lama"]);
         $gambar = uploadImage($_FILES["gambar"], $gambar_lama, "../assets/img/user/");
 
         $query = "UPDATE tb_profile_user SET 

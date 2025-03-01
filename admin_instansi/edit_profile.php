@@ -133,6 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
 </div>
 
 <?php include "footer.php"; ?>
+<script src="../assets/js/validasi.js"></script>
 
 <script>
     function previewFile() {
@@ -159,4 +160,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
             reader.readAsDataURL(file);
         }
     }
+
+    document.getElementById("no_telepone").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, ""); // Hanya angka yang diperbolehkan
+        if (this.value.length > 13) {
+            this.value = this.value.slice(0, 13); // Potong ke 13 digit
+        }
+    });
 </script>
