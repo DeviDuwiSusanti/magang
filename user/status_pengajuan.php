@@ -14,7 +14,6 @@ $sql = "SELECT *
         LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
         WHERE tb_pengajuan.id_user = '$id_user'";
 $query = mysqli_query($conn, $sql); 
-$no = 1; 
 
 // Cek apakah ada pengajuan dengan status 1, 2, atau 4
 $disable_tambah = false;
@@ -60,7 +59,11 @@ $query = mysqli_query($conn, $sql);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while($row = mysqli_fetch_assoc($query)): ?> 
+                    <?php 
+                    $no = 1;
+                    if (mysqli_num_rows($query) > 0): 
+                        while($row = mysqli_fetch_assoc($query)): 
+                    ?> 
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
                         <td><?= isset($row['nama_panjang']) ? $row['nama_panjang'] : 'Data tidak tersedia'; ?></td> 
@@ -70,27 +73,36 @@ $query = mysqli_query($conn, $sql);
                         <td class="text-center">
                             <?php 
                                 if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                    $start_date = new DateTime($row['tanggal_mulai']);
-                                    $end_date = new DateTime($row['tanggal_selesai']);
-                                    $interval = $start_date->diff($end_date);
-                                    
-                                    $months = $interval->m + ($interval->y * 12);
-                                    $days = $interval->d;
-                                    
-                                    echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
+                                    $start_date = DateTime::createFromFormat('Y-m-d', $row['tanggal_mulai']);
+                                    $end_date = DateTime::createFromFormat('Y-m-d', $row['tanggal_selesai']);
+
+                                    if ($start_date && $end_date) {
+                                        $interval = $start_date->diff($end_date);
+                                        $months = $interval->m + ($interval->y * 12);
+                                        $days = $interval->d;
+                                        echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
+                                    } else {
+                                        echo "Format Tanggal Tidak Valid";
+                                    }
                                 } else {
                                     echo "Durasi Tidak Diketahui";
                                 } 
                             ?>
                         </td>
                         <td class="text-center">
-                        <a href="detail_status.php?id_pengajuan=<?= isset($row['id_pengajuan']) ? $row['id_pengajuan'] : '' ?>" 
-                            class="text-decoration-none" title="Lihat Detail">
+                            <a href="detail_status.php?id_pengajuan=<?= isset($row['id_pengajuan']) ? $row['id_pengajuan'] : '' ?>" 
+                                class="text-decoration-none" title="Lihat Detail">
                                 <i class="bi bi-eye" style="font-size: 20px;"></i>
                             </a>
                         </td>
                     </tr>
-                    <?php endwhile; ?>
+                    <?php 
+                        endwhile;
+                    else: ?>
+                        <tr>
+                            <td colspan="7" class="text-center">Tidak ada status pengajuan.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
