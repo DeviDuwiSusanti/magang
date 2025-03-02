@@ -61,7 +61,7 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
             $result = mysqli_query($conn, $pendidikan);
             $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
         
-            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
             $query_anggota1 = mysqli_query($conn, $sql_anggota1);
             
             $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', 4, '$id_user')";
@@ -69,7 +69,7 @@ if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
         }
     }
 
-    $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
+    $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', 'Menunggu', 'Y', '$id_user', NOW(), '', '')";
     $query2 = mysqli_query($conn, $sql2);
 
     $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
@@ -149,19 +149,7 @@ if (isset($_POST["id_bidang"])) {
         margin-left: 20px;
         display: none;
     }
-
-    .invalid-feedback {
-        color: red;
-        font-size: 0.875em;
-        margin-top: 5px;
-        display: block;
-    }
-
-    .is-invalid {
-        border-color: red;
-    }
 </style>
-
 
 </head>
 <body>
@@ -183,20 +171,21 @@ if (isset($_POST["id_bidang"])) {
         <div class="form-container center-form" id="formContainer">
             <div class="form-wrapper" id="formWrapper">
             <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data">
-            <div id="step1">
-                <h4>Step 1: Daftar Pengajuan</h4>
-                    <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                    <select class="form-control" name="id_instansi" id="instansi">
-                        <option value="" disabled selected> -- Pilih Instansi --</option>
-                        <?php
-                        if (mysqli_num_rows($result_instansi) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_instansi)) {
-                                echo '<option value="'.$row['id_instansi'].'">'.$row['nama_panjang'].' (Kuota: '.$row['total_kuota'].')</option>';
+                <div id="step1">
+                    <h4>Step 1: Daftar Pengajuan</h4>
+                    <div class="mb-3">
+                        <label for="instansi" class="form-label">Instansi yang Dituju</label>
+                        <select class="form-control" name="id_instansi" id="instansi">
+                            <option value="" disabled selected> -- Pilih Instansi --</option>
+                            <?php
+                            if (mysqli_num_rows($result_instansi) > 0) {
+                                while ($row = mysqli_fetch_assoc($result_instansi)) {
+                                    echo '<option value="'.$row['id_instansi'].'">'.$row['nama_panjang'].' (Kuota: '.$row['total_kuota'].')</option>';
+                                }
                             }
-                        }
-                        ?>
-                    </select>
-                    <div id="error-instansi" class="text-danger"></div>
+                            ?>
+                        </select>
+                        <div id="error-instansi" class="text-danger"></div>
                     </div>
 
                     <div class="mb-3">
@@ -261,17 +250,18 @@ if (isset($_POST["id_bidang"])) {
                         <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
                         <div id="error-cv" class="invalid-feedback"></div>
                     </div>
-                    
-                    <button type="submit" id="submitButton" name="pengajuan_pribadi" class="btn btn-success btn-sm" style="display: inline-block;">Kirim</button>
-                    <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep()" style="display: none;">Next</button>                </div>
+
+                    <button type="submit" id="submitButton" name="pengajuan_pribadi" class="btn btn-success btn-sm" style="display: inline-block;" onclick="validateForm(event)">Kirim</button>
+                    <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep(event)"  style="display: none;">Next</button>
+                </div>
 
                 <!-- Step 2 -->
                 <div id="step2" style="display: none;">
                     <h4>Step 2: Informasi Anggota (Kecuali Kamu)</h4>
                     <div id="anggotaContainer"></div>
                     
-                    <button type="submit" id="submitButton" name="pengajuan_pribadi" class="btn btn-success btn-sm" style="display: inline-block;" onclick="validateForm(event)">Kirim</button>
-                    <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep(event)" style="display: none;">Next</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
+                    <button type="submit" name="pengajuan_kelompok" onclick="validateForm(event)" class="btn btn-success btn-sm">Kirim</button>
                 </div>
             </form>
         </div>
@@ -371,237 +361,194 @@ $(document).ready(function() {
     });
 </script>
 
-<!-- SCRIPT UNTUK Memunculkan step 2-->
+<!-- SCRIPT UNTUK VALIDASI FORM -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const kelompokPribadi = document.getElementById("kelompok_pribadi");
-        const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
-        const jumlahAnggotaContainer = jumlahAnggotaInput.closest(".mb-3");
-        const nextButton = document.getElementById("nextButton");
-        const submitButton = document.getElementById("submitButton");
-        const step1 = document.getElementById("step1");
-        const step2 = document.getElementById("step2");
-        const anggotaContainer = document.getElementById("anggotaContainer");
+document.addEventListener("DOMContentLoaded", function() {
+    const kelompokPribadi = document.getElementById("kelompok_pribadi");
+    const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
+    const jumlahAnggotaContainer = jumlahAnggotaInput.closest(".mb-3");
+    const nextButton = document.getElementById("nextButton");
+    const submitButton = document.getElementById("submitButton");
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const anggotaContainer = document.getElementById("anggotaContainer");
+    const form = document.getElementById("pengajuanForm");
 
-        // Sembunyikan jumlah anggota & Step 2 di awal
-        jumlahAnggotaContainer.style.display = "none";
-        step2.style.display = "none";
+    jumlahAnggotaContainer.style.display = "none";
+    step2.style.display = "none";
 
-        // Menambahkan event listener untuk mengontrol tombol yang ditampilkan
-        kelompokPribadi.addEventListener("change", function() {
-            if (this.value === "Kelompok") {
-                jumlahAnggotaContainer.style.display = "block"; // Tampilkan input jumlah anggota
-                nextButton.style.display = "inline-block"; // Tampilkan tombol Next
-                submitButton.style.display = "none"; // Sembunyikan tombol Kirim
-            } else {
-                jumlahAnggotaContainer.style.display = "none"; // Sembunyikan input jumlah anggota
-                step2.style.display = "none"; // Sembunyikan Step 2
-                nextButton.style.display = "none"; // Sembunyikan tombol Next
-                submitButton.style.display = "inline-block"; // Tampilkan tombol Kirim
+    kelompokPribadi.addEventListener("change", function() {
+        if (this.value === "Kelompok") {
+            jumlahAnggotaContainer.style.display = "block";
+            nextButton.style.display = "inline-block";
+            submitButton.style.display = "none";
+        } else {
+            jumlahAnggotaContainer.style.display = "none";
+            step2.style.display = "none";
+            nextButton.style.display = "none";
+            submitButton.style.display = "inline-block";
+        }
+    });
+
+    function validateStep1() {
+        const fields = [
+            { id: "instansi", message: "Pilih instansi yang dituju!" },
+            { id: "bidang", message: "Pilih bidang yang dipilih!" },
+            { id: "jenis_pengajuan", message: "Pilih jenis pengajuan!" },
+            { id: "kelompok_pribadi", message: "Pilih personil!" }
+        ];
+
+        for (const field of fields) {
+            const inputElement = document.getElementById(field.id);
+            if (!inputElement.value.trim()) {
+                alert(field.message);
+                inputElement.focus();
+                return false;
+            }
+        }
+
+        const kelompokPribadiValue = kelompokPribadi.value;
+        const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
+        if (kelompokPribadiValue === "Kelompok" && jumlahAnggota < 2) {
+            alert("Jika memilih Kelompok, jumlah anggota harus minimal 2!");
+            jumlahAnggotaInput.focus();
+            return false;
+        }
+
+        const otherFields = [
+            { id: "tanggal_mulai", message: "Pilih tanggal mulai!" },
+            { id: "tanggal_selesai", message: "Pilih tanggal selesai!" },
+            { id: "ktp", message: "Upload KTP dalam format PDF!" },
+            { id: "cv", message: "Upload CV dalam format PDF!" }
+        ];
+
+        for (const field of otherFields) {
+            const inputElement = document.getElementById(field.id);
+            if (!inputElement.value) {
+                alert(field.message);
+                inputElement.focus();
+                return false;
+            }
+        }
+
+        return validateAnggota();
+    }
+
+    function validateAnggota() {
+        const emails = new Set();
+        const anggotaInputs = document.querySelectorAll(".anggota-group");
+        let valid = true;
+
+        anggotaInputs.forEach((anggota, index) => {
+            const nama = anggota.querySelector("input[name='anggota_nama[]']");
+            const email = anggota.querySelector("input[name='anggota_email[]']");
+            const nik = anggota.querySelector("input[name='anggota_nik[]']");
+            const nim = anggota.querySelector("input[name='anggota_nim[]']");
+
+            if (!nama.value.trim()) {
+                alert(`Nama anggota ${index + 1} harus diisi!`);
+                nama.focus();
+                valid = false;
+                return;
+            }
+            if (!email.value.trim()) {
+                alert(`Email anggota ${index + 1} harus diisi!`);
+                email.focus();
+                valid = false;
+                return;
+            }
+            if (emails.has(email.value)) {
+                alert(`Email anggota ${index + 1} sudah digunakan oleh anggota lain!`);
+                email.focus();
+                valid = false;
+                return;
+            }
+            emails.add(email.value);
+            
+            if (!nik.value.trim()) {
+                alert(`NIK anggota ${index + 1} harus diisi!`);
+                nik.focus();
+                valid = false;
+                return;
+            }
+            if (nik.value.length > 16) {
+                alert(`NIK anggota ${index + 1} maksimal 16 karakter!`);
+                nik.focus();
+                valid = false;
+                return;
+            }
+            
+            if (!nim.value.trim()) {
+                alert(`NIM/NISN anggota ${index + 1} harus diisi!`);
+                nim.focus();
+                valid = false;
+                return;
+            }
+            if (nim.value.length < 10 || nim.value.length > 12) {
+                alert(`NIM/NISN anggota ${index + 1} harus 10-12 karakter!`);
+                nim.focus();
+                valid = false;
+                return;
             }
         });
 
-        // Fungsi untuk menampilkan langkah berikutnya (Step 2)
-        function nextStep(event) {
-            const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
-            anggotaContainer.innerHTML = ""; // Bersihkan isi sebelumnya
+        return valid;
+    }
 
-            // Validasi input jumlah anggota
-            if (jumlahAnggota <= 0) {
-                alert("Jumlah Anggota harus lebih dari 0!");
-                event.preventDefault(); // Cegah melanjutkan jika jumlah anggota tidak valid
-                return;
-            }
+    function nextStep(event) {
+        event.preventDefault();
+        if (!validateStep1()) return;
 
-            // Menambahkan input anggota jika lebih dari satu anggota
-            if (jumlahAnggota > 1) {
-                for (let i = 1; i < jumlahAnggota; i++) { // Dimulai dari 1 agar pendaftar utama tidak dihitung
-                    const anggotaHTML = `
-                        <div class="mb-3 anggota-group">
-                            <label class="form-label">Anggota ${i}</label>
-                            <div class="row">
-                                <div class="col">
-                                    <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama" required>
-                                    <div class="invalid-feedback">Nama Anggota ${i} harus diisi.</div>
-                                </div>
-                                <div class="col">
-                                    <input type="email" class="form-control" name="anggota_email[]" placeholder="Email" required>
-                                    <div class="invalid-feedback">Email Anggota ${i} harus diisi.</div>
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK" required>
-                                    <div class="invalid-feedback">NIK Anggota ${i} harus diisi.</div>
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN" required>
-                                    <div class="invalid-feedback">NIM/NISN Anggota ${i} harus diisi.</div>
-                                </div>
+        const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
+        anggotaContainer.innerHTML = "";
+
+        if (jumlahAnggota > 1) {
+            for (let i = 1; i < jumlahAnggota; i++) {
+                const anggotaHTML = `
+                    <div class="mb-3 anggota-group">
+                        <label class="form-label">Anggota ${i}</label>
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama">
+                            </div>
+                            <div class="col">
+                                <input type="email" class="form-control" name="anggota_email[]" placeholder="Email">
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK">
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN">
                             </div>
                         </div>
-                    `;
-                    anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
-                }
-            }
-
-            step1.style.display = "none"; // Sembunyikan Step 1
-            step2.style.display = "block"; // Tampilkan Step 2
-        }
-
-        // Fungsi untuk kembali ke langkah sebelumnya (Step 1)
-        function prevStep() {
-            step2.style.display = "none";
-            step1.style.display = "block";
-        }
-
-        // Validasi form saat tombol Kirim ditekan
-        function validateForm(event) {
-            let valid = true;
-            const inputs = document.querySelectorAll('input[required]');
-            inputs.forEach(input => {
-                if (input.value.trim() === "") {
-                    input.classList.add("is-invalid"); // Menambahkan kelas invalid
-                    valid = false;
-                } else {
-                    input.classList.remove("is-invalid"); // Menghapus kelas invalid
-                }
-            });
-
-            // Cegah form terkirim jika ada input yang kosong
-            if (!valid) {
-                event.preventDefault();
+                    </div>
+                `;
+                anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
             }
         }
 
-        window.nextStep = nextStep;
-        window.prevStep = prevStep;
-    });
-</script>
-
-<script>
-    function showError(inputId, message) {
-    const errorElement = document.getElementById(`error-${inputId}`);
-    const inputElement = document.getElementById(inputId);
-    if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.style.display = "block";
-    }
-    if (inputElement) {
-        inputElement.classList.add("is-invalid");
-    }
-}
-
-function clearError(inputId) {
-    const errorElement = document.getElementById(`error-${inputId}`);
-    const inputElement = document.getElementById(inputId);
-    if (errorElement) {
-        errorElement.textContent = "";
-        errorElement.style.display = "none";
-    }
-    if (inputElement) {
-        inputElement.classList.remove("is-invalid");
-    }
-}
-
-function validateStep1() {
-    let isValid = true;
-
-    // Validasi Dropdown Wajib Dipilih
-    const requiredDropdowns = ['instansi', 'bidang', 'kelompok_pribadi', 'jenis_pengajuan'];
-    requiredDropdowns.forEach(id => {
-        const value = document.getElementById(id).value;
-        if (!value) {
-            showError(id, 'Silakan pilih salah satu.');
-            isValid = false;
-        } else {
-            clearError(id);
-        }
-    });
-
-    // Validasi Jumlah Anggota
-    const jumlahAnggota = document.getElementById('jumlah_anggota').value.trim();
-    if (!jumlahAnggota) {
-        showError('jumlah_anggota', 'Jumlah anggota harus diisi.');
-        isValid = false;
-    } else if (isNaN(jumlahAnggota) || jumlahAnggota <= 0) {
-        showError('jumlah_anggota', 'Jumlah anggota harus angka positif.');
-        isValid = false;
-    } else {
-        clearError('jumlah_anggota');
-    }
-
-    // Jika Valid, Lanjut ke Step 2
-    if (isValid) {
-        document.getElementById('step1').style.display = "none";
-        document.getElementById('step2').style.display = "block";
-    }
-}
-
-function validateForm(event) {
-    let isValid = true;
-
-    // Validasi File PDF (Maks 1MB)
-    const fileInputs = ['ktp', 'cv'];
-    fileInputs.forEach(id => {
-        const file = document.getElementById(id).files[0];
-        if (!file) {
-            showError(id, 'File wajib diunggah.');
-            isValid = false;
-        } else if (file.type !== "application/pdf") {
-            showError(id, 'Format file harus PDF.');
-            isValid = false;
-        } else if (file.size > 1024 * 1024) {
-            showError(id, 'Ukuran file tidak boleh lebih dari 1MB.');
-            isValid = false;
-        } else {
-            clearError(id);
-        }
-    });
-
-    // Validasi Tanggal
-    const tanggalMulai = document.getElementById('tanggal_mulai').value;
-    const tanggalSelesai = document.getElementById('tanggal_selesai').value;
-    
-    if (!tanggalMulai) {
-        showError('tanggal_mulai', 'Tanggal mulai harus diisi.');
-        isValid = false;
-    } else {
-        clearError('tanggal_mulai');
-    }
-    
-    if (!tanggalSelesai) {
-        showError('tanggal_selesai', 'Tanggal selesai harus diisi.');
-        isValid = false;
-    } else if (tanggalMulai && tanggalSelesai < tanggalMulai) {
-        showError('tanggal_selesai', 'Tanggal selesai harus setelah tanggal mulai.');
-        isValid = false;
-    } else {
-        clearError('tanggal_selesai');
-    }
-
-    // Jika Form Tidak Valid, Hentikan Submit
-    if (!isValid) {
-        event.preventDefault();
-    }
-}
-
-document.getElementById('pengajuanForm').addEventListener('submit', validateForm);
-
-document.getElementById('kelompok_pribadi').addEventListener('change', function () {
-    toggleNextButton();
-});
-
-function toggleNextButton() {
-    const personil = document.getElementById('kelompok_pribadi').value;
-    const nextButton = document.getElementById('nextButton');
-    const submitButton = document.getElementById('submitButton');
-
-    if (personil === "Kelompok") {
-        nextButton.style.display = "inline-block";
-        submitButton.style.display = "none";
-    } else {
+        step1.style.display = "none";
+        step2.style.display = "block";
         nextButton.style.display = "none";
         submitButton.style.display = "inline-block";
     }
-}
+
+    function prevStep() {
+        step2.style.display = "none";
+        step1.style.display = "block";
+        nextButton.style.display = "inline-block";
+        submitButton.style.display = "none";
+    }
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        if (!validateStep1() || !validateAnggota()) return;
+        alert("Form berhasil dikirim!");
+        this.submit();
+    });
+
+    window.nextStep = nextStep;
+    window.prevStep = prevStep;
+});
 
 </script>
