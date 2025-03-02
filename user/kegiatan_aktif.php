@@ -19,9 +19,7 @@ $sql = "SELECT *
         LEFT JOIN tb_user ON tb_pengajuan.id_user = tb_user.id_user 
         LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
         LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        WHERE tb_pengajuan.status_pengajuan = '4' 
-        AND tb_profile_user.id_user = '$id_user'";
-
+        WHERE tb_pengajuan.status_pengajuan = '4' AND tb_profile_user.id_user = '$id_user'";
 $query = mysqli_query($conn, $sql);
 $no = 1;
 ?>
@@ -102,5 +100,4 @@ $no = 1;
         </div>
     </div>
 </div>
-
 <?php include "../layout/footerDashboard.php"; ?>

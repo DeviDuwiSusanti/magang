@@ -23,7 +23,6 @@ if (ISSET($_GET['id_dokumen'])){
         showAlert('Gagal!', 'Persayaratan gagal dihapus. Silakan coba lagi.', 'error');
     }    
 }
-
 ?>
 
 <div class="main-content p-3">

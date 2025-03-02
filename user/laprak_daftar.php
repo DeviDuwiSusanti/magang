@@ -107,5 +107,4 @@ if (isset($_GET['id_dokumen'])) {
         </div>
     </div>
 </div>
-
 <?php include "../layout/footerDashboard.php"; ?>
