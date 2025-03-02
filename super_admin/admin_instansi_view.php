@@ -1,6 +1,7 @@
 <?php 
     include "sidebar.php";
-    $admin_instansi = query("SELECT * FROM tb_user u, tb_profile_user p WHERE p.id_user = u.id_user AND u.level = '2' AND (p.id_instansi IS NULL OR p.id_instansi = '') ");
+    $admin_instansi = query("SELECT * FROM tb_user u, tb_profile_user p WHERE p.id_user = u.id_user AND u.level = '2' 
+                            AND (p.id_instansi IS NULL OR p.id_instansi = '') AND p.status_active = '1' ");
     $no = 1;
 ?>
 

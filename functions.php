@@ -1,4 +1,7 @@
 <?php
+
+use Dom\Mysql;
+
     include "koneksi.php";
 
     function query($query) {
@@ -78,7 +81,7 @@
         $id_user = generateUserId($conn);
         $nama = $POST["nama_user"];
         $email = $POST["email"];
-        $nik = $POST["nik_user"];
+        $nik = $POST["nik"];
         $nisn = $POST["nisn"];
         $pendidikan = $POST["id_pendidikan"];
         $jenis_kelamin = $POST["jenis_kelamin"];
@@ -94,7 +97,7 @@
             header("Location: register.php?error=email_terdaftar");
             exit;
         }
-        if (checking($conn, 'tb_profile_user', 'nik_user', $nik)) {
+        if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
             header("Location: register.php?error=nik_terdaftar");
             exit;
         }
@@ -113,7 +116,7 @@
         }
 
         $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
-        $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
+        $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
                             VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
         $query_user = mysqli_query($conn, $query1);
         $query_profile = mysqli_query($conn, $query2);
@@ -322,7 +325,7 @@
         $gambar_user = uploadImage($_FILES["gambar_instansi"], "avatar.png", "../assets/img/user/");
     
         $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
-        $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik_user, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
+        $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
                             VALUES ('$id_user', '$nama_user', '$nik', '$nip', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
         if($query_user && $query_profile) {
             return mysqli_affected_rows($conn);
@@ -333,6 +336,7 @@
     
     
     
+
 
     function super_admin_edit($POST) {
         global $conn;
@@ -362,7 +366,7 @@
     }
     
     
-    function super_admin_hapus_user($id_user, $change_by) {
+    function hapus_user_super_admin($id_user, $change_by) {
         global $conn;
         $query_user = mysqli_query($conn, "UPDATE tb_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
         $query_profile = mysqli_query($conn, "UPDATE tb_profile_user SET status_active = '0', change_by = '$change_by' WHERE id_user = '$id_user'");
@@ -373,6 +377,16 @@
         }
     }
 
+
+    function hapus_pengajuan_by_super_admin($id_pengajuan, $change_by) {
+        global $conn;
+        $query = mysqli_query($conn, "UPDATE tb_pengajuan SET status_active = '0', change_by = '$change_by' WHERE id_pengajuan = '$id_pengajuan'");
+        if($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
 
 
 // ====================================== END OF SUPER ADMIN LEVEL (1) ============================================================

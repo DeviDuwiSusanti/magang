@@ -2,17 +2,11 @@
     include "sidebar.php"; 
 
     if(isset($_POST["tambah_admin_instansi"])) {
-        if(tambah_admin_instansi($_POST)) {
-            echo "<script>
-                alert('Berhasil Tambah Data Admin Instansi');
-            document.location.href = 'user_view.php';
-        </script>";
-    } else {
-        echo "<script>
-            alert ('Gagal Tambah Data Admin Instansi');
-                document.location.href = 'user_view.php';
-        </script>";
-    }
+        if(tambah_admin_instansi($_POST)) { ?>
+        <script>tambah_user_super_admin_success()</script>
+<?php } else { ?>
+        <script>tambah_user_super_admin_gagal()</script>
+    <?php }
 }
 
 ?>
@@ -36,7 +30,7 @@
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="text" inputmode="numeric" class="form-control" id="nik" name="nik" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
+                <input type="text" inputmode="numeric" class="form-control"  id="nik" name="nik" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
                 <span id="nik_error" class="text-danger"></span>
             </div>
 
@@ -81,7 +75,7 @@
             <!-- Tempat Lahir -->
             <div class="mb-3">
                 <label for="no_telepon" class="form-label">No. Telepon</label>
-                <input type="text" class="form-control" id="telepone_user" maxlength="15" name="telepone_user" placeholder="Masukkan Nomor telepone Calon Admin Instansi">
+                <input type="tel" pattern="[0-9]{8,15}" class="form-control" id="telepone_user" maxlength="15" name="telepone_user" placeholder="Masukkan Nomor telepone Calon Admin Instansi">
             </div>
 
             <!-- Alamat -->
@@ -160,15 +154,15 @@ function validateFile() {
                 }
             });
 
-            // Validasi real-time untuk NISN
+            
             $('#nip').on('input', function() {
-                let nisn = $(this).val().trim(); // Ambil nilai dan hilangkan spasi
+                let nisn = $(this).val().trim(); 
                 let nisnError = $('#nip_error');
 
                 if (nisn.length === 0) {
-                    nisnError.text('NISN tidak boleh kosong!').show();
+                    nisnError.text('NIP tidak boleh kosong!').show();
                 } else if (nisn.length < 18) {
-                    nisnError.text('NISN harus 18 digit!').show();
+                    nisnError.text('NIP harus 18 digit!').show();
                 } else {
                     nisnError.hide();
                 }

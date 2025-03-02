@@ -2,8 +2,18 @@
     include "sidebar.php";
     $pengajuan = query("SELECT u.nama_user, i.nama_panjang, b.nama_bidang, p.* 
                         FROM tb_pengajuan p, tb_profile_user u, tb_instansi i, tb_bidang b
-                        WHERE u.id_user = p.id_user AND i.id_instansi = p.id_instansi AND b.id_bidang = p.id_bidang");
+                        WHERE u.id_user = p.id_user AND i.id_instansi = p.id_instansi AND b.id_bidang = p.id_bidang AND p.status_active = '1'");
     $no = 1;
+
+    if(isset($_GET["id_pengajuan_ini"])) {
+        $id_pengajuan = $_GET["id_pengajuan_ini"];
+        
+        if(hapus_pengajuan_by_super_admin($id_pengajuan, $id_user)) { 
+            echo "<script>hapus_pengajuan_super_admin_success()</script>";
+        } else { 
+            echo "<script>hapus_pengajuan_super_admin_gagal()</script>";
+        }
+    }
 ?>
 
 <main>
@@ -45,7 +55,7 @@
                             <td><?= $aju["tanggal_selesai"] ?></td>
                             <td><?= $aju["status_pengajuan"] ?></td>
                             <td>
-                                <a href="instansi_hapus.html" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                <a href="#" class="btn btn-danger btn-sm" onclick="hapus_pengajuan_by_super_admin(<?= $aju['id_pengajuan'] ?>)">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
                             </td>

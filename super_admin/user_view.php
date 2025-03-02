@@ -1,9 +1,20 @@
 <?php 
     include "sidebar.php";
-    $user = query("SELECT u.*, p.*, i.nama_pendek FROM tb_profile_user p JOIN tb_user u ON  p.id_user = u.id_user 
+    $user = query("SELECT u.*, p.*, i.nama_pendek, b.nama_bidang FROM tb_profile_user p JOIN tb_user u ON  p.id_user = u.id_user 
                 LEFT JOIN tb_instansi i ON p.id_instansi = i.id_instansi
+                LEFT JOIN tb_bidang b ON p.id_bidang = b.id_bidang
                 WHERE u.status_active = '1' AND p.status_active = '1' ");
     $no = 1;
+
+    if(isset($_GET["id_user_ini"])) {
+        $id_user_ini = $_GET["id_user_ini"];
+        
+        if(hapus_user_super_admin($id_user_ini, $id_user)) { 
+            echo "<script>hapus_user_super_admin_success()</script>";
+        } else { 
+            echo "<script>hapus_user_super_admin_gagal()</script>";
+        }
+    }
 ?>
 
 <main>
@@ -42,6 +53,7 @@
                         <?php foreach($user as $u) :
                             $jenis_kelamin = ($u["jenis_kelamin"] == "0" ? "Perempuan" : "Laki - Laki");
                             $admin_instansi = (($u["id_instansi"] == "") ? "Calon Admin Instansi" : "Admin " . $u["nama_pendek"]);
+                            $pembimbing_bidang = (($u["id_bidang"] == "") ? "Calon Pembimbing Bidang" : "Pembimbing " .$u["nama_bidang"]);
                             $level = "";
                             if($u["level"] == "1") {
                                 $level = "Super Admin";
@@ -54,6 +66,9 @@
                             }
                             if($u["level"] == "4") {
                                 $level = "User Kelompok";
+                            }
+                            if($u["level"] == "5") {
+                                $level = $pembimbing_bidang;
                             }
                         ?>
                         <tr>
@@ -69,14 +84,14 @@
                             <td><?= $level ?></td>
                             <td class="d-flex justify-content-center gap-2">
                                 <?php if($u["level"] == '1' || $u["level"] == '2') { ?>
-                                    <a href="user_hapus.php?id_user=<?= $u["id_user"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                    <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_user_super_admin(<?= $u['id_user'] ?>)">
                                         <i class="bi bi-trash"></i> Hapus
                                     </a>
                                     <a href="user_edit.php?id_user=<?= $u["id_user"] ?>" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
                                     <?php } else { ?>
-                                        <a href="user_hapus.php?id_user=<?= $u["id_user"] ?>" class="btn btn-danger btn-md p-2" onclick="return(confirm('Apakah Anda Yakin Akan Menghapus Data Ini'))">
+                                        <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_user_super_admin(<?= $u['id_user'] ?>)">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                 <?php } ?>

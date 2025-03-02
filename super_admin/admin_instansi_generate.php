@@ -8,17 +8,11 @@
     $instansi_selected = query("SELECT DISTINCT i.nama_panjang FROM tb_instansi i INNER JOIN tb_profile_user p ON i.id_instansi = p.id_instansi");
 
     if(isset($_POST["generate_admin_instansi"])) {
-        if(generate_admin_instansi($_POST) > 0) {
-            echo "<script>
-                alert ('Berhasil Generate Admin Instansi');
-                document.location.href = 'admin_instansi_view.php';
-            </script>";
-        } else {
-            echo "<script>
-                alert ('Gagal Genarate Admin Instansi');
-                document.location.href = 'admin_instansi_view.php';
-            </script>";
-        }
+        if(generate_admin_instansi($_POST) > 0) { ?>
+            <script>generate_admin_instansi_success()</script>
+        <?php } else { ?>
+            <script>generate_admin_instansi_success()</script>
+        <?php }
     }
 
 
