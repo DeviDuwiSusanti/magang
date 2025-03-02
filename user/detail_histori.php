@@ -16,7 +16,11 @@ $sql = "SELECT *
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
 
-$sql2 = "SELECT * FROM tb_profile_user pu, tb_pendidikan p, tb_user u WHERE pu.id_user = '$id_user' AND u.id_user = '$id_user' AND pu.id_pendidikan = p.id_pendidikan";
+$sql2 = "SELECT * 
+         FROM tb_profile_user pu
+         INNER JOIN tb_user u ON pu.id_user = u.id_user
+         INNER JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
+         WHERE pu.id_user = '$id_user' AND u.id_user = '$id_user'";
 $query2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($query2);
 

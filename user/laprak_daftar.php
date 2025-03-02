@@ -69,7 +69,6 @@ if (isset($_GET['id_dokumen'])) {
                         <th class="text-center">No</th>
                         <th class="text-center">Tanggal</th>
                         <th class="text-center">Nama Dokumen</th>
-                        <th class="text-center">Jenis Dokumen</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -85,7 +84,6 @@ if (isset($_GET['id_dokumen'])) {
                                         <?= htmlspecialchars($row2['nama_dokumen'] ?? 'Tidak diketahui') ?>
                                     </a>
                                 </td>
-                                <td><?= getKategoriText($row2['jenis_dokumen'] ?? ''); ?></td>
                                 <td class="text-center">
                                     <?php if (isset($row['status_pengajuan']) && $row['status_pengajuan'] != 5): ?>
                                         <a href="laprak_daftar.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>&id_dokumen=<?= $row2['id_dokumen'] ?>" 
