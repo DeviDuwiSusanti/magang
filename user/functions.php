@@ -1,3 +1,5 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <?php
 function generateIdPengajuan($conn) {
     // Ambil tanggal saat ini dalam format YYYYMMDD
@@ -105,7 +107,7 @@ function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
 function getBidangByInstansi($id_instansi) {
     global $conn;
     
-    $sql = "SELECT id_bidang, nama_bidang 
+    $sql = "SELECT id_bidang, nama_bidang, kuota_bidang 
             FROM tb_bidang 
             WHERE id_instansi = '$id_instansi' 
             AND kuota_bidang > 0 
@@ -119,7 +121,8 @@ function getBidangByInstansi($id_instansi) {
 
     $options = "";
     while ($row = mysqli_fetch_assoc($result)) {
-        $options .= '<option value="'.$row['id_bidang'].'">'.$row['nama_bidang'].'</option>';
+        $options .= '<option value="'.$row['id_bidang'].'">'.$row['nama_bidang'].' (Kuota: '.$row['kuota_bidang'].')</option>';
+
     }
 
     return $options ?: '<option value="" disabled>Bidang tidak tersedia</option>';

@@ -26,73 +26,75 @@ $sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS to
                  ORDER BY total_kuota DESC";
 $result_instansi = mysqli_query($conn, $sql_instansi);
 
-if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
-    $id_pengajuan = generateIdPengajuan($conn);
-    $id_dokumen_ktp = generateIdDokumen($conn, $id_pengajuan);
-    
-    $id_instansi = $_POST['id_instansi'];
-    $id_bidang = $_POST['id_bidang'];
-    $jenis_pengajuan = $_POST['jenis_pengajuan'];
-    $jumlah_pelamar = $_POST['jumlah_anggota'];
-    if ($jumlah_pelamar == NULL){
-        $jumlah_pelamar = 1;
-    }
-    $tanggal_mulai = $_POST['tanggal_mulai'];
-    $tanggal_selesai = $_POST['tanggal_selesai'];
-
-    // Menangani upload file KTP dan CV
-    $ktp = uploadFile($_FILES['ktp']);
-    $cv = uploadFile($_FILES['cv']);
-
-    if (ISSET($_POST['anggota_nama'])){
-         // Mengambil data anggota dari form Step 2
-        $anggota_nama = $_POST['anggota_nama'];
-        $anggota_email = $_POST['anggota_email'];
-        $anggota_nik = $_POST['anggota_nik'];
-        $anggota_nim = $_POST['anggota_nim'];
-
-        foreach ($anggota_nama as $index => $nama) {
-            $email = $anggota_email[$index];
-            $nik = $anggota_nik[$index];
-            $nim = $anggota_nim[$index];
-            $id_user4 = generateIdUser4($conn, $id_user);
-
-            $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
-            $result = mysqli_query($conn, $pendidikan);
-            $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
+// INSERT PENGAJUAN
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
+        $id_pengajuan = generateIdPengajuan($conn);
+        $id_dokumen_ktp = generateIdDokumen($conn, $id_pengajuan);
         
-            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik_user, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
-            $query_anggota1 = mysqli_query($conn, $sql_anggota1);
-            
-            $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', 4, '$id_user')";
-            $query_anggota2 = mysqli_query($conn, $sql_anggota2);
+        $id_instansi = $_POST['id_instansi'];
+        $id_bidang = $_POST['id_bidang'];
+        $jenis_pengajuan = $_POST['jenis_pengajuan'];
+        $jumlah_pelamar = $_POST['jumlah_anggota'];
+        if ($jumlah_pelamar == NULL){
+            $jumlah_pelamar = 1;
         }
-    }
+        $tanggal_mulai = $_POST['tanggal_mulai'];
+        $tanggal_selesai = $_POST['tanggal_selesai'];
 
-    $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', 'Menunggu', 'Y', '$id_user', NOW(), '', '')";
-    $query2 = mysqli_query($conn, $sql2);
+        // Menangani upload file KTP dan CV
+        $ktp = uploadFile($_FILES['ktp']);
+        $cv = uploadFile($_FILES['cv']);
 
-    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
-    $query3 = mysqli_query($conn, $sql3);
-    
+        if (ISSET($_POST['anggota_nama'])){
+            // Mengambil data anggota dari form Step 2
+            $anggota_nama = $_POST['anggota_nama'];
+            $anggota_email = $_POST['anggota_email'];
+            $anggota_nik = $_POST['anggota_nik'];
+            $anggota_nim = $_POST['anggota_nim'];
 
-    if ($query2 && $query3){
-        $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
-        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', '$cv[name]', 'identitas', '$cv[path]', '$id_pengajuan', '$id_user', 'Y', '$id_user', NOW(), '', '')";
-        $query4 = mysqli_query($conn, $sql4);
+            foreach ($anggota_nama as $index => $nama) {
+                $email = $anggota_email[$index];
+                $nik = $anggota_nik[$index];
+                $nim = $anggota_nim[$index];
+                $id_user4 = generateIdUser4($conn, $id_user);
 
-        $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
-        $query5 = mysqli_query($conn, $sql5);
+                $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
+                $result = mysqli_query($conn, $pendidikan);
+                $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
+            
+                $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+                $query_anggota1 = mysqli_query($conn, $sql_anggota1);
+                
+                $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '4', '$id_user')";
+                $query_anggota2 = mysqli_query($conn, $sql_anggota2);
+            }
+        }
 
-        if ($query4){
-            echo "<script>
-            alert('Yeayy, Pendaftaran Kamu Berhasil');
-            window.location.href='status_pengajuan.php';
-            </script>";
+        $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
+        $query2 = mysqli_query($conn, $sql2);
+
+        $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $query3 = mysqli_query($conn, $sql3);
+        
+
+        if ($query2 && $query3){
+            $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
+            $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', 'identitas', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+            $query4 = mysqli_query($conn, $sql4);
+
+            $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
+            $query5 = mysqli_query($conn, $sql5);
+
+            if ($query4) {
+                showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "status_pengajuan.php");
+                exit();
+            } else {
+                showAlert('Gagal!', 'Yahh pendaftaran kamu gagal. Silakan coba lagi.', 'error');
+            }    
         }
     }
 }
-
 
 // Cek jika ada request AJAX dari JavaScript untuk mengambil bidang
 if (isset($_POST["id_instansi"])) {
@@ -122,6 +124,7 @@ if (isset($_POST["id_bidang"])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -149,7 +152,64 @@ if (isset($_POST["id_bidang"])) {
         margin-left: 20px;
         display: none;
     }
-</style>
+
+    /* Card styling for detail lowongan */
+    #detailBidangCard {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        background: #ffffff;
+    }
+
+    #detailBidangCard h5.card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    #detailBidangCard p {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    #detailBidangCard strong {
+        color: #000;
+    }
+
+    #bidangKuota {
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    /* Tambahkan jarak saat card detail muncul */
+    .form-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 30px; /* Jarak antar form dan card */
+    }
+
+    .detail-lowongan {
+        display: none; /* Tersembunyi secara default */
+    }
+
+    .detail-lowongan.show {
+        display: block;
+    }
+        /* Tambahkan border kotak pada card detail */
+    #detailBidangCard {
+        border: 2px solid #0d6efd; /* Biru */
+        border-radius: 15px; /* Sudut membulat */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        background: #ffffff;
+    }
+
+    </style>
+
 
 </head>
 <body>
@@ -390,7 +450,27 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    function showError(input, message) {
+        let existingError = input.parentNode.querySelector(".error-message");
+        if (existingError) {
+            existingError.remove();
+        }
+        const error = document.createElement("small");
+        error.classList.add("error-message");
+        error.style.color = "red";
+        error.textContent = message;
+        input.parentNode.appendChild(error);
+    }
+
+    function clearError(input) {
+        const error = input.parentNode.querySelector(".error-message");
+        if (error) {
+            error.remove();
+        }
+    }
+
     function validateStep1() {
+        let isValid = true;
         const fields = [
             { id: "instansi", message: "Pilih instansi yang dituju!" },
             { id: "bidang", message: "Pilih bidang yang dipilih!" },
@@ -398,21 +478,21 @@ document.addEventListener("DOMContentLoaded", function() {
             { id: "kelompok_pribadi", message: "Pilih personil!" }
         ];
 
-        for (const field of fields) {
+        fields.forEach(field => {
             const inputElement = document.getElementById(field.id);
             if (!inputElement.value.trim()) {
-                alert(field.message);
-                inputElement.focus();
-                return false;
+                showError(inputElement, field.message);
+                isValid = false;
+            } else {
+                clearError(inputElement);
             }
-        }
+        });
 
-        const kelompokPribadiValue = kelompokPribadi.value;
-        const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
-        if (kelompokPribadiValue === "Kelompok" && jumlahAnggota < 2) {
-            alert("Jika memilih Kelompok, jumlah anggota harus minimal 2!");
-            jumlahAnggotaInput.focus();
-            return false;
+        if (kelompokPribadi.value === "Kelompok" && (parseInt(jumlahAnggotaInput.value) || 0) < 2) {
+            showError(jumlahAnggotaInput, "Jika memilih Kelompok, jumlah anggota harus minimal 2!");
+            isValid = false;
+        } else {
+            clearError(jumlahAnggotaInput);
         }
 
         const otherFields = [
@@ -422,77 +502,100 @@ document.addEventListener("DOMContentLoaded", function() {
             { id: "cv", message: "Upload CV dalam format PDF!" }
         ];
 
-        for (const field of otherFields) {
-            const inputElement = document.getElementById(field.id);
-            if (!inputElement.value) {
-                alert(field.message);
-                inputElement.focus();
-                return false;
-            }
-        }
+        const maxFileSize = 1 * 1024 * 1024; // 1 MB dalam bytes
 
-        return validateAnggota();
+        otherFields.forEach(field => {
+            const inputElement = document.getElementById(field.id);
+            const file = inputElement.files ? inputElement.files[0] : null;
+
+            if (!inputElement.value) {
+                showError(inputElement, field.message);
+                isValid = false;
+            } else if ((field.id === "ktp" || field.id === "cv") && file && file.size > maxFileSize) {
+                showError(inputElement, `${field.id.toUpperCase()} tidak boleh lebih dari 1 MB!`);
+                isValid = false;
+            } else {
+                clearError(inputElement);
+            }
+        });
+
+    return isValid && validateAnggota();
+
+    }
+
+    async function checkEmail(emailInput) {
+        const email = emailInput.value.trim();
+        if (email === "") return;
+
+        try {
+            const response = await fetch("cek.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: `email=${email}`
+            });
+            const result = await response.text();
+            if (result === "exists") {
+                showError(emailInput, "Email sudah digunakan!");
+                return false;
+            } else {
+                clearError(emailInput);
+                return true;
+            }
+        } catch (error) {
+            console.error("Error checking email:", error);
+        }
     }
 
     function validateAnggota() {
+        let isValid = true;
         const emails = new Set();
         const anggotaInputs = document.querySelectorAll(".anggota-group");
-        let valid = true;
+        const nameRegex = /^[A-Za-z\s]+$/; // Hanya huruf dan spasi
 
-        anggotaInputs.forEach((anggota, index) => {
+        anggotaInputs.forEach((anggota) => {
             const nama = anggota.querySelector("input[name='anggota_nama[]']");
             const email = anggota.querySelector("input[name='anggota_email[]']");
             const nik = anggota.querySelector("input[name='anggota_nik[]']");
             const nim = anggota.querySelector("input[name='anggota_nim[]']");
 
+        // Validasi Nama (tidak boleh angka)
             if (!nama.value.trim()) {
-                alert(`Nama anggota ${index + 1} harus diisi!`);
-                nama.focus();
-                valid = false;
-                return;
+                showError(nama, `Nama harus diisi!`);
+                isValid = false;
+            } else if (!nameRegex.test(nama.value.trim())) {
+                showError(nama, `Nama hanya boleh mengandung huruf!`);
+                isValid = false;
+            } else {
+                clearError(nama);
             }
+
             if (!email.value.trim()) {
-                alert(`Email anggota ${index + 1} harus diisi!`);
-                email.focus();
-                valid = false;
-                return;
+                showError(email, `Email anggota harus diisi!`);
+                isValid = false;
+            } else if (emails.has(email.value)) {
+                showError(email, `Email anggota sudah digunakan!`);
+                isValid = false;
+            } else {
+                emails.add(email.value);
+                checkEmail(email);
             }
-            if (emails.has(email.value)) {
-                alert(`Email anggota ${index + 1} sudah digunakan oleh anggota lain!`);
-                email.focus();
-                valid = false;
-                return;
+
+            if (!nik.value.trim() || nik.value.length > 16) {
+                showError(nik, `NIK maksimal 16 karakter!`);
+                isValid = false;
+            } else {
+                clearError(nik);
             }
-            emails.add(email.value);
-            
-            if (!nik.value.trim()) {
-                alert(`NIK anggota ${index + 1} harus diisi!`);
-                nik.focus();
-                valid = false;
-                return;
-            }
-            if (nik.value.length > 16) {
-                alert(`NIK anggota ${index + 1} maksimal 16 karakter!`);
-                nik.focus();
-                valid = false;
-                return;
-            }
-            
-            if (!nim.value.trim()) {
-                alert(`NIM/NISN anggota ${index + 1} harus diisi!`);
-                nim.focus();
-                valid = false;
-                return;
-            }
-            if (nim.value.length < 10 || nim.value.length > 12) {
-                alert(`NIM/NISN anggota ${index + 1} harus 10-12 karakter!`);
-                nim.focus();
-                valid = false;
-                return;
+
+            if (!nim.value.trim() || (nim.value.length !== 10 && nim.value.length !== 12)) {
+                showError(nim, `10 digit u/ nisn dan 12 digit u/ nim!`);
+                isValid = false;
+            } else {
+                clearError(nim);
             }
         });
 
-        return valid;
+        return isValid;
     }
 
     function nextStep(event) {
@@ -502,29 +605,18 @@ document.addEventListener("DOMContentLoaded", function() {
         const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
         anggotaContainer.innerHTML = "";
 
-        if (jumlahAnggota > 1) {
-            for (let i = 1; i < jumlahAnggota; i++) {
-                const anggotaHTML = `
-                    <div class="mb-3 anggota-group">
-                        <label class="form-label">Anggota ${i}</label>
-                        <div class="row">
-                            <div class="col">
-                                <input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama">
-                            </div>
-                            <div class="col">
-                                <input type="email" class="form-control" name="anggota_email[]" placeholder="Email">
-                            </div>
-                            <div class="col">
-                                <input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK">
-                            </div>
-                            <div class="col">
-                                <input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN">
-                            </div>
-                        </div>
+        for (let i = 1; i < jumlahAnggota; i++) {
+            const anggotaHTML = `
+                <div class="mb-3 anggota-group">
+                    <label class="form-label">Anggota ${i}</label>
+                    <div class="row">
+                        <div class="col"><input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama"></div>
+                        <div class="col"><input type="email" class="form-control" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
+                        <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK"></div>
+                        <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN"></div>
                     </div>
-                `;
-                anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
-            }
+                </div>`;
+            anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
         }
 
         step1.style.display = "none";
@@ -541,14 +633,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        if (!validateStep1() || !validateAnggota()) return;
-        alert("Form berhasil dikirim!");
-        this.submit();
+        if (!validateStep1() || !validateAnggota()) {
+            event.preventDefault();
+        }
     });
 
     window.nextStep = nextStep;
     window.prevStep = prevStep;
+    window.checkEmail = checkEmail;
 });
 
 </script>

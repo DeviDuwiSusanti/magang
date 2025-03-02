@@ -1,4 +1,5 @@
 <?php include "../layout/sidebarUser.php"; 
+include "functions.php";
 
 // akses data profil pengguna sebelum update
 $sql2 = "SELECT * FROM tb_profile_user, tb_user, tb_pendidikan WHERE tb_profile_user.id_user = '$id_user' AND tb_user.id_user  = '$id_user' AND tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan";
@@ -74,10 +75,11 @@ if (ISSET($_POST['update_profil'])){
     $query5 = mysqli_query($conn, $sql5);
 
     if ($query5) {
-        echo "<script>alert('Profil berhasil diperbarui!'); window.location.href='profil.php';</script>";
+        showAlert('Berhasil!', 'Profil Berhasil Diupdate', 'success', "profil.php");
+        exit();
     } else {
-        echo "<script>alert('Gagal memperbarui profil!');</script>";
-    }
+        showAlert('Gagal!', 'Profil gagal diupdate. Silakan coba lagi.', 'error');
+    }    
 }
 ?>
 
@@ -374,8 +376,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
             // Validasi NIM/NISN (harus 10 digit)
             const nim = document.getElementById('nim').value.trim();
-            if (!/^\d{10,12}$/.test(nim)) {
-                showError('nim', 'NIM/NISN harus terdiri dari 10-12 digit angka.');
+            if (!/^(?:\d{10}|\d{12})$/.test(nim)) {
+                showError('nim', 'NIM/NISN harus terdiri dari 10 digit u/ nisn 12 digit u/ nim.');
                 isValid = false;
             } else {
                 clearError('nim');
