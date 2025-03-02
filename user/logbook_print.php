@@ -1,5 +1,7 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 include '../koneksi.php';
+include 'functions.php';
 
 
 $id_pengajuan = $_GET['id_pengajuan'];
@@ -14,6 +16,10 @@ JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidika
 WHERE tb_logbook.id_pengajuan = '$id_pengajuan' AND tb_logbook.id_user = '$id_user'";
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
+if (!$row){
+    showAlert('Peringatan!', 'Kamu Belum Pernah Menggunggah Logbook. Silakan Unggah Terlebih Dahulu.', 'error', "logbook_daftar.php?id_pengajuan={$id_pengajuan}"); 
+    exit();
+}
 
 ?>
 <!DOCTYPE html>

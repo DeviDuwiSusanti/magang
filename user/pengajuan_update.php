@@ -47,8 +47,9 @@ if (ISSET($_POST['update_pengajuan'])){
             $updateCV = mysqli_query($conn, $sql_updateCV);
         }
     } 
-
-
+    ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php
      if ($query_update1){
         showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
         exit();

@@ -204,7 +204,7 @@ if (isset($_POST["id_instansi"])) {
         </div>
     </div>
 </div>
-
+<?php include "../layout/footerDashboard.php"; ?>
 <script>
 $(document).ready(function() {
     // Ambil bidang saat instansi berubah
