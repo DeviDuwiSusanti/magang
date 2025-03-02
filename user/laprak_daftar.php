@@ -77,9 +77,6 @@ if (isset($_GET['id_dokumen'])) {
                                 <td><?= getKategoriText($row2['jenis_dokumen'] ?? ''); ?></td>
                                 <td class="text-center">
                                     <?php if (isset($row['status_pengajuan']) && $row['status_pengajuan'] != 5): ?>
-                                        <a href="laprak_edit.php?id_dokumen=<?= $row2['id_dokumen'] ?>" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
                                         <a href="laprak_hapus.php?id_dokumen=<?= $row2['id_dokumen'] ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
