@@ -28,7 +28,7 @@ if (isset($_POST['update'])) {
     $updateQuery = "UPDATE tb_dokumen SET nama_dokumen='$nama_dokumen', jenis_dokumen='$jenis_dokumen' WHERE id_dokumen='$id_dokumen'";
     
     if (mysqli_query($conn, $updateQuery)) {
-        echo "<script>alert('Data berhasil diperbarui!'); window.location.href='laprak_daftar.php';</script>";
+        echo "<script>alert('Data berhasil diperbarui!'); window.location.href='laprak_daftar.php?id_pengajuan={$data['id_pengajuan']}&id_user={$id_user}';</script>";
     } else {
         echo "<script>alert('Terjadi kesalahan!');</script>";
     }
@@ -52,7 +52,7 @@ if (isset($_POST['update'])) {
                 <input type="text" class="form-control" id="jenis_dokumen" name="jenis_dokumen" value="<?php echo $data['jenis_dokumen']; ?>" required>
             </div>
             <button type="submit" name="update" class="btn btn-primary">Update</button>
-            <a href="laprak_daftar.php" class="btn btn-secondary">Batal</a>
+            <a href="laprak_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 </div>

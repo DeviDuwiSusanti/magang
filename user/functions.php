@@ -52,13 +52,13 @@ function generateIdUser4($conn, $id_user) {
 }
 
 function generateLogbookId($conn, $id_pengajuan) {
-    // Ambil jumlah logbook yang sudah ada untuk id_pengajuan ini
-    $sql_count = "SELECT COUNT(*) as jumlah FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan'";
-    $result = mysqli_query($conn, $sql_count);
+    // Ambil counter terbesar untuk id_pengajuan ini
+    $sql_max = "SELECT MAX(CAST(SUBSTRING(id_logbook, -2) AS UNSIGNED)) as max_counter FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan'";
+    $result = mysqli_query($conn, $sql_max);
     $row = mysqli_fetch_assoc($result);
-    $counter = str_pad($row['jumlah'], 2, '0', STR_PAD_LEFT); // Ubah ke 2 digit (00, 01, 02, ...)
+    $counter = str_pad($row['max_counter'] + 1, 2, '0', STR_PAD_LEFT); // Tambah 1 ke counter terbesar
 
-    // Buat id_logbook: 10 digit id_pengajuan + 2 digit counter
+    // Buat id_logbook dengan format 10 digit id_pengajuan + 2 digit counter
     $id_logbook = $id_pengajuan . $counter;
 
     return $id_logbook;
@@ -166,4 +166,21 @@ function getKategoriText($kategori) {
         4 => "Nilai & Sertifikat",
     ];
     return $kategoriList[$kategori] ?? "Tidak Diketahui";
+}
+
+function showAlert($title, $text, $icon, $redirect = null) {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: '$title',
+                text: '$text',
+                icon: '$icon',
+                confirmButtonText: 'OK'
+            }).then(() => {";
+    if ($redirect) {
+        echo "window.location.href = '$redirect';";
+    }
+    echo "    });
+        });
+    </script>";
 }

@@ -283,7 +283,7 @@ $(document).ready(function() {
         } else {
             // AJAX untuk cek email
             $.ajax({
-                url: 'cek_email.php',
+                url: 'cek.php',
                 type: 'POST',
                 data: { email: email, id_userEdit: id_userEdit }, // kirim id_userEdit (bisa kosong)
                 async: false,

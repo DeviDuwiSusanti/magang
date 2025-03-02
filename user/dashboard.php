@@ -21,7 +21,7 @@ $query4 = mysqli_query($conn, $sql4);
 $total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
 
 // akses laporan akhir
-$sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = '3'";
+$sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3'";
 $query5 = mysqli_query($conn, $sql5);
 $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 
@@ -69,7 +69,7 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="card-title">Laporan Akhir</h5>
-                        <h2 class="card-text text-success">0</h2>
+                        <h2 class="card-text text-success"><?= $total_laprak ?></h2>
                         <p class="text-muted">Laporan Terunggah</p>
                         <a href="kegiatan_aktif.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>

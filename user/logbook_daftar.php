@@ -1,13 +1,14 @@
-<?php include "../layout/sidebarUser.php"; 
+<?php include "../layout/sidebarUser.php";
+include "functions.php"; 
 
-if (ISSET($_GET['id_pengajuan'])){
-    $id_pengajuan = $_GET['id_pengajuan'];
-    
-    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
-    $query = mysqli_query($conn, $sql);
+ISSET($_GET['id_pengajuan']);
+$id_pengajuan = $_GET['id_pengajuan'];
 
-    $no = 1;
-}
+$sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+$query = mysqli_query($conn, $sql);
+
+$no = 1;
+
 
 // akses status_pengajuan
 $sql3 = "SELECT status_pengajuan FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
@@ -20,13 +21,16 @@ if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
     $id_pengajuan = $_GET['id_pengajuan'];
     $sql2 =  "DELETE FROM tb_logbook WHERE id_logbook = '$id_logbook' AND id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
     $query2 = mysqli_query($conn, $sql2);
-    if ($query2){
-        echo "<script> alert('Logbook Berhasil Dihapus'); window.location.href='logbook_daftar.php?id_pengajuan={$id_pengajuan}&id_user={$id_user}'; </script>";
-    }
+    if ($query2) {
+        showAlert('Berhasil!', 'Logbook Berhasil Dihapus', 'success', "logbook_daftar.php?id_pengajuan={$id_pengajuan}");
+        exit();
+    } else {
+        showAlert('Gagal!', 'Logbook gagal dihapus. Silakan coba lagi.', 'error');
+    }    
 }
 
 ?>
-
+<!-- TABEL DAFTAR LOGBOOK -->
 <div class="main-content p-3">
     <div class="container-fluid">
         <h1 class="mb-4">Daftar Logbook</h1>
