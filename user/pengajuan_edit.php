@@ -51,10 +51,10 @@ if (isset($_POST["id_instansi"])) {
     
     // Cek jika ada request AJAX untuk mendapatkan detail bidang
     if (isset($_POST["id_bidang"])) {
-    header("Content-Type: application/json");
-    $id_bidang = mysqli_real_escape_string($conn, $_POST["id_bidang"]); // Hindari SQL Injection
-    echo json_encode(getDetailBidang($id_bidang, $conn));
-    exit;
+        header("Content-Type: application/json");
+        $id_bidang = mysqli_real_escape_string($conn, $_POST["id_bidang"]); // Hindari SQL Injection
+        echo json_encode(getDetailBidang($id_bidang, $conn));
+        exit;
     }
 
 

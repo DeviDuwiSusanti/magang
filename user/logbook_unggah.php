@@ -1,7 +1,6 @@
 <?php include "../layout/sidebarUser.php"; 
 include "functions.php";
 
-ISSET($_GET['id_pengajuan']);
 $id_pengajuan = $_GET['id_pengajuan'];
 
 

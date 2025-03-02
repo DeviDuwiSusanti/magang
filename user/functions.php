@@ -17,18 +17,18 @@ function generateIdPengajuan($conn) {
 }
 
 function generateIdDokumen($conn, $id_pengajuan) {
-    // Ambil jumlah dokumen yang sudah ada untuk pengajuan ini
-    $query = "SELECT COUNT(*) AS total FROM tb_dokumen WHERE id_dokumen LIKE '$id_pengajuan%'";
+    $query = "SELECT MAX(CAST(SUBSTRING(id_dokumen, -2) AS UNSIGNED)) AS max_nomor 
+               FROM tb_dokumen 
+               WHERE id_dokumen LIKE '$id_pengajuan%'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
-    $totalDokumen = $row['total'] + 1; // Urutan berikutnya
+    $nextNumber = $row['max_nomor'] ? $row['max_nomor'] + 1 : 1;
 
-    // Format XX menjadi dua digit (01, 02, 03, ...)
-    $nomorUrut = str_pad($totalDokumen, 2, "0", STR_PAD_LEFT);
+    $nomorUrut = str_pad($nextNumber, 2, "0", STR_PAD_LEFT);
 
-    // Gabungkan untuk mendapatkan id_dokumen
     return $id_pengajuan . $nomorUrut;
 }
+
 
 function generateIdUser4($conn, $id_user) {
     // Loop sampai menemukan ID yang belum ada

@@ -3,8 +3,7 @@ include "../layout/sidebarUser.php";
 include "functions.php";  // Pastikan untuk meng-include file functions.php
 
 // Inisialisasi variabel agar tidak undefined
-if (ISSET($_GET['id_user']) && ISSET($_GET['id_pengajuan'])){
-    $id_user = $_GET['id_user'];
+if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
 }else{
     echo "<script>alert('ID User atau ID Pengajuan tidak ditemukan.'); window.history.back();</script>";
@@ -30,7 +29,7 @@ if (isset($_POST['submit_persyaratan'])) {
                 
                 // Simpan informasi dokumen ke database
                 $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
-                        VALUES ('$id_dokumen', '$file_name', 'prasyarat', '$file_path', '$id_pengajuan', '$id_user', '$id_user', 'Y', NOW(), NOW())";
+                        VALUES ('$id_dokumen', '$file_name', '2', '$file_path', '$id_pengajuan', '$id_user', '$id_user', '1', NOW(), NOW())";
                 
                 $query = mysqli_query($conn, $sql);
                 if (!$query) {
@@ -38,11 +37,14 @@ if (isset($_POST['submit_persyaratan'])) {
                 }
             }
         }
-        echo "<script>alert('Persyaratan berhasil diunggah'); window.location.href='persyaratan_daftar.php?id_pengajuan=$id_pengajuan&id_user=$id_user';</script>";
+        showAlert('Berhasil!', 'Persyaratan Berhasil Diunggah', 'success', "persyaratan_daftar.php?id_pengajuan=$id_pengajuan&id_user=$id_user");
+        exit();
     } else {
         echo "<script>alert('Pilih file persyaratan terlebih dahulu');</script>";
     }
 }
+
+
 ?>
 
 <div class="main-content p-4">

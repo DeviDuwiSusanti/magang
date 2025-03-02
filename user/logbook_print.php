@@ -1,20 +1,20 @@
 <?php
 include '../koneksi.php';
 
-if (ISSET($_GET['id_pengajuan'])){
-    $id_pengajuan = $_GET['id_pengajuan'];
-    $id_user = $_GET['id_user'];
 
-    $sql = "SELECT * FROM tb_logbook 
-    JOIN tb_pengajuan ON tb_logbook.id_pengajuan = tb_pengajuan.id_pengajuan 
-    JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
-    JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-    JOIN tb_profile_user ON tb_logbook.id_user = tb_profile_user.id_user 
-    JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
-    WHERE tb_logbook.id_pengajuan = '$id_pengajuan' AND tb_logbook.id_user = '$id_user'";
-    $query = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($query);
-}
+$id_pengajuan = $_GET['id_pengajuan'];
+$id_user = $_GET['id_user'];
+
+$sql = "SELECT * FROM tb_logbook 
+JOIN tb_pengajuan ON tb_logbook.id_pengajuan = tb_pengajuan.id_pengajuan 
+JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
+JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
+JOIN tb_profile_user ON tb_logbook.id_user = tb_profile_user.id_user 
+JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
+WHERE tb_logbook.id_pengajuan = '$id_pengajuan' AND tb_logbook.id_user = '$id_user'";
+$query = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($query);
+
 ?>
 <!DOCTYPE html>
 <html lang="id">

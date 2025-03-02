@@ -56,7 +56,7 @@ if (ISSET($_POST['update_pengajuan'])){
      }
 
     //  if ($query_update1){
-    //     showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', 'status_pengajuan.php');
+    //     showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
     //     exit();
     // }else{
     //     showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');

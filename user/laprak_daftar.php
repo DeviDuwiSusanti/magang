@@ -4,7 +4,6 @@ include '../koneksi.php';
 include "functions.php"; 
 
 $id_pengajuan = $_GET['id_pengajuan'];
-$id_user = $_GET['id_user'];
 
 // Mengambil id_pengajuan dan status_pengajuan jika ada
 $sql_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
@@ -17,6 +16,24 @@ $result = mysqli_query($conn, $sql);
 
 // Cek apakah pengguna sudah mengunggah laporan akhir
 $laporan_terunggah = mysqli_num_rows($result) > 0;
+
+// HAPUS
+// Cek apakah id_dokumen ada dalam query string
+if (isset($_GET['id_dokumen'])) {
+    $id_dokumen = $_GET['id_dokumen'];
+
+    // Query untuk menghapus dokumen berdasarkan id_dokumen
+    $sql = "DELETE FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
+    // menghapus file fisik
+    deleteOldDocument($conn, $id_pengajuan, $id_user, '3');
+
+    if (mysqli_query($conn, $sql)) {
+        showAlert('Berhasil!', 'Laporan Akhir Berhasil Dihapus', 'success', "laprak_daftar.php?id_pengajuan={$id_pengajuan}");
+        exit();
+    } else {
+        showAlert('Gagal!', 'Laporan Akhir gagal dihapus. Silakan coba lagi.', 'error');
+    }    
+}
 ?>
 
 <div class="main-content p-3">
@@ -28,7 +45,7 @@ $laporan_terunggah = mysqli_num_rows($result) > 0;
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
             <!-- Tombol tambah laporan hanya aktif jika belum ada laporan yang diunggah -->
-            <a href="laprak_unggah.php?id_user=<?= $id_user ?>&id_pengajuan=<?= $id_pengajuan ?? '' ?>" 
+            <a href="laprak_unggah.php?id_user=<?= $id_user ?>&id_pengajuan=<?= $id_pengajuan ?>" 
                class="btn btn-primary <?= $laporan_terunggah ? 'disabled' : '' ?>">
                 <i class="bi bi-plus-circle me-1"></i>
                 Tambah Laporan Akhir
@@ -60,16 +77,10 @@ $laporan_terunggah = mysqli_num_rows($result) > 0;
                                 <td><?= getKategoriText($row2['jenis_dokumen'] ?? ''); ?></td>
                                 <td class="text-center">
                                     <?php if (isset($row['status_pengajuan']) && $row['status_pengajuan'] != 5): ?>
-                                        <a href="laprak_edit.php?id_dokumen=<?= $row2['id_dokumen'] ?>" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-                                        <a href="laprak_hapus.php?id_dokumen=<?= $row2['id_dokumen'] ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
+                                        <a href="?id_dokumen=<?= $row2['id_dokumen'] ?>&id_pengajuan=<?= $id_pengajuan ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                     <?php else: ?>
-                                        <button class="btn btn-secondary btn-sm" disabled>
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </button>
                                         <button class="btn btn-secondary btn-sm" disabled>
                                             <i class="bi bi-trash"></i> Hapus
                                         </button>
