@@ -115,7 +115,7 @@ if (!$row) {
                 $disable_upload = ($status_pengajuan != 2) ? 'disabled' : '';
             ?>
 
-            <a href="persyaratan_unggah.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm btn-primary position-absolute <?= $disable_upload ?>" style="bottom: 10px; left: 10px;">
+            <a href="persyaratan_daftar.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm btn-primary position-absolute <?= $disable_upload ?>" style="bottom: 10px; left: 10px;">
                 <i class="bi bi-upload"></i> Lengkapi Dokumen
             </a>
 

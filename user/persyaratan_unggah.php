@@ -3,24 +3,31 @@ include "../layout/sidebarUser.php";
 include "functions.php";  // Pastikan untuk meng-include file functions.php
 
 // Inisialisasi variabel agar tidak undefined
-if (ISSET($_GET['id_pengajuan'])){
+if (isset($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
-}else{
-    echo "<script>alert('ID User atau ID Pengajuan tidak ditemukan.'); window.history.back();</script>";
-
+} else {
+    echo "<script>alert('ID Pengajuan tidak ditemukan.'); window.history.back();</script>";
+    exit();
 }
 
 if (isset($_POST['submit_persyaratan'])) {
-    // Proses unggah file
-    if (isset($_FILES['persyaratan']) && count($_FILES['persyaratan']['name']) > 0) {
+    if (!isset($_FILES['persyaratan']) || empty($_FILES['persyaratan']['name'][0])) {
+        echo "<script>alert('Pilih minimal satu file untuk diunggah!');</script>";
+    } else {
         foreach ($_FILES['persyaratan']['name'] as $key => $name) {
             if ($_FILES['persyaratan']['error'][$key] == 0) {
+                $file_extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                if ($file_extension !== "pdf") {
+                    echo "<script>alert('Hanya file PDF yang diperbolehkan!');</script>";
+                    exit();
+                }
+
                 $uploaded_file = [
                     'name' => $_FILES['persyaratan']['name'][$key],
                     'tmp_name' => $_FILES['persyaratan']['tmp_name'][$key]
                 ];
                 
-                $file_data = uploadFile($uploaded_file); // Fungsi upload file dari functions.php
+                $file_data = uploadFile($uploaded_file);
                 $file_name = $file_data['name'];
                 $file_path = $file_data['path'];
                 
@@ -39,12 +46,8 @@ if (isset($_POST['submit_persyaratan'])) {
         }
         showAlert('Berhasil!', 'Persyaratan Berhasil Diunggah', 'success', "persyaratan_daftar.php?id_pengajuan=$id_pengajuan&id_user=$id_user");
         exit();
-    } else {
-        echo "<script>alert('Pilih file persyaratan terlebih dahulu');</script>";
     }
 }
-
-
 ?>
 
 <div class="main-content p-4">
@@ -60,11 +63,11 @@ if (isset($_POST['submit_persyaratan'])) {
         </ol>
         <div class="dropdown-divider"></div><br><br>
 
-        <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
+        <form action="" class="form-profile" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             <div id="file-container" class="mb-3">
                 <div class="file-input-group d-flex align-items-center mb-2">
-                    <input type="file" class="form-control me-2" name="persyaratan[]" accept=".pdf" required>
-                    <input type="hidden" name="jenis_dokumen[]" value="persyaratan">
+                <input type="file" class="form-control me-2" name="persyaratan[]" onchange="validateFile(this)">
+                <input type="hidden" name="jenis_dokumen[]" value="persyaratan">
                     <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
                 </div>
             </div>
@@ -80,7 +83,7 @@ if (isset($_POST['submit_persyaratan'])) {
         let div = document.createElement("div");
         div.className = "file-input-group d-flex align-items-center mb-2";
         div.innerHTML = `
-            <input type="file" class="form-control me-2" name="persyaratan[]" accept=".pdf,.doc,.docx,.jpg,.png" required>
+            <input type="file" class="form-control me-2" name="persyaratan[]" onchange="validateFile(this)">
             <input type="hidden" name="jenis_dokumen[]" value="persyaratan">
             <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
         `;
@@ -92,6 +95,28 @@ if (isset($_POST['submit_persyaratan'])) {
         if (container.children.length > 1) {
             button.parentElement.remove();
         }
+    }
+
+    function validateFile(input) {
+        let file = input.files[0];
+        if (file) {
+            let allowedExtensions = /(\.pdf)$/i;
+            if (!allowedExtensions.exec(file.name)) {
+                alert("Hanya file PDF yang diperbolehkan!");
+                input.value = ""; // Mengosongkan input file
+            }
+        }
+    }
+
+    function validateForm() {
+        let files = document.querySelectorAll('input[type="file"]');
+        for (let file of files) {
+            if (file.files.length === 0) {
+                alert("Pilih minimal satu file untuk diunggah!");
+                return false;
+            }
+        }
+        return true;
     }
 </script>
 
