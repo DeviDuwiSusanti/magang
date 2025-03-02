@@ -108,6 +108,7 @@ function alertSuccessEdit(message, redirectUrl) {
 
 
 // =================================== SWEET ALERT SUPER ADMIN LEVEL(1) =======================================
+// edit profile
 function edit_profile_super_admin_success() {
   Swal.fire({
     icon: "success",
@@ -136,6 +137,8 @@ function edit_profile_super_admin_gagal() {
   })
 }
 
+
+// crud tabel instansi
 function tambah_instansi_super_admin_success() {
   Swal.fire({
     icon: "success",
@@ -207,7 +210,7 @@ function confirm_hapus_instansi_super_admin(id_instansi) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_hapus.php?id_instansi=" + id_instansi;
+      window.location.href = "instansi_view.php?id_instansi_ini=" + id_instansi;
     }
   });
 }
@@ -237,6 +240,194 @@ function hapus_instansi_super_admin_gagal() {
   }).then((result) => {
     if(result.isConfirmed) {
       window.location.href = "instansi_view.php";
+    }
+  })
+}
+
+
+
+
+// crud tabel user by super admin
+function confirm_hapus_user_super_admin(id_user) {
+  Swal.fire ({
+    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
+    icon: "warning",
+    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
+    confirmButtonText: "YA! Hapus",
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "user_view.php?id_user_ini=" + id_user;
+    }
+  });
+}
+
+
+function hapus_user_super_admin_success() {
+  Swal.fire({
+    title: "Berhasil!",
+    icon: "success",
+    text: "Data User Berhasil Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "user_view.php";
+    }
+  })
+}
+
+function hapus_user_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal!",
+    icon: "error",
+    text: "Data User Gagal Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "user_view.php";
+    }
+  })
+}
+
+
+
+function tambah_user_super_admin_success() {
+  Swal.fire ({
+    title: "Berhasil",
+    icon : "success",
+    text : "Tambah Admin Instansi Berhasil",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then ((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "user_view.php";
+    }
+  })
+}
+
+
+function tambah_user_super_admin_gagal() {
+  Swal.fire ({
+    title: "Gagal",
+    icon : "error",
+    text : "Tambah Admin Instansi Gagal",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then ((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "user_tambah.php";
+    }
+  })
+}
+
+
+function edit_user_super_admin_success() {
+  Swal.fire ({
+    title: "Berhasil",
+    icon : "success",
+    text : "Edit User Berhasil",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then ((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "user_view.php";
+    }
+  })
+}
+
+
+function edit_user_super_admin_gagal() {
+  Swal.fire ({
+    title: "Gagal",
+    icon : "error",
+    text : "Edit User Gagal",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then ((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "user_edit.php";
+    }
+  })
+}
+
+
+// hapus tabel Pengajuan
+function hapus_pengajuan_by_super_admin(id_pengajuan) {
+  Swal.fire({
+    title: "Apakah Anda yakin Ingin Menghapus Pengajuan Ini",
+    icon: "warning",
+    text: "Data Yang Dihapus Tidak Dapat Dikembalikan Lagi",
+    confirmButtonText: "Ya! Hapus",
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor : "#d33",
+    cancelButtonText : "Batal",
+    showCancelButton: true,
+  }).then((result) =>  {
+    if(result.isConfirmed) {
+      window.location.href = "pengajuan_view.php?id_pengajuan_ini=" + id_pengajuan;
+    }
+  })
+}
+
+
+function hapus_pengajuan_super_admin_success() {
+  Swal.fire({
+    title: "Berhasil!",
+    icon: "success",
+    text: "Pengajuan User Berhasil Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "pengajuan_view.php";
+    }
+  })
+}
+
+function hapus_pengajuan_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal!",
+    icon: "error",
+    text: "Pengajuan User Gagal Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "pengajuan_view.php";
+    }
+  })
+}
+
+// generate admin instansi
+function generate_admin_instansi_success(){
+  Swal.fire({
+    title: "Berhasil!",
+    icon: "success",
+    text: "Berhasil Menjadikan Admin Instansi",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "admin_instansi_view.php";
+    }
+  })
+}
+
+function hapus_pengajuan_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal!",
+    icon: "error",
+    text: "Gagal Menjadikan Admin Instansi",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "admin_instansi_generate.php";
     }
   })
 }

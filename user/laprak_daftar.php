@@ -55,11 +55,11 @@ if (isset($_GET['id_dokumen'])) {
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Tanggal</th>
-                        <th>Nama Dokumen</th>
-                        <th>Jenis Dokumen</th>
-                        <th>Aksi</th>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Tanggal</th>
+                        <th class="text-center">Nama Dokumen</th>
+                        <th class="text-center">Jenis Dokumen</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,7 +77,10 @@ if (isset($_GET['id_dokumen'])) {
                                 <td><?= getKategoriText($row2['jenis_dokumen'] ?? ''); ?></td>
                                 <td class="text-center">
                                     <?php if (isset($row['status_pengajuan']) && $row['status_pengajuan'] != 5): ?>
-                                        <a href="?id_dokumen=<?= $row2['id_dokumen'] ?>&id_pengajuan=<?= $id_pengajuan ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
+                                        <a href="laprak_edit.php?id_dokumen=<?= $row2['id_dokumen'] ?>" class="btn btn-warning btn-sm">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a href="laprak_hapus.php?id_dokumen=<?= $row2['id_dokumen'] ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                     <?php else: ?>

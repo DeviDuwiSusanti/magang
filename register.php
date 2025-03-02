@@ -107,7 +107,7 @@ if (isset($_POST["register"])) {
                         </div>
 
                         <div class="input-field">
-                            <input type="text" inputmode="numeric" id="nik_user" class="input" name="nik_user" maxlength="16" required>
+                            <input type="text" inputmode="numeric" id="nik_user" class="input" name="nik" maxlength="16" required>
                             <label for="nik_user">NIK (16)</label>
                             <span id="nik_error" class="error-message" style="color: red; display: none;">NIK harus 16 digit!</span>
                         </div>
@@ -196,22 +196,22 @@ if (isset($_POST["register"])) {
                         </div>
 
                         <div class="input-field">
-                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir" required>
+                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir">
                             <label for="tempat_lahir">Tempat Lahir</label>
                         </div>
 
                         <div>
                             <label for="tanggal_lahir">Tanggal Lahir</label>
                             <div class="input-field">
-                                <input type="date" class="input" name="tanggal_lahir" id="tanggal_lahir" required>
+                                <input type="date" class="input" name="tanggal_lahir" id="tanggal_lahir">
                             </div>
                         </div>
 
                         <div>
-                            <textarea name="alamat_user" id="alamat_user" required class="form-control" placeholder="Alamat Domisili"></textarea>
+                            <textarea name="alamat_user" id="alamat_user" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="tel" pattern="[0-9]{8-15}" class="input" name="telepone_user" id="telepone_user" inputmode="numeric"  maxlength="15" required>
+                            <input type="tel" pattern="[0-9]{8,15}" class="input" name="telepone_user" id="telepone_user" inputmode="numeric"  maxlength="15" required>
                             <label for="telepone_user">No. Telepone</label>
                         </div>
 
