@@ -3,20 +3,18 @@ include "../koneksi.php";
 include "../layout/sidebarUser.php";
 include "functions.php";  
 
-
 $id_pengajuan = $_GET['id_pengajuan'];
-
 // Query untuk mengambil detail pengajuan berdasarkan id_pengajuan
 $sql = "SELECT *
-        FROM tb_pengajuan
-        JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
-        JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+        FROM tb_pengajuan JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
         WHERE tb_pengajuan.id_pengajuan = '$id_pengajuan'";
 
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
 
-$sql2 = "SELECT * FROM tb_profile_user pu, tb_pendidikan p, tb_user u WHERE pu.id_user = '$id_user' AND u.id_user = '$id_user' AND pu.id_pendidikan = p.id_pendidikan";
+$sql2 = "SELECT * 
+         FROM tb_profile_user pu INNER JOIN tb_user u ON pu.id_user = u.id_user INNER JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
+         WHERE pu.id_user = '$id_user' AND u.id_user = '$id_user'";
 $query2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($query2);
 
@@ -42,7 +40,7 @@ if (!$row) {
         </div>
         
         <div class="container mt-5 mb-5">
-    <div class="card mx-auto position-relative" style="max-width: 600px;">
+        <div class="card mx-auto position-relative" style="max-width: 600px;">
         <div class="card-body text-center">
             <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" 
                  class="rounded-circle mb-3" 
@@ -125,5 +123,4 @@ if (!$row) {
         </div>
     </div>
 </div>
-
 <?php include "../layout/footerDashboard.php";?>

@@ -94,5 +94,4 @@ if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
         </div>
     </div>
 </div>
-
 <?php include "../layout/footerDashboard.php" ?>

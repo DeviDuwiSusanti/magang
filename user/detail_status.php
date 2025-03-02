@@ -14,7 +14,7 @@ $id_pengajuan = $_GET['id_pengajuan'];
 // Query untuk mengambil detail pengajuan berdasarkan id_pengajuan
 $sql = "SELECT *
         FROM tb_pengajuan
-        JOIN tb_profile_user ON tb_profile_user.id_user = '$id_user'
+        JOIN tb_profile_user ON tb_profile_user.id_user = '$id_user' 
         JOIN tb_user ON tb_profile_user.id_user = tb_user.id_user
         JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
         JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
@@ -115,7 +115,7 @@ if (!$row) {
                 $disable_upload = ($status_pengajuan != 2) ? 'disabled' : '';
             ?>
 
-            <a href="persyaratan_unggah.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm btn-primary position-absolute <?= $disable_upload ?>" style="bottom: 10px; left: 10px;">
+            <a href="persyaratan_daftar.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm btn-primary position-absolute <?= $disable_upload ?>" style="bottom: 10px; left: 10px;">
                 <i class="bi bi-upload"></i> Lengkapi Dokumen
             </a>
 
@@ -128,8 +128,6 @@ if (!$row) {
         </div>
     </div>
 </div>
-
-    </div>
 </div>
-
+</div>
 <?php include "../layout/footerDashboard.php"; ?>

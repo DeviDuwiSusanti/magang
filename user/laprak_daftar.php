@@ -4,6 +4,7 @@ include '../koneksi.php';
 include "functions.php"; 
 
 $id_pengajuan = $_GET['id_pengajuan'];
+$id_user = $_GET['id_user'];
 
 // Mengambil id_pengajuan dan status_pengajuan jika ada
 $sql_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
@@ -18,21 +19,31 @@ $result = mysqli_query($conn, $sql);
 $laporan_terunggah = mysqli_num_rows($result) > 0;
 
 // HAPUS
-// Cek apakah id_dokumen ada dalam query string
 if (isset($_GET['id_dokumen'])) {
     $id_dokumen = $_GET['id_dokumen'];
 
-    // Query untuk menghapus dokumen berdasarkan id_dokumen
-    $sql = "DELETE FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
-    // menghapus file fisik
-    deleteOldDocument($conn, $id_pengajuan, $id_user, '3');
+    // Ambil informasi file sebelum menghapus
+    $query_file = "SELECT file_path FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
+    $result_file = mysqli_query($conn, $query_file);
+    $file_data = mysqli_fetch_assoc($result_file);
+    $file_path = $file_data['file_path'];
 
-    if (mysqli_query($conn, $sql)) {
-        showAlert('Berhasil!', 'Laporan Akhir Berhasil Dihapus', 'success', "laprak_daftar.php?id_pengajuan={$id_pengajuan}");
+    // Hapus file dari server
+    if (file_exists($file_path)) {
+        unlink($file_path);
+    } else {
+        echo "<script>alert('File tidak ditemukan atau sudah dihapus sebelumnya!');</script>";
+    }
+
+    // Hapus data dari database
+    $sql_delete = "DELETE FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
+    
+    if (mysqli_query($conn, $sql_delete)) {
+        echo "<script>alert('Laporan Akhir Berhasil Dihapus'); window.location.href='laprak_daftar.php?id_pengajuan=$id_pengajuan&id_user=$id_user';</script>";
         exit();
     } else {
-        showAlert('Gagal!', 'Laporan Akhir gagal dihapus. Silakan coba lagi.', 'error');
-    }    
+        echo "<script>alert('Gagal menghapus laporan: " . mysqli_error($conn) . "');</script>";
+    }
 }
 ?>
 
@@ -58,7 +69,6 @@ if (isset($_GET['id_dokumen'])) {
                         <th class="text-center">No</th>
                         <th class="text-center">Tanggal</th>
                         <th class="text-center">Nama Dokumen</th>
-                        <th class="text-center">Jenis Dokumen</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -74,13 +84,11 @@ if (isset($_GET['id_dokumen'])) {
                                         <?= htmlspecialchars($row2['nama_dokumen'] ?? 'Tidak diketahui') ?>
                                     </a>
                                 </td>
-                                <td><?= getKategoriText($row2['jenis_dokumen'] ?? ''); ?></td>
                                 <td class="text-center">
                                     <?php if (isset($row['status_pengajuan']) && $row['status_pengajuan'] != 5): ?>
-                                        <a href="laprak_edit.php?id_dokumen=<?= $row2['id_dokumen'] ?>" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-                                        <a href="laprak_hapus.php?id_dokumen=<?= $row2['id_dokumen'] ?>" onclick="return confirm('Anda yakin akan menghapus laporan ini?')" class="btn btn-danger btn-sm">
+                                        <a href="laprak_daftar.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>&id_dokumen=<?= $row2['id_dokumen'] ?>" 
+                                           onclick="return confirm('Anda yakin akan menghapus laporan ini?')" 
+                                           class="btn btn-danger btn-sm">
                                             <i class="bi bi-trash"></i> Hapus
                                         </a>
                                     <?php else: ?>
@@ -99,5 +107,4 @@ if (isset($_GET['id_dokumen'])) {
         </div>
     </div>
 </div>
-
 <?php include "../layout/footerDashboard.php"; ?>

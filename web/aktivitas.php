@@ -8,7 +8,7 @@ $sql = "SELECT *
         JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan
         JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
         JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.status_pengajuan = '2'";
+        WHERE tb_pengajuan.status_pengajuan = 2";
 
 $query = mysqli_query($conn, $sql); 
 $no = 1;
@@ -112,6 +112,5 @@ $no = 1;
         $('#myTable').DataTable();
     });
 </script>
-
 </body>
 </html>

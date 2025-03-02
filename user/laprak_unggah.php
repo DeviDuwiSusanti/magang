@@ -11,6 +11,13 @@ if (!empty($_GET['id_user']) && !empty($_GET['id_pengajuan'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
+    $fileType = pathinfo($_FILES['laporan_akhir']['name'], PATHINFO_EXTENSION);
+    
+    if ($fileType !== 'pdf') {
+        echo "<script>alert('Hanya file PDF yang diperbolehkan!'); window.history.back();</script>";
+        exit;
+    }
+
     if ($_FILES['laporan_akhir']['size'] > 0) { // Pastikan file dipilih
         $laporan_akhir = uploadFile($_FILES['laporan_akhir']); 
 
@@ -49,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
         <form action="" class="form-profile" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             <div class="mb-3">
                 <label for="laporan_akhir" class="form-label">Unggah Laporan Akhir (PDF)</label>
-                <input type="file" class="form-control" id="laporan_akhir" name="laporan_akhir" accept=".pdf">
+                <input type="file" class="form-control" id="laporan_akhir" name="laporan_akhir">
                 <small class="text-muted">Pilih file laporan akhir (PDF)</small>
             </div>
             <button type="submit" name="submit_laporan" class="btn btn-primary">Unggah Laporan</button>
@@ -62,6 +69,13 @@ function validateForm() {
     let fileInput = document.getElementById('laporan_akhir');
     if (fileInput.files.length === 0) {
         alert('Silakan pilih file laporan sebelum mengunggah.');
+        return false;
+    }
+    
+    let file = fileInput.files[0];
+    let allowedExtensions = /\.pdf$/i;
+    if (!allowedExtensions.exec(file.name)) {
+        alert("Hanya file PDF yang diperbolehkan!");
         return false;
     }
     return true;
