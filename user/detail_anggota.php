@@ -2,7 +2,8 @@
 include "../layout/sidebarUser.php"; 
 include "functions.php";
 
-if (ISSET($_GET['id_pengajuan'])){
+// TABEL DAFTAR ANGGOTA
+if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
     $id_pengajuan = $_GET['id_pengajuan'];
     $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND u.level = '4' AND pu.id_user = u.id_user";
     $query = mysqli_query($conn, $sql);
@@ -21,8 +22,80 @@ if (ISSET($_GET['id_pengajuan'])){
     $sql3 = "SELECT * FROM tb_pengajuan p, tb_bidang b WHERE p.id_pengajuan = '$id_pengajuan' AND p.id_bidang = b.id_bidang";
     $query3 = mysqli_query($conn, $sql3);
     $row3 = mysqli_fetch_assoc($query3);
+    ?>
 
-
+    <div class="main-content p-3">
+        <div class="container-fluid">
+            <h1 class="mb-4">Daftar Anggota</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Daftar Anggota <?= $row3['jenis_pengajuan'] ?></li>
+            </ol>
+            <div class="mb-4 dropdown-divider"></div>
+            <div class="mb-4 text-end">
+                <?php
+                if ($row3['status_pengajuan'] == '1' && $jumlah_anggota < $row3['kuota_bidang']){?>
+                    <a href="?id_user=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Tambah Anggota
+                    </a>
+                <?php
+                }
+                ?>
+            </div>
+            <div class="table-responsive-sm">
+                <div class="bungkus-2">
+                    <table id="myTable" class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>NIK</th>
+                                <th>Nim/Nisn</th>
+                                <?php
+                                if ($row3['status_pengajuan'] == '1'){?>
+                                    <th>Aksi</th>
+                                <?php
+                                }
+                                ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            while ($row = mysqli_fetch_assoc($query)){?>
+                                <tr>
+                                    <td><?= $no ?></td>
+                                    <td><?= $row['nama_user'] ?></td>
+                                    <td><?= $row['email'] ?></td>
+                                    <td><?= $row['nik'] ?></td>
+                                    <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
+                                    <?php
+                                    if ($row3['status_pengajuan'] == '1'){?>
+                                    <td>
+                                        <a href="detail_anggota.php?id_userEdit=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-warning btn-sm">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a href="detail_anggota.php?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" 
+                                        onclick="return confirm('Anda yakin akan menghapus Data Anggota ini?')"
+                                        class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </a>
+                                    </td>
+                                    <?php
+                                    }
+                                    ?>
+                                </tr>
+                            <?php
+                            $no++;
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php
 }if (isset($_GET['id_userHapus']) && isset($_GET['id_pengajuan'])) {
     $id_userHapus = $_GET['id_userHapus'];
     $id_pengajuan = $_GET['id_pengajuan'];
@@ -31,9 +104,13 @@ if (ISSET($_GET['id_pengajuan'])){
             JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user
             WHERE tb_user.id_user = '$id_userHapus' AND tb_profile_user.id_pengajuan = '$id_pengajuan'";
     $query2 = mysqli_query($conn, $sql2);
-    if ($query2){
-        echo "<script> alert('Data Anggota Berhasil Dihapus'); window.location.href='detail_anggota.php?id_pengajuan={$id_pengajuan}'; </script>";
-    }
+    if (mysqli_query($conn, $sql2)){
+        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+        exit();
+    }else{
+        showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');
+    }   
+    
 }if (ISSET($_POST['update_anggota'])){
     $id_pengajuan = $_POST['id_pengajuan'];
     $id_userUpdate = $_POST['id_user'];
@@ -46,8 +123,11 @@ if (ISSET($_GET['id_pengajuan'])){
     if (mysqli_query($conn, $sqlUpdate)){
         $sqlUpdate2 = "UPDATE tb_user SET email = '$email', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
         if (mysqli_query($conn, $sqlUpdate2)){
-            echo "<script> alert('Data Anggota Berhasil DiUpdate'); window.location.href='detail_anggota.php?id_pengajuan={$id_pengajuan}'; </script>";
-        }
+            showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+            exit();
+        }else{
+            showAlert('Gagal!', 'Data anggota gagal diupdate. Silakan coba lagi.', 'error');
+        }   
     }
 }if (ISSET($_POST['tambah_anggota'])){
     $id_pengajuan = $_POST['id_pengajuan'];
@@ -64,8 +144,11 @@ if (ISSET($_GET['id_pengajuan'])){
     if (mysqli_query($conn, $sqlTambah)){
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '4', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
-            echo "<script> alert('Data Anggota Berhasil Ditambah'); window.location.href='detail_anggota.php?id_pengajuan={$id_pengajuan}'; </script>";
-        }
+            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+            exit();
+        }else{
+            showAlert('Gagal!', 'Data anggota gagal di tambah. Silakan coba lagi.', 'error');
+        }   
     }
 // FORM EDIT ANGGOTA
 }if (isset($_GET['id_userEdit']) && isset($_GET['id_pengajuan'])) {
@@ -162,85 +245,10 @@ if (ISSET($_GET['id_pengajuan'])){
     </div>
 </div>
 <?php
-}else{
-?>
-<!-- TABEL DAFTAR ANGGOTA -->
-<div class="main-content p-3">
-    <div class="container-fluid">
-        <h1 class="mb-4">Daftar Anggota</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Daftar Anggota <?= $row3['jenis_pengajuan'] ?></li>
-        </ol>
-        <div class="mb-4 dropdown-divider"></div>
-        <div class="mb-4 text-end">
-            <?php
-            if ($row3['status_pengajuan'] == '1' && $jumlah_anggota < $row3['kuota_bidang']){?>
-                <a href="?id_user=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
-                    <i class="bi bi-plus-circle me-1"></i>
-                    Tambah Anggota
-                </a>
-            <?php
-            }
-            ?>
-        </div>
-        <div class="table-responsive-sm">
-            <div class="bungkus-2">
-                <table id="myTable" class="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
-                            <th>NIK</th>
-                            <th>Nim/Nisn</th>
-                            <?php
-                            if ($row3['status_pengajuan'] == '1'){?>
-                                <th>Aksi</th>
-                            <?php
-                            }
-                            ?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        while ($row = mysqli_fetch_assoc($query)){?>
-                            <tr>
-                                <td><?= $no ?></td>
-                                <td><?= $row['nama_user'] ?></td>
-                                <td><?= $row['email'] ?></td>
-                                <td><?= $row['nik'] ?></td>
-                                <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
-                                <?php
-                                if ($row3['status_pengajuan'] == '1'){?>
-                                <td>
-                                    <a href="detail_anggota.php?id_userEdit=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </a>
-                                    <a href="detail_anggota.php?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" 
-                                    onclick="return confirm('Anda yakin akan menghapus Data Anggota ini?')"
-                                    class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Hapus
-                                    </a>
-                                </td>
-                                <?php
-                                }
-                                ?>
-                            </tr>
-                        <?php
-                        $no++;
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-<?php
 }
-?>
 
-<?php include "../layout/footerDashboard.php" ?>
+include "../layout/footerDashboard.php" 
+?>
 
 
 <!-- ==========  VALIDASIIII ===============-->

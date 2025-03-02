@@ -48,17 +48,11 @@ if (ISSET($_POST['update_pengajuan'])){
         }
     } 
 
-    if ($query_update1){
-        echo "<script> alert('Pengajuan Berhasil DiUpdate')</script>";
-        echo "<script> window.location.href='status_pengajuan.php' </script>";
-     }else{
-         echo "<script> alert('Update Pengajuan Gagal') </script>";
-     }
 
-    //  if ($query_update1){
-    //     showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
-    //     exit();
-    // }else{
-    //     showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');
-    // }   
+     if ($query_update1){
+        showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
+        exit();
+    }else{
+        showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');
+    }   
 }
