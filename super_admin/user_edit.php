@@ -3,17 +3,11 @@
     $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user_ini'")[0];
 
     if(isset($_POST["edit_data_user"])) {
-        if(super_admin_edit($_POST)) {
-            echo "<script>
-                alert('Super Admin Berhasil Edit Data User');
-            document.location.href = 'user_view.php';
-        </script>";
-    } else {
-        echo "<script>
-            alert ('Super Admin Gagal Edit Data User');
-                document.location.href = 'user_view.php';
-        </script>";
-    }
+        if(super_admin_edit($_POST)) { ?>
+        <script>edit_user_super_admin_success()</script>
+        <?php } else { ?>
+        <script>edit_user_super_admin_gagal()</script>
+        <?php }
     }
 ?>
 
@@ -64,7 +58,7 @@
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="no_telepone" class="form-label">No. Telepone</label>
-                <input type="text" inputmode="numeric" maxlength="15" class="form-control" id="no_telepone" name="telepone_user" value="<?= $pengguna["telepone_user"] ?>">
+                <input type="tel" pattern="[0-9]{8,15}" inputmode="numeric" maxlength="15" class="form-control" id="no_telepone" name="telepone_user" value="<?= $pengguna["telepone_user"] ?>">
             </div>
 
             <!-- Alamat -->

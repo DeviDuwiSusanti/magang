@@ -62,7 +62,7 @@
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="no_telepone" class="form-label">No. Telepone</label>
-                <input type="text" maxlength="15" inputmode="numeric" class="form-control" id="no_telepone" name="telepone" value="<?= $profile_edit["telepone_user"] ?>">
+                <input type="tel" pattern="[0-9]{8,15}" maxlength="15" inputmode="numeric" class="form-control" id="no_telepone" name="telepone" value="<?= $profile_edit["telepone_user"] ?>">
             </div>
 
             <!-- Alamat -->

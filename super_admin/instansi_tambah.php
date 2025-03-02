@@ -41,7 +41,7 @@
 
             <div class="mb-3">
                 <label for="nama_instansi" class="form-label">Gruop Instansi</label>
-                <input type="text" maxlength="100" class="form-control" id="group_instansi" name="group_instansi" placeholder="Masukkan Group instansi" required>
+                <input type="text" maxlength="100" class="form-control" id="group_instansi" name="group_instansi" placeholder="Masukkan Group instansi">
             </div>
     
             <div class="mb-3">
@@ -61,7 +61,7 @@
 
             <div class="mb-3">
                 <label for="telepon_instansi" class="form-label">Telepon Instansi</label>
-                <input type="text" inputmode="numeric" maxlength="15" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon instansi" required>
+                <input type="tel" pattern="[0-9]{8,15}" inputmode="numeric" maxlength="15" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon instansi">
             </div>
 
             <!-- Upload Foto Profil -->
