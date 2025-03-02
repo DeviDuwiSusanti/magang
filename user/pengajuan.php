@@ -345,7 +345,7 @@ if (isset($_POST["id_bidang"])) {
         </div>
     </div>
 </div>
-<?php include "../layout/footerDashboard.php"; ?>
+
 
 <script>
 $(document).ready(function() {
@@ -435,6 +435,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const step2 = document.getElementById("step2");
     const anggotaContainer = document.getElementById("anggotaContainer");
     const form = document.getElementById("pengajuanForm");
+    const bidang = document.getElementById("bidang");
+    let maxKuota = 0;
 
     jumlahAnggotaContainer.style.display = "none";
     step2.style.display = "none";
@@ -451,6 +453,10 @@ document.addEventListener("DOMContentLoaded", function() {
             submitButton.style.display = "inline-block";
         }
     });
+
+    bidang.addEventListener("change", function() {
+                maxKuota = parseInt(this.options[this.selectedIndex].getAttribute("data-kuota")) || 0;
+            });
 
     function showError(input, message) {
         let existingError = input.parentNode.querySelector(".error-message");
@@ -490,9 +496,18 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
-        if (kelompokPribadi.value === "Kelompok" && (parseInt(jumlahAnggotaInput.value) || 0) < 2) {
-            showError(jumlahAnggotaInput, "Jika memilih Kelompok, jumlah anggota harus minimal 2!");
-            isValid = false;
+        const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
+                
+        if (kelompokPribadi.value === "Kelompok") {
+            if (jumlahAnggota < 2) {
+                showError(jumlahAnggotaInput, "Jika memilih Kelompok, jumlah anggota harus minimal 2!");
+                isValid = false;
+            } else if (jumlahAnggota > maxKuota) {
+                showError(jumlahAnggotaInput, "Jumlah anggota melebihi kuota bidang!");
+                isValid = false;
+            } else {
+                clearError(jumlahAnggotaInput);
+            }
         } else {
             clearError(jumlahAnggotaInput);
         }

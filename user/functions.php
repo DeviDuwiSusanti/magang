@@ -106,12 +106,7 @@ function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
 function getBidangByInstansi($id_instansi) {
     global $conn;
     
-    $sql = "SELECT id_bidang, nama_bidang, kuota_bidang 
-            FROM tb_bidang 
-            WHERE id_instansi = '$id_instansi' 
-            AND kuota_bidang > 0 
-            ORDER BY nama_bidang ASC";
-    
+    $sql = "SELECT id_bidang, nama_bidang, kuota_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi' AND kuota_bidang > 0 ORDER BY nama_bidang ASC";
     $result = mysqli_query($conn, $sql);
     
     if (!$result) {
@@ -120,8 +115,7 @@ function getBidangByInstansi($id_instansi) {
 
     $options = "";
     while ($row = mysqli_fetch_assoc($result)) {
-        $options .= '<option value="'.$row['id_bidang'].'">'.$row['nama_bidang'].' (Kuota: '.$row['kuota_bidang'].')</option>';
-
+        $options .= '<option value="'.$row['id_bidang'].'" data-kuota="'.$row['kuota_bidang'].'">'.$row['nama_bidang'].' (Kuota: '.$row['kuota_bidang'].')</option>';
     }
 
     return $options ?: '<option value="" disabled>Bidang tidak tersedia</option>';
