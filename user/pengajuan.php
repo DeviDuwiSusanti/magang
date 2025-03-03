@@ -346,7 +346,7 @@ if (isset($_POST["id_bidang"])) {
     </div>
 </div>
 
-
+<!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
 <script>
 $(document).ready(function() {
     // Ambil bidang saat instansi berubah
@@ -426,8 +426,9 @@ $(document).ready(function() {
 <!-- SCRIPT UNTUK VALIDASI FORM -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    // mengambil elemen-elemen form yang diperlukan
     const kelompokPribadi = document.getElementById("kelompok_pribadi");
-    const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
+    const jumlahAnggotaInput = document.getElementById("jumlah_anggota"); // Container jumlah anggota
     const jumlahAnggotaContainer = jumlahAnggotaInput.closest(".mb-3");
     const nextButton = document.getElementById("nextButton");
     const submitButton = document.getElementById("submitButton");
@@ -436,17 +437,19 @@ document.addEventListener("DOMContentLoaded", function() {
     const anggotaContainer = document.getElementById("anggotaContainer");
     const form = document.getElementById("pengajuanForm");
     const bidang = document.getElementById("bidang");
-    let maxKuota = 0;
+    let maxKuota = 0; // Untuk menyimpan kuota maksimal bidang yang dipilih
 
+    // Sembunyikan jumlah anggota & step2 di awal
     jumlahAnggotaContainer.style.display = "none";
     step2.style.display = "none";
 
+    // Event listener untuk mengatur visibilitas jumlah anggota berdasarkan pilihan 'Kelompok' atau 'Pribadi'
     kelompokPribadi.addEventListener("change", function() {
         if (this.value === "Kelompok") {
             jumlahAnggotaContainer.style.display = "block";
             nextButton.style.display = "inline-block";
             submitButton.style.display = "none";
-        } else {
+        } else { // Untuk pilihan 'Pribadi'
             jumlahAnggotaContainer.style.display = "none";
             step2.style.display = "none";
             nextButton.style.display = "none";
@@ -454,10 +457,12 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // Mengambil kuota maksimal berdasarkan bidang yang dipilih
     bidang.addEventListener("change", function() {
                 maxKuota = parseInt(this.options[this.selectedIndex].getAttribute("data-kuota")) || 0;
             });
 
+    // Menampilkan pesan error
     function showError(input, message) {
         let existingError = input.parentNode.querySelector(".error-message");
         if (existingError) {
@@ -470,6 +475,7 @@ document.addEventListener("DOMContentLoaded", function() {
         input.parentNode.appendChild(error);
     }
 
+    // Menghapus pesan error
     function clearError(input) {
         const error = input.parentNode.querySelector(".error-message");
         if (error) {
@@ -477,6 +483,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Validasi step 1
     function validateStep1() {
         let isValid = true;
         const fields = [
@@ -486,6 +493,7 @@ document.addEventListener("DOMContentLoaded", function() {
             { id: "kelompok_pribadi", message: "Pilih personil!" }
         ];
 
+         // Validasi untuk setiap field yang wajib diisi
         fields.forEach(field => {
             const inputElement = document.getElementById(field.id);
             if (!inputElement.value.trim()) {
@@ -496,6 +504,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
+        // Validasi jumlah anggota untuk kelompok
         const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
                 
         if (kelompokPribadi.value === "Kelompok") {
@@ -512,6 +521,7 @@ document.addEventListener("DOMContentLoaded", function() {
             clearError(jumlahAnggotaInput);
         }
 
+        // Validasi file (KTP dan CV) serta tanggal mulai & selesai
         const otherFields = [
             { id: "tanggal_mulai", message: "Pilih tanggal mulai!" },
             { id: "tanggal_selesai", message: "Pilih tanggal selesai!" },
@@ -540,6 +550,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     }
 
+    // Validasi email anggota melalui AJAX
     async function checkEmail(emailInput) {
         const email = emailInput.value.trim();
         if (email === "") return;
@@ -615,6 +626,7 @@ document.addEventListener("DOMContentLoaded", function() {
         return isValid;
     }
 
+    // Fungsi untuk navigasi ke step berikutnya
     function nextStep(event) {
         event.preventDefault();
         if (!validateStep1()) return;
