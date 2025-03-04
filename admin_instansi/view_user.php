@@ -15,13 +15,16 @@ $sql = "SELECT
             p.id_pengajuan,
             p.id_user,
             p.status_pengajuan,
-            p.status_active
+            p.status_active,
+            pembimbing.nama_user AS nama_pembimbing
         FROM tb_pengajuan AS p
         INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
         INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+        LEFT JOIN tb_profile_user AS pembimbing 
+            ON p.id_bidang = pembimbing.id_bidang
         WHERE p.id_instansi = '$id_instansi'
-          AND p.status_active = '1'
-          AND (p.status_pengajuan = '2' OR p.status_pengajuan = '3' OR p.status_pengajuan = '4')
+            AND p.status_active = '1'
+            AND p.status_pengajuan IN ('2', '3', '4')
         ORDER BY p.id_pengajuan DESC";
 
 $result = mysqli_query($conn, $sql);
@@ -61,9 +64,10 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                             <th>Nama User</th>
                             <th>Nama Bidang</th>
                             <th>Jenis Kegiatan</th>
-                            <th>Pemagang</th>
+                            <th>Jumlah Pemagang</th>
                             <th>Periode</th>
                             <th>Durasi</th>
+                            <th>Pembimbing</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -75,7 +79,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                 <td><?= $row["nama_bidang"] ?></td>
                                 <td><?= $row["jenis_pengajuan"] ?></td>
                                 <td>
-                                    <a href="#" class="show-detail" title="Lihat Detail"
+                                    <a href="#" class="show-detail" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Detail"
                                         data-detail='<?= isset($nama_pengaju[$row['id_pengajuan']]) ? json_encode(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : '[]' ?>'>
                                         <?= isset($nama_pengaju[$row['id_pengajuan']]) ? count(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : 0 ?>
                                     </a>
@@ -83,20 +87,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        // Konversi tanggal ke format yang diinginkan
-                                        $start_date = new DateTime($row['tanggal_mulai']);
-                                        $end_date = new DateTime($row['tanggal_selesai']);
-
-                                        // Format tanggal dalam bahasa Indonesia
-                                        $bulanIndo = [
-                                            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                                        ];
-
-                                        $tanggal_mulai = $start_date->format('d') . ' ' . $bulanIndo[$start_date->format('n') - 1] . ' ' . $start_date->format('Y');
-                                        $tanggal_selesai = $end_date->format('d') . ' ' . $bulanIndo[$end_date->format('n') - 1] . ' ' . $end_date->format('Y');
-
-                                        echo $tanggal_mulai . " - " . $tanggal_selesai;
+                                        echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
                                     } else {
                                         echo "Periode Tidak Diketahui";
                                     }
@@ -131,44 +122,9 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                     }
                                     ?>
                                 </td>
+                                <td><?= $row["nama_pembimbing"] ?: "Pembimbing Belum Ditentukan" ?></td>
                                 <td>
-                                    <?php
-                                    $status_pengajuan = $row['status_pengajuan'];
-                                    $tanggal_mulai = $row['tanggal_mulai'];
-                                    $tanggal_selesai = $row['tanggal_selesai'];
-
-                                    date_default_timezone_set('Asia/Jakarta');
-                                    $tanggal_sekarang = date("Y-m-d");
-
-                                    // **Cek apakah tanggal mulai sudah tiba & status masih "Diterima" (2)**
-                                    if ($status_pengajuan == 2 && strtotime($tanggal_mulai) <= strtotime($tanggal_sekarang)) {
-                                        // Update status menjadi "Berlangsung" (3) di database
-                                        $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '3' WHERE id_pengajuan = '{$row['id_pengajuan']}'";
-                                        mysqli_query($conn, $sql_update);
-
-                                        // Set status_pengajuan ke 3 secara manual agar kondisi berikutnya mengenali perubahan
-                                        $status_pengajuan = 3;
-                                    }
-
-                                    // **Cek apakah tanggal selesai sudah lewat & status masih "Berlangsung" (3)**
-                                    if ($status_pengajuan == 3 && strtotime($tanggal_sekarang) > strtotime($tanggal_selesai)) {
-                                        $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '4' WHERE id_pengajuan = '{$row['id_pengajuan']}'";
-                                        mysqli_query($conn, $sql_update);
-
-                                        $status_pengajuan = 4;
-                                    }
-
-                                    // **Tampilkan status setelah update**
-                                    if ($status_pengajuan == 4) {
-                                        echo '<span class="badge bg-danger">Selesai</span>';
-                                    } elseif ($status_pengajuan == 3) {
-                                        echo '<span class="badge bg-primary">Berlangsung</span>';
-                                    } elseif ($status_pengajuan == 2) {
-                                        echo '<span class="badge bg-success">Diterima</span>';
-                                    } else {
-                                        echo '<span class="badge bg-secondary">Menunggu</span>';
-                                    }
-                                    ?>
+                                    <span id="status-badge-<?php echo $row['id_pengajuan']; ?>" class="badge"></span>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -180,3 +136,43 @@ $json_nama_pengaju = json_encode($nama_pengaju);
 </div>
 
 <?php include "footer.php"; ?>
+
+<script>
+    function updateStatus(id_pengajuan) {
+
+        // Setelah update status di database, baru ambil status terbaru dari get_status.php
+        $.ajax({
+            url: 'get_status.php',
+            type: 'GET',
+            data: {
+                id_pengajuan: id_pengajuan
+            },
+            success: function(response) {
+                let data = JSON.parse(response);
+                let statusBadge = $("#status-badge-" + id_pengajuan);
+
+                if (data.status == 5) {
+                    statusBadge.html("Selesai").attr("class", "badge bg-danger");
+                } else if (data.status == 4) {
+                    statusBadge.html("Berlangsung").attr("class", "badge bg-primary");
+                } else if (data.status == 3) {
+                    statusBadge.html("Ditolak").attr("class", "badge bg-danger");
+                } else if (data.status == 2) {
+                    statusBadge.html("Diterima").attr("class", "badge bg-success");
+                } else if (data.status == 6) {
+                    statusBadge.html("Menunggu Konfirmasi").attr("class", "badge bg-warning");
+                } else {
+                    statusBadge.html("Diajukan").attr("class", "badge bg-secondary");
+                }
+            }
+        });
+    }
+
+    // Fungsi untuk memperbarui status setiap kali halaman dimuat
+    $(document).ready(function() {
+        $("span[id^='status-badge-']").each(function() {
+            let id_pengajuan = $(this).attr("id").replace("status-badge-", "");
+            updateStatus(id_pengajuan);
+        });
+    });
+</script>
