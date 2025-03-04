@@ -92,6 +92,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                             <th>Dokumen</th>
                             <th>Periode</th>
                             <th>Durasi</th>
+                            <th>Zoom</th>
                             <th style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
@@ -155,12 +156,19 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     ?>
                                 </td>
                                 <td class="text-center align-middle">
+                                    <button type="button" class="btn btn-warning btn-sm zoom-btn" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Tambah Informasi Zoom" data-bs-target="#zoomModal"
+                                        data-id="<?= $row['id_pengajuan'] ?>">
+                                        <i class="bi bi-zoom-in"></i>
+                                    </button>
+                                </td>
+                                <td class="text-center align-middle">
                                     <button type="button" class="btn btn-success btn-sm terima-btn"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Terima Pengajuan" 
+                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Terima Pengajuan"
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-check-circle"></i> Terima
                                     </button>
-                                    <button class="btn btn-danger btn-sm tolak-btn" 
+                                    <button class="btn btn-danger btn-sm tolak-btn"
                                         data-bs-toggle="tooltip" data-bs-placement="top" title="Tolak Pengajuan"
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-person-x"></i> Tolak
@@ -209,6 +217,36 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                         <textarea class="form-control" name="alasan_tolak" id="alasan_tolak" rows="3" required></textarea>
                     </div>
                     <button type="button" class="btn btn-danger" onclick="confirmDelete()">Kirim Penolakan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal untuk Informasi Zoom -->
+<div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomModalLabel">Informasi Wawancara Zoom</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <form id="zoomForm">
+                    <input type="hidden" name="pengajuan_id" id="pengajuan_id_zoom">
+                    <div class="mb-3">
+                        <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
+                        <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
+                        <input type="time" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="link_zoom" class="form-label">Link Zoom</label>
+                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitButton">Kirim</button>
                 </form>
             </div>
         </div>
@@ -278,7 +316,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         // Fungsi untuk menampilkan preview dokumen PDF di modal
         function showPreview(url) {
             let modalBody = dokumenModal.querySelector(".modal-body");
-
             // Hapus preview sebelumnya jika ada
             let oldPreview = document.getElementById("pdfPreview");
             if (oldPreview) {
@@ -299,18 +336,16 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         // Reset hanya bagian daftar dokumen, bukan seluruh modal
         dokumenModal.addEventListener("hidden.bs.modal", function() {
             let preview = document.getElementById("pdfPreview");
-
-            // Hapus backdrop modal yang tertinggal
             document.querySelectorAll(".modal-backdrop").forEach(function(backdrop) {
                 backdrop.remove();
             });
 
             if (preview) {
-                preview.remove(); // Hapus preview saat modal ditutup
+                preview.remove(); 
             }
 
-            document.body.classList.remove("modal-open"); // Hapus class yang mencegah scrolling
-            document.body.style.paddingRight = ""; // Hapus padding tambahan jika ada
+            document.body.classList.remove("modal-open"); 
+            document.body.style.paddingRight = ""; 
         });
     });
 
@@ -321,14 +356,27 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                 let idPengajuan = this.getAttribute("data-id");
                 document.getElementById("id_pengajuan_tolak").value = idPengajuan;
 
-                let modal = new bootstrap.Modal(document.getElementById("tolakModal"));
+                let modalElement = document.getElementById("tolakModal");
+                let modal = new bootstrap.Modal(modalElement);
+
+                // Pastikan aria-hidden dihapus saat modal dibuka
+                modalElement.addEventListener("show.bs.modal", function() {
+                    modalElement.removeAttribute("aria-hidden");
+                });
+
+                // Tambahkan kembali aria-hidden saat modal ditutup
+                modalElement.addEventListener("hidden.bs.modal", function() {
+                    modalElement.setAttribute("aria-hidden", "true");
+                });
+
                 modal.show();
             });
         });
     });
 
+    // Fungsi untuk mengirim data penolakan
     function confirmDelete() {
-        event.preventDefault(); // Mencegah form langsung terkirim
+        event.preventDefault(); 
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -375,7 +423,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         });
     }
 
-    // Alert untuk penerimaan pengajuan
+    // Alert untuk penerimaan pengajuan dengan AJAX
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll(".terima-btn").forEach(button => {
             button.addEventListener("click", function() {
@@ -392,21 +440,135 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     cancelButtonText: "Batal"
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Redirect ke terima.php dengan POST
-                        let form = document.createElement("form");
-                        form.method = "POST";
-                        form.action = "terima_pengajuan.php";
+                        // Kirim data dengan AJAX
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("POST", "terima_pengajuan.php", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                        let input = document.createElement("input");
-                        input.type = "hidden";
-                        input.name = "id_pengajuan";
-                        input.value = id_pengajuan;
+                        xhr.onload = function() {
+                            if (xhr.status == 200) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Pengajuan telah diterima dan email telah dikirim.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload(); // Refresh halaman
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: 'Terjadi kesalahan, coba lagi.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        };
 
-                        form.appendChild(input);
-                        document.body.appendChild(form);
-                        form.submit();
+                        xhr.send("id_pengajuan=" + id_pengajuan);
                     }
                 });
+            });
+        });
+    });
+
+    // Fungsi untuk menampilkan modal zoom
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".zoom-btn").forEach(function(button) {
+            button.addEventListener("click", function() {
+                let idPengajuan = this.getAttribute("data-id");
+                document.getElementById("pengajuan_id_zoom").value = idPengajuan;
+
+                let zoomModal = document.getElementById("zoomModal");
+
+                let modal = new bootstrap.Modal(zoomModal);
+
+                // Pastikan modal dapat diakses oleh pembaca layar dengan menghapus aria-hidden
+                zoomModal.addEventListener("show.bs.modal", function() {
+                    zoomModal.removeAttribute("aria-hidden");
+                });
+
+                // Tambahkan kembali aria-hidden dan inert saat modal ditutup
+                zoomModal.addEventListener("hidden.bs.modal", function() {
+                    zoomModal.setAttribute("aria-hidden", "true");
+                });
+
+                modal.show();
+            });
+        });
+
+        // Tangani saat tombol kirim diklik dan SweetAlert muncul
+        document.getElementById("submitButton").addEventListener("click", function() {
+            let zoomModal = document.getElementById("zoomModal");
+
+            // Tambahkan inert agar modal tidak bisa diakses selama SweetAlert aktif
+            zoomModal.setAttribute("inert", "true");
+        });
+    });
+
+    // Fungsi untuk mengirim data zoom
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("zoomForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Mencegah form reload halaman
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Informasi Zoom akan dikirim!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Kirim!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Ambil data dari form
+                    var formData = new FormData(document.getElementById("zoomForm"));
+
+                    // Konversi FormData ke URL-encoded
+                    var urlEncodedData = new URLSearchParams();
+                    formData.forEach((value, key) => {
+                        urlEncodedData.append(key, value);
+                    });
+
+                    // Kirim data dengan AJAX
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "simpan_zoom.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    xhr.onload = function() {
+
+                        if (xhr.status == 200) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: 'Informasi Zoom telah dikirim.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Gagal!',
+                                text: 'Terjadi kesalahan, coba lagi.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        console.error("Terjadi kesalahan koneksi ke server");
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'Tidak dapat menghubungi server.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    };
+
+                    xhr.send(urlEncodedData.toString());
+                }
             });
         });
     });

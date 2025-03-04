@@ -2,6 +2,9 @@
 include "functions.php";
 
 $id_pengajuan = $_GET['id_pengajuan'];
+$sqlTanggal = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
+$queryTanggal = mysqli_query($conn, $sqlTanggal);
+$rowTanggal = mysqli_fetch_assoc($queryTanggal);
 
 
 if (isset($_POST['unggah_logbook'])) {
@@ -44,7 +47,7 @@ if (isset($_POST['unggah_logbook'])) {
             <input type="hidden" name="id_pengajuan" value="<?= $id_pengajuan ?>">
             <div class="mb-3">
                 <label for="tanggal" class="form-label">Tanggal</label>
-                <input type="date" class="form-control" id="tanggal" name="tanggal">
+                <input type="date" class="form-control" id="tanggal" name="tanggal" min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
             </div>
             
             <div class="mb-3">

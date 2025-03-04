@@ -190,7 +190,14 @@ if (!$row){
     <!-- Tambahan: Tempat Tanda Tangan -->
     <div style="width: 100%; display: flex; justify-content: flex-end; margin-top: 50px;">
         <div style="text-align: center; width: 300px;">
-            <p>Sidoarjo, <?= date("d F Y") ?></p>
+            <?php
+            // Buat formatter untuk tanggal dalam bahasa Indonesia
+            $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
+            $formatter->setPattern('d MMMM yyyy');
+
+            echo '<p>Sidoarjo, ' . $formatter->format(new DateTime()) . '</p>';
+            ?>
+
             <p><strong>Pembimbing Magang</strong></p>
             <br><br><br><br> <!-- Jeda untuk tanda tangan -->
             <p><strong>(...................................)</strong></p>

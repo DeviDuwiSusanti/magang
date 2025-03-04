@@ -25,13 +25,19 @@ $total_pengajuan = query("SELECT COUNT(*) AS total
     WHERE tb_instansi.id_instansi = '$id_instansi'
     AND tb_pengajuan.status_pengajuan = '1'")[0];
 
-// data pemagang
-$pemagang = query("SELECT COUNT(*) AS total 
-    FROM tb_pengajuan
-    JOIN tb_instansi 
-        ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
-    WHERE tb_instansi.id_instansi = '$id_instansi'
-    AND tb_pengajuan.status_pengajuan != '1'")[0];
+// Query untuk menghitung total pemagang
+$pemagang = query("SELECT SUM(
+            CASE 
+                WHEN jumlah_pelamar > 1 THEN jumlah_pelamar 
+                ELSE 1 
+            END
+        ) AS total 
+        FROM tb_pengajuan
+        JOIN tb_instansi 
+            ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        WHERE tb_instansi.id_instansi = '$id_instansi'
+        AND tb_pengajuan.status_pengajuan NOT IN ('0', '1')
+    ")[0];
 ?>
 
 
@@ -76,7 +82,7 @@ $pemagang = query("SELECT COUNT(*) AS total
                 <div class="card border-0">
                     <div class="card-body">
                         <h5 class="card-title">Jumlah Pemagang</h5>
-                        <h2 class="card-text text-success"><?= $pemagang["total"] ?></h2>
+                        <h2 class="card-text text-success"><?= $pemagang["total"] ?? 0 ?></h2>
                         <p class="text-muted">Lihat data pemagang</p>
                         <a href="view_user.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>

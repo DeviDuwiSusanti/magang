@@ -101,21 +101,21 @@ if (ISSET($_POST['update_profil'])){
             <!-- Nama Lengkap -->
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-control" id="nama" name="nama" value="<?= $row2['nama_user'] ?>" required>
+                <input type="text" class="form-control" id="nama" name="nama" value="<?= $row2['nama_user'] ?>">
                 <div class="error-message text-danger" id="error-nama"></div>
             </div>
             
             <!-- Tempat Lahir -->
             <div class="mb-3">
                 <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= $row2['tempat_lahir'] ?>" required>
+                <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= $row2['tempat_lahir'] ?>">
                 <div class="error-message text-danger" id="error-tempat_lahir"></div>
             </div>
             
             <!-- Tanggal Lahir -->
             <div class="mb-3">
                 <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $row2['tanggal_lahir'] ?>" required>
+                <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $row2['tanggal_lahir'] ?>">
             </div>
             <!-- Jenis Kelamin -->
             <div class="mb-3">
@@ -135,14 +135,14 @@ if (ISSET($_POST['update_profil'])){
             <!-- NIK -->
             <div class="mb-3">
                 <label for="nik" class="form-label">NIK</label>
-                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik'] ?>" required>
+                <input type="text" class="form-control" id="nik" name="nik" value="<?= $row2['nik'] ?>">
                 <div class="error-message text-danger" id="error-nik"></div>
             </div>
             
             <!-- Asal Studi -->
             <div class="mb-3">
                 <label for="asal_studi" class="form-label">Asal Studi</label>
-                <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $row2['nama_pendidikan'] ?>" list="sekolahList" required>
+                <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $row2['nama_pendidikan'] ?>" list="sekolahList">
                 <datalist id="sekolahList">
                     <?php 
                         // Mengambil hanya nama_pendidikan unik
@@ -172,7 +172,7 @@ if (ISSET($_POST['update_profil'])){
             <!-- Jurusan -->
             <div class="mb-3">
                 <label for="jurusan" class="form-label">Jurusan</label>
-                <select class="form-control" id="jurusan" name="jurusan" required>
+                <select class="form-control" id="jurusan" name="jurusan">
                     <?php foreach($dataPendidikan as $studi) : ?>
                         <option value="<?= $studi['jurusan'] ?>" <?= ($row2['jurusan'] == $studi['jurusan']) ? 'selected' : '' ?>><?= $studi['jurusan'] ?></option>
                     <?php endforeach; ?>
@@ -181,20 +181,21 @@ if (ISSET($_POST['update_profil'])){
 
             <div class="mb-3">
                 <label for="nim" class="form-label">NIM/NISN</label>
-                <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>" required>
+                <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>">
                 <div class="error-message text-danger" id="error-nim"></div>
             </div>
             
             <!-- Telepon -->
             <div class="mb-3">
                 <label for="telepon" class="form-label">Telepon</label>
-                <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone_user'] ?>" required>
+                <input type="number" class="form-control" id="telepon" name="telepon" value="<?= $row2['telepone_user'] ?>">
                 <div class="error-message text-danger" id="error-telepon"></div>
             </div>
             <!-- Alamat -->
             <div class="mb-3">
                 <label for="alamat" class="form-label">Alamat</label>
-                <textarea class="form-control" id="alamat" name="alamat" rows="3" required><?= $row2['alamat_user'] ?></textarea>
+                <textarea class="form-control" id="alamat" name="alamat" rows="3"><?= $row2['alamat_user'] ?></textarea>
+                <small id="error-alamat" class="text-danger"></small>
             </div>
             
             <!-- Upload Foto Profil -->
@@ -395,6 +396,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (!isValid) {
                 e.preventDefault();
+            }
+
+
+            // Validasi Alamat (wajib diisi jika masih kosong)
+            const alamat = document.getElementById('alamat').value.trim();
+            if (alamat === '') {
+                showError('alamat', 'Alamat wajib diisi.');
+                isValid = false;
+            } else {
+                clearError('alamat');
             }
 
 
