@@ -433,6 +433,75 @@ function generate_admin_instansi_gagal() {
 }
 
 
+
+// halaman pendidikan
+
+// crud tabel user by super admin
+function confirm_hapus_pendidikan_super_admin(id_pendidikan) {
+  Swal.fire ({
+    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
+    icon: "warning",
+    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
+    confirmButtonText: "YA! Hapus",
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "study_view.php?id_pendidikan_ini=" + id_pendidikan;
+    }
+  });
+}
+
+
+function hapus_pendidikan_super_admin_success() {
+  Swal.fire({
+    title: "Berhasil!",
+    icon: "success",
+    text: "Data Pendidikan Berhasil Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "study_view.php";
+    }
+  })
+}
+
+function hapus_pendidikan_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal!",
+    icon: "error",
+    text: "Data Pendidikan Gagal Dihapus",
+    confirmButtonText: "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "study_view.php";
+    }
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // halmaan settings
 function confirm_edit_email_super_admin() {
   let emailBaru = document.getElementById("email_baru").value.trim();

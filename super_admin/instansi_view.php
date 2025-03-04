@@ -3,8 +3,8 @@
     $instansi = query("SELECT * FROM tb_instansi WHERE status_active = 1");
     $no = 1;
 
-    if(isset($_GET["id_pengajuan_ini"])) {
-        $id_instansi = $_GET["id_pengajuan_ini"];
+    if(isset($_GET["id_instansi_ini"])) {
+        $id_instansi = $_GET["id_instansi_ini"];
         
         if(hapus_instansi($id_instansi, $id_user)) { 
             echo "<script>hapus_instansi_super_admin_success()</script>";
