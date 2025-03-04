@@ -11,9 +11,16 @@ $query2 = mysqli_query($conn, $sql2);
 $total_nilai = mysqli_fetch_assoc($query2)['jumlah_nilai'];
 
 // akses histori
-$sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '4'";
-$query3 = mysqli_query($conn, $sql3);
-$total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
+if ($row['level'] == '3'){
+    $sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '5'";
+    $query3 = mysqli_query($conn, $sql3);
+    $total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
+}else if ($row['level'] == '4'){
+    $sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan p, tb_profile_user pu WHERE pu.id_user = '$id_user' AND p.status_pengajuan = '5' AND pu.id_pengajuan = p.id_pengajuan";
+    $query3 = mysqli_query($conn, $sql3);
+    $total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
+}
+
 
 // akses logbook
 $sql4 = "SELECT COUNT(*) AS jumlah_logbook FROM tb_logbook WHERE id_user = '$id_user'";
