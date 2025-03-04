@@ -157,7 +157,8 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                 </td>
                                 <td class="text-center align-middle">
                                     <button type="button" class="btn btn-warning btn-sm zoom-btn" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Tambah Informasi Zoom" data-bs-target="#zoomModal">
+                                        data-bs-placement="top" title="Tambah Informasi Zoom" data-bs-target="#zoomModal"
+                                        data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-zoom-in"></i>
                                     </button>
                                 </td>
@@ -245,7 +246,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                         <label for="link_zoom" class="form-label">Link Zoom</label>
                         <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Kirim</button>
+                    <button type="submit" class="btn btn-primary" id="submitButton">Kirim</button>
                 </form>
             </div>
         </div>
@@ -315,7 +316,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         // Fungsi untuk menampilkan preview dokumen PDF di modal
         function showPreview(url) {
             let modalBody = dokumenModal.querySelector(".modal-body");
-
             // Hapus preview sebelumnya jika ada
             let oldPreview = document.getElementById("pdfPreview");
             if (oldPreview) {
@@ -336,18 +336,16 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         // Reset hanya bagian daftar dokumen, bukan seluruh modal
         dokumenModal.addEventListener("hidden.bs.modal", function() {
             let preview = document.getElementById("pdfPreview");
-
-            // Hapus backdrop modal yang tertinggal
             document.querySelectorAll(".modal-backdrop").forEach(function(backdrop) {
                 backdrop.remove();
             });
 
             if (preview) {
-                preview.remove(); // Hapus preview saat modal ditutup
+                preview.remove(); 
             }
 
-            document.body.classList.remove("modal-open"); // Hapus class yang mencegah scrolling
-            document.body.style.paddingRight = ""; // Hapus padding tambahan jika ada
+            document.body.classList.remove("modal-open"); 
+            document.body.style.paddingRight = ""; 
         });
     });
 
@@ -376,8 +374,9 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         });
     });
 
+    // Fungsi untuk mengirim data penolakan
     function confirmDelete() {
-        event.preventDefault(); // Mencegah form langsung terkirim
+        event.preventDefault(); 
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -450,7 +449,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                             if (xhr.status == 200) {
                                 Swal.fire({
                                     title: 'Berhasil!',
-                                    text: 'Pengajuan telah diterima.',
+                                    text: 'Pengajuan telah diterima dan email telah dikirim.',
                                     icon: 'success',
                                     confirmButtonText: 'OK'
                                 }).then(() => {
@@ -473,8 +472,8 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         });
     });
 
+    // Fungsi untuk menampilkan modal zoom
     document.addEventListener("DOMContentLoaded", function() {
-        // Pastikan semua tombol dengan class 'zoom-btn' dapat membuka modal
         document.querySelectorAll(".zoom-btn").forEach(function(button) {
             button.addEventListener("click", function() {
                 let idPengajuan = this.getAttribute("data-id");
@@ -482,15 +481,14 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
                 let zoomModal = document.getElementById("zoomModal");
 
-                // Pastikan tidak ada error pada 'data-bs-toogle' yang typo
                 let modal = new bootstrap.Modal(zoomModal);
 
-                // Hapus aria-hidden saat modal dibuka
+                // Pastikan modal dapat diakses oleh pembaca layar dengan menghapus aria-hidden
                 zoomModal.addEventListener("show.bs.modal", function() {
                     zoomModal.removeAttribute("aria-hidden");
                 });
 
-                // Tambahkan kembali aria-hidden saat modal ditutup
+                // Tambahkan kembali aria-hidden dan inert saat modal ditutup
                 zoomModal.addEventListener("hidden.bs.modal", function() {
                     zoomModal.setAttribute("aria-hidden", "true");
                 });
@@ -498,8 +496,17 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                 modal.show();
             });
         });
+
+        // Tangani saat tombol kirim diklik dan SweetAlert muncul
+        document.getElementById("submitButton").addEventListener("click", function() {
+            let zoomModal = document.getElementById("zoomModal");
+
+            // Tambahkan inert agar modal tidak bisa diakses selama SweetAlert aktif
+            zoomModal.setAttribute("inert", "true");
+        });
     });
 
+    // Fungsi untuk mengirim data zoom
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("zoomForm").addEventListener("submit", function(event) {
             event.preventDefault(); // Mencegah form reload halaman
@@ -524,16 +531,12 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                         urlEncodedData.append(key, value);
                     });
 
-                    console.log("Data yang dikirim:", urlEncodedData.toString()); // Cek data sebelum dikirim
-
                     // Kirim data dengan AJAX
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "simpan_zoom.php", true);
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                     xhr.onload = function() {
-                        console.log("Status Code:", xhr.status);
-                        console.log("Response dari server:", xhr.responseText); // Cek hasil dari server
 
                         if (xhr.status == 200) {
                             Swal.fire({
@@ -542,7 +545,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                 icon: 'success',
                                 confirmButtonText: 'OK'
                             }).then(() => {
-                                location.reload(); // Refresh halaman setelah sukses
+                                location.reload();
                             });
                         } else {
                             Swal.fire({
@@ -564,7 +567,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                         });
                     };
 
-                    xhr.send(urlEncodedData.toString()); // Hanya satu kali pengiriman data
+                    xhr.send(urlEncodedData.toString());
                 }
             });
         });

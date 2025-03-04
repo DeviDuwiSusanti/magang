@@ -10,15 +10,17 @@ include '../assets/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["pengajuan_id"]);
-    $tanggal = $_POST["tanggal_pelaksanaan"];
-    $jam = $_POST["jam_pelaksanaan"];
+    $tanggal = mysqli_real_escape_string($conn, $_POST["tanggal_pelaksanaan"]);
+    $tanggal = date('d F Y', strtotime($tanggal));
+    $jam = mysqli_real_escape_string($conn, $_POST["jam_pelaksanaan"]);
     $link_zoom = mysqli_real_escape_string($conn, $_POST["link_zoom"]);
 
     // Ambil data user dari tb_pengajuan
-    $query = "SELECT id_user, nama_bidang, nama_panjang FROM tb_pengajuan 
-              JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-              JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
-              WHERE tb_pengajuan.id_pengajuan = '$id_pengajuan'";
+    $query = "SELECT id_user, nama_bidang, nama_panjang 
+            FROM tb_pengajuan 
+            JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
+            JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
+            WHERE tb_pengajuan.id_pengajuan = '$id_pengajuan'";
     $result = mysqli_query($conn, $query);
 
     if ($result && $row = mysqli_fetch_assoc($result)) {
@@ -50,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p><strong>Detail Zoom:</strong></p>
                     <ul>
                         <li><strong>Tanggal:</strong> {$tanggal}</li>
-                        <li><strong>Jam:</strong> {$jam}</li>
+                        <li><strong>Jam:</strong> {$jam} WIB</li>
                         <li><strong>Link Zoom:</strong> <a href='{$link_zoom}'>{$link_zoom}</a></li>
                     </ul>
                     <p>Mohon untuk hadir tepat waktu. Jika ada pertanyaan, silakan hubungi kami melalui email ini.</p>

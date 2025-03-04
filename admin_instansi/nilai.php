@@ -23,7 +23,7 @@ $sql = "SELECT
             ON pembimbing.id_user = u_pembimbing.id_user
             AND u_pembimbing.level = 5
         WHERE p.id_instansi = '$id_instansi'
-        AND p.status_pengajuan IN ('2', '3', '4')
+        AND p.status_pengajuan = '5'
 
         UNION ALL
 
@@ -47,7 +47,7 @@ $sql = "SELECT
             ON pembimbing.id_user = u_pembimbing.id_user
             AND u_pembimbing.level = 5 
         WHERE p.id_instansi = '$id_instansi'
-        AND p.status_pengajuan IN ('2', '3', '4')
+        AND p.status_pengajuan = '5'
         AND p.id_user <> anggota.id_user
 
         ORDER BY id_pengajuan DESC
