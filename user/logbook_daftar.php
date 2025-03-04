@@ -62,7 +62,9 @@ if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
                             <th>Tanggal</th>
                             <th>Kegiatan</th>
                             <th>Keterangan</th>
-                            <th>Aksi</th>
+                            <?php if ($status_pengajuan!= '5'){?> 
+                                <th>Aksi</th> 
+                            <?php } ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -73,6 +75,8 @@ if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
                                 <td><?= $row['tanggal_logbook'] ?></td>
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
+                                <?php
+                                if ($status_pengajuan!= '5'){?>
                                 <td>
                                     <a href="logbook_edit.php?id_logbook=<?= $row['id_logbook'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil"></i> Edit
@@ -85,6 +89,7 @@ if (isset($_GET['id_logbook']) && isset($_GET['id_pengajuan'])) {
                                 </td>
                             </tr>
                         <?php
+                                }
                         $no++;
                         }
                         ?>
