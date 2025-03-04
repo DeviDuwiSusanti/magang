@@ -100,12 +100,12 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                         <span>Penilaian</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                     <a href="sertifikat.php" class="sidebar-link">
                         <i class="bi bi-award"></i>
                         <span>Sertifikat</span>
                     </a>
-                </li>
+                </li> -->
                 <li class="sidebar-item">
                     <a href="setting.php" class="sidebar-link">
                         <i class="bi bi-gear"></i>
@@ -163,18 +163,17 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
             <!-- </div>
     </div> -->
             <script src="../assets/js/script.js"></script>
-            <script src="../assets/js/validasi.js"></script>
 
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-            <!-- Select2 JS -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
             <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+            <!-- Select2 JS -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
             <script>
                 $(document).ready(function() {
@@ -214,9 +213,13 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                     });
 
                     // Inisialisasi Select2 untuk dropdown bidang
-                    $('#bidang').select2({
-                        placeholder: "Pilih Bidang",
-                        allowClear: true
+                    $(document).ready(function() {
+                        if ($('#bidang').length) { // Cek apakah elemen dengan id "bidang" ada di halaman
+                            $('#bidang').select2({
+                                placeholder: "Pilih Bidang",
+                                allowClear: true
+                            });
+                        }
                     });
                 });
 
@@ -224,7 +227,14 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                 document.addEventListener("DOMContentLoaded", function() {
                     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
                     var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                        return new bootstrap.Tooltip(tooltipTriggerEl);
+                        var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+
+                        // Event listener untuk menghilangkan tooltip setelah diklik
+                        tooltipTriggerEl.addEventListener("click", function() {
+                            tooltip.hide();
+                        });
+
+                        return tooltip;
                     });
                 });
             </script>

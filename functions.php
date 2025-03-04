@@ -390,6 +390,21 @@ use Dom\Mysql;
 
 
 
+    function hapus_pendidikan_super_admin($id_pendidikan, $id_user) {
+        global $conn;
+        $query = mysqli_query($conn, "UPDATE tb_pendidikan SET status_active = '0', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
+        if ($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+
+
+
+
+
+
     function edit_email_super_admin($POST) {
         global $conn;
         $email_baru = mysqli_real_escape_string($conn, $POST["email_baru"]); // Hindari SQL injection

@@ -1,7 +1,17 @@
 <?php 
     include "sidebar.php";
-    $pendidikan = query("SELECT * FROM tb_pendidikan");
+    $pendidikan = query("SELECT * FROM tb_pendidikan WHERE status_active = '1'");
     $no = 1;
+
+    if(isset($_GET["id_pendidikan_ini"])) {
+        $id_pendidikan = $_GET["id_pendidikan_ini"];
+        
+        if(hapus_pendidikan_super_admin($id_pendidikan, $id_user)) { 
+            echo "<script>hapus_pendidikan_super_admin_success()</script>";
+        } else { 
+            echo "<script>hapus_pendidikan_super_admin_gagal()</script>";
+        }
+    }
 ?>
 
 <main>
@@ -54,7 +64,7 @@
                             <td><?= $studi["jurusan"] ?></td>
                             <td><?= $studi["alamat_pendidikan"] ?></td>
                             <td class="d-flex justify-content-center gap-2">
-                                <a href="study_hapus.php?id_pendidikan=<?= $studi["id_pendidikan"] ?>" class="btn btn-danger btn-sm" onclick="return(confirm('Apakah Anda Yakin Mau Menghapus Data Ini?'))">
+                                <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_pendidikan_super_admin(<?= $studi['id_pendidikan'] ?>)">
                                     <i class="bi bi-trash"></i> Hapus
                                 </a>
                                 <a href="study_edit.php?id_pendidikan=<?= $studi["id_pendidikan"] ?>" class="btn btn-warning btn-sm">

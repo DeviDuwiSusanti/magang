@@ -46,18 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2' WHERE id_pengajuan = '$id_pengajuan'";
 
                 if (mysqli_query($conn, $sql_update)) {
-                    // Tentukan ucapan salam berdasarkan waktu pengiriman
-                    $jam = date("H");
-                    if ($jam < 11) {
-                        $salam = "Selamat pagi";
-                    } elseif ($jam < 15) {
-                        $salam = "Selamat siang";
-                    } elseif ($jam < 19) {
-                        $salam = "Selamat sore";
-                    } else {
-                        $salam = "Selamat malam";
-                    }
-
                     // Data email
                     $email_pengirim = 'moneyuang25@gmail.com';
                     $nama_pengirim = 'Diskominfo Sidoarjo';
@@ -65,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $subject = 'Pemberitahuan Penerimaan Magang';
 
                     // Pesan email
+                    $salam = salamBerdasarkanWaktu();
                     $message = "
                         <p>{$salam} <strong>{$nama_pelamar}</strong>,</p>
                         <p>Kami dengan senang hati menginformasikan bahwa Anda telah <strong>Diterima</strong> sebagai peserta magang di <strong>{$nama_instansi}</strong> pada bidang <strong>{$bidang_magang}</strong>.</p>
@@ -164,5 +153,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             });
         </script>";
     }
+}
+
+function salamBerdasarkanWaktu() {
+    date_default_timezone_set('Asia/Jakarta');
+    $jam = date("H");
+    if ($jam < 11) return "Selamat pagi";
+    if ($jam < 15) return "Selamat siang";
+    if ($jam < 19) return "Selamat sore";
+    return "Selamat malam";
 }
 ?>
