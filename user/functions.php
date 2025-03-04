@@ -123,8 +123,8 @@ function getBidangByInstansi($id_instansi) {
 
 function getDetailBidang($id_bidang, $conn) {
     $sql_bidang = "SELECT nama_bidang, deskripsi_bidang, kriteria_bidang, dokumen_prasyarat, kuota_bidang 
-                   FROM tb_bidang 
-                   WHERE id_bidang = '$id_bidang'";
+                    FROM tb_bidang 
+                    WHERE id_bidang = '$id_bidang'";
     $result = mysqli_query($conn, $sql_bidang);
 
     if ($result && mysqli_num_rows($result) > 0) {
