@@ -9,8 +9,8 @@ if ($level == '3'){
             FROM tb_pengajuan LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
             WHERE tb_pengajuan.status_pengajuan = '5' AND tb_pengajuan.id_user = '$id_user'";
 }else if ($level == '4'){
-    $sql = "SELECT * FROM tb_profile_user pu, tb_user u, tb_pengajuan p, tb_bidang b, tb_instansi i 
-            WHERE pu.id_user = '$id_user' AND u.id_user = '$id_user' AND pu.id_pengajuan = p.id_pengajuan AND p.id_bidang = b.id_bidang AND p.id_instansi = i.id_instansi";
+    $sql = "SELECT * FROM tb_pengajuan, tb_profile_user pu, tb_user u, tb_pengajuan p, tb_bidang b, tb_instansi i 
+            WHERE tb_pengajuan.status_pengajuan = '5' AND pu.id_user = '$id_user' AND u.id_user = '$id_user' AND pu.id_pengajuan = p.id_pengajuan AND p.id_bidang = b.id_bidang AND p.id_instansi = i.id_instansi";
 }
 $query = mysqli_query($conn, $sql);
 $no = 1;

@@ -6,11 +6,13 @@ include "../layout/sidebarUser.php";
 $id_user = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : (isset($_GET['id_user']) ? $_GET['id_user'] : null);
 
 // Query untuk mengambil data pengajuan magang yang masih aktif dan sesuai dengan id_user yang login
-$sql = "SELECT * 
-        FROM tb_pengajuan LEFT JOIN tb_profile_user ON tb_pengajuan.id_pengajuan = tb_profile_user.id_pengajuan LEFT JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan LEFT JOIN tb_user ON tb_pengajuan.id_user = tb_user.id_user LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        WHERE tb_pengajuan.status_pengajuan = '4' AND tb_profile_user.id_user = '$id_user'";
-$query = mysqli_query($conn, $sql); 
-$row = mysqli_fetch_assoc($query); 
+$sql = "SELECT *
+        FROM tb_pengajuan 
+        LEFT JOIN tb_profile_user ON tb_pengajuan.id_pengajuan = tb_profile_user.id_pengajuan LEFT JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan  LEFT JOIN tb_user ON tb_profile_user.id_user = tb_user.id_user
+        LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
+        WHERE tb_pengajuan.status_pengajuan = '4'  AND tb_profile_user.id_user = '$id_user'";
+$query = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($query);
 ?>
 
 <div class="main-content p-4">
@@ -34,7 +36,7 @@ $row = mysqli_fetch_assoc($query);
                     <!-- Foto profil -->
                     <img src="../assets/img/user/<?= !empty($row['gambar_user']) ? $row['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture"style="width: 100px; height: 100px;">
                     <h4 class="card-title"><?= $row['nama_user'] ?? 'Tidak Diketahui' ?></h4>
-                    <p class="text-muted"><?= $row['email'] ?? 'Tidak Ada Email' ?></p>
+                    <p class="text-muted"><?php echo htmlspecialchars($row['email_login'] ?? 'Tidak Ada Email'); ?></p>
 
                     <hr>
                     <div class="card-body">
