@@ -1,6 +1,7 @@
 <?php
 include "../koneksi.php"; 
 include "../layout/sidebarUser.php"; 
+include "functions.php";  
 
 // Ambil id_user dari session atau parameter URL
 $id_user = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : (isset($_GET['id_user']) ? $_GET['id_user'] : null);
@@ -13,30 +14,6 @@ $sql = "SELECT tb_pengajuan.*, tb_profile_user.*, tb_pendidikan.nama_pendidikan,
         WHERE tb_pengajuan.status_pengajuan = '4' AND tb_profile_user.id_user = '$id_user'";
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
-
-// Fungsi untuk format tanggal ke format Indonesia tanpa tahun
-function formatTanggalIndonesia($tanggal) {
-    $bulan = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    $dateObj = DateTime::createFromFormat('Y-m-d', $tanggal);
-    return $dateObj ? $dateObj->format('d') . ' ' . $bulan[(int)$dateObj->format('m') - 1] : "Format Tidak Valid";
-}
-
-// Fungsi untuk format periode (contoh: "1 Januari - 10 Desember 2024" atau "1 Desember 2023 - 10 Januari 2024")
-function formatPeriode($tanggal_mulai, $tanggal_selesai) {
-    $start_date = DateTime::createFromFormat('Y-m-d', $tanggal_mulai);
-    $end_date = DateTime::createFromFormat('Y-m-d', $tanggal_selesai);
-
-    if ($start_date && $end_date) {
-        if ($start_date->format('Y') === $end_date->format('Y')) {
-            return formatTanggalIndonesia($tanggal_mulai) . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $start_date->format('Y');
-        } else {
-            return formatTanggalIndonesia($tanggal_mulai) . ' ' . $start_date->format('Y') . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $end_date->format('Y');
-        }
-    }
-    return "Periode Tidak Diketahui";
-}
 ?>
 
 
@@ -87,20 +64,7 @@ function formatPeriode($tanggal_mulai, $tanggal_selesai) {
                                 <tr>
                                     <td><i class="bi bi-hourglass-split"></i> <strong>Durasi</strong></td>
                                     <td>
-                                        <?php 
-                                            if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                                $start_date = new DateTime($row['tanggal_mulai']);
-                                                $end_date = new DateTime($row['tanggal_selesai']);
-                                                $interval = $start_date->diff($end_date);
-                                                
-                                                $months = $interval->m + ($interval->y * 12);
-                                                $days = $interval->d;
-                                                
-                                                echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
-                                            } else {
-                                                echo "Durasi Tidak Diketahui";
-                                            } 
-                                            ?>
+                                    <?= hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
                                     </td>
                                 </tr>
                                 <tr>

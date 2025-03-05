@@ -21,38 +21,6 @@ if ($level == '3'){
 }
 $query = mysqli_query($conn, $sql);
 $no = 1;
-
-// Fungsi untuk format tanggal ke format Indonesia tanpa tahun
-function formatTanggalIndonesia($tanggal) {
-    $bulan = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    if (!empty($tanggal)) {
-        $dateObj = DateTime::createFromFormat('Y-m-d', $tanggal);
-        return $dateObj ? $dateObj->format('d') . ' ' . $bulan[(int)$dateObj->format('m') - 1] : "Format Tidak Valid";
-    }
-    return "Tanggal Tidak Diketahui";
-}
-
-// Fungsi untuk format periode (contoh: "1 Januari - 10 Desember 2024" atau "1 Desember 2023 - 10 Januari 2024")
-function formatPeriode($tanggal_mulai, $tanggal_selesai) {
-    if (empty($tanggal_mulai) || empty($tanggal_selesai)) {
-        return "Periode Tidak Diketahui";
-    }
-
-    $start_date = DateTime::createFromFormat('Y-m-d', $tanggal_mulai);
-    $end_date = DateTime::createFromFormat('Y-m-d', $tanggal_selesai);
-
-    if (!$start_date || !$end_date) {
-        return "Periode Tidak Valid";
-    }
-
-    if ($start_date->format('Y') === $end_date->format('Y')) {
-        return formatTanggalIndonesia($tanggal_mulai) . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $start_date->format('Y');
-    } else {
-        return formatTanggalIndonesia($tanggal_mulai) . ' ' . $start_date->format('Y') . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $end_date->format('Y');
-    }
-}
 ?>
 
 <div class="main-content p-4">
@@ -81,31 +49,12 @@ function formatPeriode($tanggal_mulai, $tanggal_selesai) {
                         <td class="text-center"><?= $no++ ?></td>
                         <td><?= htmlspecialchars($data['nama_panjang']) ?></td>
                         <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
-                        <td class="text-center">
-                            <?php 
-                                if (!empty($data['tanggal_mulai']) && !empty($data['tanggal_selesai'])) {
-                                    $start_date = new DateTime($data['tanggal_mulai']);
-                                    $end_date = new DateTime($data['tanggal_selesai']);
-                                    $interval = $start_date->diff($end_date);
-                                    
-                                    $months = $interval->m + ($interval->y * 12);
-                                    $days = $interval->d;
-                                    
-                                    echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
-                                } else {
-                                    echo "Durasi Tidak Diketahui";
-                                } 
-                            ?>
-                        </td>   
                         <td>
-                            <?php 
-                            if (!empty($data['tanggal_mulai']) && !empty($data['tanggal_selesai'])) {
-                                echo formatPeriode($data['tanggal_mulai'], $data['tanggal_selesai']);
-                            } else {
-                                echo "<span style='color:red; font-weight:bold;'>Periode Tidak Diketahui</span>";
-                            }
-                            ?>
-                        </td>                        
+                             <?= hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
+                        </td> 
+                        <td>
+                            <?= formatPeriode($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
+                        </td>                       
                         <td class="text-center">
                             <a href="detail_histori.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
                                 <i class="bi bi-eye" style="font-size: 20px;"></i>

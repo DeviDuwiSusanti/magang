@@ -181,10 +181,39 @@ function showAlert($title, $text, $icon, $redirect = null) {
     </script>";
 }
 
-// Fungsi untuk format tanggal dalam bahasa Indonesia
+// Fungsi untuk menghitung durasi dalam bulan dan hari
+function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
+    $start_date = new DateTime($tanggal_mulai);
+    $end_date = new DateTime($tanggal_selesai);
+    $interval = $start_date->diff($end_date);
+
+    $bulan = $interval->m + ($interval->y * 12);
+    $hari = $interval->d;
+
+    return ($bulan > 0 ? "$bulan Bulan " : "") . ($hari > 0 ? "$hari Hari" : "");
+}
+
+// Fungsi untuk format tanggal ke format Indonesia tanpa tahun
 function formatTanggalIndonesia($tanggal) {
-    $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-    $date = strtotime($tanggal);
-    return $formatter->format($date);
+    $bulan = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    $dateObj = DateTime::createFromFormat('Y-m-d', $tanggal);
+    return $dateObj ? $dateObj->format('d') . ' ' . $bulan[(int)$dateObj->format('m') - 1] : "Format Tidak Valid";
+}
+
+// Fungsi untuk format periode (contoh: "1 Januari - 10 Desember 2024" atau "1 Desember 2023 - 10 Januari 2024")
+function formatPeriode($tanggal_mulai, $tanggal_selesai) {
+    $start_date = DateTime::createFromFormat('Y-m-d', $tanggal_mulai);
+    $end_date = DateTime::createFromFormat('Y-m-d', $tanggal_selesai);
+
+    if ($start_date && $end_date) {
+        if ($start_date->format('Y') === $end_date->format('Y')) {
+            return formatTanggalIndonesia($tanggal_mulai) . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $start_date->format('Y');
+        } else {
+            return formatTanggalIndonesia($tanggal_mulai) . ' ' . $start_date->format('Y') . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $end_date->format('Y');
+        }
+    }
+    return "Periode Tidak Diketahui";
 }
 ?>
