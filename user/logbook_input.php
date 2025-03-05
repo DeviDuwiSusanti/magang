@@ -6,7 +6,7 @@ $queryTanggal = mysqli_query($conn, $sqlTanggal);
 $rowTanggal = mysqli_fetch_assoc($queryTanggal);
 
 
-if (isset($_POST['unggah_logbook'])) {
+if (isset($_POST['input_logbook'])) {
     $id_pengajuan = $_POST['id_pengajuan'];
     $tanggal = $_POST['tanggal'];
     $kegiatan = $_POST['kegiatan'];
@@ -58,9 +58,34 @@ if (isset($_POST['unggah_logbook'])) {
                 <label for="keterangan" class="form-label">Keterangan</label>
                 <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
             </div>
+
+            <!-- Jam Pelaksanaan -->
+            <div class="mb-3">
+                <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
+                <div class="d-flex gap-2">
+                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required>
+                    <span class="align-self-center">sampai</span>
+                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
+                </div>
+            </div>
+
+            <!-- Unggah Gambar -->
+            <div class="mb-3">
+                <label for="gambar_kegiatan" class="form-label">Unggah Gambar Kegiatan</label>
+                <input type="file" class="form-control" id="gambar_kegiatan" name="gambar_kegiatan" accept="image/*" required>
+            </div>
+
+            <!-- Tanda Tangan -->
+            <div class="mb-3">
+                <label for="signature-pad" class="form-label">Tanda Tangan</label>
+                <canvas id="signature-pad" width="300" height="150" style="border: 1px solid #000; display: block; margin-bottom: 10px;"></canvas>
+                <button type="button" class="btn btn-danger btn-sm" id="clear-signature">Hapus Tanda Tangan</button>
+                <input type="hidden" name="signature" id="signature-data">
+            </div>
+
     
             <!-- Tombol Submit -->
-            <button type="submit" name="unggah_logbook" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i>Simpan</button>
+            <button type="submit" name="input_logbook" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i>Simpan</button>
         </form>
     </div>
 </div>
@@ -138,4 +163,40 @@ $(document).ready(function() {
     });
 });
 
+</script>
+
+<script>
+    // Inisialisasi canvas tanda tangan
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mouseup', () => {
+        drawing = false;
+        ctx.beginPath();
+        saveSignature();
+    });
+    canvas.addEventListener('mousemove', draw);
+
+    function draw(e) {
+        if (!drawing) return;
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'black';
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+    }
+
+    document.getElementById('clear-signature').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('signature-data').value = '';
+    });
+
+    function saveSignature() {
+        const signatureData = canvas.toDataURL('image/png');
+        document.getElementById('signature-data').value = signatureData;
+    }
 </script>

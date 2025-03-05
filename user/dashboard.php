@@ -36,6 +36,8 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 ?>
 
 <div class="main-content p-4">
+    <?php echo "$id_user" ?>
+    <?php echo "$email" ?>
     <div class="container-fluid">
         <!-- Heading Dashboard -->
         <h1 class="mb-4">Dashboard</h1>
