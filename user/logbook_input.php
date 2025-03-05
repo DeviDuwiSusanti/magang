@@ -1,7 +1,6 @@
 <?php include "../layout/sidebarUser.php"; 
 include "functions.php";
 
-$id_pengajuan = $_GET['id_pengajuan'];
 $sqlTanggal = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
 $queryTanggal = mysqli_query($conn, $sqlTanggal);
 $rowTanggal = mysqli_fetch_assoc($queryTanggal);
@@ -23,10 +22,10 @@ if (isset($_POST['unggah_logbook'])) {
 
     // Cek apakah data berhasil diinput
     if ($query) {
-        showAlert('Berhasil!', 'Logbook Berhasil Diunggah', 'success', "logbook_daftar.php?id_pengajuan={$id_pengajuan}");
+        showAlert('Berhasil!', 'Logbook Berhasil Diinput', 'success', "logbook_daftar.php");
         exit();
     } else {
-        showAlert('Gagal!', 'Logbook gagal diunggah. Silakan coba lagi.', 'error');
+        showAlert('Gagal!', 'Logbook gagal diinput. Silakan coba lagi.', 'error');
     }    
 }
 
@@ -39,7 +38,7 @@ if (isset($_POST['unggah_logbook'])) {
         <h1 class="mb-4">Unggah Logbook</h1>
         <ol class="breadcrumb mb-4 d-flex justify-content-between align-items-center">
             <li class="breadcrumb-item active">Unggah Logbook Harian</li>
-            <a href="logbook_daftar.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-secondary">Lihat Daftar Logbook</a>
+            <a href="logbook_daftar.php" class="btn btn-secondary">Lihat Daftar Logbook</a>
         </ol>
         <div class="dropdown-divider"></div><br><br>
         

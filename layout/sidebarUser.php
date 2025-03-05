@@ -1,4 +1,5 @@
 <?php
+session_set_cookie_params(86400); // 86400 detik = 24 jam
 session_start();
 include "../koneksi.php";
 
@@ -6,12 +7,24 @@ if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
     $sql = "SELECT * FROM tb_user 
             JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user 
+            JOIN tb_pengajuan ON tb_profile_user.id_pengajuan = tb_pengajuan.id_pengajuan
             WHERE tb_user.email = '$email'";
     $hasil = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($hasil);
-    $id_user = $row['id_user']; // Ambil id_user dari sesi login
-    $level = $row['level'];
-} else {
+    $_SESSION['id_user'] = $row['id_user']; // Ambil id_user dari sesi login
+    $_SESSION['level'] = $row['level'];
+
+    $id_user = $_SESSION['id_user'];
+    $level = $_SESSION['level'];
+
+    $id_pengajuan = null; // Inisialisasi default
+
+    if ($row && !empty($row['id_pengajuan'])) {
+        $_SESSION['id_pengajuan'] = $row['id_pengajuan'];
+        $id_pengajuan = $_SESSION['id_pengajuan'];
+    }
+
+} else{
     echo "<script> window.location.href='../login.php' </script>";
     exit;
 }
@@ -63,23 +76,43 @@ if (isset($_SESSION['email'])) {
                     }
                 ?>
                 
+                <?php 
+                    if ($level == 3){?>
+                        <li class="sidebar-item">
+                            <a href="status_pengajuan.php" class="sidebar-link">
+                                <i class="bi bi-file-earmark-text"></i>
+                                <span>Pengajuan</span>
+                            </a>
+                        </li>
+                <?php
+                    }
+                ?>
                 <li class="sidebar-item">
                     <a href="kegiatan_aktif.php" class="sidebar-link">
                         <i class="bi bi-clipboard-check"></i>
                         <span>Kegiatan Aktif</span>
                     </a>
                 </li>
-                <?php 
-                    if ($level == 3){?>
-                        <li class="sidebar-item">
-                            <a href="status_pengajuan.php" class="sidebar-link">
-                                <i class="bi bi-file-earmark-text"></i>
-                                <span>Status Pengajuan</span>
-                            </a>
-                        </li>
+
                 <?php
-                    }
+                if ($row['status_pengajuan'] == '4'){?>
+                    <li class="sidebar-item">
+                        <a href="logbook_daftar.php" class="sidebar-link">
+                            <i class="bi bi-journal-check"></i>
+                            <span>Logbook Harian</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a href="laprak_daftar.php" class="sidebar-link">
+                            <i class="bi bi-file-earmark-bar-graph"></i>
+                            <span>Laporan Akhir</span>
+                        </a>
+                    </li>
+                <?php
+                }
                 ?>
+
                 <li class="sidebar-item">
                     <a href="histori.php" class="sidebar-link">
                         <i class="bi bi-clock-history"></i>

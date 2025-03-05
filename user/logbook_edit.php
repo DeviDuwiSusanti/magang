@@ -3,7 +3,6 @@ include "../layout/sidebarUser.php";
 include "functions.php";
 
 $id_logbook = $_GET['id_logbook'];
-$id_pengajuan = $_GET['id_pengajuan'];
 
 $sql = "SELECT * FROM tb_logbook WHERE id_logbook = '$id_logbook'";
 $query = mysqli_query($conn, $sql);
