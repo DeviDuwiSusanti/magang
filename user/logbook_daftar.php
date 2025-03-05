@@ -62,6 +62,8 @@ if (isset($_GET['id_logbook'])) {
                             <th>Tanggal</th>
                             <th>Kegiatan</th>
                             <th>Keterangan</th>
+                            <th>Waktu</th>
+                            <th>Foto Kegiatan</th>
                             <?php if ($status_pengajuan!= '5'){?> 
                                 <th>Aksi</th> 
                             <?php } ?>
@@ -75,6 +77,11 @@ if (isset($_GET['id_logbook'])) {
                                 <td><?= $row['tanggal_logbook'] ?></td>
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
+                                <td>
+                                    <?= date('H.i', strtotime($row['jam_mulai'])) ?> - <?= date('H.i', strtotime($row['jam_selesai'])) ?>
+                                </td>
+
+                                <td><img src="<?= $row['foto_kegiatan'] ?>" alt=""></td>
                                 <?php
                                 if ($status_pengajuan!= '5'){?>
                                 <td>

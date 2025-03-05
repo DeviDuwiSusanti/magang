@@ -110,7 +110,15 @@ if (!$row) {
                 display: none;
             }
         }
+
+        img {
+            max-width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
+
 </head>
 
 <body>
@@ -155,6 +163,9 @@ if (!$row) {
                 <th>Tanggal</th>
                 <th>Kegiatan</th>
                 <th>Keterangan</th>
+                <th>Waktu</th>
+                <th>Foto Kegiatan</th>
+                <th>TTD</th>
             </tr>
         </thead>
         <tbody>
@@ -172,6 +183,9 @@ if (!$row) {
                     <td style="text-align: left;"><?= formatTanggalLengkapIndonesia($row2['tanggal_logbook']) ?></td>
                     <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
                     <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
+                    <td style="text-align: left;"><?= date('H.i', strtotime($row['jam_mulai'])) ?> - <?= date('H.i', strtotime($row['jam_selesai'])) ?> WIB</td>
+                    <td style="text-align: left;"><img src="<?= $row2['foto_kegiatan'] ?>" alt="Gambar kegiatan"></td>
+                    <td style="text-align: left;"><img src="<?= $row2['tanda_tangan'] ?>" alt="TTD"></td>
                 </tr>
             <?php
                 $no++;
@@ -181,7 +195,7 @@ if (!$row) {
         <tfoot>
             <tr>
                 <th>Total Logbook</th>
-                <td colspan="3"><?= $total_logbook ?> Logbook</td>
+                <td colspan="6"><?= $total_logbook ?> Logbook</td>
             </tr>
         </tfoot>
     </table>

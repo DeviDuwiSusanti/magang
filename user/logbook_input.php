@@ -7,28 +7,30 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
 
 
 if (isset($_POST['input_logbook'])) {
-    $id_pengajuan = $_POST['id_pengajuan'];
     $tanggal = $_POST['tanggal'];
     $kegiatan = $_POST['kegiatan'];
     $keterangan = $_POST['keterangan'];
+    $jam_mulai = $_POST['jam_mulai'];
+    $jam_selesai = $_POST['jam_selesai'];
+    $ttd = $_POST['ttd'];
+    
+    $uploadedFoto = uploadFoto($_FILES['gambar_kegiatan'], '../assets/img/logbook/');
+    $target_file = $uploadedFoto['path'];
 
     $id_logbook = generateLogbookId($conn, $id_pengajuan);
 
-    // Query INSERT dengan id_logbook yang sudah dibuat
-    $sql = "INSERT INTO tb_logbook (`id_logbook`, `tanggal_logbook`, `kegiatan_logbook`, `keterangan_logbook`, `id_pengajuan`, `id_user`, `create_by`) 
-            VALUES ('$id_logbook', '$tanggal', '$kegiatan', '$keterangan', '$id_pengajuan', '$id_user', '$id_user')";
-    
-    $query = mysqli_query($conn, $sql);
+        // Query INSERT dengan id_logbook yang sudah dibuat
+        $sql = "INSERT INTO tb_logbook (`id_logbook`, `tanggal_logbook`, `kegiatan_logbook`, `keterangan_logbook`, `jam_mulai`, `jam_selesai`, `foto_kegiatan`, `tanda_tangan`, `id_pengajuan`, `id_user`, `create_by`) 
+                VALUES ('$id_logbook', '$tanggal', '$kegiatan', '$keterangan', '$jam_mulai', '$jam_selesai', '$target_file', '$ttd', '$id_pengajuan', '$id_user', '$id_user')";
 
-    // Cek apakah data berhasil diinput
-    if ($query) {
-        showAlert('Berhasil!', 'Logbook Berhasil Diinput', 'success', "logbook_daftar.php");
-        exit();
-    } else {
-        showAlert('Gagal!', 'Logbook gagal diinput. Silakan coba lagi.', 'error');
-    }    
+        // Cek apakah data berhasil diinput
+        if (mysqli_query($conn, $sql)) {
+            showAlert('Berhasil!', 'Logbook Berhasil Diinput', 'success', "logbook_daftar.php");
+            exit();
+        } else {
+            showAlert('Gagal!', 'Logbook gagal diinput. Silakan coba lagi.', 'error');
+        }    
 }
-
 
 ?>
 
@@ -42,8 +44,7 @@ if (isset($_POST['input_logbook'])) {
         </ol>
         <div class="dropdown-divider"></div><br><br>
         
-         <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="id_pengajuan" value="<?= $id_pengajuan ?>">
+        <form action="" class="form-profile" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="tanggal" class="form-label">Tanggal</label>
                 <input type="date" class="form-control" id="tanggal" name="tanggal" min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
@@ -63,16 +64,16 @@ if (isset($_POST['input_logbook'])) {
             <div class="mb-3">
                 <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
                 <div class="d-flex gap-2">
-                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required>
+                    <input type="time" class="form-control" id="jam_mulai" name="jam_mulai">
                     <span class="align-self-center">sampai</span>
-                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
+                    <input type="time" class="form-control" id="jam_selesai" name="jam_selesai">
                 </div>
             </div>
 
             <!-- Unggah Gambar -->
             <div class="mb-3">
                 <label for="gambar_kegiatan" class="form-label">Unggah Gambar Kegiatan</label>
-                <input type="file" class="form-control" id="gambar_kegiatan" name="gambar_kegiatan" accept="image/*" required>
+                <input type="file" class="form-control" id="gambar_kegiatan" name="gambar_kegiatan" accept="image/*">
             </div>
 
             <!-- Tanda Tangan -->
@@ -80,7 +81,7 @@ if (isset($_POST['input_logbook'])) {
                 <label for="signature-pad" class="form-label">Tanda Tangan</label>
                 <canvas id="signature-pad" width="300" height="150" style="border: 1px solid #000; display: block; margin-bottom: 10px;"></canvas>
                 <button type="button" class="btn btn-danger btn-sm" id="clear-signature">Hapus Tanda Tangan</button>
-                <input type="hidden" name="signature" id="signature-data">
+                <input type="hidden" name="ttd" id="signature-data">
             </div>
 
     
@@ -102,6 +103,10 @@ $(document).ready(function() {
         let tanggal = $('#tanggal').val();
         let kegiatan = $('#kegiatan').val().trim();
         let keterangan = $('#keterangan').val().trim();
+        let jam_mulai = $('#jam_mulai').val();
+        let jam_selesai = $('#jam_selesai').val();
+        let gambar = $('#gambar_kegiatan')[0].files[0];
+        let ttd = $('#signature-data').val(); // Ambil tanda tangan dari hidden input
         let id_user = <?= json_encode($id_user); ?>;
         let id_pengajuan = <?= json_encode($id_pengajuan); ?>;
         let isValid = true;
@@ -127,6 +132,38 @@ $(document).ready(function() {
             isValid = false;
         }
 
+        // Validasi Waktu (Jam Mulai dan Jam Selesai)
+        if (jam_mulai === '') {
+            $('#jam_mulai').after('<small class="text-danger">Jam mulai harus diisi</small>');
+            isValid = false;
+        }
+
+        if (jam_selesai === '') {
+            $('#jam_selesai').after('<small class="text-danger">Jam selesai harus diisi</small>');
+            isValid = false;
+        }
+
+        // Validasi Jam Mulai < Jam Selesai
+        if (jam_mulai && jam_selesai && jam_mulai >= jam_selesai) {
+            $('#jam_selesai').after('<small class="text-danger">Jam selesai harus lebih dari jam mulai</small>');
+            isValid = false;
+        }
+
+        // Validasi Gambar (harus diunggah)
+        if (!gambar) {
+            $('#gambar_kegiatan').after('<small class="text-danger">Gambar kegiatan harus diunggah</small>');
+            isValid = false;
+        } else if (gambar.size > 1048576) { // 1 MB = 1048576 bytes
+            $('#gambar_kegiatan').after('<small class="text-danger">Ukuran gambar tidak boleh lebih dari 1 MB</small>');
+            isValid = false;
+        }
+
+        // Validasi Tanda Tangan
+        if (ttd === '') {
+            $('#signature-pad').after('<small class="text-danger">Tanda tangan wajib diisi</small>');
+            isValid = false;
+        }
+
         // Jika ada error, hentikan proses
         if (!isValid) {
             return;
@@ -149,7 +186,7 @@ $(document).ready(function() {
                     // Submit form jika semua validasi lolos
                     $('<input>').attr({
                         type: 'hidden',
-                        name: 'unggah_logbook',
+                        name: 'input_logbook',
                         value: '1'
                     }).appendTo('.form-profile');
                     
