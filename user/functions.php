@@ -180,3 +180,11 @@ function showAlert($title, $text, $icon, $redirect = null) {
         });
     </script>";
 }
+
+// Fungsi untuk format tanggal dalam bahasa Indonesia
+function formatTanggalIndonesia($tanggal) {
+    $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+    $date = strtotime($tanggal);
+    return $formatter->format($date);
+}
+?>

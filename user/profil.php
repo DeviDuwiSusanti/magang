@@ -81,7 +81,7 @@ $row2 = mysqli_fetch_assoc($query2);
                         </table>
 
                         <div class="d-grid">
-                            <a href="profil_edit.php?id_user=<?= $id_user ?>" class="btn btn-primary">
+                            <a href="profil_edit.php" class="btn btn-primary">
                                 <i class="bi bi-pencil"></i> Edit Profile
                             </a>
                         </div>

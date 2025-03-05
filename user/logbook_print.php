@@ -1,11 +1,11 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
+session_start();
 include '../koneksi.php';
 include 'functions.php';
 
-
 $id_pengajuan = $_GET['id_pengajuan'];
-$id_user = $_GET['id_user'];
+$id_user = $_SESSION['id_user'];
 
 $sql = "SELECT * FROM tb_logbook 
 JOIN tb_pengajuan ON tb_logbook.id_pengajuan = tb_pengajuan.id_pengajuan 
@@ -17,10 +17,11 @@ WHERE tb_logbook.id_pengajuan = '$id_pengajuan' AND tb_logbook.id_user = '$id_us
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
 if (!$row){
-    showAlert('Peringatan!', 'Kamu Belum Pernah Menggunggah Logbook. Silakan Unggah Terlebih Dahulu.', 'error', "logbook_daftar.php?id_pengajuan={$id_pengajuan}"); 
+    showAlert('Peringatan!', 'Kamu Belum Pernah Menggunggah Logbook. Silakan Unggah Terlebih Dahulu.', 'error', "logbook_daftar.php"); 
     exit();
 }
 
+setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian'); // Set bahasa ke Indonesia
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -117,29 +118,30 @@ if (!$row){
     <div class="filter-info">
         <table>
             <tr>
-                <td><strong>NAMA</strong></td>
+                <td><strong>Nama</strong></td>
                 <td>:</td>
                 <td><?= $row['nama_user'] ?></td>
             </tr>
             <tr>
-                <td><strong>ASAL STUDI</strong></td>
+                <td><strong>Asal Studi</strong></td>
                 <td>:</td>
                 <td><?= $row['nama_pendidikan'] ?></td>
             </tr>
             <tr>
-                <td><strong>INSTANSI MAGANG</strong></td>
+                <td><strong>Instansi Magang</strong></td>
                 <td>:</td>
                 <td><?= $row['nama_panjang'] ?> Sidoarjo</td>
             </tr>
             <tr>
-                <td><strong>BIDANG</strong></td>
+                <td><strong>Bidang</strong></td>
                 <td>:</td>
                 <td><?= $row['nama_bidang'] ?></td>
             </tr>
             <tr>
-                <td><strong>DURASI</strong></td>
+                <td><strong>Waktu Pelaksanaan</strong></td>
                 <td>:</td>
-                <td><?= $row['tanggal_mulai'] ?> Sampai <?= $row['tanggal_selesai'] ?></td>
+                <td>  <?= formatTanggalIndonesia($row['tanggal_mulai']) ?> Sampai 
+                <?= formatTanggalIndonesia($row['tanggal_selesai']) ?></td>
             </tr>
         </table>
     </div>
