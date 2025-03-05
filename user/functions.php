@@ -193,6 +193,18 @@ function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
     return ($bulan > 0 ? "$bulan Bulan " : "") . ($hari > 0 ? "$hari Hari" : "");
 }
 
+// Fungsi untuk format tanggal Lengkap Indonesia
+function formatTanggalLengkapIndonesia($tanggal) {
+    $bulan = [
+        '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+        '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+        '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+    ];
+
+    $tanggal_obj = DateTime::createFromFormat('Y-m-d', $tanggal);
+    return $tanggal_obj->format('j') . ' ' . $bulan[$tanggal_obj->format('m')] . ' ' . $tanggal_obj->format('Y');
+}
+
 // Fungsi untuk format tanggal ke format Indonesia tanpa tahun
 function formatTanggalIndonesia($tanggal) {
     $bulan = [
@@ -216,4 +228,6 @@ function formatPeriode($tanggal_mulai, $tanggal_selesai) {
     }
     return "Periode Tidak Diketahui";
 }
+
+
 ?>

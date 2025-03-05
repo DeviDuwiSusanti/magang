@@ -5,10 +5,8 @@ include "../koneksi.php";
 
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
-    $sql = "SELECT * FROM tb_user 
-            JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user 
-            JOIN tb_pengajuan ON tb_profile_user.id_pengajuan = tb_pengajuan.id_pengajuan
-            WHERE tb_user.email = '$email'";
+    $sql = "SELECT * FROM tb_pengajuan p, tb_user u, tb_profile_user pu WHERE pu.id_pengajuan = p.id_pengajuan AND u.email = '$email'AND u.id_user = pu.id_user ";
+           
     $hasil = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($hasil);
     $_SESSION['id_user'] = $row['id_user']; // Ambil id_user dari sesi login

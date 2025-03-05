@@ -4,9 +4,13 @@ session_start();
 include '../koneksi.php';
 include 'functions.php';
 
+// Set timezone ke Asia/Jakarta
+date_default_timezone_set('Asia/Jakarta');
+
 $id_pengajuan = $_GET['id_pengajuan'];
 $id_user = $_SESSION['id_user'];
 
+// Query untuk mengambil data logbook dan informasi terkait
 $sql = "SELECT * FROM tb_logbook 
 JOIN tb_pengajuan ON tb_logbook.id_pengajuan = tb_pengajuan.id_pengajuan 
 JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
@@ -16,12 +20,11 @@ JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidika
 WHERE tb_logbook.id_pengajuan = '$id_pengajuan' AND tb_logbook.id_user = '$id_user'";
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
-if (!$row){
-    showAlert('Peringatan!', 'Kamu Belum Pernah Menggunggah Logbook. Silakan Unggah Terlebih Dahulu.', 'error', "logbook_daftar.php"); 
+if (!$row) {
+    showAlert('Peringatan!', 'Kamu Belum Pernah Menggunggah Logbook. Silakan Unggah Terlebih Dahulu.', 'error', "logbook_daftar.php");
     exit();
 }
 
-setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian'); // Set bahasa ke Indonesia
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -112,14 +115,14 @@ setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian'); // Set bahasa ke Indonesia
 
 <body>
     <div class="header">
-        <h2>Daftar Logbook Harian</h2>
+        <h2>LOGBOOK</h2>
     </div>
 
     <div class="filter-info">
-        <table>
+        <table style="width: 100%; text-align: left;">
             <tr>
-                <td><strong>Nama</strong></td>
-                <td>:</td>
+                <td style="width: 15%;"><strong>Nama</strong></td>
+                <td style="width: 2%;">:</td>
                 <td><?= $row['nama_user'] ?></td>
             </tr>
             <tr>
@@ -140,42 +143,41 @@ setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian'); // Set bahasa ke Indonesia
             <tr>
                 <td><strong>Waktu Pelaksanaan</strong></td>
                 <td>:</td>
-                <td>  <?= formatTanggalIndonesia($row['tanggal_mulai']) ?> Sampai 
-                <?= formatTanggalIndonesia($row['tanggal_selesai']) ?></td>
+                <td><?= formatPeriode($row['tanggal_mulai'], $row['tanggal_selesai']) ?></td>
             </tr>
         </table>
     </div>
 
     <table class="table">
-    <thead>
-        <tr>
-            <th style="width: 2%;">No</th>
-            <th>Tanggal</th>
-            <th>Kegiatan</th>
-            <th>Keterangan</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $sql2 = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
-        $query2 = mysqli_query($conn, $sql2);
-        $no = 1;
-        $total_logbook = 0; // Untuk menghitung total logbook
+        <thead>
+            <tr>
+                <th style="width: 2%;">No</th>
+                <th>Tanggal</th>
+                <th>Kegiatan</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $sql2 = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+            $query2 = mysqli_query($conn, $sql2);
+            $no = 1;
+            $total_logbook = 0;
 
-        while ($row2 = mysqli_fetch_assoc($query2)) { 
-            $total_logbook++;
-        ?>
-        <tr>
-            <td style="text-align: center;"><?= $no ?></td>
-            <td style="text-align: left;"><?= $row2['tanggal_logbook'] ?></td>
-            <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
-            <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
-        </tr>
-        <?php
-        $no++;
-        }
-        ?>
-    </tbody>
+            while ($row2 = mysqli_fetch_assoc($query2)) {
+                $total_logbook++;
+            ?>
+                <tr>
+                    <td style="text-align: center;"><?= $no ?></td>
+                    <td style="text-align: left;"><?= formatTanggalLengkapIndonesia($row2['tanggal_logbook']) ?></td>
+                    <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
+                    <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
+                </tr>
+            <?php
+                $no++;
+            }
+            ?>
+        </tbody>
         <tfoot>
             <tr>
                 <th>Total Logbook</th>
@@ -184,24 +186,15 @@ setlocale(LC_TIME, 'id_ID.utf8', 'Indonesian'); // Set bahasa ke Indonesia
         </tfoot>
     </table>
 
-
     <div class="no-print">
         <button onclick="window.print()">Cetak Logbook</button>
     </div>
 
-    <!-- Tambahan: Tempat Tanda Tangan -->
     <div style="width: 100%; display: flex; justify-content: flex-end; margin-top: 50px;">
         <div style="text-align: center; width: 300px;">
-            <?php
-            // Buat formatter untuk tanggal dalam bahasa Indonesia
-            $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
-            $formatter->setPattern('d MMMM yyyy');
-
-            echo '<p>Sidoarjo, ' . $formatter->format(new DateTime()) . '</p>';
-            ?>
-
+            <p>Sidoarjo, <?= formatTanggalLengkapIndonesia(date('Y-m-d')) ?></p>
             <p><strong>Pembimbing Magang</strong></p>
-            <br><br><br><br> <!-- Jeda untuk tanda tangan -->
+            <br><br><br><br>
             <p><strong>(...................................)</strong></p>
         </div>
     </div>
