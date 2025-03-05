@@ -22,7 +22,7 @@ $sql = "SELECT
         WHERE p.id_instansi = '$id_instansi'
         AND p.status_active = '1'
         AND p.status_pengajuan = '1'
-        ORDER BY p.id_pengajuan DESC
+        ORDER BY p.id_pengajuan ASC
 ";
 
 $result = mysqli_query($conn, $sql);
