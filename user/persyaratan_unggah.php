@@ -1,6 +1,6 @@
 <?php 
 include "../layout/sidebarUser.php"; 
-include "functions.php";  // Pastikan untuk meng-include file functions.php
+include "functions.php"; 
 
 // Inisialisasi variabel agar tidak undefined
 if (isset($_GET['id_pengajuan'])){
@@ -10,44 +10,39 @@ if (isset($_GET['id_pengajuan'])){
     exit();
 }
 
-if (isset($_POST['submit_persyaratan'])) {
-    if (!isset($_FILES['persyaratan']) || empty($_FILES['persyaratan']['name'][0])) {
-        echo "<script>alert('Pilih minimal satu file untuk diunggah!');</script>";
-    } else {
-        foreach ($_FILES['persyaratan']['name'] as $key => $name) {
-            if ($_FILES['persyaratan']['error'][$key] == 0) {
-                $file_extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-                if ($file_extension !== "pdf") {
-                    echo "<script>alert('Hanya file PDF yang diperbolehkan!');</script>";
-                    exit();
-                }
-
-                $uploaded_file = [
-                    'name' => $_FILES['persyaratan']['name'][$key],
-                    'tmp_name' => $_FILES['persyaratan']['tmp_name'][$key]
-                ];
-                
-                $file_data = uploadFile($uploaded_file);
-                $file_name = $file_data['name'];
-                $file_path = $file_data['path'];
-                
-                // Generate ID dokumen
-                $id_dokumen = generateIdDokumen($conn, $id_user); 
-                
-                // Simpan informasi dokumen ke database
-                $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
-                        VALUES ('$id_dokumen', '$file_name', '2', '$file_path', '$id_pengajuan', '$id_user', '$id_user', '1', NOW(), NOW())";
-                
-                $query = mysqli_query($conn, $sql);
-                if (!$query) {
-                    die("<script>alert('Gagal menyimpan data ke database: " . mysqli_error($conn) . "'); window.history.back();</script>");
-                }
-            }
-        }
-        showAlert('Berhasil!', 'Persyaratan Berhasil Diunggah', 'success', "persyaratan_daftar.php?id_pengajuan=$id_pengajuan&id_user=$id_user");
+// Proses upload file jika ada permintaan dari Dropzone
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
+    include "../koneksi.php"; // Pastikan koneksi database
+    
+    $id_pengajuan = $_POST['id_pengajuan'];
+    $id_user = $_POST['id_user'];
+    
+    $file_name = $_FILES['file']['name'];
+    $file_tmp = $_FILES['file']['tmp_name'];
+    $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+    
+    if ($file_extension !== "pdf") {
+        echo json_encode(["status" => "error", "message" => "Hanya file PDF yang diperbolehkan!"]);
         exit();
     }
+    
+    $upload_dir = "uploads/";
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+    
+    $file_path = $upload_dir . uniqid() . "_" . basename($file_name);
+    
+    if (move_uploaded_file($file_tmp, $file_path)) {
+        $id_dokumen = generateIdDokumen($conn, $id_user);
+        $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
+                VALUES ('$id_dokumen', '$file_name', '2', '$file_path', '$id_pengajuan', '$id_user', '$id_user', '1', NOW(), NOW())";
+        mysqli_query($conn, $sql);
+        echo json_encode(["status" => "success", "message" => "File berhasil diunggah!"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Gagal mengunggah file!"]);
+    }
+    exit();
 }
+
 ?>
 
 <div class="main-content p-4">
@@ -55,69 +50,55 @@ if (isset($_POST['submit_persyaratan'])) {
         <h1 class="mb-4">Unggah Persyaratan</h1>
         <ol class="breadcrumb mb-4 d-flex justify-content-between align-items-center">
             <li class="breadcrumb-item active">Unggah Persyaratan yang ditentukan Instansi</li>
-            <?php if (!is_null($id_pengajuan) && !is_null($id_user)) : ?>
-                <a href="persyaratan_daftar.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>" class="btn btn-secondary">
-                    Lihat Daftar Dokumen Persyaratan
-                </a>
-            <?php endif; ?>
+            <a href="persyaratan_daftar.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>" class="btn btn-secondary">
+                Lihat Daftar Dokumen Persyaratan
+            </a>
         </ol>
         <div class="dropdown-divider"></div><br><br>
 
-        <form action="" class="form-profile" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
-            <div id="file-container" class="mb-3">
-                <div class="file-input-group d-flex align-items-center mb-2">
-                <input type="file" class="form-control me-2" name="persyaratan[]" onchange="validateFile(this)">
-                <input type="hidden" name="jenis_dokumen[]" value="persyaratan">
-                    <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary mb-3" onclick="addFileInput()">Tambah</button><br>
-            <button type="submit" class="btn btn-primary" name="submit_persyaratan">Unggah Persyaratan</button>
+        <form action="" class="dropzone" id="myDropzone" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="id_pengajuan" value="<?= $id_pengajuan ?>">
+            <input type="hidden" name="id_user" value="<?= $id_user ?>">
         </form>
+        <br>
+        <button type="button" class="btn btn-primary" id="submit-all">Unggah Persyaratan</button>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
 <script>
-    function addFileInput() {
-        let container = document.getElementById("file-container");
-        let div = document.createElement("div");
-        div.className = "file-input-group d-flex align-items-center mb-2";
-        div.innerHTML = `
-            <input type="file" class="form-control me-2" name="persyaratan[]" onchange="validateFile(this)">
-            <input type="hidden" name="jenis_dokumen[]" value="persyaratan">
-            <button type="button" class="btn btn-danger btn-sm" onclick="removeFileInput(this)">−</button>
-        `;
-        container.appendChild(div);
-    }
-
-    function removeFileInput(button) {
-        let container = document.getElementById("file-container");
-        if (container.children.length > 1) {
-            button.parentElement.remove();
-        }
-    }
-
-    function validateFile(input) {
-        let file = input.files[0];
-        if (file) {
-            let allowedExtensions = /(\.pdf)$/i;
-            if (!allowedExtensions.exec(file.name)) {
-                alert("Hanya file PDF yang diperbolehkan!");
-                input.value = ""; // Mengosongkan input file
+   Dropzone.autoDiscover = false;
+let myDropzone = new Dropzone("#myDropzone", {
+    url: window.location.href, // Kirim ke halaman yang sama
+    acceptedFiles: ".pdf",
+    maxFilesize: 5, // Maksimal ukuran file dalam MB
+    paramName: "file",
+    autoProcessQueue: false,
+    parallelUploads: 10,
+    addRemoveLinks: true,
+    clickable: true, 
+    init: function() {
+        let dz = this;
+        document.getElementById("submit-all").addEventListener("click", function() {
+            if (dz.getQueuedFiles().length === 0) {
+                alert("Tidak ada file yang diunggah!");
+                return;
             }
-        }
-    }
+            dz.processQueue();
+        });
 
-    function validateForm() {
-        let files = document.querySelectorAll('input[type="file"]');
-        for (let file of files) {
-            if (file.files.length === 0) {
-                alert("Pilih minimal satu file untuk diunggah!");
-                return false;
-            }
-        }
-        return true;
+        dz.on("queuecomplete", function() {
+            alert("Semua file berhasil diunggah!");
+            window.location.href = "persyaratan_daftar.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>";
+        });
+
+        dz.on("error", function(file, message) {
+            alert("Terjadi kesalahan saat mengunggah: " + message);
+        });
     }
+});
+
 </script>
 
 <?php include "../layout/footerDashboard.php"; ?>
