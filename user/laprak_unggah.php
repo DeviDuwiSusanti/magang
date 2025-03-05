@@ -58,6 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
                 <label for="laporan_akhir" class="form-label">Unggah Laporan Akhir (PDF)</label>
                 <input type="file" class="form-control" id="laporan_akhir" name="laporan_akhir">
                 <small class="text-muted">Pilih file laporan akhir (PDF)</small>
+                <small class="text-danger font-weight-bold">
+                Gunakan format nama file: <strong>Nama_Bidang_Instansi_LaporanAkhir.pdf</strong>
+                </small>
             </div>
             <button type="submit" name="submit_laporan" class="btn btn-primary">Unggah Laporan</button>
         </form>

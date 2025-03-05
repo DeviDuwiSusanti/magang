@@ -16,10 +16,10 @@ $sql = "SELECT *
 $query = mysqli_query($conn, $sql); 
 
 // Cek apakah ada pengajuan dengan status 1, 2, atau 4
-$disable_tambah = false;
+$sembunyikan_tombol = false;
 while ($row_check = mysqli_fetch_assoc($query)) {
     if (in_array($row_check['status_pengajuan'], [1, 2, 4])) {
-        $disable_tambah = true;
+        $sembunyikan_tombol = true;
         break;
     }
 }
@@ -37,12 +37,12 @@ $query = mysqli_query($conn, $sql);
         </ol>
         <div class="mb-4 dropdown-divider"></div>
 
-        <!-- Tombol Tambah Pengajuan -->
-        <div class="d-flex justify-content-end mb-4">
-            <a href="pengajuan.php" class="btn btn-primary <?= $disable_tambah ? 'disabled' : '' ?>">
-                Tambah Pengajuan
-            </a>
-        </div>
+        <!-- Tombol Tambah Pengajuan (Hanya muncul jika tidak ada status 1, 2, atau 4) -->
+        <?php if (!$sembunyikan_tombol): ?>
+            <div class="d-flex justify-content-end mb-4">
+                <a href="pengajuan.php" class="btn btn-primary">Tambah Pengajuan</a>
+            </div>
+        <?php endif; ?>
 
         <!-- Tabel -->
         <div class="bungkus">

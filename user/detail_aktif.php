@@ -13,6 +13,30 @@ $sql = "SELECT tb_pengajuan.*, tb_profile_user.*, tb_pendidikan.nama_pendidikan,
         WHERE tb_pengajuan.status_pengajuan = '4' AND tb_profile_user.id_user = '$id_user'";
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
+
+// Fungsi untuk format tanggal ke format Indonesia tanpa tahun
+function formatTanggalIndonesia($tanggal) {
+    $bulan = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    $dateObj = DateTime::createFromFormat('Y-m-d', $tanggal);
+    return $dateObj ? $dateObj->format('d') . ' ' . $bulan[(int)$dateObj->format('m') - 1] : "Format Tidak Valid";
+}
+
+// Fungsi untuk format periode (contoh: "1 Januari - 10 Desember 2024" atau "1 Desember 2023 - 10 Januari 2024")
+function formatPeriode($tanggal_mulai, $tanggal_selesai) {
+    $start_date = DateTime::createFromFormat('Y-m-d', $tanggal_mulai);
+    $end_date = DateTime::createFromFormat('Y-m-d', $tanggal_selesai);
+
+    if ($start_date && $end_date) {
+        if ($start_date->format('Y') === $end_date->format('Y')) {
+            return formatTanggalIndonesia($tanggal_mulai) . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $start_date->format('Y');
+        } else {
+            return formatTanggalIndonesia($tanggal_mulai) . ' ' . $start_date->format('Y') . ' - ' . formatTanggalIndonesia($tanggal_selesai) . ' ' . $end_date->format('Y');
+        }
+    }
+    return "Periode Tidak Diketahui";
+}
 ?>
 
 
@@ -80,15 +104,9 @@ $row = mysqli_fetch_assoc($query);
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td><i class="bi bi-calendar-event"></i> <strong>Periode</strong></td>
+                                    <td><i class="bi bi-calendar-event"></i> <strong>Periode Magang</strong></td>
                                     <td>
-                                        <?php 
-                                            if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                                echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
-                                            } else {
-                                                echo "Periode Tidak Diketahui";
-                                            }
-                                        ?>
+                                        <?= formatPeriode($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
                                     </td>
                                 </tr>
                             </tbody>
@@ -99,7 +117,7 @@ $row = mysqli_fetch_assoc($query);
                     <div class="mb-3">
                         <?php if (!empty($row['id_pengajuan'])) { ?>
                             <a href="logbook_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary btn-sm me-2">
-                                <i class="bi bi-file-earmark-text me-1"></i> Unggah Logbook
+                                <i class="bi bi-file-earmark-text me-1"></i> Logbook
                             </a>
                             <a href="laprak_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-success btn-sm">
                                 <i class="bi bi-file-earmark-check me-1"></i> Unggah Laporan Akhir

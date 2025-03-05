@@ -20,6 +20,7 @@ $sql = "SELECT *
         LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
         LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
         WHERE tb_pengajuan.status_pengajuan = '4' AND tb_profile_user.id_user = '$id_user'";
+
 $query = mysqli_query($conn, $sql);
 $no = 1;
 ?>
@@ -42,7 +43,6 @@ $no = 1;
                         <th class="text-center">Perusahaan</th>
                         <th class="text-center">Bidang</th>
                         <th class="text-center">Durasi</th>
-                        <th class="text-center">Periode Magang</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -72,15 +72,6 @@ $no = 1;
                                     } else {
                                         echo "Durasi Tidak Diketahui";
                                     } 
-                                ?>
-                            </td>
-                            <td>
-                                <?php 
-                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
-                                    } else {
-                                        echo "Periode Tidak Diketahui";
-                                    }
                                 ?>
                             </td>
                             <td class="text-center">
