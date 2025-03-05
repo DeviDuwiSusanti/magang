@@ -56,11 +56,13 @@ if (isset($_GET['id_dokumen'])) {
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
             <!-- Tombol tambah laporan hanya aktif jika belum ada laporan yang diunggah -->
-            <a href="laprak_unggah.php?id_user=<?= $id_user ?>&id_pengajuan=<?= $id_pengajuan ?>" 
-               class="btn btn-primary <?= $laporan_terunggah ? 'disabled' : '' ?>">
-                <i class="bi bi-plus-circle me-1"></i>
-                Tambah Laporan Akhir
-            </a>
+            <?php if (!$laporan_terunggah): ?>
+                <a href="laprak_unggah.php?id_user=<?= $id_user ?>&id_pengajuan=<?= $id_pengajuan ?>" 
+                class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Tambah Laporan Akhir
+                </a>
+            <?php endif; ?>
         </div>
         <div class="table-responsive-sm">
             <table class="table table-striped table-bordered table-hover">

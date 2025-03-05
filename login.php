@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         if ($user['status_active'] == '1') {
             // Generate OTP
             $otp = rand(100000, 999999);
-            $otp_expired = date("Y-m-d H:i:s", strtotime("+7 hours +2 minutes"));
+            $otp_expired = date("Y-m-d H:i:s", strtotime("+2 minutes"));
 
             // Simpan OTP ke database
             $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email'";
