@@ -2,6 +2,8 @@
 include "../layout/sidebarUser.php"; 
 include "functions.php";  // Pastikan untuk meng-include file functions.php
 
+define('MAX_FILE_SIZE', 5 * 1024 * 1024); // Maksimum ukuran file 5MB
+
 if (!empty($_GET['id_user']) && !empty($_GET['id_pengajuan'])) {
     $id_user = $_GET['id_user'];
     $id_pengajuan = $_GET['id_pengajuan'];
@@ -12,13 +14,19 @@ if (!empty($_GET['id_user']) && !empty($_GET['id_pengajuan'])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     $fileType = pathinfo($_FILES['laporan_akhir']['name'], PATHINFO_EXTENSION);
-    
+    $fileSize = $_FILES['laporan_akhir']['size'];
+
     if ($fileType !== 'pdf') {
         echo "<script>alert('Hanya file PDF yang diperbolehkan!'); window.history.back();</script>";
         exit;
     }
 
-    if ($_FILES['laporan_akhir']['size'] > 0) { // Pastikan file dipilih
+    if ($fileSize > MAX_FILE_SIZE) {
+        echo "<script>alert('Ukuran file terlalu besar! Maksimum 5MB.'); window.history.back();</script>";
+        exit;
+    }
+
+    if ($fileSize > 0) { // Pastikan file dipilih
         $laporan_akhir = uploadFile($_FILES['laporan_akhir']); 
 
         if (!isset($laporan_akhir['error'])) {
@@ -55,9 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
 
         <form action="" class="form-profile" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
             <div class="mb-3">
-                <label for="laporan_akhir" class="form-label">Unggah Laporan Akhir (PDF)</label>
+                <label for="laporan_akhir" class="form-label">Unggah Laporan Akhir (PDF, Maks 5MB)</label>
                 <input type="file" class="form-control" id="laporan_akhir" name="laporan_akhir">
-                <small class="text-muted">Pilih file laporan akhir (PDF)</small>
                 <small class="text-danger font-weight-bold">
                 Gunakan format nama file: <strong>Nama_Bidang_Instansi_LaporanAkhir.pdf</strong>
                 </small>
@@ -70,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
 <script>
 function validateForm() {
     let fileInput = document.getElementById('laporan_akhir');
+    
     if (fileInput.files.length === 0) {
         alert('Silakan pilih file laporan sebelum mengunggah.');
         return false;
@@ -77,10 +85,18 @@ function validateForm() {
     
     let file = fileInput.files[0];
     let allowedExtensions = /\.pdf$/i;
+    let maxSize = 5 * 1024 * 1024; // 5MB
+
     if (!allowedExtensions.exec(file.name)) {
         alert("Hanya file PDF yang diperbolehkan!");
         return false;
     }
+
+    if (file.size > maxSize) {
+        alert("Ukuran file terlalu besar! Maksimum 5MB.");
+        return false;
+    }
+
     return true;
 }
 </script>

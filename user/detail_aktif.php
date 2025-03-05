@@ -76,20 +76,6 @@ $row = mysqli_fetch_assoc($query);
                             </tbody>
                         </table>
                     </div>
-
-                    <!-- Tombol untuk unggah logbook dan laporan akhir -->
-                    <div class="mb-3">
-                        <?php if (!empty($row['id_pengajuan'])) { ?>
-                            <a href="logbook_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-primary btn-sm me-2">
-                                <i class="bi bi-file-earmark-text me-1"></i> Logbook
-                            </a>
-                            <a href="laprak_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-success btn-sm">
-                                <i class="bi bi-file-earmark-check me-1"></i> Unggah Laporan Akhir
-                            </a>
-                        <?php } else { ?>
-                            <p class="text-danger">Data pengajuan tidak ditemukan.</p>
-                        <?php } ?>
-                    </div>
                 </div>
             </div>
         </div>

@@ -3,8 +3,9 @@ include "../layout/sidebarUser.php";
 include '../koneksi.php';
 include "functions.php"; 
 
-$id_pengajuan = $_GET['id_pengajuan'];
-$id_user = $_GET['id_user'];
+if (ISSET($_GET['id_pengajuan'])){
+    $id_pengajuan = $_GET['id_pengajuan'];
+};
 
 // Mengambil id_pengajuan dan status_pengajuan jika ada
 $sql_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
