@@ -36,6 +36,8 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 ?>
 
 <div class="main-content p-4">
+    <?php echo "$id_user" ?>
+    <?php echo "$email" ?>
     <div class="container-fluid">
         <!-- Heading Dashboard -->
         <h1 class="mb-4">Dashboard</h1>
@@ -60,20 +62,17 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
             }
             ?>
 
-            <?php
-            if (isset($row2['status_pengajuan']) && $row2['status_pengajuan'] == '4') { ?>
             <!-- Card 1 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="card-title">Isi Logbook</h5>
+                        <h5 class="card-title">Unggah Logbook</h5>
                         <h2 class="card-text text-primary"><?= $total_logbook ?></h2>
-                        <p class="text-muted">Logbook Terisi</p>
-                        <a href="logbook_daftar.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        <p class="text-muted">Logbook Terunggah</p>
+                        <a href="kegiatan_aktif.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
-            
             <!-- Card 2 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
@@ -81,7 +80,7 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
                         <h5 class="card-title">Laporan Akhir</h5>
                         <h2 class="card-text text-success"><?= $total_laprak ?></h2>
                         <p class="text-muted">Laporan Terunggah</p>
-                        <a href="laprak_daftar.php" class="btn btn-success mt-3 detail">View Details</a>
+                        <a href="kegiatan_aktif.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -96,9 +95,6 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
                     </div>
                 </div>
             </div>
-            <?php
-            }
-            ?>
             <!-- Card 4 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
@@ -110,7 +106,6 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
                     </div>
                 </div>
             </div>
-           
         </div>
     </div>
 </div>

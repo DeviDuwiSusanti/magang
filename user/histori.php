@@ -52,10 +52,10 @@ $no = 1;
                         <td><?= htmlspecialchars($data['nama_panjang']) ?></td>
                         <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
                         <td>
-                             <?= hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
+                             <?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?>
                         </td> 
                         <td>
-                            <?= formatPeriode($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
+                            <?= formatPeriode($data['tanggal_mulai'], $data['tanggal_selesai']) ?>
                         </td>                       
                         <td class="text-center">
                                 <a href="detail_histori.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
