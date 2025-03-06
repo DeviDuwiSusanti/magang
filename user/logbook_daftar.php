@@ -33,9 +33,9 @@ if (isset($_GET['id_logbook'])) {
 <!-- TABEL DAFTAR LOGBOOK -->
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar Logbook</h1>
+        <h1 class="mb-4">Logbook</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Daftar Logbook Harian Anda</li>
+            <li class="breadcrumb-item active">Logbook Harian Kamu</li>
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">

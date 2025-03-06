@@ -34,7 +34,7 @@ if (ISSET($_POST['update_logbook'])){
 
     $query2 = mysqli_query($conn, $sql2);
     if ($query2) {
-        showAlert('Berhasil!', 'Logbook Berhasil Diupdate', 'success', "logbook_daftar.php?id_pengajuan={$id_pengajuan}");
+        showAlert('Berhasil!', 'Logbook Berhasil Diupdate', 'success', "logbook_daftar.php");
         exit();
     } else {
         showAlert('Gagal!', 'Logbook gagal diupdate. Silakan coba lagi.', 'error');

@@ -5,8 +5,8 @@ include "../koneksi.php";
 
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
-    $sql = "SELECT * FROM tb_pengajuan p, tb_user u, tb_profile_user pu WHERE pu.id_pengajuan = p.id_pengajuan AND u.email = '$email'AND u.id_user = pu.id_user ";
-           
+    $sql = "SELECT * FROM tb_user u, tb_profile_user pu WHERE u.email = '$email' AND u.id_user = pu.id_user";
+
     $hasil = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($hasil);
     $_SESSION['id_user'] = $row['id_user']; // Ambil id_user dari sesi login
@@ -20,6 +20,9 @@ if (isset($_SESSION['email'])) {
     if ($row && !empty($row['id_pengajuan'])) {
         $_SESSION['id_pengajuan'] = $row['id_pengajuan'];
         $id_pengajuan = $_SESSION['id_pengajuan'];
+        $sql2 = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
+        $query2 = mysqli_query($conn, $sql2);
+        $row2 = mysqli_fetch_assoc($query2);
     }
 
 } else{
@@ -93,7 +96,7 @@ if (isset($_SESSION['email'])) {
                 </li>
 
                 <?php
-                if ($row['status_pengajuan'] == '4'){?>
+                if (isset($row2['status_pengajuan']) && $row2['status_pengajuan'] == '4') { ?>
                     <li class="sidebar-item">
                         <a href="logbook_daftar.php" class="sidebar-link">
                             <i class="bi bi-journal-check"></i>
