@@ -80,6 +80,20 @@ function uploadFile($file) {
     ];
 }
 
+function uploadFoto($file, $target_dir) {
+    $target_file = rtrim($target_dir, '/') . '/' . basename($file["name"]); // Pastikan path selalu benar
+    
+    // Pindahkan file ke folder tujuan
+    if (move_uploaded_file($file["tmp_name"], $target_file)) {
+        return [
+            'path' => $target_file,
+            'name' => basename($file["name"])
+        ];
+    }
+    return null; // Jika gagal upload
+}
+
+
 function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
     // Ambil file lama dari database
     $query = "SELECT file_path FROM tb_dokumen 

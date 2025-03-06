@@ -1,5 +1,5 @@
 <?php
-session_set_cookie_params(86400); // 86400 detik = 24 jam
+session_set_cookie_params(25200); // 25200 detik = 7 jam
 session_start();
 include "../koneksi.php";
 
