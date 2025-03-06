@@ -12,13 +12,15 @@ if ($level == '3'){
             WHERE tb_pengajuan.status_pengajuan = '5' AND tb_pengajuan.id_user = '$id_user'";
 } else if ($level == '4'){
     $sql = "SELECT * 
-            FROM tb_pengajuan 
-            LEFT JOIN tb_profile_user pu ON tb_pengajuan.id_user = pu.id_user 
-            LEFT JOIN tb_user u ON tb_pengajuan.id_user = u.id_user
-            LEFT JOIN tb_bidang b ON tb_pengajuan.id_bidang = b.id_bidang 
-            LEFT JOIN tb_instansi i ON tb_pengajuan.id_instansi = i.id_instansi 
-            WHERE tb_pengajuan.status_pengajuan = '5' AND pu.id_user = '$id_user'";
+    FROM tb_profile_user pu, tb_user u, tb_pengajuan p, tb_bidang b, tb_instansi i 
+    WHERE pu.id_user = '$id_user' 
+    AND u.id_user = '$id_user' 
+    AND pu.id_pengajuan = p.id_pengajuan 
+    AND p.id_bidang = b.id_bidang 
+    AND p.id_instansi = i.id_instansi 
+    AND p.status_pengajuan = '5'";
 }
+
 $query = mysqli_query($conn, $sql);
 $no = 1;
 ?>
@@ -36,7 +38,7 @@ $no = 1;
                 <thead>
                     <tr>
                         <th class="text-center">No</th>
-                        <th class="text-center">Instansi</th>
+                        <th class="text-center">Perusahaan</th>
                         <th class="text-center">Bidang</th>
                         <th class="text-center">Durasi</th>
                         <th class="text-center">Periode Magang</th>
@@ -56,10 +58,10 @@ $no = 1;
                             <?= formatPeriode($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
                         </td>                       
                         <td class="text-center">
-                            <a href="detail_histori.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
-                                <i class="bi bi-eye" style="font-size: 20px;"></i>
-                            </a>
-                        </td>
+                                <a href="detail_histori.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
+                                    <i class="bi bi-eye" style="font-size: 20px;"></i>
+                                </a>
+                            </td>
                     </tr>
                 <?php } ?>
                 <?php if (mysqli_num_rows($query) == 0): ?>

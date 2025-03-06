@@ -75,7 +75,7 @@ $no = 1;
                                 ?>
                             </td>
                             <td class="text-center">
-                                <a href="detail_aktif.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="text-decoration-none" title="Lihat Detail">
+                                <a href="detail_histori.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
                                     <i class="bi bi-eye" style="font-size: 20px;"></i>
                                 </a>
                             </td>

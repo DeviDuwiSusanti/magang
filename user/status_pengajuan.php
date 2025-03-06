@@ -90,10 +90,9 @@ $query = mysqli_query($conn, $sql);
                             ?>
                         </td>
                         <td class="text-center">
-                            <a href="detail_status.php?id_pengajuan=<?= isset($row['id_pengajuan']) ? $row['id_pengajuan'] : '' ?>" 
-                                class="text-decoration-none" title="Lihat Detail">
-                                <i class="bi bi-eye" style="font-size: 20px;"></i>
-                            </a>
+                                <a href="detail_histori.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="text-decoration-none" title="Lihat Detail">
+                                    <i class="bi bi-eye" style="font-size: 20px;"></i>
+                                </a>
                         </td>
                     </tr>
                     <?php 
