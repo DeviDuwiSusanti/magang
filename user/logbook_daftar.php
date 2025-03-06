@@ -33,9 +33,9 @@ if (isset($_GET['id_logbook'])) {
 <!-- TABEL DAFTAR LOGBOOK -->
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar Logbook</h1>
+        <h1 class="mb-4">Logbook</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Daftar Logbook Harian Anda</li>
+            <li class="breadcrumb-item active">Logbook Harian Kamu</li>
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
@@ -62,6 +62,8 @@ if (isset($_GET['id_logbook'])) {
                             <th>Tanggal</th>
                             <th>Kegiatan</th>
                             <th>Keterangan</th>
+                            <th>Waktu</th>
+                            <th>Foto Kegiatan</th>
                             <?php if ($status_pengajuan!= '5'){?> 
                                 <th>Aksi</th> 
                             <?php } ?>
@@ -75,6 +77,11 @@ if (isset($_GET['id_logbook'])) {
                                 <td><?= $row['tanggal_logbook'] ?></td>
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
+                                <td>
+                                    <?= date('H.i', strtotime($row['jam_mulai'])) ?> - <?= date('H.i', strtotime($row['jam_selesai'])) ?>
+                                </td>
+
+                                <td><img src="<?= $row['foto_kegiatan'] ?>" alt=""></td>
                                 <?php
                                 if ($status_pengajuan!= '5'){?>
                                 <td>
