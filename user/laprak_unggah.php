@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
         if (!isset($laporan_akhir['error'])) {
             $laporan_name = $laporan_akhir['name'];
             $laporan_path = $laporan_akhir['path'];
-            $id_dokumen_laporan = generateIdDokumen($conn, $id_user); 
+            $id_dokumen_laporan = generateIdDokumen($conn, $id_pengajuan); 
 
             $sql = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
                     VALUES ('$id_dokumen_laporan', '$laporan_name', '3', '$laporan_path', '$id_pengajuan', '$id_user', '$id_user', '1', NOW(), NOW())";

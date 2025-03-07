@@ -3,49 +3,38 @@ include "../layout/sidebarUser.php";
 include '../koneksi.php';
 include "functions.php"; 
 
-if (ISSET($_GET['id_pengajuan'])){
+if (isset($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
 };
 
-// Mengambil id_pengajuan dan status_pengajuan jika ada
-$sql_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
+// Ambil data pengajuan
+$sql_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
 $query_pengajuan = mysqli_query($conn, $sql_pengajuan);
 $row = mysqli_fetch_assoc($query_pengajuan);
 
-// Mengambil daftar dokumen laporan akhir
-$sql = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3' AND id_pengajuan = '$id_pengajuan'";
+// Cek level user
+$sql_user = "SELECT level FROM tb_user WHERE id_user = '$id_user'";
+$query_user = mysqli_query($conn, $sql_user);
+$user_data = mysqli_fetch_assoc($query_user);
+$level_user = $user_data['level'];
+
+// Ambil daftar laporan akhir berdasarkan id_pengajuan, dan jika level 4 hanya ambil miliknya sendiri
+if ($level_user == 4) {
+    $sql = "SELECT d.*, p.nama_user FROM tb_dokumen d 
+            JOIN tb_profile_user p ON d.id_user = p.id_user
+            WHERE d.jenis_dokumen = '3' AND d.id_pengajuan = '$id_pengajuan' AND d.id_user = '$id_user'";
+} else {
+    $sql = "SELECT d.*, p.nama_user FROM tb_dokumen d 
+            JOIN tb_profile_user p ON d.id_user = p.id_user
+            WHERE d.jenis_dokumen = '3' AND d.id_pengajuan = '$id_pengajuan'";
+}
+
 $result = mysqli_query($conn, $sql);
 
-// Cek apakah pengguna sudah mengunggah laporan akhir
-$laporan_terunggah = mysqli_num_rows($result) > 0;
-
-// HAPUS
-if (isset($_GET['id_dokumen'])) {
-    $id_dokumen = $_GET['id_dokumen'];
-
-    // Ambil informasi file sebelum menghapus
-    $query_file = "SELECT file_path FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
-    $result_file = mysqli_query($conn, $query_file);
-    $file_data = mysqli_fetch_assoc($result_file);
-    $file_path = $file_data['file_path'];
-
-    // Hapus file dari server
-    if (file_exists($file_path)) {
-        unlink($file_path);
-    } else {
-        echo "<script>alert('File tidak ditemukan atau sudah dihapus sebelumnya!');</script>";
-    }
-
-    // Hapus data dari database
-    $sql_delete = "DELETE FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
-    
-    if (mysqli_query($conn, $sql_delete)) {
-        echo "<script>alert('Laporan Akhir Berhasil Dihapus'); window.location.href='laprak_daftar.php?id_pengajuan=$id_pengajuan&id_user=$id_user';</script>";
-        exit();
-    } else {
-        echo "<script>alert('Gagal menghapus laporan: " . mysqli_error($conn) . "');</script>";
-    }
-}
+// Cek apakah pengguna sudah mengunggah laporan akhir sendiri
+$sql_cek_laporan = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
+$result_cek_laporan = mysqli_query($conn, $sql_cek_laporan);
+$laporan_terunggah = mysqli_num_rows($result_cek_laporan) > 0;
 ?>
 
 <div class="main-content p-3">
@@ -56,10 +45,10 @@ if (isset($_GET['id_dokumen'])) {
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
-            <!-- Tombol tambah laporan hanya aktif jika belum ada laporan yang diunggah -->
-            <?php if (!$laporan_terunggah): ?>
+            <!-- Tombol tambah laporan aktif jika user level 3 atau 4 dan belum mengunggah laporan -->
+            <?php if (($level_user == 3 || $level_user == 4) && !$laporan_terunggah): ?>
                 <a href="laprak_unggah.php?id_user=<?= $id_user ?>&id_pengajuan=<?= $id_pengajuan ?>" 
-                class="btn btn-primary">
+                   class="btn btn-primary">
                     <i class="bi bi-plus-circle me-1"></i>
                     Tambah Laporan Akhir
                 </a>
@@ -72,6 +61,7 @@ if (isset($_GET['id_dokumen'])) {
                         <th class="text-center">No</th>
                         <th class="text-center">Tanggal</th>
                         <th class="text-center">Nama Dokumen</th>
+                        <th class="text-center">Pemilik Laporan</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -80,15 +70,18 @@ if (isset($_GET['id_dokumen'])) {
                         $no = 1;
                         while ($row2 = mysqli_fetch_assoc($result)): ?>
                             <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= isset($row2['create_date']) ? date('d/m/Y', strtotime($row2['create_date'])) : '-' ?></td>
+                                <td class="text-center"><?= $no++ ?></td>
+                                <td class="text-center"><?= isset($row2['create_date']) ? date('d/m/Y', strtotime($row2['create_date'])) : '-' ?></td>
                                 <td>
                                     <a href="<?= $row2['file_path'] ?? '#' ?>" target="_blank">
                                         <?= htmlspecialchars($row2['nama_dokumen'] ?? 'Tidak diketahui') ?>
                                     </a>
                                 </td>
+                                <td class="text-center"><?= htmlspecialchars($row2['nama_user'] ?? 'Tidak diketahui') ?></td>
                                 <td class="text-center">
-                                    <?php if (isset($row['status_pengajuan']) && $row['status_pengajuan'] != 5): ?>
+                                    <?php 
+                                    // Level 3 dan 4 hanya bisa menghapus laporannya sendiri
+                                    if (($level_user == 3 || $level_user == 4) && $row2['id_user'] == $id_user): ?>
                                         <a href="laprak_daftar.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>&id_dokumen=<?= $row2['id_dokumen'] ?>" 
                                            onclick="return confirm('Anda yakin akan menghapus laporan ini?')" 
                                            class="btn btn-danger btn-sm">
