@@ -4,23 +4,37 @@ include "functions.php";
 include "../koneksi.php"; 
 
 
-if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
+if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
-    $sql = "SELECT * FROM tb_user 
-            JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user 
-            WHERE tb_user.email = '$email'";
+    $sql = "SELECT * FROM tb_user u, tb_profile_user pu WHERE u.email = '$email' AND u.id_user = pu.id_user";
+
     $hasil = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($hasil);
-    $id_user = $row['id_user']; // Ambil id_user dari sesi login
-    $level = $row['level'];
-} else {
+    $_SESSION['id_user'] = $row['id_user']; // Ambil id_user dari sesi login
+    $_SESSION['level'] = $row['level'];
+
+    $id_user = $_SESSION['id_user'];
+    $level = $_SESSION['level'];
+
+    $id_pengajuan = null; // Inisialisasi default
+
+    if ($row && !empty($row['id_pengajuan'])) {
+        $_SESSION['id_pengajuan'] = $row['id_pengajuan'];
+        $id_pengajuan = $_SESSION['id_pengajuan'];
+        $sql2 = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
+        $query2 = mysqli_query($conn, $sql2);
+        $row2 = mysqli_fetch_assoc($query2);
+    }
+
+} else{
     echo "<script> window.location.href='../login.php' </script>";
     exit;
 }
 
-if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])) {
-    $id_pengajuan = $_GET['id_pengajuan'];
-    $id_user = $_GET['id_user'];
+
+if (isset($_SESSION['id_pengajuan']) && isset($_SESSION['id_user'])) {
+    $id_pengajuan = $_SESSION['id_pengajuan'];
+    $id_user = $_SESSION['id_user'];
 
     // akses data pengajuan user
     $sql_pengajuan = "SELECT * FROM tb_pengajuan p, tb_bidang b, tb_instansi i WHERE p.id_pengajuan = '$id_pengajuan' AND p.id_bidang = b.id_bidang AND p.id_instansi = i.id_instansi;"; 
@@ -64,38 +78,137 @@ if (isset($_POST["id_instansi"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Pengajuan</title>
+    <title>Tambah Pengajuan</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script>
+    $(function() {
+        var dateFormat = "dd/mm/yy";
+        var today = new Date();
 
+        var from = $("#tanggal_mulai").datepicker({
+            dateFormat: dateFormat,
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 4,
+            minDate: today // Hanya izinkan tanggal mulai dari hari ini
+        }).on("change", function() {
+            // Reset tanggal selesai saat tanggal mulai diubah
+            $("#tanggal_selesai").val("");
+            to.datepicker("option", "minDate", getDate(this));
+        });
+
+        var to = $("#tanggal_selesai").datepicker({
+            dateFormat: dateFormat,
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 4,
+            minDate: today // Batas minimal tanggal selesai juga hari ini
+        }).on("change", function() {
+            from.datepicker("option", "maxDate", getDate(this));
+        });
+
+        function getDate(element) {
+            var date;
+            try {
+                date = $.datepicker.parseDate(dateFormat, element.value);
+            } catch (error) {
+                date = null;
+            }
+            return date;
+        }
+    });
+
+
+    </script>
     <style>
-        /* Layout utama untuk form dan detail lowongan */
-        .form-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            transition: all 0.3s ease-in-out;
-        }
-        
-        .form-container.shift-left {
-            justify-content: flex-start;
-        }
+    /* Layout utama untuk form dan detail lowongan */
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .form-container.shift-left {
+        justify-content: flex-start;
+    }
 
-        .form-wrapper {
-            width: 50%;
-            transition: all 0.3s ease-in-out;
-        }
+    .form-wrapper {
+        width: 50%;
+        transition: all 0.3s ease-in-out;
+    }
 
-        .detail-lowongan {
-            width: 45%;
-            margin-left: 20px;
-            display: none;
-        }
+    .detail-lowongan {
+        width: 45%;
+        margin-left: 20px;
+        display: none;
+    }
+
+    /* Card styling for detail lowongan */
+    #detailBidangCard {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        background: #ffffff;
+    }
+
+    #detailBidangCard h5.card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+    }
+
+    #detailBidangCard p {
+        font-size: 1rem;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    #detailBidangCard strong {
+        color: #000;
+    }
+
+    #bidangKuota {
+        font-weight: bold;
+        color: #28a745;
+    }
+
+    /* Tambahkan jarak saat card detail muncul */
+    .form-container {
+        display: flex;
+        align-items: flex-start;
+        gap: 30px; /* Jarak antar form dan card */
+    }
+
+    .detail-lowongan {
+        display: none; /* Tersembunyi secara default */
+    }
+
+    .detail-lowongan.show {
+        display: block;
+    }
+        /* Tambahkan border kotak pada card detail */
+    #detailBidangCard {
+        border: 2px solid #0d6efd; /* Biru */
+        border-radius: 15px; /* Sudut membulat */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        background: #ffffff;
+    }
+
     </style>
 </head>
 <body>
@@ -153,16 +266,16 @@ if (isset($_POST["id_instansi"])) {
                             <option value="penelitian">Penelitian</option>
                         </select>
                     </div>
-
                     <!-- Tanggal Mulai dan Selesai -->
                     <div class="mb-3">
                         <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= $pengajuan['tanggal_mulai'] ?>">
+                        <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= $pengajuan['tanggal_mulai'] ?>">
                         <small class="text-danger error-message" id="error_tanggal_mulai"></small>
                     </div>
+
                     <div class="mb-3">
                         <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= $pengajuan['tanggal_selesai'] ?>">
+                        <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= $pengajuan['tanggal_selesai'] ?>">
                         <small class="text-danger error-message" id="error_tanggal_selesai"></small>
                     </div>
 

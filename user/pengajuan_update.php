@@ -12,6 +12,10 @@ if (ISSET($_POST['update_pengajuan'])){
     $jenis_pengajuan = $_POST['jenis_pengajuan'];
     $tanggal_mulai = $_POST['tanggal_mulai'];
     $tanggal_selesai = $_POST['tanggal_selesai'];
+
+    // Konversi ke format YYYY-MM-DD
+    $tanggal_mulai = DateTime::createFromFormat('d/m/Y', $tanggal_mulai)->format('Y-m-d');
+    $tanggal_selesai = DateTime::createFromFormat('d/m/Y', $tanggal_selesai)->format('Y-m-d');
     $ktp = $_FILES['ktp'];
     $cv = $_FILES['cv'];
 
