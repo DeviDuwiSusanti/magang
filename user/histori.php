@@ -28,9 +28,6 @@ $no = 1;
 <div class="main-content p-4">
     <div class="container-fluid">
         <h1 class="mb-4">Daftar Histori Kegiatan</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Tabel Histori Kegiatan</li>
-        </ol>
         <div class="mb-4 dropdown-divider"></div>
 
         <div class="bungkus">

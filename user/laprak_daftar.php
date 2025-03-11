@@ -133,10 +133,7 @@ if (isset($_POST['hapus_laporan'])) {
 
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar Laporan Akhir</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Daftar Laporan Akhir Kegiatan Anda</li>
-        </ol>
+        <h1 class="mb-4">Daftar Laporan Akhir Kegiatan Anda</h1>
         <div class="mb-4 dropdown-divider"></div>
 
         <div class="mb-4 text-end">
@@ -149,6 +146,7 @@ if (isset($_POST['hapus_laporan'])) {
         </div>
 
         <div class="table-responsive-sm">
+        <div class="bungkus">
             <table class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
@@ -215,6 +213,7 @@ if (isset($_POST['hapus_laporan'])) {
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
         </div>
     </div>
 </div>

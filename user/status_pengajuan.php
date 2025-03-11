@@ -38,10 +38,7 @@ $query = mysqli_query($conn, $sql);
 
 <div class="main-content p-4">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar Pengajuan</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Tabel Histori Pengajuan</li>
-        </ol>
+        <h1 class="mb-4">Tabel Histori Pengajuan</h1>
         <div class="mb-4 dropdown-divider"></div>
 
         <?php if (!$sembunyikan_tombol): ?>
