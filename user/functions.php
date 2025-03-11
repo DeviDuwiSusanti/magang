@@ -65,6 +65,18 @@ function generateLogbookId($conn, $id_pengajuan) {
     return $id_logbook;
 }
 
+function getLogbook($conn, $id_pengajuan, $id_user) {
+    // Query untuk mengambil logbook
+    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+    $query = mysqli_query($conn, $sql);
+
+    // Periksa apakah query berhasil
+    if (!$query) {
+        die("Query error: " . mysqli_error($conn));
+    }
+    // Mengembalikan hasil query
+    return $query;
+}
 
 function uploadFile($file) {
     $target_dir = "../assets/doc/";  // Update path here
@@ -243,5 +255,52 @@ function formatPeriode($tanggal_mulai, $tanggal_selesai) {
     return "Periode Tidak Diketahui";
 }
 
+
+function inputLogbook($conn, $POST, $FILES, $id_pengajuan, $id_user) {
+    $tanggal = $POST['tanggal'];
+    $kegiatan = $POST['kegiatan'];
+    $keterangan = $POST['keterangan'];
+    $jam_mulai = $POST['jam_mulai'];
+    $jam_selesai = $POST['jam_selesai'];
+    $ttd = $POST['ttd'];
+    
+    $uploadedFoto = uploadFoto($FILES['gambar_kegiatan'], '../assets/img/logbook/');
+    $target_file = $uploadedFoto['path'];
+
+    $id_logbook = generateLogbookId($conn, $id_pengajuan);
+
+    // Query INSERT dengan id_logbook yang sudah dibuat
+    $sql = "INSERT INTO tb_logbook (`id_logbook`, `tanggal_logbook`, `kegiatan_logbook`, `keterangan_logbook`, `jam_mulai`, `jam_selesai`, `foto_kegiatan`, `tanda_tangan`, `id_pengajuan`, `id_user`, `create_by`) 
+            VALUES ('$id_logbook', '$tanggal', '$kegiatan', '$keterangan', '$jam_mulai', '$jam_selesai', '$target_file', '$ttd', '$id_pengajuan', '$id_user', '$id_user')";
+
+    return mysqli_query($conn, $sql);      
+}
+
+function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
+    global $conn;
+
+       // Inisialisasi foto_kegiatan (default: data lama)
+       $foto_kegiatan = $row['foto_kegiatan'];
+
+       // Jika ada file baru diunggah
+       if (!empty($_FILES['gambar_kegiatan']['name'])) {
+           $uploadResult = uploadFoto($FILES['gambar_kegiatan'], "../assets/img/logbook/");
+           if ($uploadResult) {
+               $foto_kegiatan = $uploadResult['path'];
+           }
+       }
+   
+       $sql2 = "UPDATE tb_logbook SET 
+       tanggal_logbook = '$POST[tanggal]',
+       kegiatan_logbook = '$POST[kegiatan]',
+       keterangan_logbook = '$POST[keterangan]',
+       jam_mulai = '$POST[jam_mulai]',
+       jam_selesai = '$POST[jam_selesai]',
+       foto_kegiatan = '$foto_kegiatan',
+       tanda_tangan = '$POST[ttd]',
+       change_by = '$id_user' WHERE id_logbook = '$id_logbook'";
+   
+       return mysqli_query($conn, $sql2);
+}
 
 ?>

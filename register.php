@@ -23,6 +23,27 @@ foreach ($perguruan_tinggi as $kampus) {
     ];
 }
 
+
+
+if(isset($_GET['confirm']) && $_GET['confirm'] == "gunakan_data_lama") {
+    $id_user_lama = $_GET['id_user_lama'];
+    echo "<p>Email sudah terdaftar, tetapi dapat menggunakan data lama.</p>";
+    echo "<a href='register.php?use_old_data=true&id_user_lama=$id_user_lama'>Gunakan Data Lama</a>";
+}
+
+if(isset($_GET['use_old_data']) && $_GET['use_old_data'] == "true") {
+    $id_user_lama = $_GET['id_user_lama'];
+    $id_user_baru = generateUserId($conn);
+
+    // Update ID user lama dengan ID baru
+    mysqli_query($conn, "UPDATE tb_user SET id_user = '$id_user_baru' WHERE id_user = '$id_user_lama'");
+    mysqli_query($conn, "UPDATE tb_profile_user SET id_user = '$id_user_baru' WHERE id_user = '$id_user_lama'");
+
+    header("Location: register.php?success=update_id");
+    exit;
+}
+
+
 // Status register
 $status = "";
 if (isset($_POST["register"])) {
@@ -93,7 +114,7 @@ if (isset($_POST["register"])) {
         <div class="container main">
             <div class="row">
                 <header>Register</header>
-                <form action="" method="POST" enctype="multipart/form-data" class="d-flex">
+                <form action="" method="POST" enctype="multipart/form-data" class="d-flex" id="registerForm">
 
                     <!-- Kolom Kiri -->
                     <div class="col-md-6">
@@ -108,13 +129,13 @@ if (isset($_POST["register"])) {
 
                         <div class="input-field">
                             <input type="text" inputmode="numeric" id="nik_user" class="input" name="nik" maxlength="16" required>
-                            <label for="nik_user">NIK (16)</label>
-                            <span id="nik_error" class="error-message" style="color: red; display: none;">NIK harus 16 digit!</span>
+                            <label for="nik_user">NIK</label>
+                            <span id="nik_error" class="error-message" style="color: red; display: none; font-size: 12px;">NIK harus 16 digit!</span>
                         </div>
                         <div class="input-field">
                             <input type="text" maxlength="10" id="nisn" inputmode="numeric" class="input" name="nisn" required>
-                            <label for="nisn">NISN (10)</label>
-                            <span id="nisn_error" class="error-message" style="color: red; display: none;">NISN harus 10 digit!</span>
+                            <label for="nisn">NISN</label>
+                            <span id="nisn_error" class="error-message" style="color: red; display: none; font-size: 12px;">NISN harus 10 digit!</span>
                         </div>
 
                         <div class="mb-3">
@@ -196,7 +217,7 @@ if (isset($_POST["register"])) {
                         </div>
 
                         <div class="input-field">
-                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir">
+                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir" required>
                             <label for="tempat_lahir">Tempat Lahir</label>
                         </div>
 
@@ -280,35 +301,42 @@ if (isset($_POST["register"])) {
 
 
         $(document).ready(function() {
-            // Validasi real-time untuk NIK
-            $('#nik_user').on('input', function() {
-                let nik = $(this).val().trim(); // Ambil nilai dan hilangkan spasi
+            // Validasi saat tombol submit ditekan
+            $('#registerForm').on('submit', function(event) {
+                let isValid = true; // Flag untuk validasi
+                let nik = $('#nik_user').val().trim();
                 let nikError = $('#nik_error');
+                let nisn = $('#nisn').val().trim();
+                let nisnError = $('#nisn_error');
 
+                // Validasi NIK
                 if (nik.length === 0) {
                     nikError.text('NIK tidak boleh kosong!').show();
-                } else if (nik.length < 16) {
-                    nikError.text('NIK harus 16 digit!').show();
+                    isValid = false;
+                } else if (nik.length !== 16 || !/^\d+$/.test(nik)) {
+                    nikError.text('NIK harus terdiri dari 16 digit angka!').show();
+                    isValid = false;
                 } else {
                     nikError.hide();
                 }
-            });
 
-            // Validasi real-time untuk NISN
-            $('#nisn').on('input', function() {
-                let nisn = $(this).val().trim(); // Ambil nilai dan hilangkan spasi
-                let nisnError = $('#nisn_error');
-
+                // Validasi NISN
                 if (nisn.length === 0) {
                     nisnError.text('NISN tidak boleh kosong!').show();
-                } else if (nisn.length < 10) {
-                    nisnError.text('NISN harus 10 digit!').show();
+                    isValid = false;
+                } else if (nisn.length !== 10 || !/^\d+$/.test(nisn)) {
+                    nisnError.text('NISN harus terdiri dari 10 digit angka!').show();
+                    isValid = false;
                 } else {
                     nisnError.hide();
                 }
+
+                // Jika tidak valid, hentikan submit
+                if (!isValid) {
+                    event.preventDefault(); // Mencegah halaman refresh
+                }
             });
         });
-
 
         // Event listener untuk pilihan pendidikan
         document.getElementById("educationSelect").addEventListener("change", function() {

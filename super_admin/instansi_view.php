@@ -56,10 +56,10 @@
 
                         <td class="d-flex justify-content-center gap-2">
                             <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_instansi_super_admin(<?= $opd['id_instansi'] ?>)">
-                                <i class="bi bi-trash"></i> Hapus
+                                <i class="bi bi-trash"></i>
                             </a>
                             <a href="instansi_edit.php?id_instansi=<?= $opd["id_instansi"] ?>" class="btn btn-warning btn-sm">
-                                <i class="bi bi-pencil"></i> Edit
+                                <i class="bi bi-pencil"></i>
                             </a>
                         </td>
                     </tr>

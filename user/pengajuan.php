@@ -5,13 +5,7 @@ include "../koneksi.php"; // Pastikan koneksi ke database
 
 if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
     $email = $_SESSION['email'];
-    $sql = "SELECT * FROM tb_user 
-            JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user 
-            WHERE tb_user.email = '$email'";
-    $hasil = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($hasil);
-    $id_user = $row['id_user']; // Ambil id_user dari sesi login
-    $level = $row['level'];
+    $id_user = $_SESSION['id_user']; // Ambil id_user dari sesi login
 } else {
     echo "<script> window.location.href='../login.php' </script>";
     exit;
@@ -26,6 +20,11 @@ $sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS to
                  ORDER BY total_kuota DESC";
 $result_instansi = mysqli_query($conn, $sql_instansi);
 
+// ambil data pendaftar
+$sql_pendaftar = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_user = '$id_user' AND u.id_user = pu.id_user";
+$query_pendaftar = mysqli_query($conn, $sql_pendaftar);
+$pendaftar = mysqli_fetch_assoc($query_pendaftar);
+
 // INSERT PENGAJUAN
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
@@ -39,9 +38,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($jumlah_pelamar == NULL){
             $jumlah_pelamar = 1;
         }
-        $tanggal_mulai = $_POST['tanggal_mulai'];
-        $tanggal_selesai = $_POST['tanggal_selesai'];
+        $tanggal_mulai = $_POST['tanggal_mulai']; // Contoh: 09/04/2025
+        $tanggal_selesai = $_POST['tanggal_selesai']; // Contoh: 10/04/2025
 
+        // Konversi ke format YYYY-MM-DD
+        $tanggal_mulai = DateTime::createFromFormat('d/m/Y', $tanggal_mulai)->format('Y-m-d');
+        $tanggal_selesai = DateTime::createFromFormat('d/m/Y', $tanggal_selesai)->format('Y-m-d');
+        
         // Menangani upload file KTP dan CV
         $ktp = uploadFile($_FILES['ktp']);
         $cv = uploadFile($_FILES['cv']);
@@ -74,13 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
         $query2 = mysqli_query($conn, $sql2);
 
-        $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', 'identitas', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
         $query3 = mysqli_query($conn, $sql3);
         
 
         if ($query2 && $query3){
             $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
-            $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', 'identitas', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+            $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
             $query4 = mysqli_query($conn, $sql4);
 
             $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
@@ -129,7 +132,50 @@ if (isset($_POST["id_bidang"])) {
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <!-- Tambahkan ini di bagian head atau sebelum </body> -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script>
+    $(function() {
+        var dateFormat = "dd/mm/yy";
+        var today = new Date();
+
+        var from = $("#tanggal_mulai").datepicker({
+            dateFormat: dateFormat,
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 4,
+            minDate: today // Hanya izinkan tanggal mulai dari hari ini
+        }).on("change", function() {
+            // Reset tanggal selesai saat tanggal mulai diubah
+            $("#tanggal_selesai").val("");
+            to.datepicker("option", "minDate", getDate(this));
+        });
+
+        var to = $("#tanggal_selesai").datepicker({
+            dateFormat: dateFormat,
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 4,
+            minDate: today // Batas minimal tanggal selesai juga hari ini
+        }).on("change", function() {
+            from.datepicker("option", "maxDate", getDate(this));
+        });
+
+        function getDate(element) {
+            var date;
+            try {
+                date = $.datepicker.parseDate(dateFormat, element.value);
+            } catch (error) {
+                date = null;
+            }
+            return date;
+        }
+    });
+
+
+    </script>
     <style>
     /* Layout utama untuk form dan detail lowongan */
     .form-container {
@@ -228,10 +274,9 @@ if (isset($_POST["id_bidang"])) {
             </a>
         </div>
 
-
         <div class="form-container center-form" id="formContainer">
             <div class="form-wrapper" id="formWrapper">
-            <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data">
+            <form id="pengajuanForm" class="form-profile" method="POST" enctype="multipart/form-data">
                 <div id="step1">
                     <h4>Step 1: Daftar Pengajuan</h4>
                     <div class="mb-3">
@@ -280,21 +325,21 @@ if (isset($_POST["id_bidang"])) {
                     </div>
 
                     <div class="mb-3">
-                        <label for="jumlah_anggota" class="form-label">Jumlah Anggota (Termasuk Kamu)</label>
+                        <label for="jumlah_anggota" class="form-label">Jumlah Anggota</label>
                         <input type="number"  class="form-control" id="jumlah_anggota" name="jumlah_anggota">
                         <div id="error-jumlah_anggota" class="invalid-feedback"></div>
                     </div>
 
-
                     <!-- Tanggal Mulai dan Selesai -->
                     <div class="mb-3">
                         <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai">
+                        <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai">
                         <div id="error-tanggal_mulai" class="invalid-feedback"></div>
                     </div>
+
                     <div class="mb-3">
                         <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="date" class="form-control" id="tanggal_selesai" name="tanggal_selesai">
+                        <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai">
                         <div id="error-tanggal_selesai" class="invalid-feedback"></div>
                     </div>
 
@@ -318,7 +363,28 @@ if (isset($_POST["id_bidang"])) {
 
                 <!-- Step 2 -->
                 <div id="step2" style="display: none;">
-                    <h4>Step 2: Informasi Anggota (Kecuali Kamu)</h4>
+                    <h4>Step 2: Informasi Anggota</h4><br><br>
+                    <div id="ketuaContainer">
+                        <!-- Anggota 1 (Readonly, diisi otomatis dari profil user) -->
+                        <div class="mb-3 anggota-group d-flex align-items-center">
+                            <span class="me-2 fw-bold">1.</span>
+                            <div class="row flex-grow-1 gx-2">
+                                <div class="col">
+                                    <input type="text" class="form-control" value="<?= $pendaftar['nama_user'] ?>" readonly>
+                                </div>
+                                <div class="col">
+                                    <input type="email" class="form-control" value="<?= $pendaftar['email'] ?>" readonly>
+                                </div>
+                                <div class="col">
+                                    <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
+                                </div>
+                                <div class="col">
+                                    <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : $pendaftar['nisn'] ?>"  readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Placeholder untuk anggota tambahan -->
                     <div id="anggotaContainer"></div>
                     
                     <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
@@ -401,28 +467,6 @@ $(document).ready(function() {
 });
 </script>
 
-<!-- SCRIPT UNTUK RANGE TANGGAL -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let tanggalMulai = document.getElementById("tanggal_mulai");
-        let tanggalSelesai = document.getElementById("tanggal_selesai");
-
-        // Set minimum date untuk tanggal mulai (besok)
-        let today = new Date();
-        today.setDate(today.getDate() + 1);
-        let minDateMulai = today.toISOString().split("T")[0];
-        tanggalMulai.setAttribute("min", minDateMulai);
-
-        // Set minimum date untuk tanggal selesai (harus lebih besar dari tanggal mulai)
-        tanggalMulai.addEventListener("change", function () {
-            let selectedMulai = new Date(this.value);
-            selectedMulai.setDate(selectedMulai.getDate() + 1);
-            let minDateSelesai = selectedMulai.toISOString().split("T")[0];
-            tanggalSelesai.setAttribute("min", minDateSelesai);
-        });
-    });
-</script>
-
 <!-- SCRIPT UNTUK VALIDASI FORM -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -490,7 +534,9 @@ document.addEventListener("DOMContentLoaded", function() {
             { id: "instansi", message: "Pilih instansi yang dituju!" },
             { id: "bidang", message: "Pilih bidang yang dipilih!" },
             { id: "jenis_pengajuan", message: "Pilih jenis pengajuan!" },
-            { id: "kelompok_pribadi", message: "Pilih personil!" }
+            { id: "kelompok_pribadi", message: "Pilih personil!" },
+            { id: "tanggal_mulai", message: "Pilih tanggal mulai!" },
+            { id: "tanggal_selesai", message: "Pilih tanggal selesai!" }
         ];
 
          // Validasi untuk setiap field yang wajib diisi
@@ -523,8 +569,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Validasi file (KTP dan CV) serta tanggal mulai & selesai
         const otherFields = [
-            { id: "tanggal_mulai", message: "Pilih tanggal mulai!" },
-            { id: "tanggal_selesai", message: "Pilih tanggal selesai!" },
             { id: "ktp", message: "Upload KTP dalam format PDF!" },
             { id: "cv", message: "Upload CV dalam format PDF!" }
         ];
@@ -574,11 +618,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function validateAnggota() {
+    async function validateAnggota() {
         let isValid = true;
         const emails = new Set();
-        const anggotaInputs = document.querySelectorAll(".anggota-group");
-        const nameRegex = /^[A-Za-z\s]+$/; // Hanya huruf dan spasi
+        const anggotaInputs = document.querySelectorAll('#anggotaContainer .anggota-group');
+        const nameRegex = /^[A-Za-z\s]+$/;
+
+        // Kumpulkan semua promise untuk checkEmail
+        const emailChecks = [];
 
         anggotaInputs.forEach((anggota) => {
             const nama = anggota.querySelector("input[name='anggota_nama[]']");
@@ -586,42 +633,54 @@ document.addEventListener("DOMContentLoaded", function() {
             const nik = anggota.querySelector("input[name='anggota_nik[]']");
             const nim = anggota.querySelector("input[name='anggota_nim[]']");
 
-        // Validasi Nama (tidak boleh angka)
             if (!nama.value.trim()) {
-                showError(nama, `Nama harus diisi!`);
+                showError(nama, "Nama harus diisi!");
                 isValid = false;
             } else if (!nameRegex.test(nama.value.trim())) {
-                showError(nama, `Nama hanya boleh mengandung huruf!`);
+                showError(nama, "Nama hanya boleh mengandung huruf!");
                 isValid = false;
             } else {
                 clearError(nama);
             }
 
             if (!email.value.trim()) {
-                showError(email, `Email anggota harus diisi!`);
+                showError(email, "Email anggota harus diisi!");
                 isValid = false;
             } else if (emails.has(email.value)) {
-                showError(email, `Email anggota sudah digunakan!`);
+                showError(email, "Email anggota sudah digunakan!");
                 isValid = false;
             } else {
                 emails.add(email.value);
-                checkEmail(email);
+                emailChecks.push(checkEmail(email));
             }
 
-            if (!nik.value.trim() || nik.value.length > 16) {
-                showError(nik, `NIK maksimal 16 karakter!`);
+            if (!nik.value.trim()) {
+                showError(nik, "NIK wajib diisi!");
+                isValid = false;
+            } else if (nik.value.length !== 16 || !/^\d+$/.test(nik.value)) {
+                showError(nik, "NIK harus terdiri dari 16 digit angka!");
                 isValid = false;
             } else {
                 clearError(nik);
             }
 
-            if (!nim.value.trim() || (nim.value.length !== 10 && nim.value.length !== 12)) {
-                showError(nim, `10 digit u/ nisn dan 12 digit u/ nim!`);
+            if (!nim.value.trim()) {
+                showError(nim, "NIM/NISN wajib diisi!");
+                isValid = false;
+            } else if (!(nim.value.length === 10 || nim.value.length === 12) || !/^\d+$/.test(nim.value)) {
+                showError(nim, "NIM harus 12 digit dan NISN harus 10 digit!");
                 isValid = false;
             } else {
                 clearError(nim);
             }
+
         });
+
+        // Tunggu semua cek email selesai
+        const emailResults = await Promise.all(emailChecks);
+        if (emailResults.includes(false)) {
+            isValid = false;
+        }
 
         return isValid;
     }
@@ -632,13 +691,14 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!validateStep1()) return;
 
         const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
+        const anggotaContainer = document.getElementById('anggotaContainer');
         anggotaContainer.innerHTML = "";
 
         for (let i = 1; i < jumlahAnggota; i++) {
             const anggotaHTML = `
-                <div class="mb-3 anggota-group">
-                    <label class="form-label">Anggota ${i}</label>
-                    <div class="row">
+                <div class="mb-3 anggota-group d-flex align-items-center">
+            <span class="me-2 fw-bold">${i + 1}.</span>
+            <div class="row flex-grow-1 gx-2">
                         <div class="col"><input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama"></div>
                         <div class="col"><input type="email" class="form-control" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
                         <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK"></div>
@@ -661,9 +721,13 @@ document.addEventListener("DOMContentLoaded", function() {
         submitButton.style.display = "none";
     }
 
-    form.addEventListener("submit", function(event) {
-        if (!validateStep1() || !validateAnggota()) {
-            event.preventDefault();
+    form.addEventListener("submit", async function(event) {
+        const step1Valid = validateStep1();
+        const anggotaValid = await validateAnggota();
+
+        if (!step1Valid || !anggotaValid) {
+            // Trigger submit form alami agar tombol terdeteksi di PHP
+            event.preventDefault(); // cegah submit langsung
         }
     });
 

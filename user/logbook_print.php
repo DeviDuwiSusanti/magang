@@ -6,8 +6,10 @@ include 'functions.php';
 
 // Set timezone ke Asia/Jakarta
 date_default_timezone_set('Asia/Jakarta');
-
-$id_pengajuan = $_GET['id_pengajuan'];
+if (ISSET($_GET['id_pengajuan'])){
+    $id_pengajuan = $_GET['id_pengajuan'];
+}
+$id_pengajuan = $_SESSION['id_pengajuan'];
 $id_user = $_SESSION['id_user'];
 
 // Query untuk mengambil data logbook dan informasi terkait

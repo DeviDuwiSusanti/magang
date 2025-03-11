@@ -65,10 +65,10 @@
                             <td><?= $studi["alamat_pendidikan"] ?></td>
                             <td class="d-flex justify-content-center gap-2">
                                 <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_pendidikan_super_admin(<?= $studi['id_pendidikan'] ?>)">
-                                    <i class="bi bi-trash"></i> Hapus
+                                    <i class="bi bi-trash"></i>
                                 </a>
                                 <a href="study_edit.php?id_pendidikan=<?= $studi["id_pendidikan"] ?>" class="btn btn-warning btn-sm">
-                                    <i class="bi bi-pencil"></i> Edit
+                                    <i class="bi bi-pencil"></i>
                                 </a>
                             </td>
                         </tr>

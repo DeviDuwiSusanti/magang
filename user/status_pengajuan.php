@@ -146,7 +146,7 @@ $query = mysqli_query($conn, $sql);
                                                 <i class="bi bi-pencil-square"></i> Edit
                                             </a>
 
-                                            <a href="detail_anggota.php" class="btn btn-sm <?= $disable_anggota ?>">
+                                            <a href="detail_anggota.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-sm <?= $disable_anggota ?>">
                                                 <i class="bi bi-people"></i> Anggota
                                             </a>
                                         </div>
