@@ -3,6 +3,14 @@ include "../koneksi.php";
 include "../layout/sidebarUser.php"; 
 include "functions.php"; 
 
+if (!isset($_SESSION['id_user'])) {
+    echo "<script>alert('Silakan login terlebih dahulu!'); window.location.href='login.php';</script>";
+    exit;
+}
+
+$id_user = $_SESSION['id_user'];
+$id_pengajuan = $_SESSION['id_pengajuan'] ?? null; // Bisa null jika belum dipilih
+
 if ($level != 3){
     echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='dashboard.php?id_user=$id_user'; </script>";
 }
@@ -122,28 +130,34 @@ $query = mysqli_query($conn, $sql);
                                     <p><strong>Periode Magang:</strong> <?= formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']) ?> </p>
 
                                  <!-- Tombol Aksi dalam Modal -->
-                                <?php 
+                                 <?php 
                                     $status_pengajuan = $row['status_pengajuan'];
 
-                                    $disable_all = ($status_pengajuan == 3) ? 'btn-secondary disabled' : 'btn-primary';
+                                    // Atur class untuk tombol berdasarkan status pengajuan
                                     $disable_upload = ($status_pengajuan != 2) ? 'btn-secondary disabled' : 'btn-primary';
-                                    $disable_edit = ($status_pengajuan == 2 || $status_pengajuan == 3 || $status_pengajuan == 4 || $status_pengajuan == 5) ? 'btn-secondary disabled' : 'btn-primary';
-                                    $disable_anggota = ($status_pengajuan == 2 || $status_pengajuan == 3 || $status_pengajuan == 5) ? 'btn-secondary disabled' : 'btn-primary';
-                                ?>
-                               <div class="modal-footer flex-column align-items-start">
-                                    <div class="d-flex gap-1">
-                                        <a href="persyaratan_daftar.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-sm <?= $disable_upload ?>">
-                                            <i class="bi bi-upload"></i> Dokumen
-                                        </a>
-                                        <a href="pengajuan_edit.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-sm <?= $disable_edit ?>">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </a>
-                                        <a href="detail_anggota.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-sm <?= $disable_anggota ?>">
-                                            <i class="bi bi-people"></i> Anggota
-                                        </a>
-                                    </div>
-                                    <div class="d-flex justify-content-end w-100 mt-2">
-                                        <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
+                                    $disable_edit = ($status_pengajuan >= 2 && $status_pengajuan <= 5) ? 'btn-secondary disabled' : 'btn-primary';
+                                    $disable_anggota = ( $status_pengajuan == 3 || $status_pengajuan == 5) ? 'btn-secondary disabled' : 'btn-primary';
+                                    ?>
+
+                                    <div class="modal-footer flex-column align-items-start">
+                                        <div class="d-flex gap-2">
+                                            <a href="persyaratan_daftar.php" class="btn btn-sm <?= $disable_upload ?>">
+                                                <i class="bi bi-upload"></i> Dokumen
+                                            </a>
+
+                                            <a href="pengajuan_edit.php" class="btn btn-sm <?= $disable_edit ?>">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+
+                                            <a href="detail_anggota.php" class="btn btn-sm <?= $disable_anggota ?>">
+                                                <i class="bi bi-people"></i> Anggota
+                                            </a>
+                                        </div>
+                                        <div class="d-flex justify-content-end w-100 mt-2">
+                                            <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">
+                                                <i class="bi bi-x-circle"></i> Tutup
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 </div>

@@ -1,40 +1,134 @@
 <?php 
 include "../layout/sidebarUser.php";
 include '../koneksi.php';
-include "functions.php"; 
+include "functions.php";
 
-if (isset($_GET['id_pengajuan'])){
-    $id_pengajuan = $_GET['id_pengajuan'];
-};
+define('MAX_FILE_SIZE', 5 * 1024 * 1024); // Maksimum ukuran file 5MB
 
-// Ambil data pengajuan
-$sql_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
-$query_pengajuan = mysqli_query($conn, $sql_pengajuan);
-$row = mysqli_fetch_assoc($query_pengajuan);
+// Ambil ID User & ID Pengajuan
+if (!isset($_SESSION['id_user']) || !isset($_SESSION['id_pengajuan'])) {
+    echo "<script>alert('Session tidak ditemukan, silakan login kembali.'); window.location.href='../login.php';</script>";
+    exit;
+}
 
-// Cek level user
+$id_user = $_SESSION['id_user'];
+$id_pengajuan = $_SESSION['id_pengajuan'];
+
+// Ambil level user
 $sql_user = "SELECT level FROM tb_user WHERE id_user = '$id_user'";
 $query_user = mysqli_query($conn, $sql_user);
 $user_data = mysqli_fetch_assoc($query_user);
-$level_user = $user_data['level'];
+$level_user = $user_data['level'] ?? null;
 
-// Ambil daftar laporan akhir berdasarkan id_pengajuan, dan jika level 4 hanya ambil miliknya sendiri
+// Ambil daftar laporan akhir
+$sql = "SELECT d.*, p.nama_user FROM tb_dokumen d 
+        JOIN tb_profile_user p ON d.id_user = p.id_user
+        WHERE d.jenis_dokumen = '3' 
+        AND d.id_pengajuan = '$id_pengajuan' 
+        AND d.status_active = 1";
+
 if ($level_user == 4) {
-    $sql = "SELECT d.*, p.nama_user FROM tb_dokumen d 
-            JOIN tb_profile_user p ON d.id_user = p.id_user
-            WHERE d.jenis_dokumen = '3' AND d.id_pengajuan = '$id_pengajuan' AND d.id_user = '$id_user'";
-} else {
-    $sql = "SELECT d.*, p.nama_user FROM tb_dokumen d 
-            JOIN tb_profile_user p ON d.id_user = p.id_user
-            WHERE d.jenis_dokumen = '3' AND d.id_pengajuan = '$id_pengajuan'";
+    $sql .= " AND d.id_user = '$id_user'";
 }
-
 $result = mysqli_query($conn, $sql);
 
-// Cek apakah pengguna sudah mengunggah laporan akhir sendiri
-$sql_cek_laporan = "SELECT * FROM tb_dokumen WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
+// Cek apakah user sudah unggah laporan
+$sql_cek_laporan = "SELECT COUNT(*) as jumlah FROM tb_dokumen 
+                    WHERE id_user = '$id_user' 
+                    AND id_pengajuan = '$id_pengajuan'
+                    AND jenis_dokumen = '3'
+                    AND status_active = 1";
 $result_cek_laporan = mysqli_query($conn, $sql_cek_laporan);
-$laporan_terunggah = mysqli_num_rows($result_cek_laporan) > 0;
+$data_cek = mysqli_fetch_assoc($result_cek_laporan);
+$laporan_terunggah = $data_cek['jumlah'] > 0;
+
+// Handle Upload Laporan
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
+    $fileType = pathinfo($_FILES['laporan_akhir']['name'], PATHINFO_EXTENSION);
+    $fileSize = $_FILES['laporan_akhir']['size'];
+
+    switch (true) {
+        case empty($_FILES['laporan_akhir']['name']):
+            $msg = "Silakan pilih file terlebih dahulu!";
+            $icon = "warning";
+            break;
+        case $fileType !== 'pdf':
+            $msg = "Hanya file PDF yang diperbolehkan!";
+            $icon = "error";
+            break;
+        case $fileSize > MAX_FILE_SIZE:
+            $msg = "Ukuran file terlalu besar! Maksimum 5MB.";
+            $icon = "error";
+            break;
+        default:
+            $laporan_akhir = uploadFile($_FILES['laporan_akhir']);
+            if (!isset($laporan_akhir['error'])) {
+                $laporan_name = $laporan_akhir['name'];
+                $laporan_path = $laporan_akhir['path'];
+                $id_dokumen_laporan = generateIdDokumen($conn, $id_pengajuan);
+                
+                $sql_upload = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) 
+                               VALUES ('$id_dokumen_laporan', '$laporan_name', '3', '$laporan_path', '$id_pengajuan', '$id_user', '$id_user', '1', NOW(), NOW())";
+
+                if (mysqli_query($conn, $sql_upload)) {
+                    $msg = "Laporan Akhir Berhasil Diunggah!";
+                    $icon = "success";
+                } else {
+                    $msg = "Laporan Akhir gagal diunggah. Silakan coba lagi.";
+                    $icon = "error";
+                }
+            } else {
+                $msg = $laporan_akhir['error'];
+                $icon = "error";
+            }
+    }
+
+    echo "<script>
+        Swal.fire({
+            icon: '$icon',
+            title: '$msg',
+        }).then(() => { window.location.href = 'laprak_daftar.php'; });
+    </script>";
+    exit;
+}
+
+// Tambahkan skrip hapus file
+if (isset($_POST['hapus_laporan'])) {
+    $id_dokumen = $_POST['id_dokumen'];
+    
+    // Ambil data file berdasarkan id_dokumen
+    $sql_get_file = "SELECT file_path, id_user FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
+    $result_get_file = mysqli_query($conn, $sql_get_file);
+    $file_data = mysqli_fetch_assoc($result_get_file);
+    
+    // Pastikan hanya user yang mengunggah yang bisa menghapus
+    if ($file_data['id_user'] == $id_user) {
+        $file_path = $file_data['file_path'];
+        
+        // Hapus file fisik jika ada
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
+        
+        // Update status di database
+        $sql_update = "UPDATE tb_dokumen SET status_active = 0 WHERE id_dokumen = '$id_dokumen'";
+        if (mysqli_query($conn, $sql_update)) {
+            echo "<script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Laporan berhasil dihapus!',
+                }).then(() => { window.location.href = 'laprak_daftar.php'; });
+            </script>";
+        } else {
+            echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal menghapus laporan!',
+                });
+            </script>";
+        }
+    }
+}
 ?>
 
 <div class="main-content p-3">
@@ -44,16 +138,16 @@ $laporan_terunggah = mysqli_num_rows($result_cek_laporan) > 0;
             <li class="breadcrumb-item active">Daftar Laporan Akhir Kegiatan Anda</li>
         </ol>
         <div class="mb-4 dropdown-divider"></div>
+
         <div class="mb-4 text-end">
-            <!-- Tombol tambah laporan aktif jika user level 3 atau 4 dan belum mengunggah laporan -->
             <?php if (($level_user == 3 || $level_user == 4) && !$laporan_terunggah): ?>
-                <a href="laprak_unggah.php?id_user=<?= $id_user ?>&id_pengajuan=<?= $id_pengajuan ?>" 
-                   class="btn btn-primary">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
                     <i class="bi bi-plus-circle me-1"></i>
                     Tambah Laporan Akhir
-                </a>
+                </button>
             <?php endif; ?>
         </div>
+
         <div class="table-responsive-sm">
             <table class="table table-striped table-bordered table-hover">
                 <thead>
@@ -79,14 +173,35 @@ $laporan_terunggah = mysqli_num_rows($result_cek_laporan) > 0;
                                 </td>
                                 <td class="text-center"><?= htmlspecialchars($row2['nama_user'] ?? 'Tidak diketahui') ?></td>
                                 <td class="text-center">
-                                    <?php 
-                                    // Level 3 dan 4 hanya bisa menghapus laporannya sendiri
-                                    if (($level_user == 3 || $level_user == 4) && $row2['id_user'] == $id_user): ?>
-                                        <a href="laprak_daftar.php?id_pengajuan=<?= $id_pengajuan ?>&id_user=<?= $id_user ?>&id_dokumen=<?= $row2['id_dokumen'] ?>" 
-                                           onclick="return confirm('Anda yakin akan menghapus laporan ini?')" 
-                                           class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </a>
+                                    <?php if ($row2['id_user'] == $id_user): ?>
+                                        <form method="POST" id="hapusForm">
+                                            <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="konfirmasiHapus(this)">
+                                                <i class="bi bi-trash"></i> Hapus
+                                            </button>
+                                        </form>
+
+                                    <!-- Tambahkan SweetAlert -->
+                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                    <script>
+                                        function konfirmasiHapus(button) {
+                                            Swal.fire({
+                                                title: "Apakah Anda yakin?",
+                                                text: "Laporan yang dihapus tidak dapat dikembalikan!",
+                                                icon: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#d33",
+                                                cancelButtonColor: "#3085d6",
+                                                confirmButtonText: "Ya, hapus!",
+                                                cancelButtonText: "Batal"
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    button.closest("form").submit();
+                                                }
+                                            });
+                                        }
+                                    </script>
+
                                     <?php else: ?>
                                         <button class="btn btn-secondary btn-sm" disabled>
                                             <i class="bi bi-trash"></i> Hapus
@@ -103,4 +218,39 @@ $laporan_terunggah = mysqli_num_rows($result_cek_laporan) > 0;
         </div>
     </div>
 </div>
+
+<!-- Modal Upload -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="uploadForm" action="" method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title">Unggah Laporan Akhir</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" class="form-control" name="laporan_akhir" id="fileInput">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Unggah</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("uploadForm").addEventListener("submit", function (e) {
+        if (!document.getElementById("fileInput").value) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Silakan pilih file terlebih dahulu!',
+            });
+        }
+    });
+});
+</script>
+
 <?php include "../layout/footerDashboard.php"; ?>
