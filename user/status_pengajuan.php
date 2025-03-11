@@ -150,11 +150,9 @@ $query = mysqli_query($conn, $sql);
                                                 <i class="bi bi-people"></i> Anggota
                                             </a>
                                         </div>
-                                        <div class="d-flex justify-content-end w-100 mt-2">
-                                            <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">
-                                                <i class="bi bi-x-circle"></i> Tutup
-                                            </button>
-                                        </div>
+                                            <div class="d-flex justify-content-end w-100 mt-2">
+                                                <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
+                                            </div>
                                     </div>
                                 </div>
                                 </div>
