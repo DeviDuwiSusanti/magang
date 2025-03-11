@@ -20,21 +20,19 @@ use Dom\Mysql;
         $hour = date("H");
         $baseId = $date . $hour;
 
-        // Query untuk mencari ID terakhir dengan format yang sama
-        $query = "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1";
-        $result = mysqli_query($conn, $query);
-
-        if ($result && mysqli_num_rows($result) > 0) {
-            $lastId = mysqli_fetch_assoc($result)['id_user'];
-            $lastCounter = intval(substr($lastId, -2));
-            $newCounter = $lastCounter + 1;
-            $newCounter = str_pad($newCounter, 2, "0", STR_PAD_LEFT);
+        $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
+        
+        if($result && mysqli_num_rows($result) > 0) {
+            $lastId = mysqli_fetch_assoc($result)["id_user"];
+            $lastCounter = intval(substr($lastId, -4, 2));
+            $newCounter = str_pad($lastCounter + 1, 2, "0", STR_PAD_LEFT);
         } else {
             $newCounter = "01";
         }
-        $newId = $baseId . $newCounter;
+        $newId = $baseId . $newCounter . "00";
         return $newId;
     }
+
 
 
 
@@ -77,55 +75,69 @@ use Dom\Mysql;
 
 
     function register($POST){
-        global $conn;
-        $id_user = generateUserId($conn);
-        $nama = $POST["nama_user"];
-        $email = $POST["email"];
-        $nik = $POST["nik"];
-        $nisn = $POST["nisn"];
-        $pendidikan = $POST["id_pendidikan"];
-        $jenis_kelamin = $POST["jenis_kelamin"];
-        $tempat_lahir = $POST["tempat_lahir"];
-        $tanggal_lahir = $POST["tanggal_lahir"];
-        $alamat = $POST["alamat_user"];
-        $telepone = $POST["telepone_user"];
-        $level = $POST["level"];
-        $nim = $POST["nim"];
-        $gambar = uploadImage($_FILES["gambar_user"], "avatar.png", "assets/img/user/");
+    global $conn;
+    $id_user = generateUserId($conn);
+    $nama = $POST["nama_user"];
+    $email = $POST["email"];
+    $nik = $POST["nik"];
+    $nisn = $POST["nisn"];
+    $pendidikan = $POST["id_pendidikan"];
+    $jenis_kelamin = $POST["jenis_kelamin"];
+    $tempat_lahir = $POST["tempat_lahir"];
+    $tanggal_lahir = $POST["tanggal_lahir"];
+    $alamat = $POST["alamat_user"];
+    $telepone = $POST["telepone_user"];
+    $level = $POST["level"];
+    $nim = $POST["nim"];
+    $gambar = uploadImage($_FILES["gambar_user"], "avatar.png", "assets/img/user/");
 
-        if (checking($conn, 'tb_user', 'email', $email)) {
+    // Cek apakah email sudah ada di database
+    $query_check_email = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE email = '$email'");
+    
+    if(mysqli_num_rows($query_check_email) > 0) {
+        $row = mysqli_fetch_assoc($query_check_email);
+        $existing_id_user = $row['id_user'];
+        $penanda = substr($existing_id_user, -2); // Ambil 2 digit terakhir (PP)
+
+        if($penanda == "00") {
             header("Location: register.php?error=email_terdaftar");
             exit;
-        }
-        if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
-            header("Location: register.php?error=nik_terdaftar");
-            exit;
-        }
-        if (checking($conn, 'tb_profile_user', 'nisn', $nisn)) {
-            header("Location: register.php?error=nisn_terdaftar");
-            exit;
-        }
-
-        if (empty($nik) || strlen($nik) !== 16 || !ctype_digit($nik)) {
-            header("Location: register.php?error=nik_tidak_sesuai");
-            exit;
-        }
-        if (empty($nisn) || strlen($nisn) !== 10 || !ctype_digit($nisn)) {
-            header("Location: register.php?error=nisn_tidak_sesuai");
-            exit;
-        }
-
-        $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
-        $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
-                            VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
-        $query_user = mysqli_query($conn, $query1);
-        $query_profile = mysqli_query($conn, $query2);
-        if($query_user && $query_profile) {
-            return mysqli_affected_rows($conn);
         } else {
-            return 0;
+            header("Location: register.php?confirm=gunakan_data_lama&id_user_lama=$existing_id_user");
+            exit;
         }
     }
+
+    // Validasi NIK dan NISN
+    if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
+        header("Location: register.php?error=nik_terdaftar");
+        exit;
+    }
+    if (checking($conn, 'tb_profile_user', 'nisn', $nisn)) {
+        header("Location: register.php?error=nisn_terdaftar");
+        exit;
+    }
+    if (empty($nik) || strlen($nik) !== 16 || !ctype_digit($nik)) {
+        header("Location: register.php?error=nik_tidak_sesuai");
+        exit;
+    }
+    if (empty($nisn) || strlen($nisn) !== 10 || !ctype_digit($nisn)) {
+        header("Location: register.php?error=nisn_tidak_sesuai");
+        exit;
+    }
+
+    // Insert data baru
+    $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
+    $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
+                            VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
+    $query_user = mysqli_query($conn, $query1);
+    $query_profile = mysqli_query($conn, $query2);
+    if($query_user && $query_profile) {
+        return mysqli_affected_rows($conn);
+    } else {
+        return 0;
+    }
+}
 
 
 

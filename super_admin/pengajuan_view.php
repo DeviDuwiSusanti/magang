@@ -56,7 +56,7 @@
                             <td><?= $aju["status_pengajuan"] ?></td>
                             <td>
                                 <a href="#" class="btn btn-danger btn-sm" onclick="hapus_pengajuan_by_super_admin(<?= $aju['id_pengajuan'] ?>)">
-                                    <i class="bi bi-trash"></i> Hapus
+                                    <i class="bi bi-trash"></i>
                                 </a>
                             </td>
                         </tr>
