@@ -78,7 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['hapus_laporan'])) {
                     <tr>
                         <th>No</th>
                         <th>Nama Dokumen</th>
-                        <th>Jenis Dokumen</th>
                         <th>Tanggal Unggah</th>
                         <th>Aksi</th>
                     </tr>
@@ -90,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['hapus_laporan'])) {
                         <tr>
                             <td><?= $no ?></td>
                             <td><a href="<?= htmlspecialchars($row['file_path']) ?>" target="_blank"> <?= htmlspecialchars($row['nama_dokumen']) ?></a></td>
-                            <td>Persyaratan</td>
                             <td><?= htmlspecialchars($row['create_date']) ?></td>
                             <td class="text-center">
                                 <?php if ($row['id_user'] == $id_user): ?>
