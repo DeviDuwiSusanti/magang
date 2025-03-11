@@ -1,25 +1,25 @@
 <?php
 include "../koneksi.php"; 
-include "../layout/sidebarUser.php"; 
-include "functions.php"; 
+include "../layout/sidebarUser.php";
+include "functions.php";
 
-// Pastikan session telah dimulai jika $id_user berasal dari session
-$id_user = $_SESSION['id_user'] ?? null;
-
-if (!$id_user) {
-    echo "<script>alert('Silakan login terlebih dahulu'); window.location.href='login.php';</script>";
-    exit;
+// Ambil daftar pengajuan magang berdasarkan id_user
+if ($level == '3') {
+    $sql = "SELECT * 
+            FROM tb_pengajuan 
+            LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
+            LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+            WHERE tb_pengajuan.status_pengajuan = '4' AND tb_pengajuan.id_user = '$id_user'";
+} else if ($level == '4') {
+    $sql = "SELECT p.*, i.nama_panjang, b.nama_bidang
+            FROM tb_profile_user pu
+            JOIN tb_user u ON pu.id_user = u.id_user
+            JOIN tb_pengajuan p ON pu.id_pengajuan = p.id_pengajuan
+            JOIN tb_bidang b ON p.id_bidang = b.id_bidang
+            JOIN tb_instansi i ON p.id_instansi = i.id_instansi
+            WHERE pu.id_user = '$id_user' 
+            AND p.status_pengajuan = '4'";
 }
-
-// Query untuk mengambil data pengajuan magang yang masih aktif sesuai dengan id_user yang login
-$sql = "SELECT * 
-        FROM tb_pengajuan 
-        LEFT JOIN tb_profile_user ON tb_pengajuan.id_pengajuan = tb_profile_user.id_pengajuan 
-        LEFT JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
-        LEFT JOIN tb_user ON tb_pengajuan.id_user = tb_user.id_user 
-        LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
-        LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-        WHERE tb_pengajuan.status_pengajuan = '4' AND tb_profile_user.id_user = '$id_user'";
 
 $query = mysqli_query($conn, $sql);
 $no = 1;
@@ -27,10 +27,7 @@ $no = 1;
 
 <div class="main-content p-4">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar Kegiatan</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Tabel Kegiatan Aktif</li>
-        </ol>
+        <h1 class="mb-4">Daftar Kegiatan Aktif</h1>
         <div class="mb-4 dropdown-divider"></div>
 
         <div class="bungkus">
@@ -38,57 +35,89 @@ $no = 1;
                 <thead>
                     <tr>
                         <th class="text-center">No</th>
-                        <th class="text-center">Nama</th>
-                        <th class="text-center">Pendidikan</th>
-                        <th class="text-center">Perusahaan</th>
+                        <th class="text-center">Instansi</th>
                         <th class="text-center">Bidang</th>
                         <th class="text-center">Durasi</th>
+                        <th class="text-center">Periode Magang</th>
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php if (mysqli_num_rows($query) > 0): ?>
-                    <?php while ($row = mysqli_fetch_assoc($query)): ?> 
-                        <tr>
-                            <td class="text-center"><?= $no++; ?></td> 
-                            <td><?= htmlspecialchars($row['nama_user'] ?? 'Data tidak tersedia') ?></td> 
-                            <td><?= htmlspecialchars($row['nama_pendidikan'] ?? 'Data tidak tersedia') ?></td> 
-                            <td><?= htmlspecialchars($row['nama_panjang'] ?? 'Data tidak tersedia') ?></td> 
-                            <td><?= htmlspecialchars($row['nama_bidang'] ?? 'Data tidak tersedia') ?></td> 
-                            <td class="text-center">
-                                <?php 
-                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        $start_date = DateTime::createFromFormat('Y-m-d', $row['tanggal_mulai']);
-                                        $end_date = DateTime::createFromFormat('Y-m-d', $row['tanggal_selesai']);
+                <?php while ($data = mysqli_fetch_assoc($query)) { 
+                    // Query Detail Pengajuan untuk Modal
+                    $id_pengajuan = $data['id_pengajuan'];
+                    $sql1 = "SELECT * FROM tb_pengajuan 
+                             JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
+                             JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
+                             WHERE tb_pengajuan.id_pengajuan = '$id_pengajuan'";
+                    $query1 = mysqli_query($conn, $sql1);
+                    $detail = mysqli_fetch_assoc($query1);
 
-                                        if ($start_date && $end_date) {
-                                            $interval = $start_date->diff($end_date);
-                                            $months = $interval->m + ($interval->y * 12);
-                                            $days = $interval->d;
-                                            echo "$months Bulan" . ($days > 0 ? " $days Hari" : "");
-                                        } else {
-                                            echo "Format Tanggal Tidak Valid";
-                                        }
-                                    } else {
-                                        echo "Durasi Tidak Diketahui";
-                                    } 
-                                ?>
-                            </td>
-                            <td class="text-center">
-                                <a href="detail_aktif.php?id_pengajuan=<?= $row['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="text-decoration-none" title="Lihat Detail">
-                                    <i class="bi bi-eye" style="font-size: 20px;"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
+                    // Query Detail Profile User
+                    $sql2 = "SELECT * FROM tb_profile_user pu 
+                             INNER JOIN tb_user u ON pu.id_user = u.id_user 
+                             INNER JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
+                             WHERE pu.id_user = '$id_user'";
+                    $query2 = mysqli_query($conn, $sql2);
+                    $profile = mysqli_fetch_assoc($query2);
+                ?>
                     <tr>
-                        <td colspan="8" class="text-center">Tidak ada kegiatan yang aktif.</td>
+                        <td class="text-center"><?= $no++ ?></td>
+                        <td><?= htmlspecialchars($data['nama_panjang']) ?></td>
+                        <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
+                        <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
+                        <td><?= formatPeriode($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td>                        
+                        <td class="text-center">
+                            <a href="#" class="text-decoration-none" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
+                                <i class="bi bi-eye" style="font-size: 20px;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    
+                    <!-- Modal Detail -->
+                    <div class="modal fade" id="modalDetail<?= $data['id_pengajuan']; ?>" tabindex="-1" aria-labelledby="modalDetailLabel<?= $data['id_pengajuan']; ?>" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="modalDetailLabel<?= $data['id_pengajuan']; ?>">Detail Pengajuan</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="../assets/img/user/<?= !empty($profile['gambar_user']) ? htmlspecialchars($profile['gambar_user']) : 'avatar.png' ?>" 
+                                         class="rounded-circle mb-3" 
+                                         alt="Profile Picture" 
+                                         style="width: 100px; height: 100px;">
+                                    <h4 class="card-title"><?= htmlspecialchars($profile['nama_user'] ?? "Tidak Diketahui") ?></h4>
+                                    <p class="text-muted"><?= htmlspecialchars($profile['email'] ?? "Tidak Ada Email") ?></p>
+                                    <hr>
+                                    <p><strong>Perusahaan:</strong> <?= htmlspecialchars($detail['nama_panjang'] ?? "Tidak Diketahui") ?></p>
+                                    <p><strong>Bidang:</strong> <?= htmlspecialchars($detail['nama_bidang'] ?? "Tidak Diketahui") ?></p>
+                                    <p><strong>Jenis Pengajuan:</strong> <?= htmlspecialchars($detail['jenis_pengajuan'] ?? "Tidak Diketahui") ?></p>
+                                    <p><strong>Status Lamaran:</strong> <?= isset($detail['status_pengajuan']) ? getStatusText($detail['status_pengajuan']) : "Tidak Diketahui" ?></p>
+                                    <p><strong>Durasi:</strong> <?= isset($detail['tanggal_mulai'], $detail['tanggal_selesai']) ? hitungDurasi($detail['tanggal_mulai'], $detail['tanggal_selesai']) : "Tidak Diketahui" ?></p>
+                                    <p><strong>Periode Magang:</strong> <?= isset($detail['tanggal_mulai'], $detail['tanggal_selesai']) ? formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']) : "Tidak Diketahui" ?></p>
+                                </div>
+
+                                <!-- Tombol Aksi dalam Modal -->
+                                <div class="modal-footer flex-column align-items-start">
+                                    <div class="d-flex justify-content-end w-100 mt-2">
+                                        <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <?php if (mysqli_num_rows($query) == 0): ?>
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada histori kegiatan.</td>
                     </tr>
                 <?php endif; ?>
-                </tbody>
+            </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <?php include "../layout/footerDashboard.php"; ?>
