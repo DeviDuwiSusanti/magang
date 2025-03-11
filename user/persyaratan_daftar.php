@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         exit();
     }
     
-    $upload_dir = "uploads/";
+    $upload_dir = "../assets/doc/"; 
     if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
     
     $file_path = $upload_dir . uniqid() . "_" . basename($file_name);
