@@ -75,6 +75,12 @@
                 <input type="text" class="form-control" id="nik_user" inputmode="numeric" name="nik_user" placeholder="Masukkan NIK Calon Admin Instansi (16)" required maxlength="16">
             </div>
 
+            <!-- NIK -->
+            <div class="mb-3">
+                <label for="nik_admin_instansi" class="form-label">NIP</label>
+                <input type="text" class="form-control" id="nik_user" inputmode="numeric" name="nip" placeholder="Masukkan NIK Calon Admin Instansi (18)" required maxlength="16">
+            </div>
+
             <!-- Email -->
             <div class="mb-3">
                 <label for="email_admin_instansi" class="form-label">Email</label>
