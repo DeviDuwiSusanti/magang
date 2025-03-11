@@ -65,6 +65,18 @@ function generateLogbookId($conn, $id_pengajuan) {
     return $id_logbook;
 }
 
+function getLogbook($conn, $id_pengajuan, $id_user) {
+    // Query untuk mengambil logbook
+    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+    $query = mysqli_query($conn, $sql);
+
+    // Periksa apakah query berhasil
+    if (!$query) {
+        die("Query error: " . mysqli_error($conn));
+    }
+    // Mengembalikan hasil query
+    return $query;
+}
 
 function uploadFile($file) {
     $target_dir = "../assets/doc/";  // Update path here

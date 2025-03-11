@@ -5,7 +5,7 @@ include "functions.php";
 // TABEL DAFTAR ANGGOTA
 if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
     $id_pengajuan = $_GET['id_pengajuan'];
-    $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND u.level = '4' AND pu.id_user = u.id_user";
+    $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user";
     $query = mysqli_query($conn, $sql);
 
     $no = 1;
@@ -53,7 +53,7 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
                                 <th>NIK</th>
                                 <th>Nim/Nisn</th>
                                 <?php
-                                if ($row3['status_pengajuan'] == '1'){?>
+                                if ($row3['status_pengajuan'] == '1' ){?>
                                     <th>Aksi</th>
                                 <?php
                                 }
@@ -70,17 +70,22 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
                                     <td><?= $row['nik'] ?></td>
                                     <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
                                     <?php
-                                    if ($row3['status_pengajuan'] == '1'){?>
-                                    <td>
-                                        <a href="detail_anggota.php?id_userEdit=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil"></i> Edit
-                                        </a>
-                                        <a href="detail_anggota.php?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" 
-                                        onclick="return confirm('Anda yakin akan menghapus Data Anggota ini?')"
-                                        class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </a>
-                                    </td>
+                                    if ($row3['status_pengajuan'] == '1'){ ?>
+                                        <td>
+                                        <?php
+                                        if ($row['level'] != 3){?>
+                                            <a href="detail_anggota.php?id_userEdit=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil"></i> Edit
+                                            </a>
+                                            <a href="detail_anggota.php?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" 
+                                            onclick="return confirm('Anda yakin akan menghapus Data Anggota ini?')"
+                                            class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash"></i> Hapus
+                                            </a>
+                                        <?php
+                                        }
+                                        ?>
+                                        </td>
                                     <?php
                                     }
                                     ?>

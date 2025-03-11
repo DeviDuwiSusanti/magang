@@ -40,7 +40,7 @@ if (isset($_POST['input_logbook'])) {
         <h1 class="mb-4">Unggah Logbook</h1>
         <ol class="breadcrumb mb-4 d-flex justify-content-between align-items-center">
             <li class="breadcrumb-item active">Unggah Logbook Harian</li>
-            <a href="logbook_daftar.php" class="btn btn-secondary">Lihat Daftar Logbook</a>
+            <a href="logbook_daftar.php" class="btn btn-primary">Lihat Daftar Logbook</a>
         </ol>
         <div class="dropdown-divider"></div><br><br>
         
@@ -70,20 +70,23 @@ if (isset($_POST['input_logbook'])) {
                 </div>
             </div>
 
-            <!-- Unggah Gambar -->
-            <div class="mb-3">
-                <label for="gambar_kegiatan" class="form-label">Unggah Gambar Kegiatan</label>
-                <input type="file" class="form-control" id="gambar_kegiatan" name="gambar_kegiatan" accept="image/*">
+             <!-- Input Gambar dan Tanda Tangan berdampingan -->
+             <div class="d-flex gap-4">
+                <!-- Unggah Gambar -->
+                <div class="mb-3" style="flex: 1;">
+                    <label for="gambar_kegiatan" class="form-label">Unggah Gambar Kegiatan (Landscape Only)</label>
+                    <input type="file" class="form-control" id="gambar_kegiatan" name="gambar_kegiatan" accept="image/*">
+                    <div id="preview-container" style="margin-top: 10px; max-width: 300px; max-height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; border: 1px solid #ddd; border-radius: 5px;"></div>
+                </div>
+                
+                <!-- Tanda Tangan -->
+                <div class="mb-3" style="flex: 1;">
+                    <label for="signature-pad" class="form-label">Tanda Tangan</label>
+                    <canvas id="signature-pad" width="300" height="150" style="border: 1px solid #000; display: block; margin-bottom: 10px;"></canvas>
+                    <button type="button" class="btn btn-danger btn-sm" id="clear-signature">Hapus Tanda Tangan</button>
+                    <input type="hidden" name="ttd" id="signature-data">
+                </div>
             </div>
-
-            <!-- Tanda Tangan -->
-            <div class="mb-3">
-                <label for="signature-pad" class="form-label">Tanda Tangan</label>
-                <canvas id="signature-pad" width="300" height="150" style="border: 1px solid #000; display: block; margin-bottom: 10px;"></canvas>
-                <button type="button" class="btn btn-danger btn-sm" id="clear-signature">Hapus Tanda Tangan</button>
-                <input type="hidden" name="ttd" id="signature-data">
-            </div>
-
     
             <!-- Tombol Submit -->
             <button type="submit" name="input_logbook" class="btn btn-primary edit"><i class="bi bi-floppy me-1"></i>Simpan</button>
@@ -92,6 +95,47 @@ if (isset($_POST['input_logbook'])) {
 </div>
 
 <?php include "../layout/footerDashboard.php" ?>
+
+<!-- Timepicker (analog) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/clockpicker/dist/bootstrap-clockpicker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
+
+<!-- Croppie -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+
+<script>
+    // Jam analog picker
+    $(document).ready(function(){
+        $('#jam_mulai').clockpicker({ autoclose: true });
+        $('#jam_selesai').clockpicker({ autoclose: true });
+    });
+
+    // Preview dan validasi gambar landscape
+    const fileInput = document.getElementById('gambar_kegiatan');
+    const previewContainer = document.getElementById('preview-container');
+
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function () {
+                    if (img.width >= img.height) {
+                        previewContainer.innerHTML = `<img src="${img.src}" alt="Preview" style="max-width:100%; height:auto;">`;
+                    } else {
+                        alert('Hanya gambar landscape yang diperbolehkan.');
+                        fileInput.value = '';
+                        previewContainer.innerHTML = '';
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 
 
 <!-- ======= VALIDASI ========== -->
