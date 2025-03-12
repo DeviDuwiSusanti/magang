@@ -5,23 +5,30 @@ if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
 };
 
+// ============== QUERY TAMBAH LOGBOOK ==================
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['input_logbook'])) {
-    if (inputLogbook($conn, $_POST, $_FILES, $id_pengajuan, $id_user)) {
-        showAlert('Berhasil!', 'Logbook Berhasil Diinput', 'success', "logbook_daftar.php");
-        exit();
-    } else {
-        showAlert('Gagal!', 'Logbook gagal diinput. Silakan coba lagi.', 'error');
-    }    
+    inputLogbook($_POST, $_FILES, $id_pengajuan, $id_user);
+}
+
+// =============== QUERY UPDATE ====================
+$id_logbook_edit = null;
+$dataLama = null;
+
+if (ISSET($_GET['id_logbook_edit'])){
+    $id_logbook_edit = $_GET['id_logbook_edit'];
+    
+    $sql = "SELECT * FROM tb_logbook WHERE id_logbook = '$id_logbook_edit'";
+    $query = mysqli_query($conn, $sql);
+    $dataLama = mysqli_fetch_assoc($query);
+    $ttd = $dataLama['tanda_tangan'];
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && ISSET($_POST['update_logbook'])){
-    if (updateLogbook($_POST, $_FILES, $id_user, $id_logbook, $row)) {
-        showAlert('Berhasil!', 'Logbook Berhasil Diupdate', 'success', "logbook_daftar.php");
-        exit();
-    } else {
-        showAlert('Gagal!', 'Logbook gagal diupdate. Silakan coba lagi.', 'error');
-    }    
+    updateLogbook($_POST, $_FILES, $id_user, $id_logbook_edit, $dataLama);
 }
+
+
 $no = 1;
 
 // akses status_pengajuan
@@ -30,22 +37,12 @@ $query3 = mysqli_query($conn, $sql3);
 $status_pengajuan = mysqli_fetch_assoc($query3)['status_pengajuan'];
 
 // akses anggota
-$sql_anggota = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND u.level = '4' AND pu.id_user = u.id_user";
+$sql_anggota = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user  AND u.status_active = '1'";
 $query_anggota = mysqli_query($conn, $sql_anggota);
 
-
-
 // HAPUS LOGBOOK
-if (isset($_GET['id_logbook'])) {
-    $id_logbook = $_GET['id_logbook'];
-    $sql2 =  "DELETE FROM tb_logbook WHERE id_logbook = '$id_logbook' AND id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
-    $query2 = mysqli_query($conn, $sql2);
-    if ($query2) {
-        showAlert('Berhasil!', 'Logbook Berhasil Dihapus', 'success', "logbook_daftar.php");
-        exit();
-    } else {
-        showAlert('Gagal!', 'Logbook gagal dihapus. Silakan coba lagi.', 'error');
-    }    
+if (isset($_GET['id_logbook_hapus'])) {
+    hapusLogbook($id_user);
 }
 
 ?>
@@ -57,26 +54,30 @@ if (isset($_GET['id_logbook'])) {
             <li class="breadcrumb-item active">Logbook Harian</li>
         </ol>
 
-        <div class="dropdown">
-            <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
-            Logbook Anggota
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="?id_user_anggota=<?= $id_user ?>#logbook_container">Anda</a></li>
-                <?php
-                while ($row_anggota = mysqli_fetch_assoc($query_anggota)){?>
-                    <li><a class="dropdown-item" href="?id_user_anggota=<?= $row_anggota['id_user'] ?>#logbook_container"><?= $row_anggota['nama_user'] ?></a></li>
-                <?php
-                }
-                ?>
-            </ul>
-        </div>
+        <?php 
+        if ($ketua){?>
+            <div class="dropdown">
+                <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
+                Logbook Anggota
+                </button>
+                <ul class="dropdown-menu">
+                    <?php
+                    while ($row_anggota = mysqli_fetch_assoc($query_anggota)){?>
+                        <li><a class="dropdown-item" href="?id_user_anggota=<?= $row_anggota['id_user'] ?>#logbook_container"><?= $row_anggota['nama_user'] ?></a></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+        <?php
+        }
+        ?>
         
         <div class="mb-4 dropdown-divider"></div>
         
         <div class="mb-4 text-end" id="logbook_container">
             <?php
-            $id_user_anggota = isset($_GET['id_user_anggota']) ? $_GET['id_user_anggota'] : $id_user; 
+            $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
                 if ($status_pengajuan != '5' && $id_user_anggota == $id_user){
                     ?>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
@@ -131,7 +132,7 @@ if (isset($_GET['id_logbook'])) {
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
 
-                                    <a href="?id_logbook=<?= $row['id_logbook'] ?>" 
+                                    <a href="?id_logbook_hapus=<?= $row['id_logbook'] ?>" 
                                     onclick="return confirm('Anda yakin akan menghapus Logbook ini?')"
                                     class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i> Hapus
@@ -157,7 +158,6 @@ if (isset($_GET['id_logbook'])) {
 $sqlTanggal = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
 $queryTanggal = mysqli_query($conn, $sqlTanggal);
 $rowTanggal = mysqli_fetch_assoc($queryTanggal);
-
 ?>
 <div class="modal fade" id="modalTambahLogbook" tabindex="-1" aria-labelledby="logbookModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg"> <!-- Menambah class modal-lg untuk memperlebar modal -->
@@ -213,18 +213,7 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
 
 
 <!-- ====================== Modal Edit Logbook ================= -->
-<?php
-$id_logbook_edit = null;
-$dataLama = null;
-if (ISSET($_GET['id_logbook_edit'])){
-    $id_logbook_edit = $_GET['id_logbook_edit'];
-    
-    $sql = "SELECT * FROM tb_logbook WHERE id_logbook = '$id_logbook_edit'";
-    $query = mysqli_query($conn, $sql);
-    $dataLama = mysqli_fetch_assoc($query);
-    $ttd = $dataLama['tanda_tangan'];
-}
-?>
+
 <div class="modal fade" id="modalEditLogbook" tabindex="-1" aria-labelledby="editLogbookModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -261,8 +250,9 @@ if (ISSET($_GET['id_logbook_edit'])){
                     <div class="d-flex gap-4">
                         <div class="mb-3" style="flex: 1;">
                             <label for="gambar_kegiatan" class="form-label">Unggah Gambar Kegiatan (Landscape Only)</label>
-                            <input type="file" class="form-control" id="gambar_kegiatan" name="gambar_kegiatan" accept="image/*">
-                            <div id="preview-container" style="margin-top: 10px; max-width: 300px; max-height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; border: 1px solid #ddd; border-radius: 5px;">
+                            <!-- Modal Edit Logbook -->
+                            <input type="file" class="form-control" id="edit_gambar_kegiatan" name="gambar_kegiatan" accept="image/*">
+                            <div id="edit_preview_container" style="margin-top: 10px; max-width: 300px; max-height: 200px; overflow: hidden; display: flex; justify-content: center; align-items: center; border: 1px solid #ddd; border-radius: 5px;">
                                 <img src="<?= $dataLama['foto_kegiatan'] ?>" alt="Gambar Kegiatan Lama" style="max-width:100%; height:auto;">
                             </div>
                         </div>
@@ -325,30 +315,36 @@ if (ISSET($_GET['id_logbook_edit'])){
 
     });
 
-    // Preview dan validasi gambar landscape
-    const fileInput = document.getElementById('gambar_kegiatan');
-    const previewContainer = document.getElementById('preview-container');
+    // Fungsi untuk validasi dan preview gambar landscape
+    function handleImagePreview(fileInputId, previewContainerId) {
+        const fileInput = document.getElementById(fileInputId);
+        const previewContainer = document.getElementById(previewContainerId);
 
-    fileInput.addEventListener('change', function () {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = function () {
-                    if (img.width >= img.height) {
-                        previewContainer.innerHTML = `<img src="${img.src}" alt="Preview" style="max-width:100%; height:auto;">`;
-                    } else {
-                        alert('Hanya gambar landscape yang diperbolehkan.');
-                        fileInput.value = '';
-                        previewContainer.innerHTML = '';
-                    }
+        fileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = function () {
+                        if (img.width >= img.height) {
+                            previewContainer.innerHTML = `<img src="${img.src}" alt="Preview" style="max-width:100%; height:auto;">`;
+                        } else {
+                            alert('Hanya gambar landscape yang diperbolehkan.');
+                            fileInput.value = ''; // reset input
+                            previewContainer.innerHTML = ''; // kosongkan preview
+                        }
+                    };
                 };
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Panggil fungsi untuk masing-masing modal
+    handleImagePreview('gambar_kegiatan', 'preview-container'); // Tambah logbook
+    handleImagePreview('edit_gambar_kegiatan', 'edit_preview_container'); // Edit logbook
 </script>
 
 <!-- =============== Inisialisasi canvas tanda tangan =======================-->
@@ -407,7 +403,7 @@ if (ISSET($_GET['id_logbook_edit'])){
 </script>
 
 
-<!-- ======= VALIDASI TAMBAH LOGBOOK========== -->
+<!-- ======= VALIDASI LOGBOOK========== -->
 <script>
 $(document).ready(function() {
     /* ============================

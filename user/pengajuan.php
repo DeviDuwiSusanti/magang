@@ -28,77 +28,12 @@ $pendaftar = mysqli_fetch_assoc($query_pendaftar);
 // INSERT PENGAJUAN
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
-        $id_pengajuan = generateIdPengajuan($conn);
-        $id_dokumen_ktp = generateIdDokumen($conn, $id_pengajuan);
-        
-        $id_instansi = $_POST['id_instansi'];
-        $id_bidang = $_POST['id_bidang'];
-        $jenis_pengajuan = $_POST['jenis_pengajuan'];
-        $jumlah_pelamar = $_POST['jumlah_anggota'];
-        if ($jumlah_pelamar == NULL){
-            $jumlah_pelamar = 1;
-        }
-        $tanggal_mulai = $_POST['tanggal_mulai']; // Contoh: 09/04/2025
-        $tanggal_selesai = $_POST['tanggal_selesai']; // Contoh: 10/04/2025
-
-        // Konversi ke format YYYY-MM-DD
-        $tanggal_mulai = DateTime::createFromFormat('d/m/Y', $tanggal_mulai)->format('Y-m-d');
-        $tanggal_selesai = DateTime::createFromFormat('d/m/Y', $tanggal_selesai)->format('Y-m-d');
-        
-        // Menangani upload file KTP dan CV
-        $ktp = uploadFile($_FILES['ktp']);
-        $cv = uploadFile($_FILES['cv']);
-
-        if (ISSET($_POST['anggota_nama'])){
-            // Mengambil data anggota dari form Step 2
-            $anggota_nama = $_POST['anggota_nama'];
-            $anggota_email = $_POST['anggota_email'];
-            $anggota_nik = $_POST['anggota_nik'];
-            $anggota_nim = $_POST['anggota_nim'];
-
-            foreach ($anggota_nama as $index => $nama) {
-                $email = $anggota_email[$index];
-                $nik = $anggota_nik[$index];
-                $nim = $anggota_nim[$index];
-                $id_user4 = generateIdUser4($conn, $id_user);
-
-                $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
-                $result = mysqli_query($conn, $pendidikan);
-                $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
-            
-                $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
-                $query_anggota1 = mysqli_query($conn, $sql_anggota1);
-                
-                $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '4', '$id_user')";
-                $query_anggota2 = mysqli_query($conn, $sql_anggota2);
-            }
-        }
-
-        $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
-        $query2 = mysqli_query($conn, $sql2);
-
-        $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
-        $query3 = mysqli_query($conn, $sql3);
-        
-
-        if ($query2 && $query3){
-            $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
-            $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
-            $query4 = mysqli_query($conn, $sql4);
-
-            $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
-            $query5 = mysqli_query($conn, $sql5);
-
-            if ($query4) {?>
-                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                <?php
-                showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "status_pengajuan.php");
-                exit();
-            } else {
-                showAlert('Gagal!', 'Yahh pendaftaran kamu gagal. Silakan coba lagi.', 'error');
-            }    
-        }
+        inputPengajuan($_POST, $_FILES, $id_user);
     }
+}
+
+if (ISSET($_POST['update_pengajuan'])){
+    updatePengajuan($_POST, $_FILES, $id_user);
 }
 
 // Cek jika ada request AJAX dari JavaScript untuk mengambil bidang
@@ -261,6 +196,9 @@ if (isset($_POST["id_bidang"])) {
 </head>
 <body>
 
+<!-- =========== INPUT PENGAJUAN =============== -->
+<?php 
+if (!ISSET($_GET['id_pengajuanEdit'])){?>
 <div class="main-content p-4">
     <div class="container-fluid">
         <h1 class="mb-4">Tambah Pengajuan</h1>
@@ -392,6 +330,111 @@ if (isset($_POST["id_bidang"])) {
                 </div>
             </form>
         </div>
+<?php
+}
+?>
+
+<!-- ============= UPDATE PENGAJUAN =========== -->
+<?php
+if (ISSET($_GET['id_pengajuanEdit'])){
+    $id_pengajuanEdit  = $_GET['id_pengajuanEdit'];
+    // akses data pengajuan user
+    $sql_pengajuan = "SELECT * FROM tb_pengajuan p, tb_bidang b, tb_instansi i WHERE p.id_pengajuan = '$id_pengajuanEdit' AND p.id_bidang = b.id_bidang AND p.id_instansi = i.id_instansi;"; 
+    $query_pengajuan = mysqli_query($conn, $sql_pengajuan);
+    $pengajuan = mysqli_fetch_assoc($query_pengajuan);
+
+    $sql_dokumen = "SELECT file_path FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuanEdit' ORDER BY id_dokumen ASC";
+    $query_dokumen = mysqli_query($conn, $sql_dokumen);
+    $daftar_dokumen = mysqli_fetch_all($query_dokumen, MYSQLI_ASSOC);
+?>
+<div class="main-content p-4">
+    <div class="container-fluid">
+        <h1 class="mb-4">Edit Pengajuan</h1>
+        <ol class="breadcrumb mb-3">
+            <li class="breadcrumb-item active">Edit Informasi Pengajuan</li>
+        </ol>
+        <div class="dropdown-divider mb-3"></div>
+        <div class="mb-4 text-end">
+            <a href="status_pengajuan.php" class="btn btn-danger btn-sm">
+                <i class="bi bi-arrow-left-circle me-1"></i> Kembali
+            </a>
+        </div>
+
+
+        <div class="form-container center-form" id="formContainer">
+            <div class="form-wrapper" id="formWrapper">
+            <form id="pengajuanForm" action="" class="form-profile" method="POST" enctype="multipart/form-data" novalidate>
+                <input type="hidden" name="id_pengajuan" value="<?= $pengajuan['id_pengajuan'] ?>">
+                <input type="hidden" name="id_user" value="<?= $id_user ?>">
+                
+                <div id="step1">
+                    <h4>Step 1: Daftar Pengajuan</h4>
+                    <div class="mb-3">
+                        <label for="instansi" class="form-label">Instansi yang Dituju</label>
+                        <select class="form-control" name="id_instansi" id="instansi" required>
+                            <option value="<?= $pengajuan['id_instansi'] ?>"><?= $pengajuan['nama_panjang'] ?></option>
+                            <?php
+                            if (mysqli_num_rows($result_instansi) > 0) {
+                                while ($row = mysqli_fetch_assoc($result_instansi)) {
+                                    echo '<option value="'.$row['id_instansi'].'">'.$row['nama_panjang'].' (Kuota: '.$row['total_kuota'].')</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="bidang" class="form-label">Bidang yang Dipilih</label>
+                        <select class="form-control" name="id_bidang" id="bidang" required>
+                            <option value="<?= $pengajuan['id_bidang'] ?>"><?= $pengajuan['nama_bidang'] ?></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
+                        <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan" required>
+                            <option value="<?= $pengajuan['jenis_pengajuan'] ?>"><?= $pengajuan['jenis_pengajuan'] ?></option>
+                            <option value="magang">Magang</option>
+                            <option value="kerja praktek">Kerja Praktek</option>
+                            <option value="pkl">PKL</option>
+                            <option value="penelitian">Penelitian</option>
+                        </select>
+                    </div>
+                    <!-- Tanggal Mulai dan Selesai -->
+                    <div class="mb-3">
+                        <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                        <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= !empty($pengajuan['tanggal_mulai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_mulai'])) : '' ?>">
+                        <small class="text-danger error-message" id="error_tanggal_mulai"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                        <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= !empty($pengajuan['tanggal_selesai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_selesai'])) : '' ?>">
+                        <small class="text-danger error-message" id="error_tanggal_selesai"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ktp" class="form-label">Upload KTP</label>
+                        <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf">
+                        <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[0]['file_path']) ?>" target="_blank">Lihat KTP</a></p>
+                        <small class="text-danger error-message" id="error_ktp"></small>
+                    </div>
+
+                    <!-- Upload CV -->
+                    <div class="mb-3">
+                        <label for="cv" class="form-label">Upload CV</label>
+                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
+                        <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
+                        <small class="text-danger error-message" id="error_cv"></small>
+                    </div>
+
+                    <button type="submit" name="update_pengajuan" class="btn btn-success btn-sm">Update</button>
+                </div>
+            </form>
+        </div>
+<?php
+}
+?>
 
             <!-- Card Detail Lowongan -->
             <div class="col-md-6" id="detailBidangContainer" style="display: none;">

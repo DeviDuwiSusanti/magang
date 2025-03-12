@@ -3,15 +3,15 @@ include "../layout/sidebarUser.php";
 include "functions.php";
 
 // TABEL DAFTAR ANGGOTA
-if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
+if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEdit'])) {
     $id_pengajuan = $_GET['id_pengajuan'];
-    $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user";
+    $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user AND u.status_active = '1'";
     $query = mysqli_query($conn, $sql);
 
     $no = 1;
 
     // update jumlah anggota magang
-    $sqlAnggota = "SELECT COUNT(*) AS jumlahAnggota FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'";
+    $sqlAnggota = "SELECT COUNT(*) AS jumlahAnggota FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan' AND status_active = '1'";
     $queryAnggota = mysqli_query($conn, $sqlAnggota);
     $jumlah_anggota = mysqli_fetch_assoc($queryAnggota)['jumlahAnggota'];
 
@@ -34,10 +34,9 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
             <div class="mb-4 text-end">
                 <?php
                 if ($row3['status_pengajuan'] == '1' && $jumlah_anggota < $row3['kuota_bidang']){?>
-                    <a href="?id_user=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Tambah Anggota
-                    </a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahAnggotaModal">
+                        <i class="bi bi-plus-circle me-1"></i> Tambah Anggota
+                    </button>
                 <?php
                 }
                 ?>
@@ -68,27 +67,21 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
                                     <td><?= $row['nama_user'] ?></td>
                                     <td><?= $row['email'] ?></td>
                                     <td><?= $row['nik'] ?></td>
-                                    <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
-                                    <?php
-                                    if ($row3['status_pengajuan'] == '1'){ ?>
+                                    <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>           
+                                    <?php if ($row3['status_pengajuan'] == '1'): ?>
                                         <td>
-                                        <?php
-                                        if ($row['level'] != 3){?>
-                                            <a href="detail_anggota.php?id_userEdit=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-warning btn-sm">
+                                        <?php $isKetua = cekStatusUser($row['id_user']) === 'Ketua'; ?>
+                                            <a href="<?= $isKetua ? '#' : "?id_userEdit={$row['id_user']}&id_pengajuan={$id_pengajuan}" ?>"
+                                                class="btn btn-warning btn-sm <?= $isKetua ? 'disabled' : '' ?>">
                                                 <i class="bi bi-pencil"></i> Edit
                                             </a>
-                                            <a href="detail_anggota.php?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>" 
-                                            onclick="return confirm('Anda yakin akan menghapus Data Anggota ini?')"
-                                            class="btn btn-danger btn-sm">
+                                            <a href="<?= $isKetua ? '#' : "detail_anggota.php?id_userHapus={$row['id_user']}&id_pengajuan={$id_pengajuan}" ?>" 
+                                            onclick="<?= $isKetua ? 'return false;' : "return confirm('Anda yakin akan menghapus Data Anggota ini?')" ?>"
+                                            class="btn btn-danger btn-sm <?= $isKetua ? 'disabled' : '' ?>">
                                                 <i class="bi bi-trash"></i> Hapus
                                             </a>
-                                        <?php
-                                        }
-                                        ?>
                                         </td>
-                                    <?php
-                                    }
-                                    ?>
+                                    <?php endif; ?>
                                 </tr>
                             <?php
                             $no++;
@@ -101,157 +94,125 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1) {
         </div>
     </div>
 <?php
-}if (isset($_GET['id_userHapus']) && isset($_GET['id_pengajuan'])) {
-    $id_userHapus = $_GET['id_userHapus'];
-    $id_pengajuan = $_GET['id_pengajuan'];
-    $sql2 =  "DELETE tb_user, tb_profile_user 
-            FROM tb_user 
-            JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user
-            WHERE tb_user.id_user = '$id_userHapus' AND tb_profile_user.id_pengajuan = '$id_pengajuan'";
-    $query2 = mysqli_query($conn, $sql2);
-    if (mysqli_query($conn, $sql2)){
-        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
-        exit();
-    }else{
-        showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');
-    }   
-    
-}if (ISSET($_POST['update_anggota'])){
-    $id_pengajuan = $_POST['id_pengajuan'];
-    $id_userUpdate = $_POST['id_user'];
-    $nama_anggota = $_POST['nama_user'];
-    $email = $_POST['email'];
-    $nik = $_POST['nik'];
-    $nim = $_POST['nim'];
+}
 
-    $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nim = '$nim', nisn = '$nim', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
-    if (mysqli_query($conn, $sqlUpdate)){
-        $sqlUpdate2 = "UPDATE tb_user SET email = '$email', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
-        if (mysqli_query($conn, $sqlUpdate2)){
-            showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
-            exit();
-        }else{
-            showAlert('Gagal!', 'Data anggota gagal diupdate. Silakan coba lagi.', 'error');
-        }   
-    }
-}if (ISSET($_POST['tambah_anggota'])){
-    $id_pengajuan = $_POST['id_pengajuan'];
-    $nama_anggota = $_POST['nama_user'];
-    $email = $_POST['email'];
-    $nik = $_POST['nik'];
-    $nim = $_POST['nim'];
-    $id_user4  = generateIdUser4($conn, $id_user);
-    $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
-    $result = mysqli_query($conn, $pendidikan);
-    $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
-
-    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
-    if (mysqli_query($conn, $sqlTambah)){
-        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '4', '$id_user')";
-        if (mysqli_query($conn, $sqlTambah2)){
-            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
-            exit();
-        }else{
-            showAlert('Gagal!', 'Data anggota gagal di tambah. Silakan coba lagi.', 'error');
-        }   
-    }
-// FORM EDIT ANGGOTA
-}if (isset($_GET['id_userEdit']) && isset($_GET['id_pengajuan'])) {
-    $id_pengajuan = $_GET['id_pengajuan'];
+$id_userEdit = null;
+$editRow = null;
+if (isset($_GET['id_userEdit'])) {
     $id_userEdit = $_GET['id_userEdit'];
     $editQuery = mysqli_query($conn, "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_user = u.id_user AND u.id_user = '$id_userEdit'");
     $editRow = mysqli_fetch_assoc($editQuery);
-?>
-    <!-- Form Edit Anggota -->
-    <div class="main-content p-4">
-    <div class="container-fluid">
-        <!-- Heading Edit Anggota -->
-        <h1 class="mb-4">Edit Anggota</h1>
-        <ol class="breadcrumb mb-4 d-flex justify-content-between align-items-center">
-            <li class="breadcrumb-item active">Form Edit Data Anggota</li>
-        </ol>
-        <div class="dropdown-divider mb-3"></div>
-        
-        <form action="detail_anggota.php" method="POST" class="form-profile">
-            <input type="hidden" name="id_user" value="<?= $editRow['id_user'] ?>">
-            <input type="hidden" name="id_pengajuan" value="<?= $id_pengajuan ?>">
-            
-            <div class="mb-3">
-                <label for="nama_user" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama_user" name="nama_user" value="<?= $editRow['nama_user'] ?>" required>
-            </div>
-            
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?= $editRow['email'] ?>" required>
-            </div>
-            
-            <div class="mb-3">
-                <label for="nik" class="form-label">NIK</label>
-                <input type="number" class="form-control" id="nik" name="nik" value="<?= $editRow['nik'] ?>" required>
-            </div>
-            
-            <div class="mb-3">
-                <label for="nim" class="form-label">Nim/Nisn</label>
-                <input type="number" class="form-control" id="nim" name="nim" value="<?= !empty($editRow['nim']) ? $editRow['nim'] : $editRow['nisn'] ?>">
-            </div>
-    
-            <!-- Tombol Submit -->
-            <button type="submit" name="update_anggota" class="btn btn-primary edit">
-                <i class="bi bi-floppy me-1"></i>Simpan Perubahan
-            </button>
-        </form>
-    </div>
-</div>
-<?php
-// FORM TAMBAH ANGGOTA
-}if (isset($_GET['id_user']) && isset($_GET['id_pengajuan'])) {
-    $id_pengajuan = $_GET['id_pengajuan'];
-    $id_user = $_GET['id_user'];
-?>
-    <!-- Form Tambah Anggota -->
-    <div class="main-content p-4">
-    <div class="container-fluid">
-        <!-- Heading tambah Anggota -->
-        <h1 class="mb-4">Tambah Anggota</h1>
-        <ol class="breadcrumb mb-4 d-flex justify-content-between align-items-center">
-            <li class="breadcrumb-item active">Form Tambah Data Anggota</li>
-        </ol>
-        <div class="dropdown-divider mb-3"></div>
-        
-        <form action="detail_anggota.php" method="POST" class="form-profile">
-            <input type="hidden" name="id_pengajuan" value="<?= $id_pengajuan ?>">
-            
-            <div class="mb-3">
-                <label for="nama_user" class="form-label">Nama</label>
-                <input type="text" class="form-control" id="nama_user" name="nama_user" >
-            </div>
-            
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" >
-            </div>
-            
-            <div class="mb-3">
-                <label for="nik" class="form-label">NIK</label>
-                <input type="number" class="form-control" id="nik" name="nik" >
-            </div>
-            
-            <div class="mb-3">
-                <label for="nim" class="form-label">Nim/Nisn</label>
-                <input type="number" class="form-control" id="nim" name="nim">
-            </div>
-    
-            <!-- Tombol Submit -->
-            <button type="submit" name="tambah_anggota" class="btn btn-primary edit">
-                <i class="bi bi-floppy me-1"></i>Tambah Anggota
-            </button>
-        </form>
-    </div>
-</div>
-<?php
 }
 
+if (isset($_GET['id_userHapus'])) {
+    hapusAnggota($id_user, $id_pengajuan);
+    
+}if (ISSET($_POST['update_anggota'])){
+    updateAnggota($_POST, $id_user, $id_pengajuan);
+}
+if (ISSET($_POST['tambah_anggota'])){
+    tambahAnggota($_POST, $id_user, $id_pengajuan);
+}
+?>
+<!-- Modal Edit Anggota -->
+<div class="modal fade" id="editAnggotaModal" tabindex="-1" aria-labelledby="editAnggotaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAnggotaModalLabel">Edit Anggota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="detail_anggota.php" method="POST" class="form_editAnggota">
+                    <input type="hidden" name="id_user" id="edit_id_user"  value="<?= $id_userEdit ?>">
+
+                    <div class="mb-3">
+                        <label for="edit_nama_user" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="edit_nama_user" name="nama_user" value="<?= $editRow['nama_user'] ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="edit_email" name="email" value="<?= $editRow['email'] ?>">
+                        <input type="hidden" name="original_email" value="<?= $editRow['email'] ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_nik" class="form-label">NIK</label>
+                        <input type="number" class="form-control" id="edit_nik" name="nik" value="<?= $editRow['nik'] ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_nim" class="form-label">Nim/Nisn</label>
+                        <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>">
+                    </div>
+
+                    <button type="submit" name="update_anggota" class="btn btn-primary">
+                        <i class="bi bi-floppy me-1"></i>Simpan Perubahan
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if ($id_userEdit): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = new bootstrap.Modal(document.getElementById('editAnggotaModal'));
+            modal.show();
+            
+            // Saat modal ditutup, hapus query string id_logbook_edit dan reload halaman
+            const modalElement = document.getElementById('editAnggotaModal');
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('id_userEdit');
+                window.location.href = url.toString();
+            });
+        });
+    </script>
+<?php endif; ?>
+
+<!-- Modal Tambah Anggota -->
+<div class="modal fade" id="tambahAnggotaModal" tabindex="-1" aria-labelledby="tambahAnggotaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tambahAnggotaModalLabel">Tambah Anggota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="detail_anggota.php" method="POST" class="form_tambahAnggota">                
+                    <div class="mb-3">
+                        <label for="nama_user" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama_user" name="nama_user">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nik" class="form-label">NIK</label>
+                        <input type="number" class="form-control" id="nik" name="nik">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nim" class="form-label">Nim/Nisn</label>
+                        <input type="number" class="form-control" id="nim" name="nim">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" name="tambah_anggota" class="btn btn-primary">Tambah Anggota</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
 include "../layout/footerDashboard.php" 
 ?>
 
@@ -259,72 +220,75 @@ include "../layout/footerDashboard.php"
 <!-- ==========  VALIDASIIII ===============-->
 <script>
 $(document).ready(function() {
-    $(".form-profile").on("submit", function(e) {
+    $(".form_tambahAnggota, .form_editAnggota").on("submit", function(e) {
         let isValid = true;
-        $(".error-message").remove(); // Hapus pesan error lama
+        $(this).find(".error-message").remove(); // Hapus pesan error lama
 
         // Fungsi tambah pesan error
         function showError(input, message) {
             $(input).after(`<div class="error-message text-danger mt-1">${message}</div>`);
         }
 
-        // Dapatkan id_user (kosong jika tambah anggota)
-        const id_userEdit = $("input[name='id_user']").val() || ""; // kalau tambah anggota, kosong
+        // Cari elemen input dalam form yang dikirimkan (tambah atau edit)
+        const form = $(this);
+        const id_userEdit = form.find("input[name='id_user']").val() || ""; // kosong kalau tambah anggota
 
         // Validasi Nama
-        const nama = $("#nama_user").val().trim();
+        const nama = form.find("[name='nama_user']").val().trim();
         const namaRegex = /^[a-zA-Z\s]+$/;
         if (nama === "") {
             isValid = false;
-            showError("#nama_user", "Nama tidak boleh kosong!");
+            showError(form.find("[name='nama_user']"), "Nama tidak boleh kosong!");
         } else if (!namaRegex.test(nama)) {
             isValid = false;
-            showError("#nama_user", "Nama hanya boleh berisi huruf!");
+            showError(form.find("[name='nama_user']"), "Nama hanya boleh berisi huruf!");
         }
 
         // Validasi Email
-        const email = $("#email").val().trim();
+        const email = form.find("[name='email']").val().trim();
+        const originalEmail = form.find("input[name='original_email']").val(); // email awal (sebelum edit)
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        // Validasi Email
         if (email === "") {
             isValid = false;
-            showError("#email", "Email tidak boleh kosong!");
+            showError(form.find("[name='email']"), "Email tidak boleh kosong!");
         } else if (!emailRegex.test(email)) {
             isValid = false;
-            showError("#email", "Masukkan email yang valid!");
-        } else {
-            // AJAX untuk cek email
+            showError(form.find("[name='email']"), "Masukkan email yang valid!");
+        } else if (email !== originalEmail) { // Cek ke DB hanya jika email diubah
             $.ajax({
                 url: 'cek.php',
                 type: 'POST',
-                data: { email: email, id_userEdit: id_userEdit }, // kirim id_userEdit (bisa kosong)
+                data: { email: email, id_userEdit: id_userEdit },
                 async: false,
                 success: function(response) {
                     if (response === "exists") {
                         isValid = false;
-                        showError("#email", "Email sudah digunakan!");
+                        showError(form.find("[name='email']"), "Email sudah digunakan!");
                     }
                 }
             });
         }
 
         // Validasi NIK
-        const nik = $("#nik").val().trim();
+        const nik = form.find("[name='nik']").val().trim();
         if (nik === "") {
             isValid = false;
-            showError("#nik", "NIK tidak boleh kosong!");
+            showError(form.find("[name='nik']"), "NIK tidak boleh kosong!");
         } else if (nik.length !== 16 || isNaN(nik)) {
             isValid = false;
-            showError("#nik", "NIK harus 16 digit angka!");
+            showError(form.find("[name='nik']"), "NIK harus 16 digit angka!");
         }
 
         // Validasi NIM/NISN
-        const nim = $("#nim").val().trim();
+        const nim = form.find("[name='nim']").val().trim();
         if (nim === "") {
             isValid = false;
-            showError("#nim", "NIM/NISN tidak boleh kosong!");
+            showError(form.find("[name='nim']"), "NIM/NISN tidak boleh kosong!");
         } else if (nim.length < 10 || nim.length > 12 || isNaN(nim)) {
             isValid = false;
-            showError("#nim", "NIM/NISN harus 10-12 digit angka!");
+            showError(form.find("[name='nim']"), "NIM/NISN harus 10-12 digit angka!");
         }
 
         // Cegah submit jika ada error
@@ -333,5 +297,4 @@ $(document).ready(function() {
         }
     });
 });
-
 </script>

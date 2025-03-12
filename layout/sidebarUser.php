@@ -25,6 +25,15 @@ if (isset($_SESSION['email'])) {
         $row2 = mysqli_fetch_assoc($query2);
     }
 
+    // inisialisasi apakah anggota atau ketua kelompok
+    $lastTwoDigits = substr($id_user, -2); // 2 digit terakhir dari id_user
+
+    $ketua = ($lastTwoDigits === '00') ? true : false;
+    $anggota = !$ketua;
+
+    // Simpan ke session
+    $_SESSION['ketua'] = $ketua;
+    $_SESSION['anggota'] = $anggota;
 } else{
     echo "<script> window.location.href='../login.php' </script>";
     exit;
@@ -73,7 +82,7 @@ if (isset($_SESSION['email'])) {
                     </a>
                 </li>
                 <?php 
-                    if ($level == 3){?>
+                    if ($ketua){?>
                         <li class="sidebar-item">
                             <a href="profil.php" class="sidebar-link">
                                 <i class="bi bi-person-lines-fill"></i>
@@ -85,7 +94,7 @@ if (isset($_SESSION['email'])) {
                 ?>
                 
                 <?php 
-                    if ($level == 3){?>
+                    if ($ketua && $level == '3'){?>
                         <li class="sidebar-item">
                             <a href="status_pengajuan.php" class="sidebar-link">
                                 <i class="bi bi-file-earmark-text"></i>
@@ -129,7 +138,7 @@ if (isset($_SESSION['email'])) {
                     </a>
                 </li>
                 <?php 
-                    if ($level == 3){?>
+                    if ($ketua && $level == '3'){?>
                         <li class="sidebar-item">
                             <a href="setting.php" class="sidebar-link">
                                 <i class="bi bi-gear"></i>
@@ -172,7 +181,7 @@ if (isset($_SESSION['email'])) {
                                 alt="<?= $row['nama_user'] ?>" class="avatar img-fluid rounded-circle">
                             </a>
                             <?php 
-                            if ($level == 3){?>
+                            if ($ketua && $level == '3'){?>
                                 <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                     <a href="profil_edit.php?id_user=<?= $id_user ?>" class="dropdown-item">
                                         <i class="bi bi-pencil-square"></i>

@@ -1,22 +1,5 @@
 
 <?php
-function generateIdPengajuan($conn) {
-    // Ambil tanggal saat ini dalam format YYYYMMDD
-    $tanggal = date("Ymd");
-
-    // Ambil jumlah pengajuan yang sudah ada untuk hari ini
-    $query = "SELECT COUNT(*) AS total FROM tb_pengajuan WHERE id_pengajuan LIKE '$tanggal%'";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_assoc($result);
-    $totalPengajuanHariIni = $row['total'] + 1; // Urutan berikutnya
-
-    // Format XX menjadi dua digit (01, 02, 03, ...)
-    $nomorUrut = str_pad($totalPengajuanHariIni, 2, "0", STR_PAD_LEFT);
-
-    // Gabungkan untuk mendapatkan id_pengajuan
-    return $tanggal . $nomorUrut;
-}
-
 function generateIdDokumen($conn, $id_pengajuan) {
     $query = "SELECT MAX(CAST(SUBSTRING(id_dokumen, -2) AS UNSIGNED)) AS max_nomor 
                FROM tb_dokumen 
@@ -30,52 +13,30 @@ function generateIdDokumen($conn, $id_pengajuan) {
     return $id_pengajuan . $nomorUrut;
 }
 
-
 function generateIdUser4($conn, $id_user) {
-    // Loop sampai menemukan ID yang belum ada
-    $nextId = 1;
-    do {
-        $counter = str_pad($nextId, 2, "0", STR_PAD_LEFT);
-        $newId = trim($id_user) . $counter;
+    // Ambil dua digit terakhir dari id_user
+    $lastTwoDigits = (int)substr($id_user, -2);
 
-        // Cek apakah ID ini sudah ada di tb_user
-        $query = "SELECT COUNT(*) as count FROM tb_user WHERE id_user = ?";
-        $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, 's', $newId);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        $row = mysqli_fetch_assoc($result);
+    // Basis id_user tanpa dua digit terakhir
+    $baseId = substr($id_user, 0, -2);
 
-        $nextId++;
-    } while ($row['count'] > 0); // Ulangi jika ID sudah ada
+    // Cari dua digit terakhir terbesar di database untuk id_user tertentu
+    $query = "SELECT MAX(CAST(SUBSTRING(id_user, -2) AS UNSIGNED)) as maxCounter 
+               FROM tb_user 
+               WHERE id_user LIKE CONCAT(?, '__')";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 's', $baseId);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($result);
+
+    // Jika ada anggota, tambah 1 dari angka terbesar; jika tidak, mulai dari 01
+    $nextId = $row['maxCounter'] ? str_pad($row['maxCounter'] + 1, 2, "0", STR_PAD_LEFT) : "01";
+
+    // Gabungkan baseId dengan dua digit terbaru
+    $newId = $baseId . $nextId;
 
     return $newId;
-}
-
-function generateLogbookId($conn, $id_pengajuan) {
-    // Ambil counter terbesar untuk id_pengajuan ini
-    $sql_max = "SELECT MAX(CAST(SUBSTRING(id_logbook, -2) AS UNSIGNED)) as max_counter FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan'";
-    $result = mysqli_query($conn, $sql_max);
-    $row = mysqli_fetch_assoc($result);
-    $counter = str_pad($row['max_counter'] + 1, 2, '0', STR_PAD_LEFT); // Tambah 1 ke counter terbesar
-
-    // Buat id_logbook dengan format 10 digit id_pengajuan + 2 digit counter
-    $id_logbook = $id_pengajuan . $counter;
-
-    return $id_logbook;
-}
-
-function getLogbook($conn, $id_pengajuan, $id_user) {
-    // Query untuk mengambil logbook
-    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
-    $query = mysqli_query($conn, $sql);
-
-    // Periksa apakah query berhasil
-    if (!$query) {
-        die("Query error: " . mysqli_error($conn));
-    }
-    // Mengembalikan hasil query
-    return $query;
 }
 
 function uploadFile($file) {
@@ -129,36 +90,7 @@ function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
     // mysqli_query($conn, $deleteQuery);
 }
 
-function getBidangByInstansi($id_instansi) {
-    global $conn;
-    
-    $sql = "SELECT id_bidang, nama_bidang, kuota_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi' AND kuota_bidang > 0 ORDER BY nama_bidang ASC";
-    $result = mysqli_query($conn, $sql);
-    
-    if (!$result) {
-        return '<option value="" disabled>Terjadi kesalahan</option>';
-    }
 
-    $options = "";
-    while ($row = mysqli_fetch_assoc($result)) {
-        $options .= '<option value="'.$row['id_bidang'].'" data-kuota="'.$row['kuota_bidang'].'">'.$row['nama_bidang'].' (Kuota: '.$row['kuota_bidang'].')</option>';
-    }
-
-    return $options ?: '<option value="" disabled>Bidang tidak tersedia</option>';
-}
-
-function getDetailBidang($id_bidang, $conn) {
-    $sql_bidang = "SELECT nama_bidang, deskripsi_bidang, kriteria_bidang, dokumen_prasyarat, kuota_bidang 
-                    FROM tb_bidang 
-                    WHERE id_bidang = '$id_bidang'";
-    $result = mysqli_query($conn, $sql_bidang);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        return mysqli_fetch_assoc($result);
-    } else {
-        return ["error" => "Data bidang tidak ditemukan."];
-    }
-}
 
 function cekEmail($email) {
     global $conn;
@@ -256,7 +188,44 @@ function formatPeriode($tanggal_mulai, $tanggal_selesai) {
 }
 
 
-function inputLogbook($conn, $POST, $FILES, $id_pengajuan, $id_user) {
+function cekStatusUser($id_user) {
+    // Ambil dua digit terakhir dari id_user
+    $dua_digit_terakhir = substr($id_user, -2);
+
+    // Jika dua digit terakhir adalah "00", berarti Ketua
+    return $dua_digit_terakhir === '00' ? 'Ketua' : 'Anggota';
+}
+
+
+// ============== LOGBOOK ==================
+function generateLogbookId($conn, $id_pengajuan) {
+    // Ambil counter terbesar untuk id_pengajuan ini
+    $sql_max = "SELECT MAX(CAST(SUBSTRING(id_logbook, -2) AS UNSIGNED)) as max_counter FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan'";
+    $result = mysqli_query($conn, $sql_max);
+    $row = mysqli_fetch_assoc($result);
+    $counter = str_pad($row['max_counter'] + 1, 2, '0', STR_PAD_LEFT); // Tambah 1 ke counter terbesar
+
+    // Buat id_logbook dengan format 10 digit id_pengajuan + 2 digit counter
+    $id_logbook = $id_pengajuan . $counter;
+
+    return $id_logbook;
+}
+
+function getLogbook($conn, $id_pengajuan, $id_user) {
+    // Query untuk mengambil logbook
+    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'";
+    $query = mysqli_query($conn, $sql);
+
+    // Periksa apakah query berhasil
+    if (!$query) {
+        die("Query error: " . mysqli_error($conn));
+    }
+    // Mengembalikan hasil query
+    return $query;
+}
+
+function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
+    global $conn;
     $tanggal = $POST['tanggal'];
     $kegiatan = $POST['kegiatan'];
     $keterangan = $POST['keterangan'];
@@ -273,7 +242,12 @@ function inputLogbook($conn, $POST, $FILES, $id_pengajuan, $id_user) {
     $sql = "INSERT INTO tb_logbook (`id_logbook`, `tanggal_logbook`, `kegiatan_logbook`, `keterangan_logbook`, `jam_mulai`, `jam_selesai`, `foto_kegiatan`, `tanda_tangan`, `id_pengajuan`, `id_user`, `create_by`) 
             VALUES ('$id_logbook', '$tanggal', '$kegiatan', '$keterangan', '$jam_mulai', '$jam_selesai', '$target_file', '$ttd', '$id_pengajuan', '$id_user', '$id_user')";
 
-    return mysqli_query($conn, $sql);      
+    if (mysqli_query($conn, $sql)) {
+        showAlert('Berhasil!', 'Logbook Berhasil Diinput', 'success', "logbook_daftar.php");
+        exit();
+    } else {
+        showAlert('Gagal!', 'Logbook gagal diinput. Silakan coba lagi.', 'error');
+    }       
 }
 
 function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
@@ -283,7 +257,7 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
        $foto_kegiatan = $row['foto_kegiatan'];
 
        // Jika ada file baru diunggah
-       if (!empty($_FILES['gambar_kegiatan']['name'])) {
+       if (!empty($FILES['gambar_kegiatan']['name'])) {
            $uploadResult = uploadFoto($FILES['gambar_kegiatan'], "../assets/img/logbook/");
            if ($uploadResult) {
                $foto_kegiatan = $uploadResult['path'];
@@ -299,8 +273,269 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
        foto_kegiatan = '$foto_kegiatan',
        tanda_tangan = '$POST[ttd]',
        change_by = '$id_user' WHERE id_logbook = '$id_logbook'";
-   
-       return mysqli_query($conn, $sql2);
+
+       if (mysqli_query($conn, $sql2)) {
+        showAlert('Berhasil!', 'Logbook Berhasil Diupdate', 'success', "logbook_daftar.php");
+        exit();
+    } else {
+        showAlert('Gagal!', 'Logbook gagal diupdate. Silakan coba lagi.', 'error');
+    }    
+}
+function hapusLogbook($id_user){
+    global $conn;
+    $id_logbook = $_GET['id_logbook_hapus'];
+    $sql2 =  "UPDATE tb_logbook SET status_active = '0', change_by = '$id_user' WHERE id_logbook = '$id_logbook'";
+    $query2 = mysqli_query($conn, $sql2);
+    if ($query2) {
+        showAlert('Berhasil!', 'Logbook Berhasil Dihapus', 'success', "logbook_daftar.php");
+        exit();
+    } else {
+        showAlert('Gagal!', 'Logbook gagal dihapus. Silakan coba lagi.', 'error');
+    }    
 }
 
+// ============== PENGAJUAN ==============
+function generateIdPengajuan($conn) {
+    // Ambil tanggal saat ini dalam format YYYYMMDD
+    $tanggal = date("Ymd");
+
+    // Ambil jumlah pengajuan yang sudah ada untuk hari ini
+    $query = "SELECT COUNT(*) AS total FROM tb_pengajuan WHERE id_pengajuan LIKE '$tanggal%'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    $totalPengajuanHariIni = $row['total'] + 1; // Urutan berikutnya
+
+    // Format XX menjadi dua digit (01, 02, 03, ...)
+    $nomorUrut = str_pad($totalPengajuanHariIni, 2, "0", STR_PAD_LEFT);
+
+    // Gabungkan untuk mendapatkan id_pengajuan
+    return $tanggal . $nomorUrut;
+}
+
+function getBidangByInstansi($id_instansi) {
+    global $conn;
+    
+    $sql = "SELECT id_bidang, nama_bidang, kuota_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi' AND kuota_bidang > 0 ORDER BY nama_bidang ASC";
+    $result = mysqli_query($conn, $sql);
+    
+    if (!$result) {
+        return '<option value="" disabled>Terjadi kesalahan</option>';
+    }
+
+    $options = "";
+    while ($row = mysqli_fetch_assoc($result)) {
+        $options .= '<option value="'.$row['id_bidang'].'" data-kuota="'.$row['kuota_bidang'].'">'.$row['nama_bidang'].' (Kuota: '.$row['kuota_bidang'].')</option>';
+    }
+
+    return $options ?: '<option value="" disabled>Bidang tidak tersedia</option>';
+}
+
+function getDetailBidang($id_bidang, $conn) {
+    $sql_bidang = "SELECT nama_bidang, deskripsi_bidang, kriteria_bidang, dokumen_prasyarat, kuota_bidang 
+                    FROM tb_bidang 
+                    WHERE id_bidang = '$id_bidang'";
+    $result = mysqli_query($conn, $sql_bidang);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        return mysqli_fetch_assoc($result);
+    } else {
+        return ["error" => "Data bidang tidak ditemukan."];
+    }
+}
+
+function inputPengajuan($POST, $FILES, $id_user){
+    global $conn;
+
+    $id_pengajuan = generateIdPengajuan($conn);
+    $id_dokumen_ktp = generateIdDokumen($conn, $id_pengajuan);
+
+    $id_instansi = $POST['id_instansi'];
+    $id_bidang = $POST['id_bidang'];
+    $jenis_pengajuan = $POST['jenis_pengajuan'];
+    $jumlah_pelamar = $POST['jumlah_anggota'];
+    if ($jumlah_pelamar == NULL){
+        $jumlah_pelamar = 1;
+    }
+    $tanggal_mulai = $POST['tanggal_mulai']; // Contoh: 09/04/2025
+    $tanggal_selesai = $POST['tanggal_selesai']; // Contoh: 10/04/2025
+
+    // Konversi ke format YYYY-MM-DD
+    $tanggal_mulai = DateTime::createFromFormat('d/m/Y', $tanggal_mulai)->format('Y-m-d');
+    $tanggal_selesai = DateTime::createFromFormat('d/m/Y', $tanggal_selesai)->format('Y-m-d');
+
+    // Menangani upload file KTP dan CV
+    $ktp = uploadFile($FILES['ktp']);
+    $cv = uploadFile($FILES['cv']);
+
+    if (ISSET($POST['anggota_nama'])){
+        // Mengambil data anggota dari form Step 2
+        $anggota_nama = $POST['anggota_nama'];
+        $anggota_email = $POST['anggota_email'];
+        $anggota_nik = $POST['anggota_nik'];
+        $anggota_nim = $POST['anggota_nim'];
+
+        foreach ($anggota_nama as $index => $nama) {
+            $email = $anggota_email[$index];
+            $nik = $anggota_nik[$index];
+            $nim = $anggota_nim[$index];
+            $id_user4 = generateIdUser4($conn, $id_user);
+
+            $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
+            $result = mysqli_query($conn, $pendidikan);
+            $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
+        
+            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+            $query_anggota1 = mysqli_query($conn, $sql_anggota1);
+            
+            $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
+            $query_anggota2 = mysqli_query($conn, $sql_anggota2);
+        }
+    }
+
+    $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
+    $query2 = mysqli_query($conn, $sql2);
+
+    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+    $query3 = mysqli_query($conn, $sql3);
+
+
+    if ($query2 && $query3){
+        $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
+        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $query4 = mysqli_query($conn, $sql4);
+        if ($query4){
+            $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
+            $query5 = mysqli_query($conn, $sql5);
+        }
+    }
+    if ($query5) {?>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <?php
+        showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "status_pengajuan.php");
+        exit();
+    } else {
+        showAlert('Gagal!', 'Yahh pendaftaran kamu gagal. Silakan coba lagi.', 'error');
+    }    
+}
+function updatePengajuan($POST, $FILES, $id_user){
+    global $conn;
+    $id_user = $POST['id_user'];
+    $id_pengajuan = $POST['id_pengajuan'];
+    $id_user = $POST['id_user'];
+    $id_instansi = $POST['id_instansi'];
+    $id_bidang = $POST['id_bidang'];
+    $jenis_pengajuan = $POST['jenis_pengajuan'];
+    $tanggal_mulai = $POST['tanggal_mulai'];
+    $tanggal_selesai = $POST['tanggal_selesai'];
+
+    // Konversi ke format YYYY-MM-DD
+    $tanggal_mulai = DateTime::createFromFormat('d/m/Y', $tanggal_mulai)->format('Y-m-d');
+    $tanggal_selesai = DateTime::createFromFormat('d/m/Y', $tanggal_selesai)->format('Y-m-d');
+
+    // UPDATE PENGAJUAN
+    $sql_update1 = "UPDATE tb_pengajuan SET 
+    id_instansi = '$id_instansi',
+    id_bidang = '$id_bidang',
+    jenis_pengajuan = '$jenis_pengajuan',
+    tanggal_mulai = '$tanggal_mulai',
+    tanggal_selesai = '$tanggal_selesai',
+    change_by = '$id_user'
+    WHERE id_pengajuan = '$id_pengajuan'";
+    $query_update1 = mysqli_query($conn, $sql_update1);
+
+
+    // Proses update KTP
+    if (!empty($FILES['ktp']['name'])) {
+        deleteOldDocument($conn, $jenis_pengajuan, $id_user, '1');
+        $ktpData = uploadFile($FILES['ktp']);
+        if ($ktpData) {
+            $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]', change_by = '$id_user' WHERE nama_dokumen = 'ktp' AND id_pengajuan = '$id_pengajuan'";
+            $updateKTP = mysqli_query($conn, $sql_updateKTP);
+        }
+    }
+
+    // Proses update CV
+    if (!empty($FILES['cv']['name'])) {
+        deleteOldDocument($conn, $jenis_pengajuan, $id_user, '1');
+        $cvData = uploadFile($FILES['cv']);
+        if ($cvData) {
+            $id_dokumen = generateIdDokumen($conn, $jenis_pengajuan);
+            $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]', change_by = '$id_user' WHERE nama_dokumen = 'cv' AND id_pengajuan = '$id_pengajuan'";
+            $updateCV = mysqli_query($conn, $sql_updateCV);
+        }
+    } 
+    ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php
+     if ($query_update1){
+        showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
+        exit();
+    }else{
+        showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');
+    }   
+}
+
+// =========== ANGGOTA ===========
+function updateAnggota($POST, $id_user, $id_pengajuan){
+    global $conn;
+    $id_userUpdate = $POST['id_user'];
+    $nama_anggota = $POST['nama_user'];
+    $email = $POST['email'];
+    $nik = $POST['nik'];
+    $nim = $POST['nim'];
+
+    $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nim = '$nim', nisn = '$nim', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
+    if (mysqli_query($conn, $sqlUpdate)){
+        $sqlUpdate2 = "UPDATE tb_user SET email = '$email', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
+    }
+
+    if (mysqli_query($conn, $sqlUpdate2)){
+        showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+        exit();
+    }else{
+        showAlert('Gagal!', 'Data anggota gagal diupdate. Silakan coba lagi.', 'error');
+    } 
+}
+
+function tambahAnggota($POST, $id_user, $id_pengajuan){
+    global $conn;
+    $nama_anggota = $POST['nama_user'];
+    $email = $POST['email'];
+    $nik = $POST['nik'];
+    $nim = $POST['nim'];
+    $id_user4  = generateIdUser4($conn, $id_user);
+    $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
+    $result = mysqli_query($conn, $pendidikan);
+    $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
+
+    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+    if (mysqli_query($conn, $sqlTambah)){
+        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '4', '$id_user')";
+        if (mysqli_query($conn, $sqlTambah2)){
+            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+            exit();
+        }else{
+            showAlert('Gagal!', 'Data anggota gagal di tambah. Silakan coba lagi.', 'error');
+        }   
+    }
+}
+function hapusAnggota($id_user, $id_pengajuan){
+    global $conn;
+    $id_userHapus = $_GET['id_userHapus'];
+    $sql2 =  "UPDATE tb_user 
+            JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user
+            SET tb_user.status_active = '0',
+                tb_user.change_by = '$id_user',
+                tb_profile_user.status_active = '0',
+                tb_profile_user.change_by = '$id_user'
+            WHERE tb_user.id_user = '$id_userHapus' 
+            AND tb_profile_user.id_pengajuan = '$id_pengajuan'";
+
+    if (mysqli_query($conn, $sql2)){
+        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+        exit();
+    }else{
+        showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');
+    }   
+}
 ?>
