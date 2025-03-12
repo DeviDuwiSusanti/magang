@@ -4,20 +4,21 @@ include "../layout/sidebarUser.php";
 include "functions.php";
 
 // Ambil daftar pengajuan magang berdasarkan id_user
-if ($level == '3') {
+if ($_SESSION['ketua']) { // Ketua kelompok level (3)
     $sql = "SELECT * 
             FROM tb_pengajuan 
             LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
             LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-            WHERE tb_pengajuan.status_pengajuan = '5' AND tb_pengajuan.id_user = '$id_user'";
-} else if ($level == '4') {
+            WHERE tb_pengajuan.status_pengajuan = '5' 
+            AND tb_pengajuan.id_user = '{$_SESSION['id_user']}'";
+} else if ($_SESSION['anggota']) { // Anggota kelompok level (4)
     $sql = "SELECT p.*, i.nama_panjang, b.nama_bidang
             FROM tb_profile_user pu
             JOIN tb_user u ON pu.id_user = u.id_user
             JOIN tb_pengajuan p ON pu.id_pengajuan = p.id_pengajuan
             JOIN tb_bidang b ON p.id_bidang = b.id_bidang
             JOIN tb_instansi i ON p.id_instansi = i.id_instansi
-            WHERE pu.id_user = '$id_user' 
+            WHERE pu.id_user = '{$_SESSION['id_user']}' 
             AND p.status_pengajuan = '5'";
 }
 
