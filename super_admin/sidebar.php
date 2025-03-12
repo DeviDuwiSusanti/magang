@@ -77,14 +77,14 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="instansi_view.php" class="sidebar-link text-decoration-none">
+                    <a href="instansi.php" class="sidebar-link text-decoration-none">
                         <i class="bi bi-buildings"></i>
                         <span>Instansi</span>
                     </a>
                 </li>
                 
                 <li class="sidebar-item">
-                    <a href="admin_instansi_view.php" class="sidebar-link text-decoration-none">
+                    <a href="admin_instansi.php" class="sidebar-link text-decoration-none">
                         <i class="bi bi-building-fill-add"></i>
                         <span>Admin Instansi</span>
                     </a>

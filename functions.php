@@ -189,68 +189,36 @@ use Dom\Mysql;
 
 
 // ================================ INSTANSI SUPER ADMIN =================================
-    function tambah_instansi_super_admin($POST) {
-        global $conn;
-        $id_user = $POST["id_user"];
-        $id_instansi = $POST["id_instansi"];
-        $nama_pendek = $POST["nama_pendek"];
-        $nama_panjang = $POST["nama_panjang"];
-        $group_instansi = $POST["group_instansi"];
-        $alamat_instansi = $POST["alamat_instansi"];
-        $deskripsi_instansi = $POST["deskripsi_instansi"];
-        $lokasi_instansi = $POST["lokasi_instansi"];
-        $telepone_instansi = $POST["telepone_instansi"];
-        $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
+function tambah_instansi_super_admin($POST) {
+    global $conn;
+    $id_user = mysqli_real_escape_string($conn, $POST["id_user"]);
+    $id_instansi = mysqli_real_escape_string($conn, $POST["id_instansi"]);
+    $nama_pendek = mysqli_real_escape_string($conn, $POST["nama_pendek"]);
+    $nama_panjang = mysqli_real_escape_string($conn, $POST["nama_panjang"]);
+    $group_instansi = mysqli_real_escape_string($conn, $POST["group_instansi"]);
+    $alamat_instansi = mysqli_real_escape_string($conn, $POST["alamat_instansi"]);
+    $deskripsi_instansi = mysqli_real_escape_string($conn, $POST["deskripsi_instansi"]);
+    $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
+    $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
+    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
-        if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
-            header("Location: instansi_tambah.php?error=id_instansi_terdaftar");
-            exit;
-        }
-        $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
-            VALUES ('$id_instansi', '$nama_pendek', '$nama_panjang', '$group_instansi', '$alamat_instansi', '$lokasi_instansi', '$telepone_instansi', '$deskripsi_instansi', '$gambar_instansi', '$id_user')";
-        if(mysqli_query($conn, $query)) {
-            return mysqli_affected_rows($conn);
-        } else {
-            return 0;
-        }
+    if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
+        header("Location: instansi.php?error=id_instansi_terdaftar");
+        exit;
     }
 
+    $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 'ssssssssss', $id_instansi, $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $telepone_instansi, $deskripsi_instansi, $gambar_instansi, $id_user);
 
-
-    function edit_instansi($POST) {
-        global $conn;
-        $id_user = $POST["id_user"];
-        $id_instansi = $POST["id_instansi"];
-        $nama_pendek = $POST["nama_pendek"];
-        $nama_panjang = $POST["nama_panjang"];
-        $group_instansi = $POST["group_instansi"];
-        $alamat_instansi = $POST["alamat_instansi"];
-        $deskripsi_instansi = $POST["deskripsi_instansi"];
-        $lokasi_instansi = $POST["lokasi_instansi"];
-        $telepone_instansi = $POST["telepone_instansi"];
-        $gambar_lama = $POST["gambar_instansi"];
-        $gambar_instansi = uploadImage($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/");
-
-        $query = "UPDATE tb_instansi SET
-                    id_instansi = '$id_instansi',
-                    nama_pendek = '$nama_pendek',
-                    nama_panjang = '$nama_panjang',
-                    group_instansi = '$group_instansi',
-                    alamat_instansi = '$alamat_instansi',
-                    lokasi_instansi = '$lokasi_instansi',
-                    deskripsi_instansi = '$deskripsi_instansi',
-                    telepone_instansi = '$telepone_instansi',
-                    gambar_instansi = '$gambar_instansi',
-                    change_by = '$id_user'
-                    WHERE id_instansi = '$id_instansi' ";
-    
-    if(mysqli_query($conn, $query)) {
-        return mysqli_affected_rows($conn);
+    if (mysqli_stmt_execute($stmt)) {
+        return mysqli_stmt_affected_rows($stmt);
     } else {
+        error_log("Error: " . mysqli_error($conn));
         return 0;
     }
-    }
-
+}
 
 
     function hapus_instansi($id_instansi, $id_user) {
@@ -269,40 +237,41 @@ use Dom\Mysql;
 
 
 
-
     function edit_instansi_super_admin($POST) {
         global $conn;
-        $id_user = $POST["id_user"];
-        $id_instansi = $POST["id_instansi"];
-        $nama_pendek = $POST["nama_pendek"];
-        $nama_panjang = $POST["nama_panjang"];
-        $group_instansi = $POST["group_instansi"];
-        $alamat_instansi = $POST["alamat_instansi"];
-        $deskripsi_instansi = $POST["deskripsi_instansi"];
-        $lokasi_instansi = $POST["lokasi_instansi"];
-        $telepone_instansi = $POST["telepone_instansi"];
-        $gambar_lama = $POST["gambar_instansi"];
-        $gambar_instansi = uploadImage($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/");
-    
-        $query = "UPDATE tb_instansi SET
-                    id_instansi = '$id_instansi',
-                    nama_pendek = '$nama_pendek',
-                    nama_panjang = '$nama_panjang',
-                    group_instansi = '$group_instansi',
-                    alamat_instansi = '$alamat_instansi',
-                    lokasi_instansi = '$lokasi_instansi',
-                    deskripsi_instansi = '$deskripsi_instansi',
-                    telepone_instansi = '$telepone_instansi',
-                    gambar_instansi = '$gambar_instansi',
-                    change_by = '$id_user'
-                    WHERE id_instansi = '$id_instansi' ";
-        if(mysqli_query($conn, $query)) {
-            return mysqli_affected_rows($conn);
-        } else {
-            return 0;
-        }
-    }
+    $id_user = mysqli_real_escape_string($conn, $POST["id_user"]);
+    $id_instansi = mysqli_real_escape_string($conn, $POST["id_instansi"]);
+    $nama_pendek = mysqli_real_escape_string($conn, $POST["nama_pendek"]);
+    $nama_panjang = mysqli_real_escape_string($conn, $POST["nama_panjang"]);
+    $group_instansi = mysqli_real_escape_string($conn, $POST["group_instansi"]);
+    $alamat_instansi = mysqli_real_escape_string($conn, $POST["alamat_instansi"]);
+    $deskripsi_instansi = mysqli_real_escape_string($conn, $POST["deskripsi_instansi"]);
+    $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
+    $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
+    $gambar_lama = mysqli_real_escape_string($conn, $POST["gambar_instansi_lama"]);
+    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/");
 
+    $query = "UPDATE tb_instansi SET
+                nama_pendek = ?,
+                nama_panjang = ?,
+                group_instansi = ?,
+                alamat_instansi = ?,
+                lokasi_instansi = ?,
+                deskripsi_instansi = ?,
+                telepone_instansi = ?,
+                gambar_instansi = ?,
+                change_by = ?
+              WHERE id_instansi = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 'sssssssssi', $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $deskripsi_instansi, $telepone_instansi, $gambar_instansi, $id_user, $id_instansi);
+
+    if (mysqli_stmt_execute($stmt)) {
+        return mysqli_stmt_affected_rows($stmt);
+    } else {
+        error_log("Error: " . mysqli_error($conn));
+        return 0;
+    }
+}
 
 
 

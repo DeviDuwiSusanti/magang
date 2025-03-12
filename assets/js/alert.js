@@ -148,7 +148,7 @@ function tambah_instansi_super_admin_success() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_view.php";
+      window.location.href = "instansi.php";
     }
   })
 }
@@ -163,7 +163,7 @@ function tambah_instansi_super_admin_gagal() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_tambah.php";
+      window.location.href = "instansi.php";
     }
   })
 }
@@ -178,7 +178,7 @@ function edit_instansi_super_admin_success() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_view.php";
+      window.location.href = "instansi.php";
     }
   })
 }
@@ -192,7 +192,7 @@ function edit_instansi_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_edit.php";
+      window.location.href = "instansi.php";
     }
   })
 }
@@ -210,7 +210,7 @@ function confirm_hapus_instansi_super_admin(id_instansi) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_view.php?id_instansi_ini=" + id_instansi;
+      window.location.href = "instansi.php?id_instansi_ini=" + id_instansi;
     }
   });
 }
@@ -225,7 +225,7 @@ function hapus_instansi_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_view.php";
+      window.location.href = "instansi.php";
     }
   })
 }
@@ -239,7 +239,7 @@ function hapus_instansi_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi_view.php";
+      window.location.href = "instansi.php";
     }
   })
 }
@@ -413,7 +413,7 @@ function generate_admin_instansi_success(){
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "admin_instansi_view.php";
+      window.location.href = "admin_instansi.php";
     }
   })
 }
@@ -427,7 +427,7 @@ function generate_admin_instansi_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "admin_instansi_generate.php";
+      window.location.href = "admin_instansi.php";
     }
   })
 }
