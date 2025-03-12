@@ -79,7 +79,7 @@ $no = 1;
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalDetailLabel<?= $data['id_pengajuan']; ?>">Detail Pengajuan</h5>
+                                    <h5 class="modal-title" id="modalDetailLabel<?= $data['id_pengajuan']; ?>">Detail Kegiatan Aktif</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">

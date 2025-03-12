@@ -341,11 +341,11 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
             });
 
             if (preview) {
-                preview.remove(); 
+                preview.remove();
             }
 
-            document.body.classList.remove("modal-open"); 
-            document.body.style.paddingRight = ""; 
+            document.body.classList.remove("modal-open");
+            document.body.style.paddingRight = "";
         });
     });
 
@@ -376,7 +376,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
     // Fungsi untuk mengirim data penolakan
     function confirmDelete() {
-        event.preventDefault(); 
+        event.preventDefault();
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -571,5 +571,11 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                 }
             });
         });
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var idPengajuan = "<?php echo isset($_SESSION['id_pengajuan']) ? $_SESSION['id_pengajuan'] : ''; ?>";
+        document.getElementById("pengajuan_id_zoom").value = idPengajuan;
     });
 </script>

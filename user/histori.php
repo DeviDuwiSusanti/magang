@@ -44,8 +44,9 @@ $no = 1;
                 </thead>
                 <tbody>
                 <?php while ($data = mysqli_fetch_assoc($query)) { 
-                    // Query Detail Pengajuan untuk Modal
                     $id_pengajuan = $data['id_pengajuan'];
+
+                    // Query Detail Pengajuan untuk Modal
                     $sql1 = "SELECT * FROM tb_pengajuan 
                              JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
                              JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
@@ -68,18 +69,20 @@ $no = 1;
                         <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
                         <td><?= formatPeriode($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td>                        
                         <td class="text-center">
-                            <a href="#" class="text-decoration-none" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#modalDetail<?= $row['id_pengajuan']; ?>">
+                            <a href="#" class="text-decoration-none" title="Lihat Detail" 
+                               data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
                                 <i class="bi bi-eye" style="font-size: 20px;"></i>
                             </a>
                         </td>
                     </tr>
                     
                     <!-- Modal Detail -->
-                    <div class="modal fade" id="modalDetail<?= $data['id_pengajuan']; ?>" tabindex="-1" aria-labelledby="modalDetailLabel<?= $data['id_pengajuan']; ?>" aria-hidden="true">
+                    <div class="modal fade" id="modalDetail<?= $data['id_pengajuan']; ?>" tabindex="-1" 
+                         aria-labelledby="modalDetailLabel<?= $data['id_pengajuan']; ?>" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="modalDetailLabel<?= $data['id_pengajuan']; ?>">Detail Pengajuan</h5>
+                                    <h5 class="modal-title" id="modalDetailLabel<?= $data['id_pengajuan']; ?>">Detail Histori</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">

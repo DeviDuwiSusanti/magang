@@ -24,7 +24,7 @@ $sql = "SELECT
             ON p.id_bidang = pembimbing.id_bidang
         WHERE p.id_instansi = '$id_instansi'
             AND p.status_active = '1'
-            AND p.status_pengajuan IN ('2', '3', '4')
+            AND p.status_pengajuan IN ('2', '4', '5')
         ORDER BY p.id_pengajuan DESC";
 
 $result = mysqli_query($conn, $sql);

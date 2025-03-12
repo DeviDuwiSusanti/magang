@@ -237,6 +237,15 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                         return tooltip;
                     });
                 });
+
+                document.addEventListener("DOMContentLoaded", function() {
+                    const sidebar = document.getElementById("sidebar");
+                    const toggleButton = document.getElementById("hamburger-menu");
+
+                    toggleButton.addEventListener("click", function() {
+                        sidebar.classList.toggle("show-sidebar");
+                    });
+                });
             </script>
 </body>
 
