@@ -1,7 +1,6 @@
 <?php
 include "sidebar.php";
 
-// Ambil data pendidikan
 $pendidikan = query("SELECT * FROM tb_pendidikan WHERE status_active = '1'");
 $no = 1;
 
@@ -15,34 +14,23 @@ if (isset($_GET["id_pendidikan_ini"])) {
     }
 }
 
-// Struktur data sekolah
-$sekolahData = [];
-$sekolah = query("SELECT * FROM tb_pendidikan WHERE fakultas IS NULL");
-foreach ($sekolah as $school) {
-    $sekolahData[$school['nama_pendidikan']][] = [
-        'id_pendidikan' => $school['id_pendidikan'],
-        'jurusan' => $school['jurusan']
-    ];
-}
+// Handle AJAX request untuk mengambil jurusan atau fakultas
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['nama_pendidikan'])) {
+        $nama_pendidikan = $_POST['nama_pendidikan'];
+        $data = query("SELECT DISTINCT jurusan FROM tb_pendidikan WHERE nama_pendidikan = '$nama_pendidikan'");
+        echo json_encode($data);
+        exit;
+    }
 
-// Struktur data perguruan tinggi
-$universitasData = [];
-$perguruan_tinggi = query("SELECT * FROM tb_pendidikan WHERE fakultas IS NOT NULL");
-foreach ($perguruan_tinggi as $kampus) {
-    $universitasData[$kampus['nama_pendidikan']][$kampus['fakultas']][] = [
-        'id_pendidikan' => $kampus['id_pendidikan'],
-        'jurusan' => $kampus['jurusan']
-    ];
+    if (isset($_POST['fakultas'])) {
+        $fakultas = $_POST['fakultas'];
+        $data = query("SELECT DISTINCT jurusan FROM tb_pendidikan WHERE fakultas = '$fakultas'");
+        echo json_encode($data);
+        exit;
+    }
 }
 ?>
-
-
-    <style>
-        /* Atur z-index untuk dropdown Select2 */
-        .select2-container--open {
-            z-index: 9999 !important;
-        }
-    </style>
     <main>
         <div class="container-fluid px-4">
             <h1 class="mt-4">Sekolah / Perguruan Tinggi</h1>
@@ -194,15 +182,7 @@ foreach ($perguruan_tinggi as $kampus) {
 
 
     <script>
-        // Data sekolah dan universitas dari PHP
-        const sekolahData = <?= json_encode($sekolahData) ?>;
-        const universitasData = <?= json_encode($universitasData) ?>;
-    </script>
-
-    
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
             // Inisialisasi DataTable
             $('#table_study').DataTable({
                 "paging": true,
@@ -236,105 +216,119 @@ foreach ($perguruan_tinggi as $kampus) {
                 ]
             });
 
+            // Inisialisasi Select2 di dalam modal
+            $('#modalTambahSekolah').on('shown.bs.modal', function () {
+                $('#nama_sekolah').select2({
+                    dropdownParent: $('#modalTambahSekolah'),
+                    tags: true,
+                    placeholder: "Pilih atau ketik manual",
+                    allowClear: true
+                });
+
+                $('#jurusan_sekolah').select2({
+                    dropdownParent: $('#modalTambahSekolah'),
+                    tags: true,
+                    placeholder: "Pilih atau ketik manual",
+                    allowClear: true
+                });
+            });
+
+            $('#modalTambahUniversitas').on('shown.bs.modal', function () {
+                $('#nama_universitas').select2({
+                    dropdownParent: $('#modalTambahUniversitas'),
+                    tags: true,
+                    placeholder: "Pilih atau ketik manual",
+                    allowClear: true
+                });
+
+                $('#fakultas_universitas').select2({
+                    dropdownParent: $('#modalTambahUniversitas'),
+                    tags: true,
+                    placeholder: "Pilih atau ketik manual",
+                    allowClear: true
+                });
+
+                $('#jurusan_universitas').select2({
+                    dropdownParent: $('#modalTambahUniversitas'),
+                    tags: true,
+                    placeholder: "Pilih atau ketik manual",
+                    allowClear: true
+                });
+            });
+
             // Tampilkan modal tambah sekolah
-            document.getElementById("tambahSekolah").addEventListener("click", function(e) {
+            $('#tambahSekolah').on('click', function(e) {
                 e.preventDefault();
-                new bootstrap.Modal(document.getElementById('modalTambahSekolah')).show();
+                $('#modalTambahSekolah').modal('show');
             });
 
             // Tampilkan modal tambah universitas
-            document.getElementById("tambahUniversitas").addEventListener("click", function(e) {
+            $('#tambahUniversitas').on('click', function(e) {
                 e.preventDefault();
-                new bootstrap.Modal(document.getElementById('modalTambahUniversitas')).show();
+                $('#modalTambahUniversitas').modal('show');
             });
 
-            // Event listener untuk pilihan sekolah
-            document.getElementById("nama_sekolah").addEventListener("change", function() {
-                let jurusanSelect = document.getElementById("jurusan_sekolah");
-                let selectedSchool = this.value;
-
-                // Kosongkan opsi sebelumnya
-                jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
-
-                if (selectedSchool && sekolahData[selectedSchool]) {
-                    sekolahData[selectedSchool].forEach(item => {
-                        let option = new Option(item.jurusan, item.id_pendidikan);
-                        jurusanSelect.appendChild(option);
-                    });
-                }
-            });
-
-            // Event listener untuk pilihan universitas
-            document.getElementById("nama_universitas").addEventListener("change", function() {
-                let facultySelect = document.getElementById("fakultas_universitas");
-                let selectedUniversity = this.value;
-
-                // Kosongkan opsi sebelumnya
-                facultySelect.innerHTML = '<option value="">Pilih Fakultas</option>';
-
-                if (selectedUniversity && universitasData[selectedUniversity]) {
-                    Object.keys(universitasData[selectedUniversity]).forEach(fakultas => {
-                        let option = new Option(fakultas, fakultas);
-                        facultySelect.appendChild(option);
-                    });
-                }
-            });
-
-            // Event listener untuk pilihan fakultas
-            document.getElementById("fakultas_universitas").addEventListener("change", function() {
-                let prodiSelect = document.getElementById("jurusan_universitas");
-                let selectedUniversity = document.getElementById("nama_universitas").value;
-                let selectedFaculty = this.value;
-
-                // Kosongkan opsi sebelumnya
-                prodiSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
-
-                if (selectedUniversity && selectedFaculty && universitasData[selectedUniversity][selectedFaculty]) {
-                    universitasData[selectedUniversity][selectedFaculty].forEach(item => {
-                        let option = new Option(item.jurusan, item.id_pendidikan);
-                        prodiSelect.appendChild(option);
-                    });
-                }
-            });
-        });
-    </script>
-
-<script>
-        $(document).ready(function() {
-            // Inisialisasi Select2 dengan opsi input manual
-            $('#nama_sekolah, #jurusan_sekolah').select2({
-                tags: true, // Aktifkan input manual
-                placeholder: "Pilih atau ketik manual",
-                allowClear: true,
-                dropdownParent: $('#modalTambahSekolah') // Dropdown muncul di dalam modal
-            });
-
-            $('#nama_universitas, #fakultas_universitas, #jurusan_universitas').select2({
-                tags: true, // Aktifkan input manual
-                placeholder: "Pilih atau ketik manual",
-                allowClear: true,
-                dropdownParent: $('#modalTambahUniversitas') // Dropdown muncul di dalam modal
-            });
-
-            // Simpan nilai yang dipilih atau diinput manual ke input hidden
+            // Handle perubahan pada select nama sekolah
             $('#nama_sekolah').on('change', function() {
-                $('#nama_sekolah_hidden').val($(this).val());
+                var namaSekolah = $(this).val();
+                $('#nama_sekolah_hidden').val(namaSekolah);
+
+                // Ambil daftar jurusan berdasarkan nama sekolah
+                $.ajax({
+                    url: 'pendidikan.php',
+                    type: 'POST',
+                    data: { nama_pendidikan: namaSekolah },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        var options = '<option value="">Pilih Jurusan</option>';
+                        data.forEach(function(item) {
+                            options += '<option value="' + item.jurusan + '">' + item.jurusan + '</option>';
+                        });
+                        $('#jurusan_sekolah').html(options);
+                    }
+                });
             });
 
-            $('#jurusan_sekolah').on('change', function() {
-                $('#jurusan_sekolah_hidden').val($(this).val());
-            });
-
+            // Handle perubahan pada select nama universitas
             $('#nama_universitas').on('change', function() {
-                $('#nama_universitas_hidden').val($(this).val());
+                var namaUniversitas = $(this).val();
+                $('#nama_universitas_hidden').val(namaUniversitas);
+
+                // Ambil daftar fakultas berdasarkan nama universitas
+                $.ajax({
+                    url: 'pendidikan.php',
+                    type: 'POST',
+                    data: { nama_pendidikan: namaUniversitas },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        var options = '<option value="">Pilih Fakultas</option>';
+                        data.forEach(function(item) {
+                            options += '<option value="' + item.fakultas + '">' + item.fakultas + '</option>';
+                        });
+                        $('#fakultas_universitas').html(options);
+                    }
+                });
             });
 
+            // Handle perubahan pada select fakultas universitas
             $('#fakultas_universitas').on('change', function() {
-                $('#fakultas_universitas_hidden').val($(this).val());
-            });
+                var fakultas = $(this).val();
+                $('#fakultas_universitas_hidden').val(fakultas);
 
-            $('#jurusan_universitas').on('change', function() {
-                $('#jurusan_universitas_hidden').val($(this).val());
+                // Ambil daftar jurusan berdasarkan fakultas
+                $.ajax({
+                    url: 'pendidikan.php',
+                    type: 'POST',
+                    data: { fakultas: fakultas },
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        var options = '<option value="">Pilih Jurusan</option>';
+                        data.forEach(function(item) {
+                            options += '<option value="' + item.jurusan + '">' + item.jurusan + '</option>';
+                        });
+                        $('#jurusan_universitas').html(options);
+                    }
+                });
             });
         });
     </script>

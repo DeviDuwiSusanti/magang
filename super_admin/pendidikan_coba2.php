@@ -36,13 +36,6 @@ foreach ($perguruan_tinggi as $kampus) {
 }
 ?>
 
-
-    <style>
-        /* Atur z-index untuk dropdown Select2 */
-        .select2-container--open {
-            z-index: 9999 !important;
-        }
-    </style>
     <main>
         <div class="container-fluid px-4">
             <h1 class="mt-4">Sekolah / Perguruan Tinggi</h1>
@@ -295,46 +288,6 @@ foreach ($perguruan_tinggi as $kampus) {
                         prodiSelect.appendChild(option);
                     });
                 }
-            });
-        });
-    </script>
-
-<script>
-        $(document).ready(function() {
-            // Inisialisasi Select2 dengan opsi input manual
-            $('#nama_sekolah, #jurusan_sekolah').select2({
-                tags: true, // Aktifkan input manual
-                placeholder: "Pilih atau ketik manual",
-                allowClear: true,
-                dropdownParent: $('#modalTambahSekolah') // Dropdown muncul di dalam modal
-            });
-
-            $('#nama_universitas, #fakultas_universitas, #jurusan_universitas').select2({
-                tags: true, // Aktifkan input manual
-                placeholder: "Pilih atau ketik manual",
-                allowClear: true,
-                dropdownParent: $('#modalTambahUniversitas') // Dropdown muncul di dalam modal
-            });
-
-            // Simpan nilai yang dipilih atau diinput manual ke input hidden
-            $('#nama_sekolah').on('change', function() {
-                $('#nama_sekolah_hidden').val($(this).val());
-            });
-
-            $('#jurusan_sekolah').on('change', function() {
-                $('#jurusan_sekolah_hidden').val($(this).val());
-            });
-
-            $('#nama_universitas').on('change', function() {
-                $('#nama_universitas_hidden').val($(this).val());
-            });
-
-            $('#fakultas_universitas').on('change', function() {
-                $('#fakultas_universitas_hidden').val($(this).val());
-            });
-
-            $('#jurusan_universitas').on('change', function() {
-                $('#jurusan_universitas_hidden').val($(this).val());
             });
         });
     </script>
