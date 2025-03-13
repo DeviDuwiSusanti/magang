@@ -33,6 +33,4 @@ if (isset($_POST['tanggal']) && isset($_POST['id_user']) && isset($_POST['id_pen
 
     echo json_encode($response);
 }
-
-
 ?>

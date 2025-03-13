@@ -85,10 +85,10 @@ if (isset($_GET['id_logbook_hapus'])) {
                         Tambah Logbook
                 </button>
 
-            <a href="print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
-                <i class="bi bi-printer me-1"></i>
-                Cetak
-            </a>
+                <a href="print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
+                    <i class="bi bi-printer me-1"></i>
+                    Cetak
+                </a>
             <?php          
             }
             ?>
@@ -293,8 +293,6 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
         });
     </script>
 <?php endif; ?>
-
-
 
 
 

@@ -538,4 +538,76 @@ function hapusAnggota($id_user, $id_pengajuan){
         showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');
     }   
 }
+
+// ================= PROFILE ==============
+function updateProfile($POST, $FILES, $id_user, $dataLama){
+    global $conn;
+    $nama_user = $POST['nama'];
+    $tempat_lahir = $POST['tempat_lahir'];
+    $tanggal_lahir = $POST['tanggal_lahir'];
+    $jenis_kelamin = $POST['jenis_kelamin'];
+    $nik = $POST['nik'];
+    $telepone = $POST['telepon'];
+    $alamat_user = $POST['alamat'];
+    $asal_studi = $POST['asal_studi'];
+
+    if (ISSET($POST['fakultas'])){
+        $fakultas = $POST['fakultas'];
+        $jurusan = $POST['jurusan'];
+        $nim = $POST['nim'];
+        $nisn = NULL;
+        echo "fakultas";
+    }else{
+        $fakultas = NULL;
+        $jurusan = $POST['jurusan'];
+        $nisn = $POST['nim'];
+        $nim = NULL;
+        echo "$fakultas";
+    }
+
+    // Update data pendidikan (ambil id_pendidikan dari nama_pendidikan)
+    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$asal_studi' AND fakultas = '$fakultas' AND jurusan = '$jurusan'";
+    $result_pendidikan = mysqli_query($conn, $query_pendidikan);
+    $row_pendidikan = mysqli_fetch_assoc($result_pendidikan);
+    $id_pendidikan = $row_pendidikan['id_pendidikan'] ?? $dataLama['id_pendidikan']; // Pakai data lama jika tidak ditemukan
+
+    // Cek apakah ada file gambar yang diunggah
+    if (!empty($FILES['image']['name'])) {
+        $image_name = time() . "_" . $FILES['image']['name'];
+        $target_dir = "../assets/img/user/";
+        $target_file = $target_dir . basename($image_name);
+        
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            $gambar_update = ", gambar_user = '$image_name'";
+        } else {
+            $gambar_update = "";
+        }
+    } else {
+        $gambar_update = "";
+    }
+
+    // Query update profil di tb_profile_user
+    $sql5 = "UPDATE tb_profile_user SET 
+        nama_user = '$nama_user',
+        tempat_lahir = '$tempat_lahir',
+        tanggal_lahir = '$tanggal_lahir',
+        jenis_kelamin = '$jenis_kelamin',
+        nik = '$nik',
+        nim = '$nim',
+        nisn = '$nisn',
+        id_pendidikan = '$id_pendidikan',
+        telepone_user = '$telepone',
+        alamat_user = '$alamat_user',
+        change_by = '$id_user'
+        $gambar_update WHERE id_user = '$id_user'";
+    
+    $query5 = mysqli_query($conn, $sql5);
+
+    if ($query5) {
+        showAlert('Berhasil!', 'Profil Berhasil Diupdate', 'success', "profil.php");
+        exit();
+    } else {
+        showAlert('Gagal!', 'Profil gagal diupdate. Silakan coba lagi.', 'error');
+    } 
+}   
 ?>
