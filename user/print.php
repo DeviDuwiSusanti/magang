@@ -9,28 +9,28 @@ date_default_timezone_set('Asia/Jakarta');
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
 }
-$id_pengajuan = $_SESSION['id_pengajuan'];
 $id_user = $_SESSION['id_user'];
 
 // Query untuk mengambil data logbook dan informasi terkait
-$sql = "SELECT * FROM tb_logbook 
-JOIN tb_pengajuan ON tb_logbook.id_pengajuan = tb_pengajuan.id_pengajuan 
-JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
-JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-JOIN tb_profile_user ON tb_logbook.id_user = tb_profile_user.id_user 
-JOIN tb_pendidikan ON tb_profile_user.id_pendidikan = tb_pendidikan.id_pendidikan 
-WHERE tb_logbook.id_pengajuan = '$id_pengajuan' AND tb_logbook.id_user = '$id_user'";
+$sql = "SELECT * FROM tb_logbook AS l
+        JOIN tb_pengajuan AS p ON l.id_pengajuan = p.id_pengajuan
+        JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi
+        JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+        JOIN tb_profile_user AS u ON l.id_user = u.id_user
+        JOIN tb_pendidikan AS d ON u.id_pendidikan = d.id_pendidikan
+        WHERE l.id_pengajuan = '$id_pengajuan' 
+        AND l.id_user = '$id_user' 
+        AND l.status_active = '1'";
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
 if (!$row) {
-    showAlert('Peringatan!', 'Kamu Belum Pernah Menggunggah Logbook. Silakan Unggah Terlebih Dahulu.', 'error', "logbook_daftar.php");
+    showAlert('Peringatan!', 'Kamu Belum Pernah Mengisi Logbook. Silakan Isi Terlebih Dahulu.', 'warning', "logbook_daftar.php");
     exit();
 }
 
 ?>
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -172,7 +172,7 @@ if (!$row) {
         </thead>
         <tbody>
             <?php
-            $sql2 = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user'";
+            $sql2 = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'";
             $query2 = mysqli_query($conn, $sql2);
             $no = 1;
             $total_logbook = 0;

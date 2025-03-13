@@ -20,9 +20,11 @@ if (isset($_SESSION['email'])) {
     if ($row && !empty($row['id_pengajuan'])) {
         $_SESSION['id_pengajuan'] = $row['id_pengajuan'];
         $id_pengajuan = $_SESSION['id_pengajuan'];
-        $sql2 = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
+        $sql2 = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan' AND status_active = '1'";
         $query2 = mysqli_query($conn, $sql2);
         $row2 = mysqli_fetch_assoc($query2);
+        $_SESSION['status_pengajuan'] = $row2['status_pengajuan']; // Simpan status pengajuan ke session
+        $status_pengajuan = $_SESSION['status_pengajuan']; // Ambil status pengajuan dari session
     }
 
     // inisialisasi apakah anggota atau ketua kelompok
@@ -112,7 +114,7 @@ if (isset($_SESSION['email'])) {
                 </li>
 
                 <?php
-                if (isset($row2['status_pengajuan']) && $row2['status_pengajuan'] == '4') { ?>
+                if (isset($status_pengajuan) && $status_pengajuan == '4') { ?>
                     <li class="sidebar-item">
                         <a href="logbook_daftar.php" class="sidebar-link">
                             <i class="bi bi-journal-check"></i>
