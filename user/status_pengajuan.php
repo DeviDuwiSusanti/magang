@@ -11,9 +11,14 @@ if (!isset($_SESSION['id_user'])) {
 $id_user = $_SESSION['id_user'];
 $id_pengajuan = $_SESSION['id_pengajuan'] ?? null; // Bisa null jika belum dipilih
 
-if ($level != 3){
-    echo "<script> alert('Maaf Anda tidak ada hak akses di halaman ini'); window.location.href='dashboard.php?id_user=$id_user'; </script>";
+if (!isset($_SESSION['ketua']) || $_SESSION['ketua'] !== true) {
+    echo "<script>
+            alert('Maaf Anda tidak ada hak akses di halaman ini');
+            window.location.href='dashboard.php?id_user=" . $_SESSION['id_user'] . "';
+          </script>";
+    exit;
 }
+
 
 // Query untuk mengambil daftar pengajuan
 $sql = "SELECT * 

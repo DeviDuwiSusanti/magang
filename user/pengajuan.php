@@ -5,7 +5,16 @@ include "../koneksi.php"; // Pastikan koneksi ke database
 
 if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
     $email = $_SESSION['email'];
-    $id_user = $_SESSION['id_user']; // Ambil id_user dari sesi login
+    $id_user = $_SESSION['id_user']; // Ambil id_user dari sesi login?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <?php
+    if (cekStatusUser($id_user) == 'Anggota'){
+        showAlert('Peringatan!', 'Kamu Sudah Menjadi Anggota Yang Sudah Terdaftar.', 'warning', "../web/lowongan.php");
+        exit();
+    }else if (cekStatusUser($id_user) == 'Ketua' && $_SESSION['status_pengajuan'] == '1' || $_SESSION['status_pengajuan'] == '4'){
+        showAlert('Peringatan!', 'Kamu Sudah Mengajukan Pengajuan Magang Atau Kamu Sudah Punya Kegiatan Magang Yang Masih Berlangsung.', 'warning', "../web/lowongan.php");
+        exit();
+    }
 } else {
     echo "<script> window.location.href='../login.php' </script>";
     exit;

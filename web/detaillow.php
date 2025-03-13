@@ -116,7 +116,7 @@ include "functions.php";
                     </div>
 
                     <div class="d-flex justify-content-left mt-4">
-                        <a href="../user/pengajuan.php?id_bidang=<?= $row['id_bidang'] ?>" class="btn btn-primary">Daftar Sekarang</a>
+                        <a href="../user/pengajuan.php" class="btn btn-primary">Daftar Sekarang</a>
                     </div>
                 </div>
             </div>

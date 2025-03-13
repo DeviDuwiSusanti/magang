@@ -58,7 +58,7 @@ if (isset($_GET['id_logbook_hapus'])) {
         if ($ketua){?>
             <div class="dropdown">
                 <button type="button" class="btn btn-info dropdown-toggle" data-bs-toggle="dropdown">
-                Logbook Anggota
+                    Lihat Logbook Anggota
                 </button>
                 <ul class="dropdown-menu">
                     <?php
@@ -77,21 +77,21 @@ if (isset($_GET['id_logbook_hapus'])) {
         
         <div class="mb-4 text-end" id="logbook_container">
             <?php
-            $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
+                $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
                 if ($status_pengajuan != '5' && $id_user_anggota == $id_user){
                     ?>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
                         <i class="bi bi-plus-circle me-1"></i>
                         Tambah Logbook
                 </button>
-                <?php          
-                }
-                ?>
 
-            <a href="logbook_print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
-                <i class="bi bi-printer me-1"></i>
-                Cetak
-            </a>
+                <a href="print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
+                    <i class="bi bi-printer me-1"></i>
+                    Cetak
+                </a>
+            <?php          
+            }
+            ?>
         </div>
        
         <div class="table-responsive-sm" >     
@@ -105,6 +105,7 @@ if (isset($_GET['id_logbook_hapus'])) {
                             <th>Keterangan</th>
                             <th>Waktu</th>
                             <th>Foto Kegiatan</th>
+                            <th>TTD</th>
                             <?php 
                             if ($status_pengajuan != '5' && $id_user_anggota == $id_user){?> 
                                 <th>Aksi</th> 
@@ -117,7 +118,7 @@ if (isset($_GET['id_logbook_hapus'])) {
                         while ($row = mysqli_fetch_assoc($logbook)){?>
                             <tr>
                                 <td><?= $no ?></td>
-                                <td><?= $row['tanggal_logbook'] ?></td>
+                                <td><?= formatTanggalLengkapIndonesia($row['tanggal_logbook']) ?></td>
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
                                 <td>
@@ -125,8 +126,9 @@ if (isset($_GET['id_logbook_hapus'])) {
                                 </td>
 
                                 <td><img src="<?= $row['foto_kegiatan'] ?>" alt=""></td>
+                                <td><img src="<?= $row['tanda_tangan'] ?>" alt="TTD"></td>
                                 <?php
-                                if ($status_pengajuan!= '5'){?>
+                                if ($status_pengajuan != '5' && $id_user_anggota == $id_user){?> 
                                 <td>
                                     <a href="?id_logbook_edit=<?= $row['id_logbook'] ?>" class="btn btn-warning btn-sm">
                                         <i class="bi bi-pencil"></i> Edit
@@ -291,8 +293,6 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
         });
     </script>
 <?php endif; ?>
-
-
 
 
 
