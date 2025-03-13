@@ -98,7 +98,7 @@
                 </li>
                 
                 <li class="sidebar-item">
-                    <a href="study_view.php" class="sidebar-link text-decoration-none">
+                    <a href="pendidikan.php" class="sidebar-link text-decoration-none">
                         <i class="bi bi-mortarboard"></i>
                         <span>Pendidikan</span>
                     </a>
