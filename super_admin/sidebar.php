@@ -70,7 +70,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="profile_view.php" class="sidebar-link text-decoration-none">
+                    <a href="profile.php" class="sidebar-link text-decoration-none">
                         <i class="bi bi-person-circle"></i>
                         <span>My Profile</span>
                     </a>
@@ -91,7 +91,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="user_view.php" class="sidebar-link text-decoration-none">
+                    <a href="user.php" class="sidebar-link text-decoration-none">
                         <i class="bi bi-people"></i>
                         <span>User</span>
                     </a>
@@ -105,7 +105,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="pengajuan_view.php" class="sidebar-link text-decoration-none">
+                    <a href="pengajuan.php" class="sidebar-link text-decoration-none">
                         <i class="bi bi-journals"></i>
                         <span>Pengajuan</span>
                     </a>
@@ -143,7 +143,7 @@
                                 <img src="../assets/img/user/<?= $pengguna["gambar_user"] ?>"  alt="avatar" class="avatar rounded-circle">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="profile_view.php" class="dropdown-item">
+                                <a href="profile.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
                                     <span>My Profile</span>
                                 </a>

@@ -118,7 +118,7 @@ function edit_profile_super_admin_success() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "profile_view.php";
+      window.location.href = "profile.php";
     }
   })
 }
@@ -132,7 +132,7 @@ function edit_profile_super_admin_gagal() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "profile_edit.php";
+      window.location.href = "profile.php";
     }
   })
 }
@@ -260,7 +260,7 @@ function confirm_hapus_user_super_admin(id_user) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php?id_user_ini=" + id_user;
+      window.location.href = "user.php?id_user_ini=" + id_user;
     }
   });
 }
@@ -275,7 +275,7 @@ function hapus_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -289,7 +289,7 @@ function hapus_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -305,7 +305,7 @@ function tambah_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -320,7 +320,7 @@ function tambah_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_tambah.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -335,7 +335,7 @@ function edit_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -350,7 +350,7 @@ function edit_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_edit.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -369,7 +369,7 @@ function hapus_pengajuan_by_super_admin(id_pengajuan) {
     showCancelButton: true,
   }).then((result) =>  {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan_view.php?id_pengajuan_ini=" + id_pengajuan;
+      window.location.href = "pengajuan.php?id_pengajuan_ini=" + id_pengajuan;
     }
   })
 }
@@ -384,7 +384,7 @@ function hapus_pengajuan_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan_view.php";
+      window.location.href = "pengajuan.php";
     }
   })
 }
@@ -398,7 +398,7 @@ function hapus_pengajuan_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan_view.php";
+      window.location.href = "pengajuan.php";
     }
   })
 }
@@ -449,7 +449,7 @@ function confirm_hapus_pendidikan_super_admin(id_pendidikan) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "study_view.php?id_pendidikan_ini=" + id_pendidikan;
+      window.location.href = "pendidikan.php?id_pendidikan_ini=" + id_pendidikan;
     }
   });
 }
@@ -464,7 +464,7 @@ function hapus_pendidikan_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "study_view.php";
+      window.location.href = "pendidikan.php";
     }
   })
 }
@@ -478,12 +478,40 @@ function hapus_pendidikan_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "study_view.php";
+      window.location.href = "pendidikan.php";
     }
   })
 }
 
 
+
+function edit_pendidikan_super_admin_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil",
+    text : "Edit Data pendidikan Berhasil :)",
+    confirmButtonColor : "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "pendidikan.php";
+    }
+  })
+}
+
+function edit_pendidikan_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal",
+    icon: "error",
+    text: "Edit Data pendidikan Gagal :(",
+    confirmButtonText : "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "pendidikan.php";
+    }
+  })
+}
 
 
 

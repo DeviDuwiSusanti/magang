@@ -303,7 +303,7 @@ function tambah_instansi_super_admin($POST) {
         $tanggal_lahir = $POST["tanggal_lahir"];
         $telepone_user = $POST["telepone_user"];
         $alamat_user = $POST["alamat_user"];
-        $gambar_user = uploadImage($_FILES["gambar_instansi"], "avatar.png", "../assets/img/user/");
+        $gambar_user = uploadImage($_FILES["gambar_user"], "avatar.png", "../assets/img/user/");
     
         $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
         $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
@@ -382,6 +382,23 @@ function tambah_instansi_super_admin($POST) {
     }
 
 
+    function edit_pendidikan($POST) {
+        global $conn;
+        $id_pendidikan = $POST["id_pendidikan"];
+        $id_user = $POST["id_user"];
+        $nama_pendidikan = $POST["nama_pendidikan"];
+        $fakultas = $POST["fakultas"];
+        $jurusan = $POST["jurusan"];
+        $alamat_pendidikan = $POST["alamat_pendidikan"]; 
+        $query = mysqli_query($conn, "UPDATE tb_pendidikan SET nama_pendidikan = '$nama_pendidikan', fakultas = '$fakultas', jurusan = '$jurusan', alamat_pendidikan = '$alamat_pendidikan', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
+        if($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+
+
 
 
 
@@ -399,6 +416,7 @@ function tambah_instansi_super_admin($POST) {
             die("Error: " . mysqli_error($conn)); // Debugging error MySQL
         }
     }    
+
 
 
 

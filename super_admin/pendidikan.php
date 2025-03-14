@@ -7,13 +7,23 @@ $no = 1;
 
 // Handle hapus data
 if (isset($_GET["id_pendidikan_ini"])) {
-    $id_pendidikan = $_GET["id_pendidikan_ini"];
-    if (hapus_pendidikan_super_admin($id_pendidikan, $id_user)) { 
+    $id_pendidikan_ini = $_GET["id_pendidikan_ini"];
+    if (hapus_pendidikan_super_admin($id_pendidikan_ini, $id_user)) { 
         echo "<script>hapus_pendidikan_super_admin_success()</script>";
     } else { 
         echo "<script>hapus_pendidikan_super_admin_gagal()</script>";
     }
 }
+
+
+if(isset($_POST["edit_pendidikan"])) {
+    if(edit_pendidikan($_POST) > 0) { ?>
+        <script>edit_pendidikan_super_admin_success()</script>
+    <?php } else { ?>
+        <script>edit_pendidikan_super_admin_gagal()</script>
+    <?php }
+}
+
 
 // Struktur data sekolah
 $sekolahData = [];
@@ -91,12 +101,18 @@ foreach ($perguruan_tinggi as $kampus) {
                                 <td><?= $studi["jurusan"] ?></td>
                                 <td><?= $studi["alamat_pendidikan"] ?></td>
                                 <td class="d-flex justify-content-center gap-2">
-                                    <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_pendidikan_super_admin(<?= $studi['id_pendidikan'] ?>)">
+                                    <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_pendidikan_super_admin('<?= $studi['id_pendidikan'] ?>')">
                                         <i class="bi bi-trash"></i>
                                     </a>
-                                    <a href="study_edit.php?id_pendidikan=<?= $studi["id_pendidikan"] ?>" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"
+                                        data-id="<?= $studi['id_pendidikan'] ?>"
+                                        data-nama-pendidikan="<?= $studi['nama_pendidikan'] ?>"
+                                        data-fakultas="<?= $studi['fakultas'] ?>"
+                                        data-jurusan="<?= $studi['jurusan'] ?>"
+                                        data-alamat="<?= $studi['alamat_pendidikan'] ?>"
+                                        data-user = "<?= $id_user ?>">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -106,6 +122,47 @@ foreach ($perguruan_tinggi as $kampus) {
             </div>
         </div>
     </main>
+
+
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Data Pendidikan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditPendidikan" action="" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="id_pendidikan" id="id_pendidikan_edit">
+                        <input type="hidden" name="id_user" id="id_user_edit">
+                        <input type="text" name="" id="">
+                        <div class="mb-3">
+                            <label for="nama_pendidikan_edit" class="form-label">Nama Sekolah / Universitas</label>
+                            <input type="text" class="form-control" id="nama_pendidikan_edit" name="nama_pendidikan">
+                        </div>
+                        <div class="mb-3">
+                            <label for="fakultas_edit" class="form-label">Fakultas</label>
+                            <input type="text" class="form-control" id="fakultas_edit" name="fakultas">
+                        </div>
+                        <div class="mb-3">
+                            <label for="jurusan_edit" class="form-label">Jurusan / Prodi</label>
+                            <input type="text" class="form-control" id="jurusan_edit" name="jurusan">
+                        </div>
+                        <div class="mb-3">
+                            <label for="alamat_pendidikan_edit" class="form-label">Alamat Pendidikan</label>
+                            <textarea class="form-control" id="alamat_pendidikan_edit" name="alamat_pendidikan" rows="3"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" name="edit_pendidikan" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal untuk Tambah Sekolah -->
     <div class="modal fade" id="modalTambahSekolah" tabindex="-1" aria-labelledby="modalTambahSekolahLabel" aria-hidden="true">
@@ -199,6 +256,29 @@ foreach ($perguruan_tinggi as $kampus) {
         const universitasData = <?= json_encode($universitasData) ?>;
     </script>
 
+    <!-- JavaScript untuk Modal Edit -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var editModal = document.getElementById('editModal');
+            editModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget; // Tombol yang memicu modal
+                var id = button.getAttribute('data-id');
+                var namaPendidikan = button.getAttribute('data-nama-pendidikan');
+                var fakultas = button.getAttribute('data-fakultas');
+                var jurusan = button.getAttribute('data-jurusan');
+                var alamat = button.getAttribute('data-alamat');
+                var user = button.getAttribute('data_user');
+
+                // Isi nilai ke dalam form modal
+                document.getElementById('id_pendidikan_edit').value = id;
+                document.getElementById('nama_pendidikan_edit').value = namaPendidikan;
+                document.getElementById('fakultas_edit').value = fakultas;
+                document.getElementById('jurusan_edit').value = jurusan;
+                document.getElementById('alamat_pendidikan_edit').value = alamat;
+                document.getElementById('id_user_edit').value = user;
+            });
+        });
+    </script>
     
 
     <script>

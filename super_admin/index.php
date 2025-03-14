@@ -21,7 +21,7 @@
                         <h5 class="card-title">Instansi Terdaftar</h5>
                         <h2 class="card-text text-success"><?= $instansi["total"] ?></h2>
                         <p class="text-muted">Lihat Dan Kelola Daftar Instansi</p>
-                        <a href="instansi_view.php" class="btn btn-success mt-3 detail">View Details</a>
+                        <a href="instansi.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                         <h5 class="card-title">Daftar Pengguna</h5>
                         <h2 class="card-text text-warning"><?= $user["total"] ?></h2>
                         <p class="text-muted">Lihat Dan Kelola Daftar Pengguna</p>
-                        <a href="user_view.php" class="btn btn-warning mt-3 detail">View Details</a>
+                        <a href="user.php" class="btn btn-warning mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                         <h5 class="card-title">Daftar Pendidikan</h5>
                         <h2 class="card-text text-primary"><?= $pendidikan["total"] ?></h2>
                         <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p>
-                        <a href="study_view.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        <a href="pendidikan.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                         <h5 class="card-title">Pengajuan User</h5>
                         <h2 class="card-text text-danger"><?= $pengajuan["total"] ?></h2>
                         <p class="text-muted">Daftar Pengajuan Pengguna</p>
-                        <a href="pengajuan_view.php" class="btn btn-danger mt-3 detail">View Details</a>
+                        <a href="pengajuan.php" class="btn btn-danger mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
