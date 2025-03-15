@@ -18,15 +18,21 @@ if (isset($_SESSION['email'])) {
     $id_pengajuan = null; // Inisialisasi default
 
     if ($row && !empty($row['id_pengajuan'])) {
-        $_SESSION['id_pengajuan'] = $row['id_pengajuan'];
-        $id_pengajuan = $_SESSION['id_pengajuan'];
-        $sql2 = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan' AND status_active = '1'";
+        $sql2 = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '$row[id_pengajuan]' AND status_active = '1'";
         $query2 = mysqli_query($conn, $sql2);
         $row2 = mysqli_fetch_assoc($query2);
-        $_SESSION['status_pengajuan'] = $row2['status_pengajuan']; // Simpan status pengajuan ke session
-        $status_pengajuan = $_SESSION['status_pengajuan']; // Ambil status pengajuan dari session
+        if ($row2['id_pengajuan']){
+            $_SESSION['id_pengajuan'] = $row2['id_pengajuan'];
+            $id_pengajuan = $_SESSION['id_pengajuan'];
+            $_SESSION['status_pengajuan'] = $row2['status_pengajuan']; // Simpan status pengajuan ke session
+            $status_pengajuan = $_SESSION['status_pengajuan']; // Ambil status pengajuan dari session
+        }if (!empty($row2['status_pengajuan'])) {
+            $_SESSION['status_pengajuan'] = $row2['status_pengajuan'];
+        } else {
+            echo "status_pengajuan kosong!";
+        }
+          
     }
-
     // inisialisasi apakah anggota atau ketua kelompok
     $lastTwoDigits = substr($id_user, -2); // 2 digit terakhir dari id_user
 
