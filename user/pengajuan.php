@@ -765,7 +765,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <span class="me-2 fw-bold">${i + 1}.</span>
                 <div class="row flex-grow-1 gx-2">
                             <div class="col"><input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama"></div>
-                              <div class="col"><input type="email" class="form-control anggota-email" name="anggota_email[]" placeholder="Email"></div>
+                              <div class="col"><input type="email" class="form-control anggota-email" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
                             <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK"></div>
                             <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN"></div>
                         </div>
