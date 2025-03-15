@@ -34,6 +34,25 @@ use Dom\Mysql;
     }
 
 
+    function generate_user_id_level_1_2($conn) {
+        $date = date("ymd");
+        $hour = date("H");
+        $baseId = $date . $hour;
+
+        $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
+        
+        if($result && mysqli_num_rows($result) > 0) {
+            $lastId = mysqli_fetch_assoc($result)["id_user"];
+            $lastCounter = intval(substr($lastId, 2));
+            $newCounter = str_pad($lastCounter + 1, 2, "0", STR_PAD_LEFT);
+        } else {
+            $newCounter = "01";
+        }
+        $newId = $baseId . $newCounter;
+        return $newId;
+    }
+
+
 
 
 
@@ -293,7 +312,7 @@ function tambah_instansi_super_admin($POST) {
     function tambah_admin_instansi($POST) {
         global $conn;
         $create_by = $POST["id_user"];
-        $id_user = generateUserId($conn);
+        $id_user = generate_user_id_level_1_2($conn);
         $nama_user = $POST["nama_user"];
         $nik = $POST["nik"];
         $nip = $POST["nip"];
