@@ -1,5 +1,6 @@
 <?php include "../layout/sidebarUser.php";
 include "functions.php"; 
+confirmDeleteScript();
 
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
@@ -134,11 +135,12 @@ if (isset($_GET['id_logbook_hapus'])) {
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
 
-                                    <a href="?id_logbook_hapus=<?= $row['id_logbook'] ?>" 
-                                    onclick="return confirm('Anda yakin akan menghapus Logbook ini?')"
+                                    <a href="javascript:void(0);" 
+                                    onclick="confirmDelete('?id_logbook_hapus=<?= $row['id_logbook'] ?>', 'Logbook <?= $row['kegiatan_logbook'] ?>')" 
                                     class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i> Hapus
                                     </a>
+
                                 </td>
                             </tr>
                         <?php
@@ -420,6 +422,7 @@ $(document).ready(function() {
         var gambar = gambarElem ? gambarElem.files[0] : null;
         var ttd = form.find('[name="ttd"]').val();
         var isValid = true;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i; // Format yang diperbolehkan
         
         // Bersihkan error sebelumnya
         form.find('.text-danger').remove();
@@ -455,18 +458,27 @@ $(document).ready(function() {
         // Validasi Gambar:
         // Mode tambah: wajib diunggah.
         // Mode edit: jika diunggah, ukurannya tidak boleh > 1MB.
-        if (!isEdit) {
+         // Validasi Gambar:
+         if (!isEdit) {
             if (!gambar) {
                 form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Gambar kegiatan harus diunggah</small>');
+                isValid = false;
+            } else if (!allowedExtensions.test(gambar.name)) {
+                form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Format gambar tidak valid (hanya JPG, JPEG, PNG, GIF)</small>');
                 isValid = false;
             } else if (gambar.size > 1048576) {
                 form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Ukuran gambar tidak boleh lebih dari 1 MB</small>');
                 isValid = false;
             }
         } else {
-            if (gambar && gambar.size > 1048576) {
-                form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Ukuran gambar tidak boleh lebih dari 1 MB</small>');
-                isValid = false;
+            if (gambar) {
+                if (!allowedExtensions.test(gambar.name)) {
+                    form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Format gambar tidak valid (hanya JPG, JPEG, PNG, GIF)</small>');
+                    isValid = false;
+                } else if (gambar.size > 1048576) {
+                    form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Ukuran gambar tidak boleh lebih dari 1 MB</small>');
+                    isValid = false;
+                }
             }
         }
         // Validasi Tanda Tangan

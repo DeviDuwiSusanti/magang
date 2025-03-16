@@ -5,15 +5,19 @@ include "../koneksi.php"; // Pastikan koneksi ke database
 
 if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
     $email = $_SESSION['email'];
-    $id_user = $_SESSION['id_user']; // Ambil id_user dari sesi login?>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <?php
-    if (cekStatusUser($id_user) == 'Anggota'){
+    $id_user = $_SESSION['id_user']; // Ambil id_user dari sesi login
+    if (cekStatusUser($id_user) == 'Anggota'){?>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <?php
         showAlert('Peringatan!', 'Kamu Sudah Menjadi Anggota Yang Sudah Terdaftar.', 'warning', "../web/lowongan.php");
         exit();
-    }else if (cekStatusUser($id_user) == 'Ketua' && $_SESSION['status_pengajuan'] == '1' || $_SESSION['status_pengajuan'] == '4'){
-        showAlert('Peringatan!', 'Kamu Sudah Mengajukan Pengajuan Magang Atau Kamu Sudah Punya Kegiatan Magang Yang Masih Berlangsung.', 'warning', "../web/lowongan.php");
-        exit();
+    }else if (isset($_SESSION['status_pengajuan']) && !isset($_GET['id_pengajuanEdit'])){
+        if (cekStatusUser($id_user) == 'Ketua' && $_SESSION['status_pengajuan'] == '1' || $_SESSION['status_pengajuan'] == '4'){?>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <?php
+            showAlert('Peringatan!', 'Kamu Sudah Mengajukan Pengajuan Magang Atau Kamu Sudah Punya Kegiatan Magang Yang Masih Berlangsung.', 'warning', "../web/lowongan.php");
+            exit();
+        }
     }
 } else {
     echo "<script> window.location.href='../login.php' </script>";
@@ -59,8 +63,6 @@ if (isset($_POST["id_bidang"])) {
     echo json_encode(getDetailBidang($id_bidang, $conn));
     exit;
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -80,6 +82,10 @@ if (isset($_POST["id_bidang"])) {
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+       <!-- Tambahkan stylesheet Select2 -->
+       <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <!-- Tambahkan script Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
     $(function() {
         var dateFormat = "dd/mm/yy";
@@ -228,8 +234,8 @@ if (!ISSET($_GET['id_pengajuanEdit'])){?>
                     <h4>Step 1: Daftar Pengajuan</h4>
                     <div class="mb-3">
                         <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                        <select class="form-control" name="id_instansi" id="instansi">
-                            <option value="" disabled selected> -- Pilih Instansi --</option>
+                        <select class="form-control select2" name="id_instansi" id="instansi" style="width: 100%;">
+                            <option value="" disabled selected>-- Pilih Instansi --</option>
                             <?php
                             if (mysqli_num_rows($result_instansi) > 0) {
                                 while ($row = mysqli_fetch_assoc($result_instansi)) {
@@ -316,18 +322,18 @@ if (!ISSET($_GET['id_pengajuanEdit'])){?>
                         <div class="mb-3 anggota-group d-flex align-items-center">
                             <span class="me-2 fw-bold">1.</span>
                             <div class="row flex-grow-1 gx-2">
-                                <div class="col">
-                                    <input type="text" class="form-control" value="<?= $pendaftar['nama_user'] ?>" readonly>
-                                </div>
-                                <div class="col">
-                                    <input type="email" class="form-control" value="<?= $pendaftar['email'] ?>" readonly>
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : $pendaftar['nisn'] ?>"  readonly>
-                                </div>
+                            <div class="col">
+                                <input type="text" class="form-control" value="<?= $pendaftar['nama_user'] ?>" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="text" class="form-control" value="<?= $pendaftar['email'] ?>" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : $pendaftar['nisn'] ?>"  readonly>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -378,9 +384,9 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                 
                 <div id="step1">
                     <h4>Step 1: Daftar Pengajuan</h4>
-                    <div class="mb-3">
+                    <div class="mb-3">           
                         <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                        <select class="form-control" name="id_instansi" id="instansi" required>
+                        <select class="form-control select2" name="id_instansi" id="instansi" style="width: 100%" required>
                             <option value="<?= $pengajuan['id_instansi'] ?>"><?= $pengajuan['nama_panjang'] ?></option>
                             <?php
                             if (mysqli_num_rows($result_instansi) > 0) {
@@ -465,6 +471,14 @@ if (ISSET($_GET['id_pengajuanEdit'])){
 </div>
 
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
+<script>
+    $(document).ready(function() {
+        $('#instansi').select2({
+            placeholder: "-- Pilih Instansi --",
+            allowClear: true
+        });
+    });
+</script>
 <script>
 $(document).ready(function() {
     // Ambil bidang saat instansi berubah
@@ -670,14 +684,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    async function validateAnggota() {
+    function validateAnggota() {
         let isValid = true;
         const emails = new Set();
         const anggotaInputs = document.querySelectorAll('#anggotaContainer .anggota-group');
         const nameRegex = /^[A-Za-z\s]+$/;
-
-        // Kumpulkan semua promise untuk checkEmail
-        const emailChecks = [];
 
         anggotaInputs.forEach((anggota) => {
             const nama = anggota.querySelector("input[name='anggota_nama[]']");
@@ -703,7 +714,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 isValid = false;
             } else {
                 emails.add(email.value);
-                emailChecks.push(checkEmail(email));
+                checkEmail(email);
             }
 
             if (!nik.value.trim()) {
@@ -728,13 +739,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         });
 
-        // Tunggu semua cek email selesai
-        const emailResults = await Promise.all(emailChecks);
-        if (emailResults.includes(false)) {
-            isValid = false;
-        }
-
         return isValid;
+    }
+
+    function prevStep() {
+        step2.style.display = "none";
+        step1.style.display = "block";
+        nextButton.style.display = "inline-block";
+        submitButton.style.display = "none";
+
+        anggotaContainer.innerHTML = "";
     }
 
     // Fungsi untuk navigasi ke step berikutnya
@@ -743,21 +757,21 @@ document.addEventListener("DOMContentLoaded", function() {
         if (!validateStep1()) return;
 
         const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
-        const anggotaContainer = document.getElementById('anggotaContainer');
-        anggotaContainer.innerHTML = "";
-
-        for (let i = 1; i < jumlahAnggota; i++) {
-            const anggotaHTML = `
+        if (anggotaContainer.children.length !== jumlahAnggota - 1) {
+            anggotaContainer.innerHTML = "";
+            for (let i = 1; i < jumlahAnggota; i++) {
+                const anggotaHTML = `
                 <div class="mb-3 anggota-group d-flex align-items-center">
-            <span class="me-2 fw-bold">${i + 1}.</span>
-            <div class="row flex-grow-1 gx-2">
-                        <div class="col"><input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama"></div>
-                        <div class="col"><input type="email" class="form-control" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
-                        <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK"></div>
-                        <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN"></div>
-                    </div>
-                </div>`;
-            anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
+                <span class="me-2 fw-bold">${i + 1}.</span>
+                <div class="row flex-grow-1 gx-2">
+                            <div class="col"><input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama"></div>
+                              <div class="col"><input type="email" class="form-control anggota-email" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
+                            <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK"></div>
+                            <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN"></div>
+                        </div>
+                    </div>`;
+                anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
+            }
         }
 
         step1.style.display = "none";
@@ -766,20 +780,11 @@ document.addEventListener("DOMContentLoaded", function() {
         submitButton.style.display = "inline-block";
     }
 
-    function prevStep() {
-        step2.style.display = "none";
-        step1.style.display = "block";
-        nextButton.style.display = "inline-block";
-        submitButton.style.display = "none";
-    }
 
-    form.addEventListener("submit", async function(event) {
-        const step1Valid = validateStep1();
-        const anggotaValid = await validateAnggota();
 
-        if (!step1Valid || !anggotaValid) {
-            // Trigger submit form alami agar tombol terdeteksi di PHP
-            event.preventDefault(); // cegah submit langsung
+    form.addEventListener("submit", function(event) {
+        if (!validateStep1() || !validateAnggota()) {
+            event.preventDefault();
         }
     });
 

@@ -139,6 +139,31 @@ function showAlert($title, $text, $icon, $redirect = null) {
     </script>";
 }
 
+
+function confirmDeleteScript() {
+    echo "<script>
+        function confirmDelete(url, dataName = 'data ini') {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Data ' + dataName + ' akan dihapus!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>";
+}
+
+
+
+
 // Fungsi untuk menghitung durasi dalam bulan dan hari
 function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
     $start_date = new DateTime($tanggal_mulai);

@@ -173,13 +173,23 @@ if (isset($_POST["edit_data_user"])) {
                         <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
                         <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
                     </div>
+
                     <div class="mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
-                            <option value="1">Laki-laki</option>
-                            <option value="0">Perempuan</option>
-                        </select>
+                        <div class="form-group">
+                            <label class="form-label">Pilih Jenis Kelamin:</label>
+                            <div class="d-flex">
+                                <div class="form-check me-3">
+                                    <input class="form-check-input" type="radio" id="male" name="jenis_kelamin" value="1" required>
+                                    <label class="form-check-label" for="male">Laki-laki</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="female" name="jenis_kelamin" value="0" required>
+                                    <label class="form-check-label" for="female">Perempuan</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="mb-3">
                         <label for="telepon" class="form-label">Telepon</label>
                         <input type="tel" class="form-control" id="telepon" name="telepone_user">
@@ -341,7 +351,7 @@ if (isset($_POST["edit_data_user"])) {
                     nisnError.text('NIP tidak boleh kosong!').show();
                     isValid = false;
                 } else if (nisn.length !== 18 || !/^\d+$/.test(nisn)) {
-                    nisnError.text('NISN harus terdiri dari 18 digit angka!').show();
+                    nisnError.text('NIP harus terdiri dari 18 digit angka!').show();
                     isValid = false;
                 } else {
                     nisnError.hide();
