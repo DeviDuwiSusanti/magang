@@ -59,25 +59,25 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="view_profile.php" class="sidebar-link">
+                    <a href="profile.php" class="sidebar-link">
                         <i class="bi bi-person-lines-fill"></i>
                         <span>Profile Saya</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="view_instansi.php" class="sidebar-link">
+                    <a href="instansi.php" class="sidebar-link">
                         <i class="bi bi-buildings"></i>
                         <span>Kelola Instansi</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="view_bidang.php" class="sidebar-link">
+                    <a href="bidang.php" class="sidebar-link">
                         <i class="bi bi-building-fill-add"></i>
                         <span>Kelola Bidang</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="daftar_pembimbing.php" class="sidebar-link">
+                    <a href="pembimbing.php" class="sidebar-link">
                         <i class="bi bi-person-workspace"></i>
                         <span>Pembimbing Bidang</span>
                     </a>
@@ -94,12 +94,12 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                         <span>Daftar Pemagang</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                     <a href="nilai.php" class="sidebar-link">
                         <i class="bi bi-clipboard-check"></i>
                         <span>Penilaian</span>
                     </a>
-                </li>
+                </li> -->
                 <!-- <li class="sidebar-item">
                     <a href="sertifikat.php" class="sidebar-link">
                         <i class="bi bi-award"></i>
@@ -138,9 +138,9 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                                 <img src="../assets/img/user/<?= $pengguna["gambar_user"] ?: 'avatar_admin.jpg' ?>" alt="avatar" class="avatar img-fluid rounded-circle" style="object-fit: cover; object-position: top; border: 2px solid #ccc;">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="edit_profile.php" class="dropdown-item">
+                                <a href="view_profile.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
-                                    <span>Edit Profile</span>
+                                    <span>Profile Saya</span>
                                 </a>
                                 <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>

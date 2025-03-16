@@ -1,4 +1,5 @@
 <?php include "../layout/header.php"; 
+include "update_status.php";
 
 $id_instansi = $_SESSION["id_instansi"];
 
@@ -36,7 +37,7 @@ $pemagang = query("SELECT SUM(
         JOIN tb_instansi 
             ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
         WHERE tb_instansi.id_instansi = '$id_instansi'
-        AND tb_pengajuan.status_pengajuan NOT IN ('0', '1')
+        AND tb_pengajuan.status_pengajuan NOT IN ('0', '1', '6')
     ")[0];
 ?>
 
