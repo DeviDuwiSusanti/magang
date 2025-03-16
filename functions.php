@@ -727,7 +727,7 @@ function tambah_instansi_super_admin($POST) {
         }
     
         // Cek apakah ada gambar baru yang diunggah
-        $gambar_baru = !empty($_FILES["gambar_instansi"]["name"]) ? $_FILES["gambar_instansi"]["name"] : $data_baru["gambar_instansi"];
+        $gambar_baru = !empty($_FILES["gambar_instansi"]["name"]) ? $_FILES["gambar_instansi"]["name"] : $data_baru["gambar_instansi_lama"];
     
         // Bandingkan data lama dengan data baru
         return $data_lama['nama_pendek'] == $data_baru["nama_pendek"] &&
