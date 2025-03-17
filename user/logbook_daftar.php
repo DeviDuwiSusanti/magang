@@ -79,13 +79,15 @@ if (isset($_GET['id_logbook_hapus'])) {
         <div class="mb-4 text-end" id="logbook_container">
             <?php
                 $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
-                if ($status_pengajuan != '5' && $id_user_anggota == $id_user){
-                    ?>
+                if ($id_user_anggota == $id_user){
+                    if ($status_pengajuan != '5'){?>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Tambah Logbook
-                </button>
-
+                            <i class="bi bi-plus-circle me-1"></i>
+                            Tambah Logbook
+                        </button>
+                    <?php
+                    }
+                    ?>
                 <a href="print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
                     <i class="bi bi-printer me-1"></i>
                     Cetak
@@ -122,12 +124,10 @@ if (isset($_GET['id_logbook_hapus'])) {
                                 <td><?= formatTanggalLengkapIndonesia($row['tanggal_logbook']) ?></td>
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
-                                <td>
-                                    <?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?>
-                                </td>
+                                <td><?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?></td>
+                                <td><img src="<?= $row['foto_kegiatan'] ?>" alt="" style="width: 150px; height: 100px;"></td>
 
-                                <td><img src="<?= $row['foto_kegiatan'] ?>" alt=""></td>
-                                <td><img src="<?= $row['tanda_tangan'] ?>" alt="TTD"></td>
+                                <td><img src="<?= $row['tanda_tangan'] ?>" alt="TTD" style="width: 150px; height: 100px;"></td>
                                 <?php
                                 if ($status_pengajuan != '5' && $id_user_anggota == $id_user){?> 
                                 <td>

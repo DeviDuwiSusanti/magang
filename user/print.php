@@ -101,7 +101,7 @@ if (!$row) {
             border-radius: 4px;
         }
 
-            /* Pastikan gambar dalam tabel memiliki ukuran tetap */
+        /* Pastikan gambar dalam tabel memiliki ukuran tetap */
         .table img {
             width: 150px;  /* Sesuaikan dengan ukuran yang diinginkan */
             height: 100px; /* Pastikan semua gambar memiliki tinggi yang sama */
@@ -185,7 +185,7 @@ if (!$row) {
                     <td style="text-align: left;"><?= formatTanggalLengkapIndonesia($row2['tanggal_logbook']) ?></td>
                     <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
                     <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
-                    <td style="text-align: left;"><?= date('H.i', strtotime($row['jam_mulai'])) ?> - <?= date('H.i', strtotime($row['jam_selesai'])) ?> WIB</td>
+                    <td style="text-align: left;"><?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?> </td>
                     <td style="text-align: left;"><img src="<?= $row2['foto_kegiatan'] ?>" alt="Gambar kegiatan"></td>
                     <td style="text-align: left;"><img src="<?= $row2['tanda_tangan'] ?>" alt="TTD"></td>
                 </tr>
