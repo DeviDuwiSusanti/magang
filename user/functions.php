@@ -337,37 +337,6 @@ function generateIdPengajuan($conn) {
     return $tanggal . $nomorUrut;
 }
 
-function getBidangByInstansi($id_instansi) {
-    global $conn;
-    
-    $sql = "SELECT id_bidang, nama_bidang, kuota_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi' AND kuota_bidang > 0 ORDER BY nama_bidang ASC";
-    $result = mysqli_query($conn, $sql);
-    
-    if (!$result) {
-        return '<option value="" disabled>Terjadi kesalahan</option>';
-    }
-
-    $options = "";
-    while ($row = mysqli_fetch_assoc($result)) {
-        $options .= '<option value="'.$row['id_bidang'].'" data-kuota="'.$row['kuota_bidang'].'">'.$row['nama_bidang'].' (Kuota: '.$row['kuota_bidang'].')</option>';
-    }
-
-    return $options ?: '<option value="" disabled>Bidang tidak tersedia</option>';
-}
-
-function getDetailBidang($id_bidang, $conn) {
-    $sql_bidang = "SELECT nama_bidang, deskripsi_bidang, kriteria_bidang, dokumen_prasyarat, kuota_bidang 
-                    FROM tb_bidang 
-                    WHERE id_bidang = '$id_bidang'";
-    $result = mysqli_query($conn, $sql_bidang);
-
-    if ($result && mysqli_num_rows($result) > 0) {
-        return mysqli_fetch_assoc($result);
-    } else {
-        return ["error" => "Data bidang tidak ditemukan."];
-    }
-}
-
 function inputPengajuan($POST, $FILES, $id_user){
     global $conn;
 
