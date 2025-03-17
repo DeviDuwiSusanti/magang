@@ -55,7 +55,7 @@ $pemagang = query("SELECT SUM(
                         <h5 class="card-title">Kelola Instansi</h5>
                         <h2 class="card-text text-primary"><?= $instansi_admin["total"] ?></h2>
                         <p class="text-muted">Kelola data instansi</p>
-                        <a href="view_instansi.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        <a href="instansi.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +65,7 @@ $pemagang = query("SELECT SUM(
                         <h5 class="card-title">Kelola Bidang</h5>
                         <h2 class="card-text text-warning"><?= $bidang_admin["total"] ?></h2>
                         <p class="text-muted">Kelola data bidang</p>
-                        <a href="view_bidang.php" class="btn btn-warning mt-3 detail">View Details</a>
+                        <a href="bidang.php" class="btn btn-warning mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>

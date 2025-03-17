@@ -352,30 +352,72 @@ a.sidebar-link:hover {
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Style dasar tombol */
+.btn {
+    position: relative;
+    display: inline-block;
+    color: white;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Warna tombol */
 .btn-primary {
-    background-color: #4e73df;
-    color: #fff;
+    background: linear-gradient(45deg, #4e73df, #375ab9);
 }
 
 .btn-success {
-    background-color: #1cc88a;
-    color: #fff;
+    background: linear-gradient(45deg, #1cc88a, #17a673);
 }
 
 .btn-warning {
-    background-color: #f6c23e;
-    color: #fff;
+    background: linear-gradient(45deg, #f6c23e, #d4a11e);
 }
 
 .btn-danger {
-    background-color: #e74a3b;
-    color: #fff;
+    background: linear-gradient(45deg, #e74a3b, #c0392b);
 }
 
+/* Hover efek */
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-    opacity: 0.9;
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
+    /* transform: translateY(-3px); */
+    opacity: 1;
+}
+
+/* Efek gradient animasi */
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05), rgba(255,255,255,0.2));
+    transition: all 0.5s ease-in-out;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+/* Efek glowing */
+.btn-primary:hover {
+    box-shadow: 0px 0px 20px rgba(78, 115, 223, 0.6);
+}
+
+.btn-success:hover {
+    box-shadow: 0px 0px 20px rgba(28, 200, 138, 0.6);
+}
+
+.btn-warning:hover {
+    box-shadow: 0px 0px 20px rgba(246, 194, 62, 0.6);
+}
+
+.btn-danger:hover {
+    box-shadow: 0px 0px 20px rgba(231, 74, 59, 0.6);
 }
 
 .mt-3 {
@@ -399,6 +441,13 @@ a.sidebar-link:hover {
 .form-profile textarea,
 .form-profile select {
     font-size: 14px;
+    background-color: var(--form-bg);
+    color: var(--text-color);
+}
+
+.select2 {
+    display: block;
+    width: 100% !important;
     background-color: var(--form-bg);
     color: var(--text-color);
 }
@@ -641,3 +690,7 @@ p {
 }
 
 /* Label modal */
+
+.select2-container--open .select2-dropdown {
+    z-index: 9999 !important;
+}

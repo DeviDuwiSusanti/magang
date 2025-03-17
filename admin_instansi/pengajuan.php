@@ -225,7 +225,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
 <!-- Modal untuk Informasi Zoom -->
 <div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomModalLabel">Informasi Wawancara Zoom</h5>
@@ -246,7 +246,10 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                         <label for="link_zoom" class="form-label">Link Zoom</label>
                         <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789" required>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="submitButton">Kirim</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="submitButton">Kirim</button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -74,7 +74,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahBidangModal">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal">
                 <i class="bi bi-plus-circle me-1"></i> Tambah Bidang
             </button>
         </div>
@@ -148,6 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     <div class="mb-3">
                         <label for="kriteria" class="form-label">Kriteria</label>
                         <textarea class="form-control" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang" required></textarea>
+                        <small class="text-muted">*Pisahkan dengan koma</small>
                     </div>
                     <div class="mb-3">
                         <label for="kuota" class="form-label">Kuota</label>
@@ -156,6 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     <div class="mb-3">
                         <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
                         <textarea class="form-control" id="dokumen" name="dokumen" rows="3" placeholder="Masukkan dokumen prasyarat" required></textarea>
+                        <small class="text-muted">*Pisahkan dengan koma</small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
