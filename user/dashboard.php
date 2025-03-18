@@ -1,7 +1,7 @@
 <?php include '../layout/sidebarUser.php';
 
 // Query dapat jumlah pengajuan user
-$sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '1'";
+$sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '1' AND status_active = '1'";
 $query2 = mysqli_query($conn, $sql2);
 $total_pengajuan = mysqli_fetch_array($query2)['jumlah_pengajuan'];
 
@@ -11,11 +11,11 @@ $query2 = mysqli_query($conn, $sql2);
 $total_nilai = mysqli_fetch_assoc($query2)['jumlah_nilai'];
 
 // akses histori
-if ($row['level'] == '3'){
+if ($ketua){
     $sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '5'";
     $query3 = mysqli_query($conn, $sql3);
     $total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
-}else if ($row['level'] == '4'){
+}else if ($anggota){
     $sql3 = "SELECT COUNT(*) AS jumlah_histori FROM tb_pengajuan p, tb_profile_user pu WHERE pu.id_user = '$id_user' AND p.status_pengajuan = '5' AND pu.id_pengajuan = p.id_pengajuan";
     $query3 = mysqli_query($conn, $sql3);
     $total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
@@ -45,7 +45,7 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
         <div class="row">
             <!-- Card 1 -->
             <?php 
-            if ($row['level'] == 3){?>
+            if ($ketua){?>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
