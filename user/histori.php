@@ -111,7 +111,7 @@ $no = 1;
                                         <a href="laprak_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-info btn-sm px-3">
                                             <i class="bi bi-book"></i> Laporan
                                         </a>
-                                        <a href="logbook_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>&id_user=<?= $id_user ?>" class="btn btn-info btn-sm px-3">
+                                        <a href="logbook_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3">
                                             <i class="bi bi-book"></i> Logbook
                                         </a>
                                     </div>
