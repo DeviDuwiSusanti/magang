@@ -1,111 +1,110 @@
-// Fungsi Menampilkan Pesan Error di Bawah Input
-function showError(id, message) {
-    let inputField = document.getElementById(id);
+function validateEditForm() {
+  let nama = document.getElementById("nama").value;
+  let tempatLahir = document.getElementById("tempat_lahir").value;
+  let tanggalLahir = document.getElementById("tanggal_lahir").value;
+  let telepon = document.getElementById("no_telepone").value;
+  let alamat = document.getElementById("alamat").value;
+  let gambar = document.getElementById("image").files[0];
+  let isValid = true;
 
-    // Jika id 'gender', cari parent untuk menampilkan error
-    if (id === "gender") {
-        inputField = document.getElementById("gender_l").parentElement; // Ambil parent dari radio button
-    }
+  // Reset semua pesan error
+  document.querySelectorAll(".text-danger").forEach(function (el) {
+    el.textContent = "";
+  });
 
-    let existingError = inputField.parentElement.querySelector(".text-danger");
-    if (!existingError) {
-        let errorText = document.createElement("small");
-        errorText.className = "text-danger";
-        errorText.innerText = message;
-        inputField.parentElement.appendChild(errorText);
-    } else {
-        existingError.innerText = message;
+  // Validasi Nama
+  if (!/^[a-zA-Z\s.,'-]+$/.test(nama)) {
+    document.getElementById("nama_error").textContent =
+      "Nama hanya boleh berisi huruf, spasi, dan simbol (.,'-).";
+    document.getElementById("nama").focus(); // Fokus ke input nama
+    document
+      .getElementById("nama")
+      .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input nama
+    return false;
+  }
+
+  // Validasi Tempat Lahir
+  if (tempatLahir.trim() === "") {
+    document.getElementById("tempat_lahir_error").textContent =
+      "Tempat lahir tidak boleh kosong.";
+    document.getElementById("tempat_lahir").focus(); // Fokus ke input tempat lahir
+    document
+      .getElementById("tempat_lahir")
+      .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input tempat lahir
+    return false;
+  } else if (!/^[a-zA-Z\s'-]+$/.test(tempatLahir)) {
+    document.getElementById("tempat_lahir_error").textContent =
+      "Tempat lahir hanya boleh berisi huruf, spasi, dan simbol ('-).";
+    document.getElementById("tempat_lahir").focus(); // Fokus ke input tempat lahir
+    document
+      .getElementById("tempat_lahir")
+      .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input tempat lahir
+    return false;
+  }
+
+  // Validasi Tanggal Lahir
+  if (tanggalLahir.trim() === "") {
+    document.getElementById("tanggal_lahir_error").textContent =
+      "Tanggal lahir tidak boleh kosong.";
+    document.getElementById("tanggal_lahir").focus(); // Fokus ke input tanggal lahir
+    document
+      .getElementById("tanggal_lahir")
+      .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input tanggal lahir
+    return false;
+  }
+
+  // Validasi Telepon
+  if (telepon.trim() === "") {
+    document.getElementById("telepon_error").textContent =
+      "Nomor telepon tidak boleh kosong.";
+    document.getElementById("no_telepone").focus(); // Fokus ke input telepon
+    document
+      .getElementById("no_telepone")
+      .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input telepon
+    return false;
+  } else if (!/^\d{8,15}$/.test(telepon)) {
+    document.getElementById("telepon_error").textContent =
+      "Telepon hanya boleh berisi angka (8-15 digit).";
+    document.getElementById("no_telepone").focus(); // Fokus ke input telepon
+    document
+      .getElementById("no_telepone")
+      .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input telepon
+    return false;
+  }
+
+  // Validasi Alamat
+  if (alamat.trim() === "") {
+    document.getElementById("alamat_error").textContent =
+      "Alamat tidak boleh kosong.";
+    document.getElementById("alamat").focus(); // Fokus ke input alamat
+    document
+      .getElementById("alamat")
+      .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input alamat
+    return false;
+  }
+
+  // Validasi Gambar
+  if (gambar) {
+    if (gambar.size > 1048576) {
+      // 1MB
+      document.getElementById("image_error").textContent =
+        "Ukuran gambar tidak boleh lebih dari 1MB.";
+      document.getElementById("image").focus(); // Fokus ke input gambar
+      document
+        .getElementById("image")
+        .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input gambar
+      return false;
     }
+    if (!gambar.type.match("image.*")) {
+      document.getElementById("image_error").textContent =
+        "File yang diupload harus berupa gambar.";
+      document.getElementById("image").focus(); // Fokus ke input gambar
+      document
+        .getElementById("image")
+        .scrollIntoView({ behavior: "smooth", block: "center" }); // Scroll ke input gambar
+      return false;
+    }
+  }
+
+  return isValid;
 }
-
-// Fungsi Menghapus Pesan Error
-function clearError(id) {
-    let inputField = document.getElementById(id);
-
-    // Jika id 'gender', cari parent dari radio button
-    if (id === "gender") {
-        inputField = document.getElementById("gender_l").parentElement;
-    }
-
-    let existingError = inputField.parentElement.querySelector(".text-danger");
-    if (existingError) {
-        existingError.remove();
-    }
-}
-
-document.getElementById("editForm").addEventListener("submit", function (event) {
-    let isValid = true;
-
-    // Validasi Nama Lengkap (hanya huruf dan spasi)
-    const nama = document.getElementById("nama_user").value.trim();
-    if (!/^[a-zA-Z\s'-]+$/.test(nama)) {
-        showError("nama_user", "Nama hanya boleh berisi huruf dan spasi.");
-        isValid = false;
-    } else {
-        clearError("nama_user");
-    }
-
-    // Validasi Tempat Lahir (hanya huruf dan spasi)
-    const tempatLahir = document.getElementById("tempat_lahir").value.trim();
-    if (!/^[a-zA-Z\s]+$/.test(tempatLahir)) {
-        showError("tempat_lahir", "Tempat lahir hanya boleh berisi huruf dan spasi.");
-        isValid = false;
-    } else {
-        clearError("tempat_lahir");
-    }
-
-    // Validasi Tanggal Lahir (tidak boleh kosong)
-    const tanggalLahir = document.getElementById("tanggal_lahir").value;
-    if (!tanggalLahir) {
-        showError("tanggal_lahir", "Tanggal lahir harus diisi.");
-        isValid = false;
-    } else {
-        clearError("tanggal_lahir");
-    }
-
-    // Validasi Jenis Kelamin (harus dipilih salah satu)
-    const genderL = document.getElementById("gender_l").checked;
-    const genderP = document.getElementById("gender_p").checked;
-    if (!genderL && !genderP) {
-        showError("gender", "Pilih jenis kelamin.");
-        isValid = false;
-    } else {
-        clearError("gender");
-    }
-
-    // Validasi No. Telepon (hanya angka, minimal 10-13 digit)
-    const telepon = document.getElementById("no_telepone").value.trim();
-    if (!/^\d{10,13}$/.test(telepon)) {
-        showError("no_telepone", "No. telepon harus 10-13 digit angka.");
-        isValid = false;
-    } else {
-        clearError("no_telepone");
-    }
-
-    // Validasi Alamat (tidak boleh kosong)
-    const alamat = document.getElementById("alamat").value.trim();
-    if (alamat === "") {
-        showError("alamat", "Alamat tidak boleh kosong.");
-        isValid = false;
-    } else {
-        clearError("alamat");
-    }
-
-    // Validasi Foto Profil (jika diunggah, harus format gambar yang benar)
-    const fileInput = document.getElementById("image");
-    if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-        if (!allowedTypes.includes(file.type)) {
-            showError("image", "Format gambar harus jpg, jpeg, png, atau gif.");
-            isValid = false;
-        } else {
-            clearError("image");
-        }
-    }
-
-    // Jika ada kesalahan, batalkan submit
-    if (!isValid) {
-        event.preventDefault();
-    }
-});
