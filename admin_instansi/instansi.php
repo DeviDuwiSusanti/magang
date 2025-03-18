@@ -79,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                         </table>
 
                         <div class="d-grid">
-                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editInstansiModal">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editInstansiModal">
                                 <i class="bi bi-pencil me-1"></i>Edit Instansi
                             </button>
                         </div>
@@ -137,8 +137,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                         <small class="text-muted">Kosong Jika tidak ingin di ganti</small>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary btn-sm" name="edit_instansi">Simpan Perubahan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary" name="edit_instansi">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>

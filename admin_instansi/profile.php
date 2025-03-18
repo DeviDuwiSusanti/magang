@@ -121,16 +121,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control" id="nama" name="nama_user" value="<?= $profile["nama_user"] ?>">
+                        <small class="text-danger" id="nama_error"></small>
                     </div>
                     <!-- Tempat Lahir -->
                     <div class="mb-3">
                         <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
                         <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= $profile["tempat_lahir"] ?>">
+                        <small class="text-danger" id="tempat_lahir_error"></small>
                     </div>
                     <!-- Tanggal Lahir -->
                     <div class="mb-3">
                         <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
                         <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $profile["tanggal_lahir"] ?>">
+                        <small class="text-danger" id="tanggal_lahir_error"></small>
                     </div>
                     <!-- Gender -->
                     <div class="mb-3">
@@ -156,6 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
                     <div class="mb-3">
                         <label for="alamat" class="form-label">Alamat</label>
                         <textarea class="form-control" id="alamat" name="alamat_user" rows="3"><?= $profile["alamat_user"] ?></textarea>
+                        <small class="text-danger" id="alamat_error"></small>
                     </div>
                     <!-- Upload Foto Profil -->
                     <div class="mb-3">
@@ -179,6 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
 </div>
 
 <?php include "footer.php"; ?>
+<script src="../assets/js/validasi.js"></script>
 
 <!-- JavaScript untuk Modal dan Validasi -->
 <script>
@@ -207,23 +212,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
     }
 
     // Fungsi untuk validasi form edit
-    function validateEditForm() {
-        let telepon = document.getElementById('no_telepone').value;
-        let isValid = true;
+    // function validateEditForm() {
+    //     let telepon = document.getElementById('no_telepone').value;
+    //     let isValid = true;
 
-        // Validasi Telepon
-        if (!/^\d+$/.test(telepon)) {
-            document.getElementById('telepon_error').textContent = "Telepon hanya boleh berisi angka.";
-            isValid = false;
-        } else {
-            document.getElementById('telepon_error').textContent = "";
-        }
+    //     // Validasi Telepon
+    //     if (!/^\d+$/.test(telepon)) {
+    //         document.getElementById('telepon_error').textContent = "Telepon hanya boleh berisi angka.";
+    //         isValid = false;
+    //     } else {
+    //         document.getElementById('telepon_error').textContent = "";
+    //     }
 
-        return isValid;
-    }
+    //     return isValid;
+    // }
 
-    // Event listener untuk input telepon
-    document.getElementById("no_telepone").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
-    });
+    // // Event listener untuk input telepon
+    // document.getElementById("no_telepone").addEventListener("input", function(e) {
+    //     this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+    // });
 </script>
