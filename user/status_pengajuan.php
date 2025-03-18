@@ -25,7 +25,7 @@ $sql = "SELECT *
         FROM tb_pengajuan
         LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
         LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
-        WHERE tb_pengajuan.id_user = '$id_user'";
+        WHERE tb_pengajuan.id_user = '$id_user'   AND tb_pengajuan.status_Active = 1";
 $query = mysqli_query($conn, $sql);
 
 // Cek apakah tombol "Tambah Pengajuan" perlu disembunyikan

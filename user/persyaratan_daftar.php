@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['hapus_laporan'])) {
     if ($file_data && $file_data['id_user'] == $id_user) {
         $file_path = $file_data['file_path'];
 
-        // Hapus file fisik jika ada
+        // Menghapus file fisik 
         if (!empty($file_path) && file_exists($file_path)) {
             unlink($file_path);
         }
@@ -60,10 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['hapus_laporan'])) {
 
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar Persyaratan yang Telah Diunggah</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Daftar Dokumen Persyaratan</li>
-        </ol>
+        <h1 class="mb-4">Daftar Dokumen Persyaratan yang Telah Diunggah</h1>
         <div class="mb-4 dropdown-divider"></div>
 
         <div class="mb-4 text-end">
@@ -286,9 +283,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 .remove-button:hover {
     background: darkred;
 }
-
-
-
 </style>
 
 <script>
@@ -385,6 +379,4 @@ let myDropzone = new Dropzone("#myDropzone", {
 });
 
 </script>
-
-
 <?php include "../layout/footerDashboard.php"; ?>
