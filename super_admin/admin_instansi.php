@@ -2,7 +2,7 @@
     include "sidebar.php";
     $admin_instansi = query("SELECT * FROM tb_user u, tb_profile_user p WHERE p.id_user = u.id_user AND u.level = '2' 
                             AND (p.id_instansi IS NULL OR p.id_instansi = '') AND p.status_active = '1' ");
-    $instansi_available = query("SELECT i.id_instansi, i.nama_panjang FROM tb_instansi i LEFT JOIN tb_profile_user p ON p.id_instansi = i.id_instansi WHERE p.id_instansi IS NULL OR p.id_instansi = '' ");
+    $instansi_available = query("SELECT i.id_instansi, i.nama_panjang, i.status_active FROM tb_instansi i LEFT JOIN tb_profile_user p ON p.id_instansi = i.id_instansi WHERE (p.id_instansi IS NULL OR p.id_instansi = '') AND i.status_active = '1' ");
     $instansi_selected = query("SELECT DISTINCT i.nama_panjang FROM tb_instansi i INNER JOIN tb_profile_user p ON i.id_instansi = p.id_instansi");
 
     if(isset($_POST["generate_admin_instansi"])) {

@@ -1,5 +1,6 @@
 <?php
 include "../layout/header.php";
+include "update_status.php";
 
 $id_instansi = $_SESSION['id_instansi'];
 $no = 1;
@@ -124,7 +125,19 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                 </td>
                                 <td><?= $row["nama_pembimbing"] ?: "Pembimbing Belum Ditentukan" ?></td>
                                 <td>
-                                    <span id="status-badge-<?php echo $row['id_pengajuan']; ?>" class="badge"></span>
+                                    <?php
+                                    if ($row['status_pengajuan'] == 5) {
+                                        echo '<span class="badge bg-danger">Selesai</span>';
+                                    } elseif ($row['status_pengajuan'] == 4) {
+                                        echo '<span class="badge bg-primary">Berlangsung</span>';
+                                    } elseif ($row['status_pengajuan'] == 3) {
+                                        echo '<span class="badge bg-danger">Ditolak</span>';
+                                    } elseif ($row['status_pengajuan'] == 2) {
+                                        echo '<span class="badge bg-success">Diterima</span>';
+                                    } else {
+                                        echo '<span class="badge bg-secondary">Diajukan</span>';
+                                    }
+                                    ?>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -136,43 +149,3 @@ $json_nama_pengaju = json_encode($nama_pengaju);
 </div>
 
 <?php include "footer.php"; ?>
-
-<script>
-    function updateStatus(id_pengajuan) {
-
-        // Setelah update status di database, baru ambil status terbaru dari get_status.php
-        $.ajax({
-            url: 'get_status.php',
-            type: 'GET',
-            data: {
-                id_pengajuan: id_pengajuan
-            },
-            success: function(response) {
-                let data = JSON.parse(response);
-                let statusBadge = $("#status-badge-" + id_pengajuan);
-
-                if (data.status == 5) {
-                    statusBadge.html("Selesai").attr("class", "badge bg-danger");
-                } else if (data.status == 4) {
-                    statusBadge.html("Berlangsung").attr("class", "badge bg-primary");
-                } else if (data.status == 3) {
-                    statusBadge.html("Ditolak").attr("class", "badge bg-danger");
-                } else if (data.status == 2) {
-                    statusBadge.html("Diterima").attr("class", "badge bg-success");
-                } else if (data.status == 6) {
-                    statusBadge.html("Menunggu Konfirmasi").attr("class", "badge bg-warning");
-                } else {
-                    statusBadge.html("Diajukan").attr("class", "badge bg-secondary");
-                }
-            }
-        });
-    }
-
-    // Fungsi untuk memperbarui status setiap kali halaman dimuat
-    $(document).ready(function() {
-        $("span[id^='status-badge-']").each(function() {
-            let id_pengajuan = $(this).attr("id").replace("status-badge-", "");
-            updateStatus(id_pengajuan);
-        });
-    });
-</script>

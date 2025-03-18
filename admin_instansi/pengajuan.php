@@ -21,7 +21,7 @@ $sql = "SELECT
         INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
         WHERE p.id_instansi = '$id_instansi'
         AND p.status_active = '1'
-        AND p.status_pengajuan = '1'
+        AND p.status_pengajuan IN ('1', '6')
         ORDER BY p.id_pengajuan ASC
 ";
 
@@ -185,7 +185,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
 <!-- Modal untuk Menampilkan Daftar Dokumen -->
 <div class="modal fade" id="dokumenModal" tabindex="-1" aria-labelledby="dokumenModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="dokumenModalLabel">Dokumen yang Dilengkapi</h5>
@@ -225,7 +225,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
 <!-- Modal untuk Informasi Zoom -->
 <div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomModalLabel">Informasi Wawancara Zoom</h5>
@@ -246,7 +246,10 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                         <label for="link_zoom" class="form-label">Link Zoom</label>
                         <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789" required>
                     </div>
-                    <button type="submit" class="btn btn-primary" id="submitButton">Kirim</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" id="submitButton">Kirim</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -472,44 +475,39 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         });
     });
 
-    // Fungsi untuk menampilkan modal zoom
     document.addEventListener("DOMContentLoaded", function() {
+        let zoomModal = document.getElementById("zoomModal");
+        let zoomForm = document.getElementById("zoomForm");
+        let submitButton = document.getElementById("submitButton");
+
+        // Event listener untuk semua tombol Zoom
         document.querySelectorAll(".zoom-btn").forEach(function(button) {
             button.addEventListener("click", function() {
                 let idPengajuan = this.getAttribute("data-id");
                 document.getElementById("pengajuan_id_zoom").value = idPengajuan;
 
-                let zoomModal = document.getElementById("zoomModal");
-
                 let modal = new bootstrap.Modal(zoomModal);
-
-                // Pastikan modal dapat diakses oleh pembaca layar dengan menghapus aria-hidden
-                zoomModal.addEventListener("show.bs.modal", function() {
-                    zoomModal.removeAttribute("aria-hidden");
-                });
-
-                // Tambahkan kembali aria-hidden dan inert saat modal ditutup
-                zoomModal.addEventListener("hidden.bs.modal", function() {
-                    zoomModal.setAttribute("aria-hidden", "true");
-                });
-
                 modal.show();
             });
         });
 
-        // Tangani saat tombol kirim diklik dan SweetAlert muncul
-        document.getElementById("submitButton").addEventListener("click", function() {
-            let zoomModal = document.getElementById("zoomModal");
+        // Pastikan aria-hidden dikelola dengan benar saat modal dibuka & ditutup
+        zoomModal.addEventListener("show.bs.modal", function() {
+            zoomModal.removeAttribute("aria-hidden");
+        });
 
-            // Tambahkan inert agar modal tidak bisa diakses selama SweetAlert aktif
+        zoomModal.addEventListener("hidden.bs.modal", function() {
+            zoomModal.setAttribute("aria-hidden", "true");
+        });
+
+        // Event listener tombol "Kirim" untuk menonaktifkan modal sementara
+        submitButton.addEventListener("click", function() {
             zoomModal.setAttribute("inert", "true");
         });
-    });
 
-    // Fungsi untuk mengirim data zoom
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("zoomForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Mencegah form reload halaman
+        // Form submit dengan SweetAlert dan AJAX
+        zoomForm.addEventListener("submit", function(event) {
+            event.preventDefault();
 
             Swal.fire({
                 title: 'Apakah Anda yakin?',
@@ -522,22 +520,15 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Ambil data dari form
-                    var formData = new FormData(document.getElementById("zoomForm"));
+                    let formData = new FormData(zoomForm);
+                    let urlEncodedData = new URLSearchParams();
+                    formData.forEach((value, key) => urlEncodedData.append(key, value));
 
-                    // Konversi FormData ke URL-encoded
-                    var urlEncodedData = new URLSearchParams();
-                    formData.forEach((value, key) => {
-                        urlEncodedData.append(key, value);
-                    });
-
-                    // Kirim data dengan AJAX
-                    var xhr = new XMLHttpRequest();
+                    let xhr = new XMLHttpRequest();
                     xhr.open("POST", "simpan_zoom.php", true);
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                     xhr.onload = function() {
-
                         if (xhr.status == 200) {
                             Swal.fire({
                                 title: 'Berhasil!',
@@ -558,7 +549,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     };
 
                     xhr.onerror = function() {
-                        console.error("Terjadi kesalahan koneksi ke server");
                         Swal.fire({
                             title: 'Gagal!',
                             text: 'Tidak dapat menghubungi server.',
@@ -569,13 +559,16 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
                     xhr.send(urlEncodedData.toString());
                 }
+
+                // Hapus inert setelah SweetAlert selesai
+                zoomModal.removeAttribute("inert");
             });
         });
-    });
 
-
-    document.addEventListener("DOMContentLoaded", function() {
-        var idPengajuan = "<?php echo isset($_SESSION['id_pengajuan']) ? $_SESSION['id_pengajuan'] : ''; ?>";
-        document.getElementById("pengajuan_id_zoom").value = idPengajuan;
+        // Set nilai idPengajuan dari session jika elemen ada
+        let pengajuanInput = document.getElementById("pengajuan_id_zoom");
+        if (pengajuanInput) {
+            pengajuanInput.value = "<?php echo isset($_SESSION['id_pengajuan']) ? $_SESSION['id_pengajuan'] : ''; ?>";
+        }
     });
 </script>

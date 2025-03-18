@@ -34,6 +34,25 @@ use Dom\Mysql;
     }
 
 
+    function generate_user_id_level_1_2($conn) {
+        $date = date("ymd");
+        $hour = date("H");
+        $baseId = $date . $hour;
+
+        $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
+        
+        if($result && mysqli_num_rows($result) > 0) {
+            $lastId = mysqli_fetch_assoc($result)["id_user"];
+            $lastCounter = intval(substr($lastId, 2));
+            $newCounter = str_pad($lastCounter + 1, 2, "0", STR_PAD_LEFT);
+        } else {
+            $newCounter = "01";
+        }
+        $newId = $baseId . $newCounter;
+        return $newId;
+    }
+
+
 
 
 
@@ -293,7 +312,7 @@ function tambah_instansi_super_admin($POST) {
     function tambah_admin_instansi($POST) {
         global $conn;
         $create_by = $POST["id_user"];
-        $id_user = generateUserId($conn);
+        $id_user = generate_user_id_level_1_2($conn);
         $nama_user = $POST["nama_user"];
         $nik = $POST["nik"];
         $nip = $POST["nip"];
@@ -303,7 +322,7 @@ function tambah_instansi_super_admin($POST) {
         $tanggal_lahir = $POST["tanggal_lahir"];
         $telepone_user = $POST["telepone_user"];
         $alamat_user = $POST["alamat_user"];
-        $gambar_user = uploadImage($_FILES["gambar_instansi"], "avatar.png", "../assets/img/user/");
+        $gambar_user = uploadImage($_FILES["gambar_user"], "avatar.png", "../assets/img/user/");
     
         $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
         $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
@@ -382,6 +401,23 @@ function tambah_instansi_super_admin($POST) {
     }
 
 
+    function edit_pendidikan($POST) {
+        global $conn;
+        $id_pendidikan = $POST["id_pendidikan"];
+        $id_user = $POST["id_user"];
+        $nama_pendidikan = $POST["nama_pendidikan"];
+        $fakultas = $POST["fakultas"];
+        $jurusan = $POST["jurusan"];
+        $alamat_pendidikan = $POST["alamat_pendidikan"]; 
+        $query = mysqli_query($conn, "UPDATE tb_pendidikan SET nama_pendidikan = '$nama_pendidikan', fakultas = '$fakultas', jurusan = '$jurusan', alamat_pendidikan = '$alamat_pendidikan', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
+        if($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+
+
 
 
 
@@ -399,6 +435,7 @@ function tambah_instansi_super_admin($POST) {
             die("Error: " . mysqli_error($conn)); // Debugging error MySQL
         }
     }    
+
 
 
 
@@ -709,7 +746,7 @@ function tambah_instansi_super_admin($POST) {
         }
     
         // Cek apakah ada gambar baru yang diunggah
-        $gambar_baru = !empty($_FILES["gambar_instansi"]["name"]) ? $_FILES["gambar_instansi"]["name"] : $data_baru["gambar_instansi"];
+        $gambar_baru = !empty($_FILES["gambar_instansi"]["name"]) ? $_FILES["gambar_instansi"]["name"] : $data_baru["gambar_instansi_lama"];
     
         // Bandingkan data lama dengan data baru
         return $data_lama['nama_pendek'] == $data_baru["nama_pendek"] &&

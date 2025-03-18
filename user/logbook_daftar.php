@@ -1,5 +1,6 @@
 <?php include "../layout/sidebarUser.php";
 include "functions.php"; 
+confirmDeleteScript();
 
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
@@ -78,17 +79,19 @@ if (isset($_GET['id_logbook_hapus'])) {
         <div class="mb-4 text-end" id="logbook_container">
             <?php
                 $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
-                if ($status_pengajuan != '5' && $id_user_anggota == $id_user){
-                    ?>
+                if ($id_user_anggota == $id_user){
+                    if ($status_pengajuan != '5'){?>
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
-                        <i class="bi bi-plus-circle me-1"></i>
-                        Tambah Logbook
-                </button>
-
-            <a href="print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
-                <i class="bi bi-printer me-1"></i>
-                Cetak
-            </a>
+                            <i class="bi bi-plus-circle me-1"></i>
+                            Tambah Logbook
+                        </button>
+                    <?php
+                    }
+                    ?>
+                <a href="print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
+                    <i class="bi bi-printer me-1"></i>
+                    Cetak
+                </a>
             <?php          
             }
             ?>
@@ -121,12 +124,10 @@ if (isset($_GET['id_logbook_hapus'])) {
                                 <td><?= formatTanggalLengkapIndonesia($row['tanggal_logbook']) ?></td>
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
-                                <td>
-                                    <?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?>
-                                </td>
+                                <td><?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?></td>
+                                <td><img src="<?= $row['foto_kegiatan'] ?>" alt="" style="width: 150px; height: 100px;"></td>
 
-                                <td><img src="<?= $row['foto_kegiatan'] ?>" alt=""></td>
-                                <td><img src="<?= $row['tanda_tangan'] ?>" alt="TTD"></td>
+                                <td><img src="<?= $row['tanda_tangan'] ?>" alt="TTD" style="width: 150px; height: 100px;"></td>
                                 <?php
                                 if ($status_pengajuan != '5' && $id_user_anggota == $id_user){?> 
                                 <td>
@@ -134,11 +135,12 @@ if (isset($_GET['id_logbook_hapus'])) {
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>
 
-                                    <a href="?id_logbook_hapus=<?= $row['id_logbook'] ?>" 
-                                    onclick="return confirm('Anda yakin akan menghapus Logbook ini?')"
+                                    <a href="javascript:void(0);" 
+                                    onclick="confirmDelete('?id_logbook_hapus=<?= $row['id_logbook'] ?>', 'Logbook <?= $row['kegiatan_logbook'] ?>')" 
                                     class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash"></i> Hapus
                                     </a>
+
                                 </td>
                             </tr>
                         <?php
@@ -296,8 +298,6 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
 
 
 
-
-
 <!--  ==================== Timepicker (analog) =================-->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/clockpicker/dist/bootstrap-clockpicker.min.css">
 <script src="https://cdn.jsdelivr.net/npm/clockpicker/dist/bootstrap-clockpicker.min.js"></script>
@@ -422,6 +422,7 @@ $(document).ready(function() {
         var gambar = gambarElem ? gambarElem.files[0] : null;
         var ttd = form.find('[name="ttd"]').val();
         var isValid = true;
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i; // Format yang diperbolehkan
         
         // Bersihkan error sebelumnya
         form.find('.text-danger').remove();
@@ -457,18 +458,27 @@ $(document).ready(function() {
         // Validasi Gambar:
         // Mode tambah: wajib diunggah.
         // Mode edit: jika diunggah, ukurannya tidak boleh > 1MB.
-        if (!isEdit) {
+         // Validasi Gambar:
+         if (!isEdit) {
             if (!gambar) {
                 form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Gambar kegiatan harus diunggah</small>');
+                isValid = false;
+            } else if (!allowedExtensions.test(gambar.name)) {
+                form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Format gambar tidak valid (hanya JPG, JPEG, PNG, GIF)</small>');
                 isValid = false;
             } else if (gambar.size > 1048576) {
                 form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Ukuran gambar tidak boleh lebih dari 1 MB</small>');
                 isValid = false;
             }
         } else {
-            if (gambar && gambar.size > 1048576) {
-                form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Ukuran gambar tidak boleh lebih dari 1 MB</small>');
-                isValid = false;
+            if (gambar) {
+                if (!allowedExtensions.test(gambar.name)) {
+                    form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Format gambar tidak valid (hanya JPG, JPEG, PNG, GIF)</small>');
+                    isValid = false;
+                } else if (gambar.size > 1048576) {
+                    form.find('[name="gambar_kegiatan"]').after('<small class="text-danger">Ukuran gambar tidak boleh lebih dari 1 MB</small>');
+                    isValid = false;
+                }
             }
         }
         // Validasi Tanda Tangan

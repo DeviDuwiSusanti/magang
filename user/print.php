@@ -12,15 +12,9 @@ if (ISSET($_GET['id_pengajuan'])){
 $id_user = $_SESSION['id_user'];
 
 // Query untuk mengambil data logbook dan informasi terkait
-$sql = "SELECT * FROM tb_logbook AS l
-        JOIN tb_pengajuan AS p ON l.id_pengajuan = p.id_pengajuan
-        JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi
-        JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
-        JOIN tb_profile_user AS u ON l.id_user = u.id_user
-        JOIN tb_pendidikan AS d ON u.id_pendidikan = d.id_pendidikan
-        WHERE l.id_pengajuan = '$id_pengajuan' 
-        AND l.id_user = '$id_user' 
-        AND l.status_active = '1'";
+$sql = "SELECT * FROM tb_logbook AS l JOIN tb_pengajuan AS p ON l.id_pengajuan = p.id_pengajuan JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+        JOIN tb_profile_user AS u ON l.id_user = u.id_user JOIN tb_pendidikan AS d ON u.id_pendidikan = d.id_pendidikan
+        WHERE l.id_pengajuan = '$id_pengajuan' AND l.id_user = '$id_user' AND l.status_active = '1'";
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
 if (!$row) {
@@ -107,20 +101,26 @@ if (!$row) {
             border-radius: 4px;
         }
 
+        /* Pastikan gambar dalam tabel memiliki ukuran tetap */
+        .table img {
+            width: 150px;  /* Sesuaikan dengan ukuran yang diinginkan */
+            height: 100px; /* Pastikan semua gambar memiliki tinggi yang sama */
+            object-fit: cover; /* Memastikan gambar tetap rapi dalam ukuran yang ditentukan */
+            border: 1px solid #ddd; /* Opsional, agar tampak lebih rapi */
+            padding: 3px;
+        }
+
+        /* Aturan untuk cetak */
         @media print {
             .no-print {
-                display: none;
+                display: none; /* Sembunyikan tombol cetak saat dicetak */
+            }
+            .table img {
+                width: 120px; /* Atur ukuran gambar saat dicetak */
+                height: 90px;
             }
         }
-
-        img {
-            max-width: 150px;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
     </style>
-
 </head>
 
 <body>
@@ -185,7 +185,7 @@ if (!$row) {
                     <td style="text-align: left;"><?= formatTanggalLengkapIndonesia($row2['tanggal_logbook']) ?></td>
                     <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
                     <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
-                    <td style="text-align: left;"><?= date('H.i', strtotime($row['jam_mulai'])) ?> - <?= date('H.i', strtotime($row['jam_selesai'])) ?> WIB</td>
+                    <td style="text-align: left;"><?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?> </td>
                     <td style="text-align: left;"><img src="<?= $row2['foto_kegiatan'] ?>" alt="Gambar kegiatan"></td>
                     <td style="text-align: left;"><img src="<?= $row2['tanda_tangan'] ?>" alt="TTD"></td>
                 </tr>

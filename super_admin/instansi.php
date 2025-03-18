@@ -159,6 +159,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -218,12 +219,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
 
 
 
@@ -316,7 +311,6 @@ function validateFile() {
 </script>
 
 <script>
-
     document.getElementById("id_instansi").addEventListener("input", function (e) {
         this.value = this.value.replace(/\D/g, "");
         });

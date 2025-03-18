@@ -104,6 +104,203 @@ function alertSuccessEdit(message, redirectUrl) {
   });
 }
 
+// Edit profile admin instansi
+function edit_profile_admin_instansi_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: "Data profile berhasil diperbarui",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "profile.php";
+    }
+  })
+}
+
+function edit_profile_admin_instansi_gagal() {
+  Swal.fire({
+    icon: "error",
+    title: "Gagal!",
+    text: "Data profile gagal diperbarui",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "profile.php";
+    }
+  })
+}
+
+// Edit instansi admin instansi
+function edit_instansi_admin_instansi_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: "Data instansi berhasil diperbarui",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi.php";
+    }
+  })
+}
+
+function edit_instansi_admin_instansi_gagal() {
+  Swal.fire({
+    icon: "error",
+    title: "Gagal!",
+    text: "Data instansi gagal diperbarui",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "instansi.php";
+    }
+  })
+}
+
+// Tambah bidang admin instansi
+function tambah_bidang_admin_instansi_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: "Data bidang berhasil ditambahkan",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "bidang.php";
+    }
+  })
+}
+
+function tambah_bidang_admin_instansi_gagal() {
+  Swal.fire({
+    icon: "error",
+    title: "Gagal!",
+    text: "Data bidang gagal ditambahkan",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "bidang.php";
+    }
+  })
+}
+
+// Edit bidang admin instansi
+function edit_bidang_admin_instansi_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: "Data bidang berhasil diperbarui",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "bidang.php";
+    }
+  })
+}
+
+function edit_bidang_admin_instansi_gagal() {
+  Swal.fire({
+    icon: "error",
+    title: "Gagal!",
+    text: "Data bidang gagal diperbarui",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "bidang.php";
+    }
+  })
+}
+
+// Hapus bidang admin instansi
+function hapus_bidang_admin_instansi(id_bidang) {
+  Swal.fire({
+    title: "Apakah Anda yakin?",
+    icon: "warning",
+    text: "Data bidang akan dihapus!",
+    confirmButtonText: "Ya! Hapus",
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "bidang.php?id_bidang_ini=" + id_bidang;
+    }
+  });
+}
+
+function hapus_bidang_admin_instansi_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil!",
+    text: "Data bidang berhasil dihapus",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "bidang.php";
+    }
+  })
+}
+
+function hapus_bidang_admin_instansi_gagal() {
+  Swal.fire({
+    icon: "error",
+    title: "Gagal!",
+    text: "Data bidang gagal dihapus",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "bidang.php";
+    }
+  })
+}
+
+// Logout admin instansi
+function logout_admin_instansi() {
+  Swal.fire({
+    title: "Apakah Anda yakin ingin logout?",
+    text: "Anda harus login kembali untuk mengakses sistem.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Ya, Logout",
+    cancelButtonText: "Batal",
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetch("logout.php")
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "success") {
+            Swal.fire({
+              title: "Berhasil Logout!",
+              icon: "success",
+              text: "Anda telah keluar dari sistem.",
+              confirmButtonText: "OK"
+            }).then(() => {
+              window.location.href = "../login.php"; // Redirect ke halaman login
+            });
+          }
+        });
+    }
+  });
+}
+
+
+
+
+
 
 
 
@@ -118,7 +315,7 @@ function edit_profile_super_admin_success() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "profile_view.php";
+      window.location.href = "profile.php";
     }
   })
 }
@@ -132,7 +329,7 @@ function edit_profile_super_admin_gagal() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "profile_edit.php";
+      window.location.href = "profile.php";
     }
   })
 }
@@ -260,7 +457,7 @@ function confirm_hapus_user_super_admin(id_user) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php?id_user_ini=" + id_user;
+      window.location.href = "user.php?id_user_ini=" + id_user;
     }
   });
 }
@@ -275,7 +472,7 @@ function hapus_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -289,7 +486,7 @@ function hapus_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -305,7 +502,7 @@ function tambah_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -320,7 +517,7 @@ function tambah_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_tambah.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -335,7 +532,7 @@ function edit_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_view.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -350,7 +547,7 @@ function edit_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user_edit.php";
+      window.location.href = "user.php";
     }
   })
 }
@@ -369,7 +566,7 @@ function hapus_pengajuan_by_super_admin(id_pengajuan) {
     showCancelButton: true,
   }).then((result) =>  {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan_view.php?id_pengajuan_ini=" + id_pengajuan;
+      window.location.href = "pengajuan.php?id_pengajuan_ini=" + id_pengajuan;
     }
   })
 }
@@ -384,7 +581,7 @@ function hapus_pengajuan_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan_view.php";
+      window.location.href = "pengajuan.php";
     }
   })
 }
@@ -398,7 +595,7 @@ function hapus_pengajuan_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan_view.php";
+      window.location.href = "pengajuan.php";
     }
   })
 }
@@ -449,7 +646,7 @@ function confirm_hapus_pendidikan_super_admin(id_pendidikan) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "study_view.php?id_pendidikan_ini=" + id_pendidikan;
+      window.location.href = "pendidikan.php?id_pendidikan_ini=" + id_pendidikan;
     }
   });
 }
@@ -464,7 +661,7 @@ function hapus_pendidikan_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "study_view.php";
+      window.location.href = "pendidikan.php";
     }
   })
 }
@@ -478,12 +675,40 @@ function hapus_pendidikan_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "study_view.php";
+      window.location.href = "pendidikan.php";
     }
   })
 }
 
 
+
+function edit_pendidikan_super_admin_success() {
+  Swal.fire({
+    icon: "success",
+    title: "Berhasil",
+    text : "Edit Data pendidikan Berhasil :)",
+    confirmButtonColor : "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "pendidikan.php";
+    }
+  })
+}
+
+function edit_pendidikan_super_admin_gagal() {
+  Swal.fire({
+    title: "Gagal",
+    icon: "error",
+    text: "Edit Data pendidikan Gagal :(",
+    confirmButtonText : "OK",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "pendidikan.php";
+    }
+  })
+}
 
 
 
@@ -583,6 +808,11 @@ function edit_email_super_admin_gagal() {
     }
   });
 }
+
+
+
+
+
 
 
 

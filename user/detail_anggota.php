@@ -1,6 +1,8 @@
 <?php 
 include "../layout/sidebarUser.php"; 
 include "functions.php";
+confirmDeleteScript();
+
 
 // TABEL DAFTAR ANGGOTA
 if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEdit'])) {
@@ -75,11 +77,12 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                                 class="btn btn-warning btn-sm <?= $isKetua ? 'disabled' : '' ?>">
                                                 <i class="bi bi-pencil"></i> Edit
                                             </a>
-                                            <a href="<?= $isKetua ? '#' : "detail_anggota.php?id_userHapus={$row['id_user']}&id_pengajuan={$id_pengajuan}" ?>" 
-                                            onclick="<?= $isKetua ? 'return false;' : "return confirm('Anda yakin akan menghapus Data Anggota ini?')" ?>"
+                                            <a href="javascript:void(0);"
+                                            onclick="confirmDelete('?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>', 'anggota <?= $row['nama_user'] ?>')"
                                             class="btn btn-danger btn-sm <?= $isKetua ? 'disabled' : '' ?>">
                                                 <i class="bi bi-trash"></i> Hapus
                                             </a>
+
                                         </td>
                                     <?php endif; ?>
                                 </tr>
@@ -105,8 +108,7 @@ if (isset($_GET['id_userEdit'])) {
 }
 
 if (isset($_GET['id_userHapus'])) {
-    hapusAnggota($id_user, $id_pengajuan);
-    
+    hapusAnggota($id_user, $id_pengajuan); 
 }if (ISSET($_POST['update_anggota'])){
     updateAnggota($_POST, $id_user, $id_pengajuan);
 }

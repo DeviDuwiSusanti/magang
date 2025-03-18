@@ -35,8 +35,8 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../assets/js/alert.js"></script>
-    <!-- Select2 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 </head>
 
@@ -59,25 +59,25 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="view_profile.php" class="sidebar-link">
+                    <a href="profile.php" class="sidebar-link">
                         <i class="bi bi-person-lines-fill"></i>
                         <span>Profile Saya</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="view_instansi.php" class="sidebar-link">
+                    <a href="instansi.php" class="sidebar-link">
                         <i class="bi bi-buildings"></i>
                         <span>Kelola Instansi</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="view_bidang.php" class="sidebar-link">
+                    <a href="bidang.php" class="sidebar-link">
                         <i class="bi bi-building-fill-add"></i>
                         <span>Kelola Bidang</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="daftar_pembimbing.php" class="sidebar-link">
+                    <a href="pembimbing.php" class="sidebar-link">
                         <i class="bi bi-person-workspace"></i>
                         <span>Pembimbing Bidang</span>
                     </a>
@@ -94,12 +94,12 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                         <span>Daftar Pemagang</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                     <a href="nilai.php" class="sidebar-link">
                         <i class="bi bi-clipboard-check"></i>
                         <span>Penilaian</span>
                     </a>
-                </li>
+                </li> -->
                 <!-- <li class="sidebar-item">
                     <a href="sertifikat.php" class="sidebar-link">
                         <i class="bi bi-award"></i>
@@ -138,9 +138,9 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                                 <img src="../assets/img/user/<?= $pengguna["gambar_user"] ?: 'avatar_admin.jpg' ?>" alt="avatar" class="avatar img-fluid rounded-circle" style="object-fit: cover; object-position: top; border: 2px solid #ccc;">
                             </a>
                             <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                <a href="edit_profile.php" class="dropdown-item">
+                                <a href="view_profile.php" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
-                                    <span>Edit Profile</span>
+                                    <span>Profile Saya</span>
                                 </a>
                                 <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
@@ -163,13 +163,9 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
             <!-- </div>
     </div> -->
             <script src="../assets/js/script.js"></script>
-
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-
-            <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <!-- Sertakan JS: Bootstrap, dan DataTables -->
             <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
             <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
             <!-- Select2 JS -->
@@ -213,13 +209,10 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                     });
 
                     // Inisialisasi Select2 untuk dropdown bidang
-                    $(document).ready(function() {
-                        if ($('#bidang').length) { // Cek apakah elemen dengan id "bidang" ada di halaman
-                            $('#bidang').select2({
-                                placeholder: "Pilih Bidang",
-                                allowClear: true
-                            });
-                        }
+                    $('#id_bidang').select2({
+                        placeholder: "Pilih Bidang",
+                        allowClear: true,
+                        dropdownParent: $('#tambahPembimbingModal')
                     });
                 });
 
