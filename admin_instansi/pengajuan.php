@@ -240,7 +240,10 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     </div>
                     <div class="mb-3">
                         <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
-                        <input type="time" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan" required>
+                        <div class="input-group clockpicker">
+                            <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan" required>
+                            <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="link_zoom" class="form-label">Link Zoom</label>
@@ -570,5 +573,12 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         if (pengajuanInput) {
             pengajuanInput.value = "<?php echo isset($_SESSION['id_pengajuan']) ? $_SESSION['id_pengajuan'] : ''; ?>";
         }
+    });
+
+    $(document).ready(function() {
+        $('.clockpicker').clockpicker({
+            autoclose: true,
+            donetext: 'Pilih'
+        });
     });
 </script>

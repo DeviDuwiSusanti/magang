@@ -1,6 +1,7 @@
 <?php
 include "../layout/header.php";
 
+$id_instansi = $_SESSION['id_instansi'];
 $bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidang, b.kuota_bidang, b.kriteria_bidang, b.dokumen_prasyarat,
                   i.id_instansi, i.nama_panjang, 
                   pu.id_user 
@@ -14,7 +15,6 @@ $bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidan
 $query = mysqli_query($conn, $bidang);
 $bidang = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $no = 1;
-$id_instansi = $_SESSION['id_instansi'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
     if (tambah_bidang($_POST) > 0) {
@@ -134,30 +134,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" enctype="multipart/form-data">
+                <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateTambahBidang()">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_instansi" id="id_instansi" value="<?= $id_instansi ?>">
                     <div class="mb-3">
                         <label for="nama_bidang" class="form-label">Nama Bidang</label>
-                        <input type="text" class="form-control" id="nama_bidang" name="nama_bidang" placeholder="Masukkan nama bidang" required>
+                        <input type="text" class="form-control" data-error-id="nama_bidang_error" id="nama_bidang" name="nama_bidang" placeholder="Masukkan nama bidang">
+                        <small class="text-danger" id="nama_bidang_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label">Deskripsi Bidang</label>
-                        <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" placeholder="Masukkan deskripsi bidang" required></textarea>
+                        <textarea class="form-control" data-error-id="deskripsi_error" id="deskripsi" name="deskripsi" rows="3" placeholder="Masukkan deskripsi bidang"></textarea>
+                        <small class="text-danger" id="deskripsi_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="kriteria" class="form-label">Kriteria</label>
-                        <textarea class="form-control" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang" required></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small>
+                        <textarea class="form-control" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang"></textarea>
+                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                        <small class="text-danger" id="kriteria_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="kuota" class="form-label">Kuota</label>
-                        <input type="number" class="form-control" id="kuota" name="kuota" placeholder="Masukkan kuota bidang" required>
+                        <input type="number" class="form-control" data-error-id="kuota_error" id="kuota" name="kuota" placeholder="Masukkan kuota bidang">
+                        <small class="text-danger" id="kuota_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
-                        <textarea class="form-control" id="dokumen" name="dokumen" rows="3" placeholder="Masukkan dokumen prasyarat" required></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small>
+                        <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="3" placeholder="Masukkan dokumen prasyarat"></textarea>
+                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                        <small class="text-danger" id="dokumen_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -178,30 +183,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" enctype="multipart/form-data">
+                <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditBidang()">
                     <input type="hidden" name="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_bidang" id="edit_id_bidang">
                     <div class="mb-3">
                         <label for="nama_bidang" class="form-label fw-bold">Nama Bidang</label>
-                        <input type="text" class="form-control" id="edit_nama_bidang" name="nama_bidang" required>
+                        <input type="text" class="form-control" data-error-id="edit_nama_bidang_error" id="edit_nama_bidang" name="nama_bidang">
+                        <small class="text-danger" id="edit_nama_bidang_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label fw-bold">Deskripsi Bidang</label>
-                        <textarea class="form-control" id="edit_deskripsi" name="deskripsi" rows="3" required></textarea>
+                        <textarea class="form-control" data-error-id="edit_deskripsi_error" id="edit_deskripsi" name="deskripsi" rows="3"></textarea>
+                        <small class="text-danger" id="edit_deskripsi_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="kriteria" class="form-label fw-bold">Kriteria</label>
-                        <textarea class="form-control" id="edit_kriteria" name="kriteria" rows="3" required></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small>
+                        <textarea class="form-control" data-error-id="edit_kriteria_error" id="edit_kriteria" name="kriteria" rows="3"></textarea>
+                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                        <small class="text-danger" id="edit_kriteria_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="kuota" class="form-label fw-bold">Kuota</label>
-                        <input type="number" class="form-control" id="edit_kuota" name="kuota" required">
+                        <input type="number" class="form-control" data-error-id="edit_kuota_error" id="edit_kuota" name="kuota"">
+                        <small class="text-danger" id="edit_kuota_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="dokumen" class="form-label fw-bold">Dokumen Prasyarat</label>
-                        <textarea class="form-control" id="edit_dokumen" name="dokumen" rows="3" required></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small>
+                        <textarea class="form-control" data-error-id="edit_dokumen_error" id="edit_dokumen" name="dokumen" rows="3"></textarea>
+                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                        <small class="text-danger" id="edit_dokumen_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -214,6 +224,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
 </div>
 
 <?php include "footer.php"; ?>
+<script src="../assets/js/validasi.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -230,29 +241,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             });
         });
     });
-
-
-    function confirmDelete(event) {
-        // Mencegah aksi default link
-        event.preventDefault();
-
-        // Mendapatkan URL yang akan dihapus
-        const url = event.currentTarget.href;
-
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data bidang akan dihapus!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika dikonfirmasi, alihkan ke URL hapus
-                window.location.href = url;
-            }
-        });
-    }
 </script>

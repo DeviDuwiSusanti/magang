@@ -12,13 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
     if (cek_edit_profile($conn, $_POST)) {
         echo "
             <script>
-                Swal.fire({
-                    title: 'Tidak Ada Perubahan!',
-                    text: 'Data profile telah disimpan.',
-                    icon: 'info',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#3085d6'
-                });
+                tidak_ada_perubahan_profile();
             </script>
         ";
     } else {
@@ -117,25 +111,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
             <div class="modal-body">
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditForm()">
                     <input type="hidden" name="id_user" value="<?= $profile["id_user"] ?>">
-                    <!-- Nama -->
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="nama" name="nama_user" value="<?= $profile["nama_user"] ?>">
+                        <input type="text" class="form-control" data-error-id="nama_error" id="nama" name="nama_user" value="<?= $profile["nama_user"] ?>">
                         <small class="text-danger" id="nama_error"></small>
                     </div>
-                    <!-- Tempat Lahir -->
                     <div class="mb-3">
                         <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                        <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir" value="<?= $profile["tempat_lahir"] ?>">
+                        <input type="text" class="form-control" data-error-id="tempat_lahir_error" id="tempat_lahir" name="tempat_lahir" value="<?= $profile["tempat_lahir"] ?>">
                         <small class="text-danger" id="tempat_lahir_error"></small>
                     </div>
-                    <!-- Tanggal Lahir -->
                     <div class="mb-3">
                         <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                        <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" value="<?= $profile["tanggal_lahir"] ?>">
+                        <input type="date" class="form-control" data-error-id="tanggal_lahir_error" id="tanggal_lahir" name="tanggal_lahir" value="<?= $profile["tanggal_lahir"] ?>">
                         <small class="text-danger" id="tanggal_lahir_error"></small>
                     </div>
-                    <!-- Gender -->
                     <div class="mb-3">
                         <label for="gender" class="form-label">Jenis Kelamin</label>
                         <div>
@@ -149,29 +139,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
                             </div>
                         </div>
                     </div>
-                    <!-- Telepon -->
                     <div class="mb-3">
                         <label for="no_telepone" class="form-label">No. Telepon</label>
-                        <input type="tel" pattern="[0-9]{8,15}" maxlength="15" inputmode="numeric" class="form-control" id="no_telepone" name="telepone" value="<?= $profile["telepone_user"] ?>">
+                        <input type="tel" class="form-control" data-error-id="telepon_error" id="no_telepone" name="telepone" value="<?= $profile["telepone_user"] ?>">
                         <small id="telepon_error" class="text-danger"></small>
                     </div>
-                    <!-- Alamat -->
                     <div class="mb-3">
                         <label for="alamat" class="form-label">Alamat</label>
-                        <textarea class="form-control" id="alamat" name="alamat_user" rows="3"><?= $profile["alamat_user"] ?></textarea>
+                        <textarea class="form-control" data-error-id="alamat_error" id="alamat" name="alamat_user" rows="3"><?= $profile["alamat_user"] ?></textarea>
                         <small class="text-danger" id="alamat_error"></small>
                     </div>
-                    <!-- Upload Foto Profil -->
                     <div class="mb-3">
                         <label for="image">Foto Profil</label><br><br>
                         <div class="image-preview" id="imagePreview">
                             <img src="../assets/img/user/<?= $profile["gambar_user"] ?: 'avatar.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; object-position: top;">
                             <input type="hidden" name="gambar_lama" id="gambar_lama" value="<?= $profile["gambar_user"] ?>">
                         </div>
-                        <input type="file" class="input form-control" id="image" name="gambar" accept="image/*" onchange="validateFile()">
-                        <small class="text-muted">Kosong Jika tidak ingin di ganti</small>
+                        <input type="file" class="input form-control" data-error-id="image_error" id="image" name="gambar" accept="image/*" onchange="previewFile()">
+                        <small class="text-muted">Kosong Jika tidak ingin di ganti</small> <br>
+                        <small class="text-danger" id="image_error"></small>
                     </div>
-                    <!-- Submit Button -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" name="edit_profile" class="btn btn-primary">Simpan Perubahan</button>
@@ -185,23 +172,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
 <?php include "footer.php"; ?>
 <script src="../assets/js/validasi.js"></script>
 
-<!-- JavaScript untuk Modal dan Validasi -->
 <script>
     // Fungsi untuk validasi file
-    function validateFile() {
+    function previewFile() {
         const fileInput = document.getElementById('image');
         const previewContainer = document.getElementById('imagePreview');
         const previewImage = document.getElementById('previewImage');
         const file = fileInput.files[0];
 
         if (file) {
-            if (file.size > 1048576) { // 1MB = 1048576 bytes
-                alert("Ukuran file terlalu besar! Maksimal 1MB.");
-                fileInput.value = ""; // Reset file input
-                previewImage.src = "../assets/img/user/<?= $profile["gambar_user"] ?>"; // Kembalikan ke gambar lama
-                return;
-            }
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 previewImage.src = e.target.result; // Tampilkan pratinjau gambar baru
@@ -211,24 +190,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_profile'])) {
         }
     }
 
-    // Fungsi untuk validasi form edit
-    // function validateEditForm() {
-    //     let telepon = document.getElementById('no_telepone').value;
-    //     let isValid = true;
+    // Event listener untuk input telepon
+    document.getElementById("no_telepone").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
 
-    //     // Validasi Telepon
-    //     if (!/^\d+$/.test(telepon)) {
-    //         document.getElementById('telepon_error').textContent = "Telepon hanya boleh berisi angka.";
-    //         isValid = false;
-    //     } else {
-    //         document.getElementById('telepon_error').textContent = "";
-    //     }
-
-    //     return isValid;
-    // }
-
-    // // Event listener untuk input telepon
-    // document.getElementById("no_telepone").addEventListener("input", function(e) {
-    //     this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
-    // });
+        const maxLength = 15;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    });
 </script>

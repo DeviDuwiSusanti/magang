@@ -99,33 +99,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" enctype="multipart/form-data">
+                <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditInstansi()">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_instansi" value="<?= $instansi["id_instansi"] ?>">
                     <input type="hidden" id="group_instansi" name="group_instansi" value="<?= $instansi["group_instansi"] ?>">
                     <div class="mb-3">
                         <label for="nama_panjang" class="form-label">Nama Lengkap Instansi</label>
-                        <input type="text" class="form-control" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_panjang"] ?>">
+                        <input type="text" class="form-control" data-error-id="nama_panjang_error" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_panjang"] ?>">
+                        <small class="text-danger" id="nama_panjang_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="nama_pendek" class="form-label">Nama Singkat Instansi</label>
-                        <input type="text" class="form-control" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_pendek"] ?>">
+                        <input type="text" class="form-control" data-error-id="nama_pendek_error" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_pendek"] ?>">
+                        <small class="text-danger" id="nama_pendek_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
-                        <textarea class="form-control" id="deskripsi_instansi" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"><?= $instansi["deskripsi_instansi"] ?></textarea>
+                        <textarea class="form-control" data-error-id="deskripsi_instansi_error" id="deskripsi_instansi" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"><?= $instansi["deskripsi_instansi"] ?></textarea>
+                        <small class="text-danger" id="deskripsi_instansi_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="alamat_instansi" class="form-label">Alamat</label>
-                        <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" placeholder="Masukkan alamat lengkap"><?= $instansi["alamat_instansi"] ?></textarea>
+                        <textarea class="form-control" data-error-id="alamat_instansi_error" id="alamat_instansi" name="alamat_instansi" rows="3" placeholder="Masukkan alamat lengkap"><?= $instansi["alamat_instansi"] ?></textarea>
+                        <small class="text-danger" id="alamat_instansi_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="telepone_instansi" class="form-label">Telepon</label>
-                        <input type="text" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon" value="<?= $instansi["telepone_instansi"] ?>">
+                        <input type="text" class="form-control" data-error-id="telepone_instansi_error" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon" value="<?= $instansi["telepone_instansi"] ?>">
+                        <small class="text-danger" id="telepone_instansi_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="lokasi_instansi" class="form-label">Link Lokasi</label>
-                        <textarea class="form-control" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan link lokasi"><?= $instansi["lokasi_instansi"] ?></textarea>
+                        <textarea class="form-control" data-error-id="lokasi_instansi_error" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan link lokasi"><?= $instansi["lokasi_instansi"] ?></textarea>
+                        <small class="text-danger" id="lokasi_instansi_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="gambar_instansi" class="form-label">Foto Profil</label>
@@ -133,8 +139,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                             <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
                             <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $instansi["gambar_instansi"] ?>">
                         </div>
-                        <input type="file" class="form-control" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="previewFile()">
+                        <input type="file" class="form-control" data-error-id="gambar_instansi_error" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="previewFile()">
                         <small class="text-muted">Kosong Jika tidak ingin di ganti</small>
+                        <small class="text-danger" id="gambar_instansi_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -147,8 +154,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
 </div>
 
 <?php include "footer.php"; ?>
+<script src="../assets/js/validasi.js"></script>
 
 <script>
+    // Fungsi untuk validasi file
     function previewFile() {
         const fileInput = document.getElementById('gambar_instansi_edit');
         const previewContainer = document.getElementById('imagePreview');
@@ -156,20 +165,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         const file = fileInput.files[0];
 
         if (file) {
-            if (file.size > 1048576) { // 1MB = 1048576 bytes
-                alert("Ukuran file terlalu besar! Maksimal 1MB.");
-                fileInput.value = ""; // Reset file input
-                previewImage.src = ""; // Hapus pratinjau
-                previewContainer.style.display = "none";
-                return;
-            }
-
             const reader = new FileReader();
             reader.onload = function(e) {
-                previewImage.src = e.target.result;
+                previewImage.src = e.target.result; // Tampilkan pratinjau gambar baru
                 previewContainer.style.display = "block";
             };
             reader.readAsDataURL(file);
         }
     }
+
+    // Event listener untuk input telepon
+    document.getElementById("telepone_instansi").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+
+        const maxLength = 15;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    });
 </script>

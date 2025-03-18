@@ -38,6 +38,8 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="../assets/js/alert.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.js"></script>
 </head>
 
 <body>
@@ -214,6 +216,11 @@ $pengguna = query("SELECT * FROM tb_profile_user WHERE id_user = '$id_user'")[0]
                         allowClear: true,
                         dropdownParent: $('#tambahPembimbingModal')
                     });
+                    $('#edit_bidang').select2({
+                        placeholder: "Pilih Bidang",
+                        allowClear: true,
+                        dropdownParent: $('#editPembimbingModal')
+                    })
                 });
 
                 // Inisialisasi tooltip secara global

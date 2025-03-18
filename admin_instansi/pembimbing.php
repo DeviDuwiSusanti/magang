@@ -16,7 +16,8 @@ $bidang = "SELECT
             pu.nip, 
             pu.jabatan, 
             pu.telepone_user AS telepone_pembimbing, 
-            b.nama_bidang
+            b.nama_bidang,
+            b.id_bidang
         FROM tb_profile_user AS pu
         JOIN tb_bidang AS b
             ON pu.id_bidang = b.id_bidang
@@ -26,6 +27,7 @@ $bidang = "SELECT
             ON pu.id_user = u.id_user
         WHERE pu.status_active = '1'
         AND u.status_active = '1'
+        AND b.status_active = '1'
         AND i.id_instansi = '$id_instansi_admin'
         ORDER BY b.id_bidang ASC";
 
@@ -58,7 +60,6 @@ $no = 1;
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahPembimbingModal">
                 <i class="bi bi-plus-circle me-1"></i> Tambah Pembimbing
             </button>
-            <!-- <a href="tambah_pembimbing.php" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Daftar Bidang"></a> -->
         </div>
         <div class="table-responsive-sm">
             <div class="bungkus-2">
@@ -83,9 +84,17 @@ $no = 1;
                                     <td><?= ($pembimbing['jabatan']) ?></td>
                                     <td><?= ($pembimbing['telepone_pembimbing']) ?></td>
                                     <td>
-                                        <a href="edit_pembimbing.php?id=<?= $pembimbing['id_pembimbing'] ?>" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
+                                        <button type="button" class="btn btn-warning btn-sm editPembimbingBtn"
+                                            data-bs-toggle="modal" data-bs-target="#editPembimbingModal"
+                                            data-id_pembimbing="<?= $pembimbing['id_pembimbing'] ?>"
+                                            data-nama_pembimbing="<?= $pembimbing['nama_pembimbing'] ?>"
+                                            data-nik="<?= $pembimbing['nik_pembimbing'] ?>"
+                                            data-nip="<?= $pembimbing['nip'] ?>"
+                                            data-jabatan="<?= $pembimbing['jabatan'] ?>"
+                                            data-telepon="<?= $pembimbing['telepone_pembimbing'] ?>"
+                                            data-id_bidang="<?= $pembimbing['id_bidang'] ?>">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
                                         <a href="hapus.php?id=<?= $pembimbing['id_pembimbing'] ?>&type=pembimbing" class="btn btn-danger btn-sm" onclick="confirmDelete(event)" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus">
                                             <i class="bi bi-trash"></i>
                                         </a>
@@ -180,28 +189,91 @@ $no = 1;
     </div>
 </div>
 
+<!-- Modal Edit Pembimbing -->
+<div class="modal fade" id="editPembimbingModal" tabindex="-1" aria-labelledby="editPembimbingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPembimbingModalLabel">Edit Pembimbing</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" id="id_user" name="id_user" value="<?= $id_user ?>">
+                    <input type="hidden" id="edit_id_pembimbing" name="id_pembimbing">
+                    <div class="mb-3">
+                        <label for="nama_pembimbing" class="form-label">Nama Pembimbing</label>
+                        <input type="text" class="form-control" id="edit_nama_pembimbing" name="nama_pembimbing">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nik_pembimbing" class="form-label">NIK Pembimbing</label>
+                        <input type="text" class="form-control" id="edit_nik_pembimbing" name="nik_pembimbing">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nip" class="form-label">NIP Pembimbing</label>
+                        <input type="text" class="form-control" id="edit_nip" name="nip">
+                    </div>
+                    <div class="mb-3">
+                        <label for="jabatan" class="form-label">Jabatan</label>
+                        <input type="text" class="form-control" id="edit_jabatan" name="jabatan">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telepone_pembimbing" class="form-label">Telepon</label>
+                        <input type="text" class="form-control" id="edit_telepone_pembimbing" name="telepone_pembimbing">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_bidang" class="form-label">Pilih Bidang</label>
+                        <select id="edit_bidang" name="id_bidang" class="form-select select2">
+                            <option disabled>Pilih Bidang</option>
+                            <?php foreach ($list_bidang as $bidang): ?>
+                                <option value="<?= $bidang['id_bidang']; ?>"
+                                    <?= (!empty($bidang['id_pembimbing']) && $bidang['id_pembimbing'] != $pembimbing['id_pembimbing']) ? 'disabled' : ''; ?>>
+                                    <?= $bidang['nama_bidang']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary" name="edit_pembimbing">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include "footer.php"; ?>
 
 <script>
-    function confirmDelete(event) {
-        event.preventDefault(); // Mencegah aksi default link
+    document.addEventListener("DOMContentLoaded", function() {
+        const editButtons = document.querySelectorAll(".editPembimbingBtn");
 
-        const url = event.currentTarget.href; // Ambil URL dari atribut href
+        editButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                document.getElementById("edit_id_pembimbing").value = this.getAttribute("data-id_pembimbing");
+                document.getElementById("edit_nama_pembimbing").value = this.getAttribute("data-nama_pembimbing");
+                document.getElementById("edit_nik_pembimbing").value = this.getAttribute("data-nik");
+                document.getElementById("edit_nip").value = this.getAttribute("data-nip");
+                document.getElementById("edit_jabatan").value = this.getAttribute("data-jabatan");
+                document.getElementById("edit_telepone_pembimbing").value = this.getAttribute("data-telepon");
+                document.getElementById("edit_bidang").value = this.getAttribute("data-id_bidang");
 
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data pembimbing akan dihapus!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika dikonfirmasi, alihkan ke URL hapus
-                window.location.href = url;
-            }
+                // Atur bidang yang sesuai dengan id_pembimbing
+                let idBidangPembimbing = this.getAttribute("data-id_bidang");
+                let bidangSelect = document.getElementById("edit_bidang");
+
+                for (let option of bidangSelect.options) {
+                    if (option.value === idBidangPembimbing) {
+                        option.selected = true; // Pilih bidang yang sesuai
+                        option.disabled = true; // Pastikan bidangnya tidak di-disable
+                    } else if (option.hasAttribute("disabled")) {
+                        option.disabled = true; // Tetap disable bidang lain yang sudah ada pembimbingnya
+                    }
+                }
+            });
         });
-    }
+    });
 </script>

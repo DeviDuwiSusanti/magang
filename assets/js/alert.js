@@ -266,6 +266,21 @@ function hapus_bidang_admin_instansi_gagal() {
   })
 }
 
+// alert tidak ada perubahan profil
+function tidak_ada_perubahan_profile() {
+  Swal.fire({
+    icon: "info",
+    title: "Tidak Ada Perubahan!",
+    text: "Data profile telah disimpan.",
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "profile.php";
+    }
+  })
+}
+
 // Logout admin instansi
 function logout_admin_instansi() {
   Swal.fire({
