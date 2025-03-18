@@ -49,6 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_pengajuan'])) 
     updatePengajuan($_POST, $_FILES, $id_user);
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_pengajuan'])) {
+    hapusPengajuan($_POST, $id_user);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -418,6 +422,7 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                     </div>
 
                     <button type="submit" name="update_pengajuan" class="btn btn-success btn-sm">Update</button>
+                    <button type="submit" name="hapus_pengajuan" class="btn btn-danger btn-sm">Hapus Pengajuan</button>
                 </div>
             </form>
         </div>

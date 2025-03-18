@@ -81,13 +81,6 @@ function deleteOldDocument($conn, $id_pengajuan, $id_user, $jenis_dokumen) {
             unlink($file_path); // Hapus file fisik
         }
     }
-
-    // Hapus record lama di database
-    // $deleteQuery = "DELETE FROM tb_dokumen 
-    //                 WHERE id_pengajuan = '$id_pengajuan' 
-    //                 AND id_user = '$id_user'
-    //                 AND jenis_dokumen = '$jenis_dokumen'";
-    // mysqli_query($conn, $deleteQuery);
 }
 
 
@@ -467,6 +460,40 @@ function updatePengajuan($POST, $FILES, $id_user){
     }else{
         showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');
     }   
+}
+
+function hapusPengajuan($POST, $id_user){
+    global $conn;
+    $id_pengajuan = $POST['id_pengajuan'];
+    $sql_hapusPengajuan = "UPDATE tb_pengajuan SET status_active = '0' WHERE id_pengajuan = '$id_pengajuan'";
+    if (mysqli_query($conn, $sql_hapusPengajuan)){
+        $sql2_hapusPengajuan = "UPDATE tb_profile_user SET id_pengajuan = NULL WHERE id_user = '$id_user'";
+        $query1 = mysqli_query($conn, $sql2_hapusPengajuan);
+
+        $anggota = "SELECT * FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan' AND SUBSTRING(id_user, -2) <> '00'";
+        $queryAnggota = mysqli_query($conn, $anggota);
+        while ($row = mysqli_fetch_assoc($queryAnggota)){
+            $hapus_anggota = "UPDATE tb_profile_user SET status_active = '0' WHERE id_user = '$row[id_user]'";
+            $query2 = mysqli_query($conn, $hapus_anggota);
+        }
+
+        // 3. Hapus dokumen fisik terkait pengajuan
+        $dokumen = "SELECT * FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuan' AND jenis_dokumen = '1'";
+        $query4  = mysqli_query($conn, $dokumen);
+        while ($row2 = mysqli_fetch_assoc($query4)){
+            $id_dokumen = $row2['id_dokumen'];
+            deleteOldDocument($conn, $id_pengajuan, $id_user, '1'); // Hapus dokumen jenis 'identitas'
+            $hapus_dokumen = "UPDATE tb_dokumen SET status_active = '0' WHERE id_dokumen = '$id_dokumen'";
+            mysqli_query($conn, $hapus_dokumen);
+        }
+
+        if ($query1){?>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <?php
+            showAlert('Berhasil!', 'Pengajuan Berhasil Dihapus', 'success', "status_pengajuan.php");
+            exit();
+        }
+    }
 }
 
 // =========== ANGGOTA ===========
