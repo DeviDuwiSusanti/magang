@@ -19,10 +19,9 @@ $row2 = mysqli_fetch_assoc($query2);
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top">
-                    <img src="../assets/img/user/<?= $row2['gambar_user'] ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
+                    <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>
-
                     <hr>
                     <div class="card-body">
                         <table class="table">
@@ -171,6 +170,37 @@ if (isset($_POST['update_profil'])) {
                         <input type="text" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
                         <small class="text-danger" id="nik-error"></small>
                     </div>
+                    
+                    <?php if(($ketua || $anggota) && $level == "3") : ?>
+
+                    <!-- Asal Studi -->
+                    <div class="mb-3">
+                        <label for="asal_studi" class="form-label">Asal Studi</label>
+                        <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $dataLama['nama_pendidikan'] ?>" list="sekolahList">
+                        <datalist id="sekolahList">
+                        <?php 
+                        // Mengambil hanya nama_pendidikan unik
+                        $uniquePendidikan = [];
+                        foreach ($dataPendidikan as $studi) {
+                            $uniquePendidikan[$studi['nama_pendidikan']] = true;
+                        }
+
+                        // Menampilkan opsi tanpa duplikat
+                        foreach (array_keys($uniquePendidikan) as $namaPendidikan) : 
+                        ?>
+                        <option value="<?= htmlspecialchars($namaPendidikan) ?>"></option>
+                        <?php endforeach; ?>
+                        </datalist>
+                    </div>
+                    
+                    <div class="mb-3" id="fakultasContainer" style="display: none;">
+                        <label for="fakultas" class="form-label">Fakultas</label>
+                        <select class="form-control" id="fakultas" name="fakultas">
+                            <?php foreach($dataPendidikan as $studi) : ?>
+                                <option value="<?= $studi['fakultas'] ?>" <?= ($dataLama['fakultas'] == $studi['fakultas']) ? 'selected' : '' ?>><?= $studi['fakultas'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
                     <?php if (($ketua || $anggota) && $level == "4") : ?>
 
@@ -254,7 +284,6 @@ if (isset($_POST['update_profil'])) {
     </div>
 </div>
 
-<!-- <script src="../assets/js/validasi.js"></script> -->
 <script>
     function previewFile() {
         const fileInput = document.getElementById('image');
@@ -559,4 +588,3 @@ if (isset($_POST['update_profil'])) {
         });
     });
 </script>
-

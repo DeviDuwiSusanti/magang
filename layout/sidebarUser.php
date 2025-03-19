@@ -174,6 +174,7 @@ if (isset($_SESSION['email'])) {
                 <?php endif; ?>
 
 
+                <!-- ========== USER ========== -->
                 <?php 
                     if ($ketua && $level == '3'){?>
                         <li class="sidebar-item">
@@ -186,17 +187,11 @@ if (isset($_SESSION['email'])) {
                     }
                 ?>
 
-                <?php if(($ketua || $anggota) && $level == "3") : ?>
+                <?php if(($ketua || $anggota) && $level == '3') : ?>
                 <li class="sidebar-item">
                     <a href="kegiatan_aktif.php" class="sidebar-link">
                         <i class="bi bi-clipboard-check"></i>
                         <span>Kegiatan Aktif</span>
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="histori.php" class="sidebar-link">
-                        <i class="bi bi-clock-history"></i>
-                        <span>Histori</span>
                     </a>
                 </li>
                 <?php endif; ?>
@@ -216,10 +211,18 @@ if (isset($_SESSION['email'])) {
                             <span>Laporan Akhir</span>
                         </a>
                     </li>
-
                 <?php
                 }
                 ?>
+
+                <?php if(($ketua || $anggota) && $level == '3') : ?>
+                <li class="sidebar-item">
+                    <a href="histori.php" class="sidebar-link">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Histori</span>
+                    </a>
+                </li>
+                <?php endif; ?>
 
                 <li class="sidebar-item">
                     <a href="setting.php" class="sidebar-link">
