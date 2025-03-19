@@ -61,7 +61,7 @@ if (isset($_SESSION['email'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
-    <link rel="stylesheet" href="../assets/css/style_super_admin.css">
+    <!-- <link rel="stylesheet" href="../assets/css/style_super_admin.css"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
     
@@ -253,7 +253,7 @@ if (isset($_SESSION['email'])) {
                         <li class="nav-item dropdown">
                             <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                             <img src="../assets/img/user/<?= !empty($row['gambar_user']) ? $row['gambar_user'] : 'avatar.png' ?>" 
-                                alt="<?= $row['nama_user'] ?>" class="avatar img-fluid rounded-circle">
+                                alt="<?= $row['nama_user'] ?>" class="avatar img-fluid rounded-circle" style="object-fit: cover; object-position: top; border: 2px solid #ccc;">
                             </a>
                                 <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
                                     <a href="profil.php?id_user=<?= $id_user ?>" class="dropdown-item">
