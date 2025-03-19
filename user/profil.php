@@ -19,7 +19,7 @@ $row2 = mysqli_fetch_assoc($query2);
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top">
-                    <img src="../assets/img/user/<?= $row2['gambar_user'] ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
+                    <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px;">
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>
 
@@ -168,7 +168,7 @@ if (ISSET($_POST['update_profil'])){
                         <div class="error-message text-danger" id="error-nik"></div>
                     </div>
                     
-                    <?php if(($ketua || $anggota) && $level == "4") : ?>
+                    <?php if(($ketua || $anggota) && $level == "3") : ?>
 
                     <!-- Asal Studi -->
                     <div class="mb-3">

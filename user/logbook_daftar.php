@@ -50,11 +50,7 @@ if (isset($_GET['id_logbook_hapus'])) {
 <!-- ================= TABEL DAFTAR LOGBOOK ============== -->
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Logbook</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Logbook Harian</li>
-        </ol>
-
+        <h1 class="mb-4">Logbook</h1><br>
         <?php 
         if ($ketua){?>
             <div class="dropdown">
@@ -73,6 +69,23 @@ if (isset($_GET['id_logbook_hapus'])) {
         <?php
         }
         ?>
+        <ol class="breadcrumb mb-4"  style="display: flex; justify-content: flex-end;">
+            <li class="breadcrumb-item active">
+                Logbook Harian 
+                <span class="logbook-owner">
+                    <?php
+                    if (isset($_GET['id_user_anggota'])) {
+                        $id_user_anggota = $_GET['id_user_anggota'];
+                        $query_logbook = mysqli_query($conn, "SELECT nama_user FROM tb_profile_user WHERE id_user = '$id_user_anggota'");
+                        $row_logbook = mysqli_fetch_assoc($query_logbook);
+                        echo $row_logbook['nama_user'];
+                    } else {
+                        echo 'Anda';
+                    }
+                    ?>
+                </span>
+            </li>
+            </ol>
         
         <div class="mb-4 dropdown-divider"></div>
         

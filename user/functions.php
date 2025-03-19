@@ -461,9 +461,38 @@ function updatePengajuan($POST, $FILES, $id_user){
     }   
 }
 
+function confirmHapusPengajuan($id_pengajuan, $id_user) {
+    ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(id_pengajuan, id_user) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengkonfirmasi, jalankan function hapusPengajuan
+                    hapusPengajuan(id_pengajuan, id_user);
+                }
+            });
+        }
+
+        // Panggil function confirmDelete dengan parameter yang diterima dari PHP
+        confirmDelete('<?php echo $id_pengajuan; ?>', '<?php echo $id_user; ?>');
+    </script>
+    <?php
+}
+
 function hapusPengajuan($POST, $id_user){
     global $conn;
     $id_pengajuan = $POST['id_pengajuan'];
+    confirmHapusPengajuan($id_pengajuan, $id_user);
     $sql_hapusPengajuan = "UPDATE tb_pengajuan SET status_active = '0', change_by = '$id_user' WHERE id_pengajuan = '$id_pengajuan'";
     if (mysqli_query($conn, $sql_hapusPengajuan)){
         $sql2_hapusPengajuan = "UPDATE tb_profile_user SET id_pengajuan = NULL, change_by = '$id_user' WHERE id_user = '$id_user'";
@@ -534,7 +563,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
 
     $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
     if (mysqli_query($conn, $sqlTambah)){
-        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '4', '$id_user')";
+        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
             showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
             exit();

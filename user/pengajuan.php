@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_pengajuan'])) {
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
        <!-- Tambahkan stylesheet Select2 -->
        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <!-- Tambahkan script Select2 -->
@@ -418,7 +419,8 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                     </div>
 
                     <button type="submit" name="update_pengajuan" class="btn btn-success btn-sm">Update</button>
-                    <button type="submit" name="hapus_pengajuan" class="btn btn-danger btn-sm">Hapus Pengajuan</button>
+                    <input type="hidden" name="hapus_pengajuan"> <!-- Tanda penghapusan -->
+                    <button type="submit" class="btn btn-danger btn-sm" id="hapusPengajuan">Hapus Pengajuan</button>
                 </div>
             </form>
         </div>
@@ -444,6 +446,29 @@ if (ISSET($_GET['id_pengajuanEdit'])){
         </div>
     </div>
 </div>
+
+
+<script>
+document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
+    event.preventDefault(); // Mencegah form langsung terkirim
+
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Kirim form secara manual
+            document.getElementById('editPengajuanForm').submit();
+        }
+    });
+});
+</script>
 
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
 <script>
