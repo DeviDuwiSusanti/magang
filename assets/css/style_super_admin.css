@@ -21,10 +21,10 @@
 .dark-mode {
     --bg-color: #121212;
     --text-color: #ffffff;
-    --navbar-bg: #343a40;
+    --navbar-bg: #212529;
     --text-mute: #ffffff;
     --td-tabel: #ffffff;
-    --form-bg: #343a40;
+    --form-bg: #212529;
     --box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.3);
     --box-shadow-2: 0 0 1.5rem 0 rgba(255, 255, 255, 0.3);
 }
