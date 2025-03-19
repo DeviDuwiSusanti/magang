@@ -71,7 +71,7 @@ if (isset($_GET['id_logbook_hapus'])) {
         ?>
         <ol class="breadcrumb mb-4"  style="display: flex; justify-content: flex-end;">
             <li class="breadcrumb-item active">
-                Logbook Harian 
+                Logbook
                 <span class="logbook-owner">
                     <?php
                     if (isset($_GET['id_user_anggota'])) {

@@ -34,19 +34,15 @@ $sql_pendaftar = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_user =
 $query_pendaftar = mysqli_query($conn, $sql_pendaftar);
 $pendaftar = mysqli_fetch_assoc($query_pendaftar);
 
-// INSERT PENGAJUAN
+// CRUD PENGAJUAN
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['pengajuan_pribadi']) || isset($_POST['pengajuan_kelompok'])) {
         inputPengajuan($_POST, $_FILES, $id_user);
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_pengajuan'])) {
+    } else if (isset($_POST['update_pengajuan'])) {
     updatePengajuan($_POST, $_FILES, $id_user);
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_pengajuan'])) {
+    } else if (isset($_POST['hapus_pengajuan'])) {
     hapusPengajuan($_POST, $id_user);
+    }
 }
 
 ?>
