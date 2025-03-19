@@ -49,6 +49,8 @@ $row2 = mysqli_fetch_assoc($query2);
                                     <td><i class="bi bi-credit-card"></i> <strong>NIK</strong></td>
                                     <td><?= $row2['nik'] ?></td>
                                 </tr>
+
+                                <?php if(($ketua || $anggota) && $level == "3") : ?>
                                 <tr>
                                 <tr>
                                     <td><i class="bi bi-mortarboard"></i> <strong> <?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></strong></td>
@@ -72,6 +74,8 @@ $row2 = mysqli_fetch_assoc($query2);
                                     <td><i class="bi bi-diagram-3"></i> <strong>Jurusan</strong></td>
                                     <td><?= $row2['jurusan'] ?></td>
                                 </tr>
+
+                                <?php endif; ?>
                                 <tr>
                                     <td><i class="bi bi-telephone"></i> <strong>Telepon</strong></td>
                                     <td><?= $row2['telepone_user'] ?></td>
@@ -164,6 +168,8 @@ if (ISSET($_POST['update_profil'])){
                         <div class="error-message text-danger" id="error-nik"></div>
                     </div>
                     
+                    <?php if(($ketua || $anggota) && $level == "4") : ?>
+
                     <!-- Asal Studi -->
                     <div class="mb-3">
                         <label for="asal_studi" class="form-label">Asal Studi</label>
@@ -208,6 +214,7 @@ if (ISSET($_POST['update_profil'])){
                 <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>">
                 <div class="error-message text-danger" id="error-nim"></div>
             </div>
+            <?php endif; ?>
             
             <!-- Telepon -->
             <div class="mb-3">

@@ -1,7 +1,7 @@
 <?php
 session_set_cookie_params(25200); // 25200 detik = 7 jam
 session_start();
-include "../koneksi.php";
+include "../functions.php";
 
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
@@ -52,18 +52,16 @@ if (isset($_SESSION['email'])) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard User</title>
-   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../assets/js/alert.js"></script>
-    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="../assets/css/style_super_admin.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
     
@@ -89,18 +87,93 @@ if (isset($_SESSION['email'])) {
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <?php 
-                    if ($ketua){?>
-                        <li class="sidebar-item">
-                            <a href="profil.php" class="sidebar-link">
-                                <i class="bi bi-person-lines-fill"></i>
-                                <span>Profile</span>
-                            </a>
-                        </li>
-                <?php        
-                    }
-                ?>
+
+                <li class="sidebar-item">
+                    <a href="profil.php" class="sidebar-link">
+                        <i class="bi bi-person-lines-fill"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
                 
+
+                <!-- ================================= super admin ================================== -->
+                <?php if($level == '1') : ?>
+                    <li class="sidebar-item">
+                        <a href="super1_instansi.php" class="sidebar-link text-decoration-none">
+                            <i class="bi bi-buildings"></i>
+                            <span>Instansi</span>
+                        </a>
+                    </li>
+                    
+                    <li class="sidebar-item">
+                        <a href="super1_admin_instansi.php" class="sidebar-link text-decoration-none">
+                            <i class="bi bi-building-fill-add"></i>
+                            <span>Admin Instansi</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a href="super1_user.php" class="sidebar-link text-decoration-none">
+                            <i class="bi bi-people"></i>
+                            <span>User</span>
+                        </a>
+                    </li>
+                    
+                    <li class="sidebar-item">
+                        <a href="super1_pendidikan.php" class="sidebar-link text-decoration-none">
+                            <i class="bi bi-mortarboard"></i>
+                            <span>Pendidikan</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item">
+                        <a href="super1_pengajuan.php" class="sidebar-link text-decoration-none">
+                            <i class="bi bi-journals"></i>
+                            <span>Pengajuan</span>
+                        </a>
+                    </li>
+                    
+                <?php endif; ?>
+                <!-- end of super admin =================================== -->
+
+
+
+
+                <!-- ======================== level 2 admin instansi ========================= -->
+                <?php if($level == "2") : ?>
+                    <li class="sidebar-item">
+                        <a href="admin2_instansi.php" class="sidebar-link">
+                            <i class="bi bi-buildings"></i>
+                            <span>Kelola Instansi</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="admin2_bidang.php" class="sidebar-link">
+                            <i class="bi bi-building-fill-add"></i>
+                            <span>Kelola Bidang</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="admin2_pembimbing.php" class="sidebar-link">
+                            <i class="bi bi-person-workspace"></i>
+                            <span>Pembimbing Bidang</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="admin2_pengajuan.php" class="sidebar-link">
+                            <i class="bi bi-journals"></i>
+                            <span>Kelola Pengajuan</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="admin2_user.php" class="sidebar-link">
+                            <i class="bi bi-people"></i>
+                            <span>Daftar Pemagang</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+
                 <?php 
                     if ($ketua && $level == '3'){?>
                         <li class="sidebar-item">
@@ -112,12 +185,21 @@ if (isset($_SESSION['email'])) {
                 <?php
                     }
                 ?>
+
+                <?php if(($ketua || $anggota) && $level == "3") : ?>
                 <li class="sidebar-item">
                     <a href="kegiatan_aktif.php" class="sidebar-link">
                         <i class="bi bi-clipboard-check"></i>
                         <span>Kegiatan Aktif</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a href="histori.php" class="sidebar-link">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Histori</span>
+                    </a>
+                </li>
+                <?php endif; ?>
 
                 <?php
                 if (isset($status_pengajuan) && $status_pengajuan == '4') { ?>
@@ -140,23 +222,13 @@ if (isset($_SESSION['email'])) {
                 ?>
 
                 <li class="sidebar-item">
-                    <a href="histori.php" class="sidebar-link">
-                        <i class="bi bi-clock-history"></i>
-                        <span>Histori</span>
+                    <a href="setting.php" class="sidebar-link">
+                        <i class="bi bi-gear"></i>
+                        <span>Setting</span>
                     </a>
                 </li>
-                <?php 
-                    if ($ketua && $level == '3'){?>
-                        <li class="sidebar-item">
-                            <a href="setting.php" class="sidebar-link">
-                                <i class="bi bi-gear"></i>
-                                <span>Setting</span>
-                            </a>
-                        </li>
-                <?php
-                    }
-                ?>
             </ul>
+
             <div class="sidebar-footer">
                 <a href="../logout.php" class="sidebar-link">
                     <i class="bi bi-box-arrow-left"></i>
@@ -166,14 +238,6 @@ if (isset($_SESSION['email'])) {
         </aside>
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
-                <!-- <form action="#" class="d-none d-sm-inline-block">
-                    <div class="input-group input-group-navbar">
-                        <input type="text" class="form-control border-0 rounded-0 pe-0" placeholder="Search..." aria-label="Search">
-                        <button class="btn rounded-0 border-0">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                </form> -->
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
                         <!-- Tombol Toggle Dark Mode -->
@@ -188,44 +252,51 @@ if (isset($_SESSION['email'])) {
                             <img src="../assets/img/user/<?= !empty($row['gambar_user']) ? $row['gambar_user'] : 'avatar.png' ?>" 
                                 alt="<?= $row['nama_user'] ?>" class="avatar img-fluid rounded-circle">
                             </a>
-                            <?php 
-                            if ($ketua && $level == '3'){?>
                                 <div class="dropdown-menu dropdown-menu-end rounded-0 border-0 shadow mt-3">
-                                    <a href="profil_edit.php?id_user=<?= $id_user ?>" class="dropdown-item">
+                                    <a href="profil.php?id_user=<?= $id_user ?>" class="dropdown-item">
                                         <i class="bi bi-pencil-square"></i>
-                                        <span>Edit Profil</span>
+                                        <span>Profile Saya</span>
                                     </a>
+                                    <div class="dropdown-divider"></div>
                                     <a href="setting.php" class="dropdown-item">
                                         <i class="bi bi-gear"></i>
                                         <span>Pengaturan</span>
                                     </a>
-                                    <div class="dropdown-divider"></div>
                                     <a href="bantuan.php" class="dropdown-item">
                                         <i class="bi bi-question-circle"></i>
                                         <span>Pusat Bantuan</span>
                                     </a>
+                                    <div class="dropdown-divider"></div>
                                     <a href="../logout.php" class="dropdown-item">
                                         <i class="bi bi-box-arrow-right"></i>
                                         <span>Logout</span>
                                     </a>
                                 </div>
-                            <?php
-                                }
-                            ?>
                         </li>
                     </ul>
                 </div>
             </nav>
-        <!-- </div>
-    </div> -->
+            
+    <script src="../assets/js/alert.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../assets/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <!-- Sertakan JS: jQuery, Bootstrap, dan DataTables -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Inisialisasi DataTables -->
     <script>

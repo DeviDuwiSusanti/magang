@@ -1,5 +1,60 @@
 <?php include '../layout/sidebarUser.php';
 
+
+// ===================== super admin ======================
+$instansi_1 = query("SELECT COUNT(*) AS total FROM tb_instansi WHERE status_active = 1")[0];
+$pendidikan_1 = query("SELECT COUNT(*) AS total FROM tb_pendidikan WHERE status_active = 1")[0];
+$pengajuan_1 = query("SELECT COUNT(*) AS total FROM tb_pengajuan WHERE status_active = 1")[0];
+$user_1 = query("SELECT COUNT(*) AS total FROM tb_user WHERE status_active = 1")[0];
+// ============================== end of super admin =========================
+
+
+
+// =============== admin instansi ==================================
+include "admin2_update_status.php";
+
+$id_instansi = $_SESSION["id_instansi"];
+
+// data instansi
+$instansi_admin_2 = query("SELECT COUNT(*) AS total 
+    FROM tb_instansi
+    JOIN tb_profile_user 
+        ON tb_instansi.id_instansi = tb_profile_user.id_instansi
+    WHERE tb_profile_user.id_user = '$id_user'")[0];
+
+// data bidang
+$bidang_admin_2 = query("SELECT COUNT(*) AS total 
+    FROM tb_bidang
+    JOIN tb_instansi 
+        ON tb_bidang.id_instansi = tb_instansi.id_instansi
+    WHERE tb_instansi.id_instansi = '$id_instansi'
+    AND tb_bidang.status_active = '1'")[0];
+
+// Query untuk menghitung total pengajuan
+$total_pengajuan_2 = query("SELECT COUNT(*) AS total 
+    FROM tb_pengajuan
+    JOIN tb_instansi 
+        ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+    WHERE tb_instansi.id_instansi = '$id_instansi'
+    AND tb_pengajuan.status_pengajuan = '1'")[0];
+
+// Query untuk menghitung total pemagang
+$pemagang_2 = query("SELECT SUM(
+            CASE 
+                WHEN jumlah_pelamar > 1 THEN jumlah_pelamar 
+                ELSE 1 
+            END
+        ) AS total 
+        FROM tb_pengajuan
+        JOIN tb_instansi 
+            ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
+        WHERE tb_instansi.id_instansi = '$id_instansi'
+        AND tb_pengajuan.status_pengajuan NOT IN ('0', '1', '6')
+    ")[0];
+// ========================== end of admin insatansi level 2 ===============================
+
+
+
 // Query dapat jumlah pengajuan user
 $sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '1' AND status_active = '1'";
 $query2 = mysqli_query($conn, $sql2);
@@ -43,9 +98,113 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
             <li class="breadcrumb-item active">User</li>
         </ol>
         <div class="row">
+            <!-- ===================== super admin ======================= -->
+            <?php if($level == "1") : ?>
+                <!-- Card 1 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Instansi Terdaftar</h5>
+                            <h2 class="card-text text-success"><?= $instansi_1["total"] ?></h2>
+                            <p class="text-muted">Lihat Dan Kelola Daftar Instansi</p>
+                            <a href="super1_instansi.php" class="btn btn-success mt-3 detail">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Daftar Pengguna</h5>
+                            <h2 class="card-text text-warning"><?= $user_1["total"] ?></h2>
+                            <p class="text-muted">Lihat Dan Kelola Daftar Pengguna</p>
+                            <a href="super1_user.php" class="btn btn-warning mt-3 detail">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Daftar Pendidikan</h5>
+                            <h2 class="card-text text-primary"><?= $pendidikan_1["total"] ?></h2>
+                            <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p>
+                            <a href="super1_pendidikan.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Pengajuan User</h5>
+                            <h2 class="card-text text-danger"><?= $pengajuan_1["total"] ?></h2>
+                            <p class="text-muted">Daftar Pengajuan Pengguna</p>
+                            <a href="super1_pengajuan.php" class="btn btn-danger mt-3 detail">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <!-- ==================================== end of super admin level 1 =================================== -->
+
+
+            <!-- ============================ admin instansi level 2========================================= -->
+            <?php if($level == "2") : ?>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Kelola Instansi</h5>
+                                <h2 class="card-text text-primary"><?= $instansi_admin_2["total"] ?></h2>
+                                <p class="text-muted">Kelola data instansi</p>
+                                <a href="admin2_instansi.php" class="btn btn-primary mt-3 detail">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Kelola Bidang</h5>
+                                <h2 class="card-text text-warning"><?= $bidang_admin_2["total"] ?></h2>
+                                <p class="text-muted">Kelola data bidang</p>
+                                <a href="admin2_bidang.php" class="btn btn-warning mt-3 detail">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Pengajuan Baru</h5>
+                                <h2 class="card-text text-danger"><?= $total_pengajuan_2["total"] ?></h2>
+                                <p class="text-muted">Lihat pengajuan baru</p>
+                                <a href="admin2_pengajuan.php" class="btn btn-danger mt-3 detail">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Jumlah Pemagang</h5>
+                                <h2 class="card-text text-success"><?= $pemagang_2["total"] ?? 0 ?></h2>
+                                <p class="text-muted">Lihat data pemagang</p>
+                                <a href="admin2_user.php" class="btn btn-success mt-3 detail">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+
+            <!-- ====================================== end of admin instansi level 2 ==================================== -->
+
+
+
+            <!-- ====================================== USER DAN ANGGOTA (LEVEL 3) -->
             <!-- Card 1 -->
             <?php 
-            if ($ketua){?>
+            if ($ketua && $level == "3"){?>
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
@@ -99,7 +258,9 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
             <?php
             }
             ?>
+
             <!-- Card 4 -->
+            <?php if(($ketua || $anggota) && $level == "4") : ?>
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
@@ -110,7 +271,7 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
                     </div>
                 </div>
             </div>
-           
+            <?php endif; ?>
         </div>
     </div>
 </div>
