@@ -22,6 +22,7 @@ $row2 = mysqli_fetch_assoc($query2);
                     <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>
+
                     <hr>
                     <div class="card-body">
                         <table class="table">
@@ -170,7 +171,7 @@ if (isset($_POST['update_profil'])) {
                         <input type="text" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
                         <small class="text-danger" id="nik-error"></small>
                     </div>
-                    
+
                     <?php if(($ketua || $anggota) && $level == "3") : ?>
 
                     <!-- Asal Studi -->
