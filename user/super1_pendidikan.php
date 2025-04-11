@@ -136,7 +136,6 @@ foreach ($perguruan_tinggi as $kampus) {
                     <form id="formEditPendidikan" action="" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_pendidikan" id="id_pendidikan_edit">
                         <input type="hidden" name="id_user" id="id_user_edit">
-                        <input type="text" name="" id="">
                         <div class="mb-3">
                             <label for="nama_pendidikan_edit" class="form-label">Nama Sekolah / Universitas</label>
                             <input type="text" class="form-control" id="nama_pendidikan_edit" name="nama_pendidikan">
