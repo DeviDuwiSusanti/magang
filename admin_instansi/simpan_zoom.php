@@ -1,5 +1,6 @@
 <?php
 include "../layout/header.php";
+include "function.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -11,16 +12,28 @@ include '../assets/phpmailer/src/SMTP.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["pengajuan_id"]);
     $tanggal = mysqli_real_escape_string($conn, $_POST["tanggal_pelaksanaan"]);
-    $tanggal = date('d F Y', strtotime($tanggal));
+    $tanggal = formatTanggalLengkapIndonesia($tanggal);
     $jam = mysqli_real_escape_string($conn, $_POST["jam_pelaksanaan"]);
     $link_zoom = mysqli_real_escape_string($conn, $_POST["link_zoom"]);
 
+    // $pembimbing = mysqli_real_escape_string($conn, $_POST["pembimbing"]);
+    
+    // // Ambil nama pembimbing berdasarkan ID pembimbing yang dipilih
+    // $query_pembimbing = "SELECT nama_user FROM tb_profile_user WHERE id_user = '$pembimbing'";
+    // $result_pembimbing = mysqli_query($conn, $query_pembimbing);
+    
+    // if ($result_pembimbing && $row_pembimbing = mysqli_fetch_assoc($result_pembimbing)) {
+    //     $nama_pembimbing = $row_pembimbing['nama_user'];
+    // } else {
+    //     $nama_pembimbing = "Tidak Diketahui";
+    // }
+
     // Ambil data user dari tb_pengajuan
     $query = "SELECT id_user, nama_bidang, nama_panjang 
-            FROM tb_pengajuan 
-            JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
-            JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
-            WHERE tb_pengajuan.id_pengajuan = '$id_pengajuan'";
+              FROM tb_pengajuan 
+              JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang 
+              JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
+              WHERE tb_pengajuan.id_pengajuan = '$id_pengajuan'";
     $result = mysqli_query($conn, $query);
 
     if ($result && $row = mysqli_fetch_assoc($result)) {
@@ -121,4 +134,3 @@ function salamBerdasarkanWaktu()
     if ($jam < 19) return "Selamat sore";
     return "Selamat malam";
 }
-?>
