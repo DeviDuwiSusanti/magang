@@ -260,7 +260,7 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
             ?>
 
             <!-- Card 4 -->
-            <?php if(($ketua || $anggota) && $level == "4") : ?>
+            <?php if(($ketua || $anggota) && $level == "3") : ?>
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">

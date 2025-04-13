@@ -202,8 +202,6 @@ if (isset($_POST['update_profil'])) {
                         </div>
                     <?php endif; ?>
 
-                    <?php if (($ketua || $anggota) && $level == "4") : ?>
-
                         <!-- Asal Studi -->
                         <div class="mb-3">
                             <label for="asal_studi" class="form-label">Asal Studi</label>

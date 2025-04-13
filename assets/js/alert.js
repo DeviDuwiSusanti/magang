@@ -360,7 +360,7 @@ function tambah_instansi_super_admin_success() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi.php";
+      window.location.href = "super1_instansi.php";
     }
   })
 }
@@ -375,7 +375,7 @@ function tambah_instansi_super_admin_gagal() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi.php";
+      window.location.href = "super1_instansi.php";
     }
   })
 }
@@ -390,7 +390,7 @@ function edit_instansi_super_admin_success() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi.php";
+      window.location.href = "super1_instansi.php";
     }
   })
 }
@@ -404,7 +404,7 @@ function edit_instansi_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi.php";
+      window.location.href = "super1_instansi.php";
     }
   })
 }
@@ -422,7 +422,7 @@ function confirm_hapus_instansi_super_admin(id_instansi) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi.php?id_instansi_ini=" + id_instansi;
+      window.location.href = "super1_instansi.php?id_instansi_ini=" + id_instansi;
     }
   });
 }
@@ -437,7 +437,7 @@ function hapus_instansi_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi.php";
+      window.location.href = "super1_instansi.php";
     }
   })
 }
@@ -451,7 +451,7 @@ function hapus_instansi_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "instansi.php";
+      window.location.href = "super1_instansi.php";
     }
   })
 }
@@ -472,7 +472,7 @@ function confirm_hapus_user_super_admin(id_user) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user.php?id_user_ini=" + id_user;
+      window.location.href = "super1_user.php?id_user_ini=" + id_user;
     }
   });
 }
@@ -487,7 +487,7 @@ function hapus_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user.php";
+      window.location.href = "super1_user.php";
     }
   })
 }
@@ -501,7 +501,7 @@ function hapus_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user.php";
+      window.location.href = "super1_user.php";
     }
   })
 }
@@ -517,7 +517,7 @@ function tambah_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user.php";
+      window.location.href = "super1_user.php";
     }
   })
 }
@@ -532,7 +532,7 @@ function tambah_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user.php";
+      window.location.href = "super1_user.php";
     }
   })
 }
@@ -547,7 +547,7 @@ function edit_user_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user.php";
+      window.location.href = "super1_user.php";
     }
   })
 }
@@ -562,7 +562,7 @@ function edit_user_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then ((result) => {
     if(result.isConfirmed) {
-      window.location.href = "user.php";
+      window.location.href = "super1_user.php";
     }
   })
 }
@@ -581,7 +581,7 @@ function hapus_pengajuan_by_super_admin(id_pengajuan) {
     showCancelButton: true,
   }).then((result) =>  {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan.php?id_pengajuan_ini=" + id_pengajuan;
+      window.location.href = "super1_pengajuan.php?id_pengajuan_ini=" + id_pengajuan;
     }
   })
 }
@@ -596,7 +596,7 @@ function hapus_pengajuan_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan.php";
+      window.location.href = "super1_pengajuan.php";
     }
   })
 }
@@ -610,7 +610,7 @@ function hapus_pengajuan_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pengajuan.php";
+      window.location.href = "super1_pengajuan.php";
     }
   })
 }
@@ -625,7 +625,7 @@ function generate_admin_instansi_success(){
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "admin_instansi.php";
+      window.location.href = "super1_admin_instansi.php";
     }
   })
 }
@@ -639,7 +639,7 @@ function generate_admin_instansi_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "admin_instansi.php";
+      window.location.href = "super1_admin_instansi.php";
     }
   })
 }
@@ -661,7 +661,7 @@ function confirm_hapus_pendidikan_super_admin(id_pendidikan) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pendidikan.php?id_pendidikan_ini=" + id_pendidikan;
+      window.location.href = "super1_pendidikan.php?id_pendidikan_ini=" + id_pendidikan;
     }
   });
 }
@@ -676,7 +676,7 @@ function hapus_pendidikan_super_admin_success() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pendidikan.php";
+      window.location.href = "super1_pendidikan.php";
     }
   })
 }
@@ -690,7 +690,7 @@ function hapus_pendidikan_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pendidikan.php";
+      window.location.href = "super1_pendidikan.php";
     }
   })
 }
@@ -706,7 +706,7 @@ function edit_pendidikan_super_admin_success() {
     confirmButtonText: "OK",
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pendidikan.php";
+      window.location.href = "super1_pendidikan.php";
     }
   })
 }
@@ -720,7 +720,7 @@ function edit_pendidikan_super_admin_gagal() {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "pendidikan.php";
+      window.location.href = "super1_pendidikan.php";
     }
   })
 }
