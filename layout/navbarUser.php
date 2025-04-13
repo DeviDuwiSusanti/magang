@@ -62,14 +62,22 @@ if (isset($_SESSION['email'])) {
             </ul>
         </div>
 
-        <!-- Kondisi untuk mengatur jalur gambar -->
-        <a class="navbar-brand" href="../user/dashboard.php" data-bs-toggle="tooltip" title="Dashboard">
-            <img 
-                src="<?= $user_image ?>" 
-                alt="User Image" 
-                style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
-            >
-        </a>
+        <!-- Kondisi untuk mengatur jalur gambar atau tombol masuk -->
+        <?php if(isset($_SESSION['id_user'])): ?>
+            <!-- Tampilkan gambar profil jika user sudah login -->
+            <a class="navbar-brand" href="../user/dashboard.php" data-bs-toggle="tooltip" title="Dashboard">
+                <img 
+                    src="<?= $user_image ?>" 
+                    alt="User Image" 
+                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
+                >
+            </a>
+        <?php else: ?>
+            <!-- Tampilkan tombol Masuk jika belum login -->
+            <a class="btn btn-primary" href="../login.php">
+                Masuk
+            </a>
+        <?php endif; ?>
     </nav>
 </header>
 

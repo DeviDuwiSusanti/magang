@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                                 <button type="submit" name="login" class="submit">Sign In</button>
                             </div>
                         </form>
-                        <p>Belum punya akun? <a href="register.php">Register Now</a></p>
+                        <p>Belum punya akun? <a href="register.php">Daftar Sekarang</a></p>
                     </div>
                 </div>
             </div>

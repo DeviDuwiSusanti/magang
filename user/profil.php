@@ -467,7 +467,7 @@ if (isset($_POST['update_profil'])) {
                 showError(
                     "nama",
                     "nama-error",
-                    "Nama hanya boleh berisi huruf, spasi, dan simbol ('-)."
+                    "Nama hanya boleh berisi huruf."
                 );
                 isValid = false;
             }
@@ -485,7 +485,7 @@ if (isset($_POST['update_profil'])) {
                 showError(
                     "tempat_lahir",
                     "tempat_lahir-error",
-                    "Tempat lahir hanya boleh berisi huruf, spasi, dan simbol ('-)."
+                    "Tempat lahir hanya boleh berisi huruf."
                 );
                 isValid = false;
             }
