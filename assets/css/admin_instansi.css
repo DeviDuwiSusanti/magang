@@ -26,7 +26,7 @@
     --text-mute: #ffffff;
     --td-tabel: #ffffff;
     /* --form-bg: #343a40; */
-    --form-bg: #212529;
+    --form-bg: #121212;
     --card: #212529;
     --box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.3);
     --box-shadow-2: 0 0 1.5rem 0 rgba(255, 255, 255, 0.3);
@@ -38,6 +38,14 @@
 
 .dark-mode .tolak-label {
     color : black
+}
+
+.dark-mode table {
+    background-color: #212529 !important;
+}
+
+.dark-mode .card {
+    background-color: #212529 !important;
 }
 
 .dark-mode .modal-body {
@@ -477,11 +485,6 @@ a.sidebar-link:hover {
     font-size: 14px;
     font-weight: bold;
     border-radius: 5px;
-}
-
-table {
-    background-color: var(--form-bg);
-
 }
 
 hr {

@@ -1,5 +1,6 @@
 <?php
-include "../layout/header.php";
+include "../layout/sidebarUser.php";
+include "function.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
