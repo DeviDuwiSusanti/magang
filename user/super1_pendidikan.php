@@ -55,9 +55,9 @@ foreach ($perguruan_tinggi as $kampus) {
     </style>
     <main>
         <div class="container-fluid px-4">
-            <h1 class="mt-4">Sekolah / Perguruan Tinggi</h1>
+            <h1 class="mt-4">Halaman Daftar Sekolah Dan Perguruan Tinggi</h1>
             <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">Halaman Daftar Sekolah Atau Perguruan Tinggi Pengguna</li>
+                <li class="breadcrumb-item active"></li>
             </ol>
         </div>
         <div class="container mt-5 mb-5">                        
