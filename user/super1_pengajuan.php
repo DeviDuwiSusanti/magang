@@ -18,9 +18,9 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Pengajuan</h1>
+        <h1 class="mt-4">Halaman Daftar Pengajuan User</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Halaman Pengajuan User</li>
+            <li class="breadcrumb-item active"></li>
         </ol>
     </div>
     <div class="container mt-5">                        

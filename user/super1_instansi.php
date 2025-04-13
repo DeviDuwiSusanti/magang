@@ -31,7 +31,7 @@
 ?>
 
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Halaman Instansi</h1>
+    <h1 class="mt-4">Halaman Daftar Instansi</h1>
 </div>
 
 <div class="container mt-5 mb-5">                        
