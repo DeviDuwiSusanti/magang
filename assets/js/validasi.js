@@ -147,19 +147,19 @@ function validateEditForm() {
   return isValid; // Form hanya dikirim jika valid
 }
 
-// Tangkap form yang akan divalidasi
-const form = document.querySelector("#editForm"); // Sesuaikan selector ini dengan form Anda
+// // Tangkap form yang akan divalidasi
+// const form = document.querySelector("#editForm"); // Sesuaikan selector ini dengan form Anda
 
-// Tambahkan event listener untuk event submit
-form.addEventListener("submit", function (event) {
-  // Panggil fungsi validasi
-  const isValid = validateEditForm();
+// // Tambahkan event listener untuk event submit
+// form.addEventListener("submit", function (event) {
+//   // Panggil fungsi validasi
+//   const isValid = validateEditForm();
 
-  // Jika validasi gagal, hentikan submit form
-  if (!isValid) {
-    event.preventDefault(); // Mencegah form dari pengiriman
-  }
-});
+//   // Jika validasi gagal, hentikan submit form
+//   if (!isValid) {
+//     event.preventDefault(); // Mencegah form dari pengiriman
+//   }
+// });
 
 //  Validasi inputan edit instansi
 function validateEditInstansi() {
@@ -400,6 +400,156 @@ function validateEditBidang() {
       "edit_dokumen_error",
       "Minimal harus ada satu koma untuk memisahkan dokumen prasyarat."
     );
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+// Fungsi validasi input tambah pembimbing
+function validateTambahPembimbing() {
+  let isValid = true;
+
+  // Reset pesan error sebelumnya
+  document
+    .querySelectorAll(".text-danger")
+    .forEach((el) => (el.textContent = ""));
+
+  // Validasi Nama
+  const nama = document.getElementById("nama_pembimbing").value.trim();
+  if (nama === "") {
+    showError("nama_pembimbing", "nama_pembimbing_error", "Nama tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^[a-zA-Z\s.,'-]+$/.test(nama)) {
+    showError(
+      "nama_pembimbing",
+      "nama_pembimbing_error",
+      "Nama hanya boleh berisi huruf, spasi, dan simbol ('-)."
+    );
+    isValid = false;
+  }
+
+  const email = document.getElementById("email").value.trim();
+  if (email === "") {
+    showError("email", "email_error", "Email tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+    showError("email", "email_error", "Format email tidak valid.");
+    isValid = false;
+  }
+
+  const nik = document.getElementById("nik_pembimbing").value.trim();
+  if (nik === "") {
+    showError("nik_pembimbing", "nik_pembimbing_error", "NIK tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^[0-9]{16}$/.test(nik)) {
+    showError(
+      "nik_pembimbing",
+      "nik_pembimbing_error",
+      "NIK harus terdiri dari 16 digit angka."
+    );
+    isValid = false;
+  }
+
+  const nip = document.getElementById("nip").value.trim();
+  if (nip === "") {
+    showError("nip", "nip_error", "NIP tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^[0-9]{18}$/.test(nip)) {
+    showError(
+      "nip",
+      "nip_error",
+      "NIP harus terdiri dari 18 digit angka."
+    );
+    isValid = false;
+  }
+
+  const jabatan = document.getElementById("jabatan").value.trim();
+  if (jabatan === "") {
+    showError("jabatan", "jabatan_error", "Jabatan tidak boleh kosong.");
+    isValid = false;
+  }
+
+  const genderL = document.getElementById("gender_l").checked;
+  const genderP = document.getElementById("gender_p").checked;
+  if (!genderL && !genderP) {
+    showError("gender_p", "gender_error", "Jenis kelamin harus dipilih.");
+    isValid = false;
+  }
+
+  const telepon = document.getElementById("telepone_pembimbing").value.trim();
+  if (telepon === "") {
+    showError("telepone_pembimbing", "telepone_error", "Nomor telepon tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^\d+$/.test(telepon)) {
+    showError("telepone_pembimbing", "telepone_error", "Telepon harus berupa angka.");
+    isValid = false;
+  }
+
+  const bidang = document.getElementById("id_bidang").value;
+  if (bidang === "") {
+    showError("id_bidang", "bidang_error", "Bidang harus dipilih.");
+    isValid = false;
+  }
+
+  return isValid;
+}
+
+// Fungsi validasi input edit pembimbing
+function validateEditPembimbing() {
+  let isValid = true;
+
+  // Reset pesan error sebelumnya
+  document
+    .querySelectorAll(".text-danger")
+    .forEach((el) => (el.textContent = ""));
+
+  // Validasi Nama
+  const nama = document.getElementById("edit_nama_pembimbing").value.trim();
+  if (nama === "") {
+    showError("edit_nama_pembimbing", "edit_nama_pembimbing_error", "Nama tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^[a-zA-Z\s.,'-]+$/.test(nama)) {
+    showError("edit_nama_pembimbing", "edit_nama_pembimbing_error", "Nama hanya boleh berisi huruf, spasi, dan simbol ('-).");
+    isValid = false;
+  }
+
+  const nik = document.getElementById("edit_nik_pembimbing").value.trim();
+  if (nik === "") {
+    showError("edit_nik_pembimbing", "edit_nik_pembimbing_error", "NIK tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^[0-9]{16}$/.test(nik)) {
+    showError("edit_nik_pembimbing", "edit_nik_pembimbing_error", "NIK harus terdiri dari 16 digit angka.");
+    isValid = false;
+  }
+
+  const nip = document.getElementById("edit_nip").value.trim();
+  if (nip === "") {
+    showError("edit_nip", "edit_nip_error", "NIP tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^[0-9]{18}$/.test(nip)) {
+    showError("edit_nip", "edit_nip_error", "NIP harus terdiri dari 18 digit angka.");
+    isValid = false;
+  }
+
+  const jabatan = document.getElementById("edit_jabatan").value.trim();
+  if (jabatan === "") {
+    showError("edit_jabatan", "edit_jabatan_error", "Jabatan tidak boleh kosong.");
+    isValid = false;
+  }
+
+  const telepon = document.getElementById("edit_telepone_pembimbing").value.trim();
+  if (telepon === "") {
+    showError("edit_telepone_pembimbing", "edit_telepone_error", "Nomor telepon tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^\d+$/.test(telepon)) {
+    showError("edit_telepone_pembimbing", "edit_telepone_error", "Telepon harus berupa angka.");
+    isValid = false;
+  }
+
+  const bidang = document.getElementById("edit_bidang").value;
+  if (bidang === "") {
+    showError("edit_bidang", "edit_bidang_error", "Bidang harus dipilih.");
     isValid = false;
   }
 
