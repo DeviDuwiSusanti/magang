@@ -34,6 +34,8 @@ $no = 1;
     
     <!-- Import DataTables CSS biar tabel bisa interaktif -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    
+    <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
 </head>
 <body>
 
