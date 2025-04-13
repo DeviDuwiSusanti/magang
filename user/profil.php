@@ -52,10 +52,8 @@ $row2 = mysqli_fetch_assoc($query2);
 
                                 <?php if (($ketua || $anggota) && $level == "3") : ?>
                                     <tr>
-                                    <tr>
                                         <td><i class="bi bi-mortarboard"></i> <strong> <?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></strong></td>
                                         <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
-                                    </tr>
                                     </tr>
                                     <tr>
                                         <td><i class="bi bi-building"></i> <strong>Asal Studi</strong></td>
@@ -172,36 +170,37 @@ if (isset($_POST['update_profil'])) {
                         <small class="text-danger" id="nik-error"></small>
                     </div>
 
-                    <?php if(($ketua || $anggota) && $level == "3") : ?>
+                    <?php if (($ketua || $anggota) && $level == "3") : ?>
 
-                    <!-- Asal Studi -->
-                    <div class="mb-3">
-                        <label for="asal_studi" class="form-label">Asal Studi</label>
-                        <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $dataLama['nama_pendidikan'] ?>" list="sekolahList">
-                        <datalist id="sekolahList">
-                        <?php 
-                        // Mengambil hanya nama_pendidikan unik
-                        $uniquePendidikan = [];
-                        foreach ($dataPendidikan as $studi) {
-                            $uniquePendidikan[$studi['nama_pendidikan']] = true;
-                        }
+                        <!-- Asal Studi -->
+                        <div class="mb-3">
+                            <label for="asal_studi" class="form-label">Asal Studi</label>
+                            <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $dataLama['nama_pendidikan'] ?>" list="sekolahList">
+                            <datalist id="sekolahList">
+                                <?php
+                                // Mengambil hanya nama_pendidikan unik
+                                $uniquePendidikan = [];
+                                foreach ($dataPendidikan as $studi) {
+                                    $uniquePendidikan[$studi['nama_pendidikan']] = true;
+                                }
 
-                        // Menampilkan opsi tanpa duplikat
-                        foreach (array_keys($uniquePendidikan) as $namaPendidikan) : 
-                        ?>
-                        <option value="<?= htmlspecialchars($namaPendidikan) ?>"></option>
-                        <?php endforeach; ?>
-                        </datalist>
-                    </div>
-                    
-                    <div class="mb-3" id="fakultasContainer" style="display: none;">
-                        <label for="fakultas" class="form-label">Fakultas</label>
-                        <select class="form-control" id="fakultas" name="fakultas">
-                            <?php foreach($dataPendidikan as $studi) : ?>
-                                <option value="<?= $studi['fakultas'] ?>" <?= ($dataLama['fakultas'] == $studi['fakultas']) ? 'selected' : '' ?>><?= $studi['fakultas'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                                // Menampilkan opsi tanpa duplikat
+                                foreach (array_keys($uniquePendidikan) as $namaPendidikan) :
+                                ?>
+                                    <option value="<?= htmlspecialchars($namaPendidikan) ?>"></option>
+                                <?php endforeach; ?>
+                            </datalist>
+                        </div>
+
+                        <div class="mb-3" id="fakultasContainer" style="display: none;">
+                            <label for="fakultas" class="form-label">Fakultas</label>
+                            <select class="form-control" id="fakultas" name="fakultas">
+                                <?php foreach ($dataPendidikan as $studi) : ?>
+                                    <option value="<?= $studi['fakultas'] ?>" <?= ($dataLama['fakultas'] == $studi['fakultas']) ? 'selected' : '' ?>><?= $studi['fakultas'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    <?php endif; ?>
 
                     <?php if (($ketua || $anggota) && $level == "4") : ?>
 

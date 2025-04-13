@@ -1,73 +1,62 @@
-<?php include '../layout/sidebarUser.php';
+<?php
+include '../layout/sidebarUser.php';
+include "functions.php";
 
 $id_instansi = $_SESSION['id_instansi'];
 $no = 1;
 
 // Query untuk data utama pengajuan
-$sql = "SELECT
+$sql = "SELECT  
             pu.nama_user,
             b.nama_bidang,
-            p.jenis_pengajuan,
-            p.jumlah_pelamar,
-            p.tanggal_mulai,
-            p.tanggal_selesai,
-            p.id_pengajuan,
-            p.id_user,
-            p.status_pengajuan,
-            p.status_active
+            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.kirim_zoom
         FROM tb_pengajuan AS p
-        INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
-        INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+            INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
+            INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
         WHERE p.id_instansi = '$id_instansi'
-        AND p.status_active = '1'
-        AND p.status_pengajuan IN ('1', '6')
+            AND p.status_active = '1'
+            AND p.status_pengajuan IN ('1', '6')
         ORDER BY p.id_pengajuan ASC
 ";
-
 $result = mysqli_query($conn, $sql);
 
 // Query untuk mendapatkan daftar nama pengaju
 $sql2 = "SELECT 
-            p.id_pengajuan, 
-            GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
+            p.id_pengajuan, GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
         FROM tb_pengajuan AS p
-        JOIN tb_profile_user AS pu ON p.id_pengajuan = pu.id_pengajuan
+            JOIN tb_profile_user AS pu ON p.id_pengajuan = pu.id_pengajuan
         WHERE p.id_instansi = '$id_instansi'
         GROUP BY p.id_pengajuan
         ORDER BY p.id_pengajuan DESC
 ";
 
+// Simpan daftar nama pengaju dalam array
 $nama_pengaju = [];
 $result2 = mysqli_query($conn, $sql2);
 while ($row2 = mysqli_fetch_assoc($result2)) {
     $nama_pengaju[$row2['id_pengajuan']] = $row2['daftar_nama'];
 }
-
 $json_nama_pengaju = json_encode($nama_pengaju);
 
 // Query untuk mendapatkan daftar dokumen
 $sql3 = "SELECT 
             d.id_pengajuan, 
-            d.id_user, 
-            GROUP_CONCAT(d.file_path SEPARATOR ', ') AS daftar_dokumen
+            d.id_user, GROUP_CONCAT(d.file_path SEPARATOR ', ') AS daftar_dokumen
         FROM tb_dokumen AS d
-        JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
+            JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
         WHERE p.id_instansi = '$id_instansi'
         GROUP BY d.id_pengajuan, d.id_user
 ";
-
+// Simpan daftar dokumen dalam array
 $daftar_dokumen = [];
 $result3 = mysqli_query($conn, $sql3);
 
 while ($row3 = mysqli_fetch_assoc($result3)) {
     $id_user = $row3['id_user'];
     $id_pengajuan = $row3['id_pengajuan'];
-
     $dokumen_list = explode(', ', $row3['daftar_dokumen']);
-
     $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
 }
-
 $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 ?>
 
@@ -119,7 +108,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
+                                        echo formatTanggalLengkapIndonesia($row['tanggal_mulai']) . ' - ' . formatTanggalLengkapIndonesia($row['tanggal_selesai']);
                                     } else {
                                         echo "Periode Tidak Diketahui";
                                     }
@@ -128,36 +117,18 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        $start_date = new DateTime($row['tanggal_mulai']);
-                                        $end_date = new DateTime($row['tanggal_selesai']);
-                                        $interval = $start_date->diff($end_date);
-
-                                        $years = $interval->y;
-                                        $months = $interval->m;
-                                        $days = $interval->d;
-
-                                        $hasil = "";
-
-                                        if ($years > 0) {
-                                            $hasil .= "$years Tahun ";
-                                        }
-                                        if ($months > 0) {
-                                            $hasil .= "$months Bulan ";
-                                        }
-                                        if ($days > 0) {
-                                            $hasil .= "$days Hari";
-                                        }
-
-                                        echo trim($hasil); // Hapus spasi berlebih di akhir
+                                        echo hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']);
                                     } else {
                                         echo "Durasi Tidak Diketahui";
                                     }
                                     ?>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <button type="button" class="btn btn-warning btn-sm zoom-btn" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Tambah Informasi Zoom" data-bs-target="#zoomModal"
-                                        data-id="<?= $row['id_pengajuan'] ?>">
+                                    <?php $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : ''; ?>
+                                    <button type="button" class="btn btn-warning btn-sm zoom-btn"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="<?= ($row['kirim_zoom'] == 1) ? 'Informasi Zoom sudah dikirim' : 'Tambah Informasi Zoom' ?>"
+                                        data-bs-target="#zoomModal" data-id="<?= $row['id_pengajuan'] ?>" <?= $disabled ?>>
                                         <i class="bi bi-zoom-in"></i>
                                     </button>
                                 </td>
@@ -222,6 +193,17 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
     </div>
 </div>
 
+<?php
+// Query untuk mengambil semua pembimbing beserta bidangnya
+$query = "SELECT pu.id_user, pu.nama_user, b.nama_bidang 
+          FROM tb_profile_user pu
+          JOIN tb_bidang b ON pu.id_bidang = b.id_bidang
+          JOIN tb_user u ON pu.id_user = u.id_user
+          WHERE u.level = 5";
+
+$result = mysqli_query($conn, $query);
+?>
+
 <!-- Modal untuk Informasi Zoom -->
 <div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -245,6 +227,18 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                         </div>
                     </div>
                     <div class="mb-3">
+                        <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
+                        <select class="form-control" id="pembimbing" name="pembimbing" required>
+                            <option value="">-- Pilih Pembimbing --</option>
+                            <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                <option value="<?= $row['id_user']; ?>">
+                                    <?= $row['nama_user'] . ' - <span class="badge bg-primary">' . $row['nama_bidang'] . '</span>'; ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                        <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small>
+                    </div>
+                    <div class="mb-3">
                         <label for="link_zoom" class="form-label">Link Zoom</label>
                         <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789" required>
                     </div>
@@ -258,11 +252,10 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
     </div>
 </div>
 
-
-
 <?php include "../layout/footerDashboard.php" ?>
 
 <script>
+    // Fungsi untuk menampilkan dokumen dalam modal
     document.addEventListener("DOMContentLoaded", function() {
         let dokumenModal = document.getElementById("dokumenModal");
         let dokumenList = document.getElementById("dokumenList");
@@ -321,7 +314,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         // Fungsi untuk menampilkan preview dokumen PDF di modal
         function showPreview(url) {
             let modalBody = dokumenModal.querySelector(".modal-body");
-            // Hapus preview sebelumnya jika ada
             let oldPreview = document.getElementById("pdfPreview");
             if (oldPreview) {
                 oldPreview.remove();
@@ -447,7 +439,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     if (result.isConfirmed) {
                         // Kirim data dengan AJAX
                         var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "terima_pengajuan.php", true);
+                        xhr.open("POST", "admin2_terima_pengajuan.php", true);
                         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                         xhr.onload = function() {
@@ -477,6 +469,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         });
     });
 
+    // Fungsi untuk menampilkan modal Zoom
     document.addEventListener("DOMContentLoaded", function() {
         let zoomModal = document.getElementById("zoomModal");
         let zoomForm = document.getElementById("zoomForm");
@@ -502,11 +495,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
             zoomModal.setAttribute("aria-hidden", "true");
         });
 
-        // Event listener tombol "Kirim" untuk menonaktifkan modal sementara
-        submitButton.addEventListener("click", function() {
-            zoomModal.setAttribute("inert", "true");
-        });
-
         // Form submit dengan SweetAlert dan AJAX
         zoomForm.addEventListener("submit", function(event) {
             event.preventDefault();
@@ -527,7 +515,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     formData.forEach((value, key) => urlEncodedData.append(key, value));
 
                     let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "simpan_zoom.php", true);
+                    xhr.open("POST", "admin2_simpan_zoom.php", true);
                     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                     xhr.onload = function() {
@@ -566,12 +554,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                 zoomModal.removeAttribute("inert");
             });
         });
-
-        // Set nilai idPengajuan dari session jika elemen ada
-        let pengajuanInput = document.getElementById("pengajuan_id_zoom");
-        if (pengajuanInput) {
-            pengajuanInput.value = "<?php echo isset($_SESSION['id_pengajuan']) ? $_SESSION['id_pengajuan'] : ''; ?>";
-        }
     });
 
     $(document).ready(function() {

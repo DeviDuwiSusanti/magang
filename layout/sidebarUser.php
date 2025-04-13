@@ -61,12 +61,9 @@ if (isset($_SESSION['email'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="../assets/css/admin_instansi.css">
-    <!-- <link rel="stylesheet" href="../assets/css/style_super_admin.css"> -->
+    <link rel="stylesheet" href="../assets/css/style_super_admin.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-
-    
-
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css">
 </head>
 
 <body>
@@ -298,13 +295,46 @@ if (isset($_SESSION['email'])) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Inisialisasi DataTables -->
     <script>
         $(document).ready(function() {
-            $('#myTable').DataTable();
+            var table = $('#myTable').DataTable();
+
+            // Event handler untuk tombol "show-detail"
+            $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+                e.preventDefault();
+
+                var detailData = $(this).data('detail');
+                var detailHtml = '<ul>';
+                $.each(detailData, function(index, name) {
+                    detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+                });
+                detailHtml += '</ul>';
+
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                // Sembunyikan detail yang lain sebelum menampilkan yang baru
+                if (!row.child.isShown()) {
+                    $('#myTable tbody tr.shown').not(tr).each(function() {
+                        table.row(this).child.hide();
+                        $(this).removeClass('shown');
+                    });
+                }
+
+                // Tampilkan atau sembunyikan detail dari baris yang diklik
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    row.child(detailHtml).show();
+                    tr.addClass('shown');
+                }
+            });
         });
     </script>
 </body>
