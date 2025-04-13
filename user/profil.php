@@ -13,7 +13,7 @@ $row2 = mysqli_fetch_assoc($query2);
     <div class="container-fluid">
         <h1 class="mb-4">Profile Saya</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Halaman View Profile</li>
+            <li class="breadcrumb-item active"></li>
         </ol>
         <div class="dropdown-divider"></div>
         <div class="container mt-5 mb-5">
