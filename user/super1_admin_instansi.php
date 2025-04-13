@@ -16,7 +16,7 @@
 
 <main>
     <div class="container-fluid px-4">
-        <h1 class="mt-4">Halaman Calon Admin Instansi</h1>
+        <h1 class="mt-4">Halaman Daftar Calon Admin Instansi</h1>
     </div>
     <div class="container mt-5">                                
         <!-- Table -->

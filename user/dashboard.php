@@ -95,7 +95,7 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
         <!-- Heading Dashboard -->
         <h1 class="mb-4">Dashboard</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">User</li>
+            <li class="breadcrumb-item active"></li>
         </ol>
         <div class="row">
             <!-- ===================== super admin ======================= -->
