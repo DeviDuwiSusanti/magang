@@ -80,18 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 defaultDate: "+1w",
                 changeMonth: true,
                 numberOfMonths: 4,
-                minDate: today // Tanggal mulai minimal hari ini
+                minDate: today // Hanya izinkan tanggal mulai dari hari ini
             }).on("change", function() {
-                var selectedStartDate = getDate(this);
-                if (selectedStartDate) {
-                    // Hitung 1 bulan setelah tanggal mulai
-                    var minEndDate = new Date(selectedStartDate);
-                    minEndDate.setMonth(minEndDate.getMonth() + 1);
-                    
-                    // Set minDate untuk tanggal selesai
-                    to.datepicker("option", "minDate", minEndDate);
-                    $("#tanggal_selesai").val(""); // Reset tanggal selesai
-                }
+                // Reset tanggal selesai saat tanggal mulai diubah
+                $("#tanggal_selesai").val("");
+                to.datepicker("option", "minDate", getDate(this));
             });
 
             var to = $("#tanggal_selesai").datepicker({
@@ -99,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 defaultDate: "+1w",
                 changeMonth: true,
                 numberOfMonths: 4,
-                minDate: null // Awalnya tidak ada batasan (akan di-set saat tanggal mulai dipilih)
+                minDate: today // Batas minimal tanggal selesai juga hari ini
             }).on("change", function() {
                 from.datepicker("option", "maxDate", getDate(this));
             });
