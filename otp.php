@@ -15,7 +15,7 @@
         $query = "SELECT u.id_user, p.id_instansi, u.level 
                 FROM tb_user u
                 LEFT JOIN tb_profile_user p ON u.id_user = p.id_user
-                WHERE u.email = '$email' AND u.otp = '$otp' AND u.otp_expired > NOW()";
+                WHERE u.email = '$email' AND u.status_active = '1' AND u.otp = '$otp' AND u.otp_expired > NOW()";
         $result = $conn->query($query);
 
         if ($result->num_rows > 0) {
