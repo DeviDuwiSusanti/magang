@@ -5,7 +5,7 @@ include "../functions.php";
 
 if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
-    $sql = "SELECT * FROM tb_user u, tb_profile_user pu WHERE u.email = '$email' AND u.id_user = pu.id_user";
+    $sql = "SELECT * FROM tb_user u, tb_profile_user pu WHERE u.email = '$email' AND u.id_user = pu.id_user AND u.status_active = '1'";
 
     $hasil = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($hasil);

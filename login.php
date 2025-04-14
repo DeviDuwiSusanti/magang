@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
 
     // Cek apakah email ada di database
-    $query = "SELECT * FROM tb_user WHERE email = '$email'";
+    $query = "SELECT * FROM tb_user WHERE email = '$email' AND status_active = '1'";
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) > 0) {
@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             $otp_expired = date("Y-m-d H:i:s", strtotime("+2 minutes"));
 
             // Simpan OTP ke database
-            $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email'";
+            $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email' AND status_active = '1'";
             mysqli_query($conn, $updateQuery);
 
             // Kirim OTP melalui email
