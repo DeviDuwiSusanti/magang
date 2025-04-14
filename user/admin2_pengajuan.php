@@ -138,8 +138,14 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-check-circle"></i> Terima
                                     </button>
-                                    <button class="btn btn-danger btn-sm tolak-btn"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Tolak Pengajuan"
+                                    <!-- Menggunakan tooltip, untuk membuka modalnya pakai fungsi -->
+                                    <button
+                                        class="btn btn-danger btn-sm tolak-btn"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="Tolak Pengajuan"
+                                        data-bs-target="#tolakModal"
+                                        data-bs-toggle-second="modal"
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-person-x"></i> Tolak
                                     </button>
@@ -181,6 +187,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
             </div>
             <div class="modal-body">
                 <form id="tolakForm">
+                    <p>Apakah Anda yakin ingin menolak pengajuan ini?</p>
                     <input type="hidden" name="id_pengajuan" id="id_pengajuan_tolak">
                     <div class="mb-3">
                         <label for="alasan_tolak" class="form-label tolak-label">Alasan Penolakan</label>
@@ -351,30 +358,23 @@ $result = mysqli_query($conn, $query);
         });
     });
 
-    // Fungsi untuk menampilkan modal penolakan
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".tolak-btn").forEach(function(button) {
-            button.addEventListener("click", function() {
-                let idPengajuan = this.getAttribute("data-id");
-                document.getElementById("id_pengajuan_tolak").value = idPengajuan;
+    // Kode untuk tombol tolak
+    document.querySelectorAll('.tolak-btn').forEach((btn) => {
+        // Tooltip tetap aktif
+        new bootstrap.Tooltip(btn);
 
-                let modalElement = document.getElementById("tolakModal");
-                let modal = new bootstrap.Modal(modalElement);
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id'); // Ambil ID dari tombol
+            const inputHidden = document.getElementById('id_pengajuan_tolak');
+            if (inputHidden) inputHidden.value = id;
 
-                // Pastikan aria-hidden dihapus saat modal dibuka
-                modalElement.addEventListener("show.bs.modal", function() {
-                    modalElement.removeAttribute("aria-hidden");
-                });
-
-                // Tambahkan kembali aria-hidden saat modal ditutup
-                modalElement.addEventListener("hidden.bs.modal", function() {
-                    modalElement.setAttribute("aria-hidden", "true");
-                });
-
-                modal.show();
-            });
+            // Show modalnya (jika tidak pakai data-bs-toggle langsung)
+            const targetModal = btn.getAttribute('data-bs-target');
+            const modal = new bootstrap.Modal(document.querySelector(targetModal));
+            modal.show();
         });
     });
+
 
     // Fungsi untuk mengirim data penolakan
     function confirmDelete() {
@@ -565,6 +565,21 @@ $result = mysqli_query($conn, $query);
         $('.clockpicker').clockpicker({
             autoclose: true,
             donetext: 'Pilih'
+        });
+    });
+
+    // Inisialisasi tooltip secara global
+    document.addEventListener("DOMContentLoaded", function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+
+            // Event listener untuk menghilangkan tooltip setelah diklik
+            tooltipTriggerEl.addEventListener("click", function() {
+                tooltip.hide();
+            });
+
+            return tooltip;
         });
     });
 </script>

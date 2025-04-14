@@ -67,6 +67,7 @@ if (isset($_POST["register"])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./assets/js/alert.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" href="./assets/img/logo_kab_sidoarjo.png" type="image/png">
     <title>Register</title>
     <style>
         select,
