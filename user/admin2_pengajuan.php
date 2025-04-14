@@ -213,22 +213,24 @@ $result = mysqli_query($conn, $query);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <form id="zoomForm">
+                <form id="zoomForm" onsubmit="return validateZoomForm()">
                     <input type="hidden" name="pengajuan_id" id="pengajuan_id_zoom">
                     <div class="mb-3">
                         <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
-                        <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan" required>
+                        <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
+                        <div class="text-danger" id="tanggal_pelaksanaan_error"></div>
                     </div>
                     <div class="mb-3">
                         <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
                         <div class="input-group clockpicker">
-                            <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan" required>
+                            <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan">
                             <span class="input-group-text"><i class="bi bi-clock"></i></span>
                         </div>
+                        <small class="text-danger" id="jam_pelaksanaan_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
-                        <select class="form-control" id="pembimbing" name="pembimbing" required>
+                        <select class="form-control" id="pembimbing" name="pembimbing">
                             <option value="">-- Pilih Pembimbing --</option>
                             <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                                 <option value="<?= $row['id_user']; ?>">
@@ -236,11 +238,13 @@ $result = mysqli_query($conn, $query);
                                 </option>
                             <?php endwhile; ?>
                         </select>
-                        <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small>
+                        <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
+                        <small class="text-danger" id="pembimbing_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="link_zoom" class="form-label">Link Zoom</label>
-                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789" required>
+                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789">
+                        <small class="text-danger" id="link_zoom_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -253,6 +257,7 @@ $result = mysqli_query($conn, $query);
 </div>
 
 <?php include "../layout/footerDashboard.php" ?>
+<script src="../assets/js/validasi.js"></script>
 
 <script>
     // Fungsi untuk menampilkan dokumen dalam modal

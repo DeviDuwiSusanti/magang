@@ -555,3 +555,46 @@ function validateEditPembimbing() {
 
   return isValid;
 }
+
+// Fungsi validasi input informasi zoom
+function validateZoomForm() {
+  let isValid = true;
+
+  // Reset pesan error
+  document.querySelectorAll(".text-danger").forEach((el) => (el.textContent = ""));
+
+  // Ambil nilai
+  const tanggal = document.getElementById("tanggal_pelaksanaan").value.trim();
+  const jam = document.getElementById("jam_pelaksanaan").value.trim();
+  const pembimbing = document.getElementById("pembimbing").value.trim();
+  const linkZoom = document.getElementById("link_zoom").value.trim();
+
+  // Validasi Tanggal
+  if (tanggal === "") {
+    showError("tanggal_pelaksanaan", "tanggal_pelaksanaan_error", "Tanggal pelaksanaan tidak boleh kosong.");
+    isValid = false;
+  }
+
+  // Validasi Jam
+  if (jam === "") {
+    showError("jam_pelaksanaan", "jam_pelaksanaan_error", "Jam pelaksanaan tidak boleh kosong.");
+    isValid = false;
+  }
+
+  // Validasi Pembimbing
+  if (pembimbing === "") {
+    showError("pembimbing", "pembimbing_error", "Pilih pembimbing terlebih dahulu.");
+    isValid = false;
+  }
+
+  // Validasi Link Zoom
+  if (linkZoom === "") {
+    showError("link_zoom", "link_zoom_error", "Link Zoom tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^https?:\/\/.+/.test(linkZoom)) {
+    showError("link_zoom", "link_zoom_error", "Format link Zoom tidak valid.");
+    isValid = false;
+  }
+
+  return isValid;
+}

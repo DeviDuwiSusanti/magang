@@ -76,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal">
                 <i class="bi bi-plus-circle me-1"></i> Tambah Bidang
             </button>
+            <a href="admin2_print_bidang.php" target="_blank" class="btn btn-success btn-sm"><i class="bi bi-printer me-1"></i> Cetak</a>
         </div>
         <div class="table-responsive-sm">
             <div class="bungkus-2">
