@@ -13,7 +13,7 @@ function generateIdDokumen($conn, $id_pengajuan) {
     return $id_pengajuan . $nomorUrut;
 }
 
-function generateIdUser4($conn, $id_user) {
+function generateIdAnggota($conn, $id_user) {
     // Ambil dua digit terakhir dari id_user
     $lastTwoDigits = (int)substr($id_user, -2);
 
@@ -359,7 +359,7 @@ function inputPengajuan($POST, $FILES, $id_user){
             $email = $anggota_email[$index];
             $nik = $anggota_nik[$index];
             $nim = $anggota_nim[$index];
-            $id_user4 = generateIdUser4($conn, $id_user);
+            $id_user4 = generateIdAnggota($conn, $id_user);
 
             $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
             $result = mysqli_query($conn, $pendidikan);
@@ -531,7 +531,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     $email = $POST['email'];
     $nik = $POST['nik'];
     $nim = $POST['nim'];
-    $id_user4  = generateIdUser4($conn, $id_user);
+    $id_user4  = generateIdAnggota($conn, $id_user);
     $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
     $result = mysqli_query($conn, $pendidikan);
     $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];

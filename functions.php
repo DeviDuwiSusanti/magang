@@ -632,13 +632,13 @@ function tambah_instansi_super_admin($POST) {
         global $conn;
     
         // Ambil data dari form
-        $id_user                = $POST["id_user"];
-        $id_pembimbing          = $POST["id_pembimbing"];
-        $nama_pembimbing        = $POST["nama_pembimbing"];
-        $nik_pembimbing         = $POST["nik_pembimbing"];
-        $nip                    = $POST["nip"];
-        $jabatan                = $POST["jabatan"];
-        $telepone_pembimbing    = $POST["telepone_pembimbing"];
+        $id_user                = $POST["edit_id_user"];
+        $id_pembimbing          = $POST["edit_id_pembimbing"];
+        $nama_pembimbing        = $POST["edit_nama_pembimbing"];
+        $nik_pembimbing         = $POST["edit_nik_pembimbing"];
+        $nip                    = $POST["edit_nip"];
+        $jabatan                = $POST["edit_jabatan"];
+        $telepone_pembimbing    = $POST["edit_telepone_pembimbing"];
         $id_bidang_baru         = $POST["id_bidang"];
     
         // Cek bidang lama dari database

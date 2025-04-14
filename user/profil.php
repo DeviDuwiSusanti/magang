@@ -4,16 +4,13 @@ include "functions.php";
 $sql2 = "SELECT pu.*, u.*, p.* FROM tb_profile_user pu JOIN tb_user u ON pu.id_user = u.id_user LEFT JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan WHERE pu.id_user = '$id_user'";
 $query2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($query2);
-
-
-
 ?>
 
 <div class="main-content p-4">
     <div class="container-fluid">
         <h1 class="mb-4">Profile Saya</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Halaman View Profile</li>
+            <li class="breadcrumb-item active"></li>
         </ol>
         <div class="dropdown-divider"></div>
         <div class="container mt-5 mb-5">
@@ -37,7 +34,13 @@ $row2 = mysqli_fetch_assoc($query2);
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-calendar"></i> <strong>TTL</strong></td>
-                                    <td><?php echo $row['tempat_lahir'] . ', ' . formatTanggalLengkapIndonesia($row['tanggal_lahir']); ?></td>
+                                    <td>
+                                        <?php 
+                                        if (!empty($row['tempat_lahir']) && !empty($row['tanggal_lahir'])) {
+                                            echo $row['tempat_lahir'] . ', ' . formatTanggalLengkapIndonesia($row['tanggal_lahir']);
+                                        }
+                                        ?>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><i class="bi bi-gender-ambiguous"></i> <strong>Jenis Kelamin</strong></td>
@@ -202,35 +205,6 @@ if (isset($_POST['update_profil'])) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                        <!-- Asal Studi -->
-                        <div class="mb-3">
-                            <label for="asal_studi" class="form-label">Asal Studi</label>
-                            <input type="text" class="form-control" id="asal_studi" name="asal_studi" value="<?= $dataLama['nama_pendidikan'] ?>" list="sekolahList">
-                            <datalist id="sekolahList">
-                                <?php
-                                // Mengambil hanya nama_pendidikan unik
-                                $uniquePendidikan = [];
-                                foreach ($dataPendidikan as $studi) {
-                                    $uniquePendidikan[$studi['nama_pendidikan']] = true;
-                                }
-
-                                // Menampilkan opsi tanpa duplikat
-                                foreach (array_keys($uniquePendidikan) as $namaPendidikan) :
-                                ?>
-                                    <option value="<?= htmlspecialchars($namaPendidikan) ?>"></option>
-                                <?php endforeach; ?>
-                            </datalist>
-                        </div>
-
-                        <div class="mb-3" id="fakultasContainer" style="display: none;">
-                            <label for="fakultas" class="form-label">Fakultas</label>
-                            <select class="form-control" id="fakultas" name="fakultas">
-                                <?php foreach ($dataPendidikan as $studi) : ?>
-                                    <option value="<?= $studi['fakultas'] ?>" <?= ($dataLama['fakultas'] == $studi['fakultas']) ? 'selected' : '' ?>><?= $studi['fakultas'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
 
                         <!-- Jurusan -->
                         <div class="mb-3">

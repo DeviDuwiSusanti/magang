@@ -1,8 +1,9 @@
 <?php
 session_start();
 include "functions.php"; 
-include "../koneksi.php"; // Pastikan koneksi ke database
+include "../koneksi.php"; 
 
+// Pengecekan apakah user sudah punya pengajuan atau belum
 if (isset($_SESSION['email'])  && isset($_SESSION['id_user'])) {
     $email = $_SESSION['email'];
     $id_user = $_SESSION['id_user']; // Ambil id_user dari sesi login
@@ -70,45 +71,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Tambahkan script Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
-    $(function() {
-        var dateFormat = "dd/mm/yy";
-        var today = new Date();
+        $(function() {
+            var dateFormat = "dd/mm/yy";
+            var today = new Date();
 
-        var from = $("#tanggal_mulai").datepicker({
-            dateFormat: dateFormat,
-            defaultDate: "+1w",
-            changeMonth: true,
-            numberOfMonths: 4,
-            minDate: today // Hanya izinkan tanggal mulai dari hari ini
-        }).on("change", function() {
-            // Reset tanggal selesai saat tanggal mulai diubah
-            $("#tanggal_selesai").val("");
-            to.datepicker("option", "minDate", getDate(this));
-        });
+            var from = $("#tanggal_mulai").datepicker({
+                dateFormat: dateFormat,
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 4,
+                minDate: today // Hanya izinkan tanggal mulai dari hari ini
+            }).on("change", function() {
+                // Reset tanggal selesai saat tanggal mulai diubah
+                $("#tanggal_selesai").val("");
+                to.datepicker("option", "minDate", getDate(this));
+            });
 
-        var to = $("#tanggal_selesai").datepicker({
-            dateFormat: dateFormat,
-            defaultDate: "+1w",
-            changeMonth: true,
-            numberOfMonths: 4,
-            minDate: today // Batas minimal tanggal selesai juga hari ini
-        }).on("change", function() {
-            from.datepicker("option", "maxDate", getDate(this));
-        });
+            var to = $("#tanggal_selesai").datepicker({
+                dateFormat: dateFormat,
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 4,
+                minDate: today // Batas minimal tanggal selesai juga hari ini
+            }).on("change", function() {
+                from.datepicker("option", "maxDate", getDate(this));
+            });
 
-        function getDate(element) {
-            var date;
-            try {
-                date = $.datepicker.parseDate(dateFormat, element.value);
-            } catch (error) {
-                date = null;
+            function getDate(element) {
+                var date;
+                try {
+                    date = $.datepicker.parseDate(dateFormat, element.value);
+                } catch (error) {
+                    date = null;
+                }
+                return date;
             }
-            return date;
-        }
-    });
-
-
+        });
     </script>
+    
     <style>
     /* Layout utama untuk form dan detail lowongan */
     .form-container {
@@ -348,7 +348,6 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                 <i class="bi bi-arrow-left-circle me-1"></i> Kembali
             </a>
         </div>
-
 
         <div class="form-container center-form" id="formContainer">
             <div class="form-wrapper" id="formWrapper">

@@ -1,5 +1,7 @@
-<?php include '../layout/sidebarUser.php';
-include "admin2_update_status.php";
+<?php 
+include '../layout/sidebarUser.php';
+include "update_status.php";
+include "functions.php";
 
 $id_instansi = $_SESSION['id_instansi'];
 $no = 1;
@@ -87,7 +89,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        echo date('d F Y', strtotime($row['tanggal_mulai'])) . ' - ' . date('d F Y', strtotime($row['tanggal_selesai']));
+                                        echo formatTanggalLengkapIndonesia($row['tanggal_mulai']) . ' - ' . formatTanggalLengkapIndonesia($row['tanggal_selesai']);
                                     } else {
                                         echo "Periode Tidak Diketahui";
                                     }
@@ -96,27 +98,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        $start_date = new DateTime($row['tanggal_mulai']);
-                                        $end_date = new DateTime($row['tanggal_selesai']);
-                                        $interval = $start_date->diff($end_date);
-
-                                        $years = $interval->y;
-                                        $months = $interval->m;
-                                        $days = $interval->d;
-
-                                        $hasil = "";
-
-                                        if ($years > 0) {
-                                            $hasil .= "$years Tahun ";
-                                        }
-                                        if ($months > 0) {
-                                            $hasil .= "$months Bulan ";
-                                        }
-                                        if ($days > 0) {
-                                            $hasil .= "$days Hari";
-                                        }
-
-                                        echo trim($hasil); // Hapus spasi berlebih di akhir
+                                        echo hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']);
                                     } else {
                                         echo "Durasi Tidak Diketahui";
                                     }
