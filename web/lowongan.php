@@ -24,6 +24,7 @@ include "functions.php";
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style2.css" />
     <link rel="stylesheet" href="../assets/css/low.css" />
+    <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
     <title>Home</title>
 </head>
 

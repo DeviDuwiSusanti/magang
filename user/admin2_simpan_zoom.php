@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail_pelamar->addAddress($email_pelamar);
                 $mail_pelamar->isHTML(true);
                 $mail_pelamar->Subject = $subject_pelamar;
-                $mail_pelamar->Body = $message_pelamar;
+                $mail_pelamar->Body = $message;
 
                 if ($mail_pelamar->send()) {
                     echo "<script>

@@ -79,6 +79,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         </div>
         <div class="table-responsive-sm">
             <div class="bungkus-2">
+                <!-- <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2" id="top-bar-wrapper">
+                    <div id="entries-wrapper"></div> 
+
+                    <div class="d-flex align-items-center gap-2" id="right-controls">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal">
+                            <i class="bi bi-plus-circle me-1"></i>
+                        </button>
+                        <div id="search-wrapper"></div>
+                    </div>
+                </div> -->
                 <table id="myTable" class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
@@ -204,7 +214,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     <div class="mb-3">
                         <label for="kuota" class="form-label fw-bold">Kuota</label>
                         <input type="number" class="form-control" data-error-id="edit_kuota_error" id="edit_kuota" name="kuota"">
-                        <small class="text-danger" id="edit_kuota_error"></small>
+                        <small class=" text-danger" id="edit_kuota_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="dokumen" class="form-label fw-bold">Dokumen Prasyarat</label>
@@ -240,4 +250,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             });
         });
     });
+
+    // $(document).ready(function() {
+    //     const table = $('#myTable').DataTable();
+
+    //     $('#myTable_length').appendTo('#entries-wrapper');
+    //     $('#myTable_filter').appendTo('#search-wrapper');
+    // });
 </script>

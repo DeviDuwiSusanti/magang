@@ -392,7 +392,7 @@ $result = mysqli_query($conn, $query);
 
                 // Kirim data dengan AJAX
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "tolak_pengajuan.php", true);
+                xhr.open("POST", "admin2_tolak_pengajuan.php", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
                 xhr.onload = function() {

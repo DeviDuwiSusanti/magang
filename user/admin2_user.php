@@ -1,6 +1,6 @@
 <?php 
 include '../layout/sidebarUser.php';
-include "admin2_update_status.php";
+include "update_status.php";
 include "functions.php";
 
 $id_instansi = $_SESSION['id_instansi'];

@@ -73,27 +73,27 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 // Fungsi helper untuk cek apakah tampilan mobile
-// function isMobile() {
-//     return window.innerWidth < 992;
-//   }
+function isMobile() {
+    return window.innerWidth < 992;
+  }
   
-//   const sidebar = document.getElementById('sidebar');
-//   const toggleButton = document.getElementById('hamburger-menu');
-//   const menuItems = document.querySelectorAll('#sidebar .sidebar-item .sidebar-link');
+  const sidebar = document.getElementById('sidebar');
+  const toggleButton = document.getElementById('hamburger-menu');
+  const menuItems = document.querySelectorAll('#sidebar .sidebar-item .sidebar-link');
   
-//   toggleButton.addEventListener('click', () => {
-//     if (isMobile()) {
-//       sidebar.classList.toggle('hide');
-//     }
-//   });
+  toggleButton.addEventListener('click', () => {
+    if (isMobile()) {
+      sidebar.classList.toggle('hide');
+    }
+  });
   
-//   menuItems.forEach((item) => {
-//     item.addEventListener('click', () => {
-//       if (isMobile()) {
-//         sidebar.classList.add('hide');
-//       }
-//     });
-//   });
+  menuItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      if (isMobile()) {
+        sidebar.classList.add('hide');
+      }
+    });
+  });
   
   
   
