@@ -292,6 +292,7 @@ if (isset($_POST['update_profil'])) {
     })
 </script>
 
+<!-- SCRIPT AKSES FAKULTAS DAN PRODI SESUAI UNIV -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const asalStudiInput = document.getElementById('asal_studi');

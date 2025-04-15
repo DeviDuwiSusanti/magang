@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['input_logbook'])) {
     inputLogbook($_POST, $_FILES, $id_pengajuan, $id_user);
 }
 
-// =============== QUERY UPDATE ====================
+// =============== QUERY UPDATE====================
 $id_logbook_edit = null;
 $dataLama = null;
 
