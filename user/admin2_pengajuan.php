@@ -138,8 +138,14 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-check-circle"></i> Terima
                                     </button>
-                                    <button class="btn btn-danger btn-sm tolak-btn"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Tolak Pengajuan"
+                                    <!-- Menggunakan tooltip, untuk membuka modalnya pakai fungsi -->
+                                    <button
+                                        class="btn btn-danger btn-sm tolak-btn"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="Tolak Pengajuan"
+                                        data-bs-target="#tolakModal"
+                                        data-bs-toggle-second="modal"
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-person-x"></i> Tolak
                                     </button>
@@ -181,6 +187,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
             </div>
             <div class="modal-body">
                 <form id="tolakForm">
+                    <p>Apakah Anda yakin ingin menolak pengajuan ini?</p>
                     <input type="hidden" name="id_pengajuan" id="id_pengajuan_tolak">
                     <div class="mb-3">
                         <label for="alasan_tolak" class="form-label tolak-label">Alasan Penolakan</label>
@@ -213,22 +220,24 @@ $result = mysqli_query($conn, $query);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <form id="zoomForm">
+                <form id="zoomForm" onsubmit="return validateZoomForm()">
                     <input type="hidden" name="pengajuan_id" id="pengajuan_id_zoom">
                     <div class="mb-3">
                         <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
-                        <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan" required>
+                        <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
+                        <div class="text-danger" id="tanggal_pelaksanaan_error"></div>
                     </div>
                     <div class="mb-3">
                         <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
                         <div class="input-group clockpicker">
-                            <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan" required>
+                            <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan">
                             <span class="input-group-text"><i class="bi bi-clock"></i></span>
                         </div>
+                        <small class="text-danger" id="jam_pelaksanaan_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
-                        <select class="form-control" id="pembimbing" name="pembimbing" required>
+                        <select class="form-control" id="pembimbing" name="pembimbing">
                             <option value="">-- Pilih Pembimbing --</option>
                             <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                                 <option value="<?= $row['id_user']; ?>">
@@ -236,11 +245,13 @@ $result = mysqli_query($conn, $query);
                                 </option>
                             <?php endwhile; ?>
                         </select>
-                        <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small>
+                        <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
+                        <small class="text-danger" id="pembimbing_error"></small>
                     </div>
                     <div class="mb-3">
                         <label for="link_zoom" class="form-label">Link Zoom</label>
-                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789" required>
+                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789">
+                        <small class="text-danger" id="link_zoom_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -253,6 +264,7 @@ $result = mysqli_query($conn, $query);
 </div>
 
 <?php include "../layout/footerDashboard.php" ?>
+<script src="../assets/js/validasi.js"></script>
 
 <script>
     // Fungsi untuk menampilkan dokumen dalam modal
@@ -346,30 +358,23 @@ $result = mysqli_query($conn, $query);
         });
     });
 
-    // Fungsi untuk menampilkan modal penolakan
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".tolak-btn").forEach(function(button) {
-            button.addEventListener("click", function() {
-                let idPengajuan = this.getAttribute("data-id");
-                document.getElementById("id_pengajuan_tolak").value = idPengajuan;
+    // Kode untuk tombol tolak
+    document.querySelectorAll('.tolak-btn').forEach((btn) => {
+        // Tooltip tetap aktif
+        new bootstrap.Tooltip(btn);
 
-                let modalElement = document.getElementById("tolakModal");
-                let modal = new bootstrap.Modal(modalElement);
+        btn.addEventListener('click', function() {
+            const id = this.getAttribute('data-id'); // Ambil ID dari tombol
+            const inputHidden = document.getElementById('id_pengajuan_tolak');
+            if (inputHidden) inputHidden.value = id;
 
-                // Pastikan aria-hidden dihapus saat modal dibuka
-                modalElement.addEventListener("show.bs.modal", function() {
-                    modalElement.removeAttribute("aria-hidden");
-                });
-
-                // Tambahkan kembali aria-hidden saat modal ditutup
-                modalElement.addEventListener("hidden.bs.modal", function() {
-                    modalElement.setAttribute("aria-hidden", "true");
-                });
-
-                modal.show();
-            });
+            // Show modalnya (jika tidak pakai data-bs-toggle langsung)
+            const targetModal = btn.getAttribute('data-bs-target');
+            const modal = new bootstrap.Modal(document.querySelector(targetModal));
+            modal.show();
         });
     });
+
 
     // Fungsi untuk mengirim data penolakan
     function confirmDelete() {
@@ -560,6 +565,21 @@ $result = mysqli_query($conn, $query);
         $('.clockpicker').clockpicker({
             autoclose: true,
             donetext: 'Pilih'
+        });
+    });
+
+    // Inisialisasi tooltip secara global
+    document.addEventListener("DOMContentLoaded", function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
+
+            // Event listener untuk menghilangkan tooltip setelah diklik
+            tooltipTriggerEl.addEventListener("click", function() {
+                tooltip.hide();
+            });
+
+            return tooltip;
         });
     });
 </script>

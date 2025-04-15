@@ -80,6 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="css/style.css"> -->
     <link rel="stylesheet" href="assets/css/sign_in.css">
+    <link rel="icon" href="./assets/img/logo_kab_sidoarjo.png" type="image/png">
     <style>
 
     </style>

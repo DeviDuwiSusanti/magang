@@ -688,7 +688,7 @@ p {
     }
 
     #sidebar.show-sidebar {
-        left: 0; /* Munculkan sidebar */
+        left: 0;
     }
 }
 
