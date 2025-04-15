@@ -6,6 +6,7 @@ include 'functions.php';
 
 // Set timezone ke Asia/Jakarta
 date_default_timezone_set('Asia/Jakarta');
+
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
 }
@@ -15,8 +16,10 @@ $id_user = $_SESSION['id_user'];
 $sql = "SELECT * FROM tb_logbook AS l JOIN tb_pengajuan AS p ON l.id_pengajuan = p.id_pengajuan JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
         JOIN tb_profile_user AS u ON l.id_user = u.id_user JOIN tb_pendidikan AS d ON u.id_pendidikan = d.id_pendidikan
         WHERE l.id_pengajuan = '$id_pengajuan' AND l.id_user = '$id_user' AND l.status_active = '1'";
+
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
+
 if (!$row) {
     showAlert('Peringatan!', 'Kamu Belum Pernah Mengisi Logbook. Silakan Isi Terlebih Dahulu.', 'warning', "logbook_daftar.php");
     exit();

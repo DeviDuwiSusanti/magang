@@ -39,13 +39,20 @@ function generateIdAnggota($conn, $id_user) {
     return $newId;
 }
 
-function uploadFile($file) {
-    $target_dir = "../assets/doc/";  // Update path here
+function uploadFileUser($file, $id_pengajuan) {
+
+    $target_dir = "../assets/doc/$id_pengajuan/";
+
+    // Buat folder jika belum ada
+    if (!file_exists($target_dir)) {
+        mkdir($target_dir, 0777, true);
+    }
+
     $target_file = $target_dir . basename($file["name"]);
-    
+
     // Pindahkan file ke folder tujuan
     move_uploaded_file($file["tmp_name"], $target_file);
-    
+
     // Mengembalikan array dengan path dan nama file
     return [
         'path' => $target_file,
@@ -66,7 +73,6 @@ function uploadFoto($file, $target_dir) {
     return null; // Jika gagal upload
 }
 
-
 function deleteOldDocument($id_dokumen) {
     global $conn;
     // Ambil file lama dari database
@@ -77,6 +83,30 @@ function deleteOldDocument($id_dokumen) {
     $file_path = $row['file_path'];
     if (file_exists($file_path)) {
         unlink($file_path); // Hapus file fisik
+    }
+}
+
+function hapusFolderPengajuan($id_pengajuan) {
+    $folder = "../assets/doc/$id_pengajuan/";
+
+    // Cek apakah folder ada
+    if (is_dir($folder)) {
+        // Hapus semua file di dalam folder
+        $files = scandir($folder);
+        foreach ($files as $file) {
+            if ($file !== "." && $file !== "..") {
+                $file_path = $folder . $file;
+                if (is_file($file_path)) {
+                    unlink($file_path);
+                }
+            }
+        }
+
+        // Hapus foldernya setelah kosong
+        rmdir($folder);
+        return true; // Sukses
+    } else {
+        return false; // Folder tidak ditemukan
     }
 }
 
@@ -148,9 +178,6 @@ function confirmDeleteScript() {
         }
     </script>";
 }
-
-
-
 
 // Fungsi untuk menghitung durasi dalam bulan dan hari
 function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
@@ -293,6 +320,7 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
         showAlert('Gagal!', 'Logbook gagal diupdate. Silakan coba lagi.', 'error');
     }    
 }
+
 function hapusLogbook($id_user){
     global $conn;
     $id_logbook = $_GET['id_logbook_hapus'];
@@ -345,8 +373,8 @@ function inputPengajuan($POST, $FILES, $id_user){
     $tanggal_selesai = DateTime::createFromFormat('d/m/Y', $tanggal_selesai)->format('Y-m-d');
 
     // Menangani upload file KTP dan CV
-    $ktp = uploadFile($FILES['ktp']);
-    $cv = uploadFile($FILES['cv']);
+    $ktp = uploadFileUser($FILES['ktp'], $id_pengajuan);
+    $cv = uploadFileUser($FILES['cv'], $id_pengajuan);
 
     if (ISSET($POST['anggota_nama'])){
         // Mengambil data anggota dari form Step 2
@@ -398,6 +426,7 @@ function inputPengajuan($POST, $FILES, $id_user){
         showAlert('Gagal!', 'Yahh pendaftaran kamu gagal. Silakan coba lagi.', 'error');
     }    
 }
+
 function updatePengajuan($POST, $FILES, $id_user){
     global $conn;
     $id_user = $POST['id_user'];
@@ -436,7 +465,7 @@ function updatePengajuan($POST, $FILES, $id_user){
     // Proses update KTP
     if (!empty($FILES['ktp']['name'])) {
         deleteOldDocument(getDokumenIdentitas('ktp', $id_pengajuan));
-        $ktpData = uploadFile($FILES['ktp']);
+        $ktpData = uploadFileUser($FILES['ktp'], $id_pengajuan);
         if ($ktpData) {
             $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]', change_by = '$id_user' WHERE nama_dokumen = 'ktp' AND id_pengajuan = '$id_pengajuan'";
             $updateKTP = mysqli_query($conn, $sql_updateKTP);
@@ -446,7 +475,7 @@ function updatePengajuan($POST, $FILES, $id_user){
     // Proses update CV
     if (!empty($FILES['cv']['name'])) {
         deleteOldDocument(getDokumenIdentitas('cv', $id_pengajuan));
-        $cvData = uploadFile($FILES['cv']);
+        $cvData = uploadFileUser($FILES['cv'], $id_pengajuan);
         if ($cvData) {
             $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]', change_by = '$id_user' WHERE nama_dokumen = 'cv' AND id_pengajuan = '$id_pengajuan'";
             $updateCV = mysqli_query($conn, $sql_updateCV);
@@ -462,7 +491,6 @@ function updatePengajuan($POST, $FILES, $id_user){
         showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');
     }   
 }
-
 
 function hapusPengajuan($POST, $id_user){
     global $conn;
@@ -487,11 +515,11 @@ function hapusPengajuan($POST, $id_user){
         $queryDokumen  = mysqli_query($conn, $dokumen);
         while ($row2 = mysqli_fetch_assoc($queryDokumen)){
             $id_dokumen = $row2['id_dokumen'];
-            deleteOldDocument($id_dokumen); // Hapus dokumen jenis 'identitas'
             $hapus_dokumen = "UPDATE tb_dokumen SET status_active = '0', change_by = '$id_user' WHERE id_dokumen = '$id_dokumen'";
             mysqli_query($conn, $hapus_dokumen);
         }
-
+        hapusFolderPengajuan($id_pengajuan);
+        
         if ($result){?>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <?php
@@ -547,6 +575,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
         }   
     }
 }
+
 function hapusAnggota($id_user, $id_pengajuan){
     global $conn;
     $id_userHapus = $_GET['id_userHapus'];
