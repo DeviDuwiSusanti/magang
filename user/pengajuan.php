@@ -238,22 +238,21 @@ if (!ISSET($_GET['id_pengajuanEdit'])){?>
 
                     <div class="mb-3">
                         <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
-                        <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
-                            <option value="" disabled selected>Pilih Jenis Pengajuan</option>
-                            <option value="magang">Magang</option>
-                            <option value="kerja praktek">Kerja Praktek</option>
-                            <option value="pkl">PKL</option>
-                            <option value="penelitian">Penelitian</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="kelompok_pribadi" class="form-label">Personil</label>
-                        <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi">
-                            <option value="" disabled selected>Pilih Personil</option>
-                            <option value="Kelompok">Kelompok</option>
-                            <option value="Pribadi">Pribadi</option>
-                        </select>
+                        <div class="d-flex gap-2">
+                            <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
+                                <option value="" disabled selected>-- pilih jenis pengajuan --</option>
+                                <option value="magang">Magang</option>
+                                <option value="kerja praktek">Kerja Praktek</option>
+                                <option value="pkl">PKL</option>
+                                <option value="penelitian">Penelitian</option>
+                            </select>
+                            <span class="align-self-center">-</span>
+                            <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi">
+                                <option value="" disabled selected>-- pilih personil --</option>
+                                <option value="Kelompok">Kelompok</option>
+                                <option value="Pribadi">Pribadi</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="mb-3">
@@ -261,27 +260,30 @@ if (!ISSET($_GET['id_pengajuanEdit'])){?>
                         <input type="number"  class="form-control" id="jumlah_anggota" name="jumlah_anggota">
                     </div>
 
-                    <!-- Tanggal Mulai dan Selesai -->
                     <div class="mb-3">
-                        <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai">
+                        <label class="form-label">Tanggal Pelaksanaan</label>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" placeholder="-- mulai --">
+                            <span class="align-self-center">-</span>
+                            <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" placeholder="-- selesai --">
+                        </div>
                     </div>
-
+                
                     <div class="mb-3">
-                        <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai">
-                    </div>
-
-                    <!-- Upload KTP -->
-                    <div class="mb-3">
-                        <label for="ktp" class="form-label">Upload KTP</label>
-                        <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf">
-                    </div>
-
-                    <!-- Upload CV -->
-                    <div class="mb-3">
-                        <label for="cv" class="form-label">Upload CV</label>
-                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
+                        <label class="form-label">Unggah CV dan KTP</label>
+                        <div class="d-flex gap-2">
+                            <div class="w-100 position-relative">
+                                <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
+                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('ktp')">&times;</button>
+                                <small class="form-text text-muted">Upload KTP (.pdf)</small>
+                            </div>
+                            <span class="align-self-center"></span>
+                            <div class="w-100 position-relative">
+                                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
+                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('ktp')">&times;</button>
+                                <small class="form-text text-muted">Upload CV (.pdf)</small>
+                            </div>
+                        </div>
                     </div>
 
                     <button type="submit" id="submitButton" name="pengajuan_pribadi" class="btn btn-success btn-sm" style="display: inline-block;" onclick="validateForm(event)">Kirim</button>
@@ -369,7 +371,6 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                             }
                             ?>
                         </select>
-
                     </div>
 
                     <div class="mb-3">
@@ -389,28 +390,35 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                             <option value="penelitian">Penelitian</option>
                         </select>
                     </div>
-                    <!-- Tanggal Mulai dan Selesai -->
-                    <div class="mb-3">
-                        <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                        <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= !empty($pengajuan['tanggal_mulai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_mulai'])) : '' ?>">
-                    </div>
 
                     <div class="mb-3">
-                        <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
-                        <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= !empty($pengajuan['tanggal_selesai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_selesai'])) : '' ?>">
+                        <label class="form-label">Tanggal Pelaksanaan</label>
+                        <div class="d-flex gap-2">
+                            <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= !empty($pengajuan['tanggal_mulai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_mulai'])) : '' ?>">
+                            <span class="align-self-center">-</span>
+                            <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= !empty($pengajuan['tanggal_selesai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_selesai'])) : '' ?>">
+                        </div>
                     </div>
-
+                
                     <div class="mb-3">
-                        <label for="ktp" class="form-label">Upload KTP</label>
-                        <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf">
-                        <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[0]['file_path']) ?>" target="_blank">Lihat KTP</a></p>
-                    </div>
+                        <label class="form-label">Unggah CV dan KTP</label>
+                        <div class="d-flex gap-2">
+                            <!-- Upload KTP -->
+                            <div class="w-100 position-relative">
+                                <input type="file" class="form-control pe-5" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
+                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('ktp')">&times;</button>
+                                <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[0]['file_path']) ?>" target="_blank">Lihat KTP</a></p>
+                            </div>
 
-                    <!-- Upload CV -->
-                    <div class="mb-3">
-                        <label for="cv" class="form-label">Upload CV</label>
-                        <input type="file" class="form-control" id="cv" name="cv" accept=".pdf">
-                        <p>Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
+                            <span class="align-self-center"></span>
+
+                            <!-- Upload CV -->
+                            <div class="w-100 position-relative">
+                                <input type="file" class="form-control pe-5" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
+                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('cv')">&times;</button>
+                                <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
+                            </div>
+                        </div>
                     </div>
 
                     <button type="submit" name="update_pengajuan" class="btn btn-success btn-sm">Update</button>
@@ -442,7 +450,37 @@ if (ISSET($_GET['id_pengajuanEdit'])){
     </div>
 </div>
 
+<!-- Melihat preview dan hapus dokumen -->
+<script>
+    const previewPDF = input => {
+        const file = input.files[0];
+        if (file && file.type === "application/pdf") {
+            window.open(URL.createObjectURL(file), "_blank");
+        }
+    };
 
+    document.getElementById("ktp").addEventListener("click", function () {
+        if (this.files.length > 0) previewPDF(this);
+    });
+
+    document.getElementById("cv").addEventListener("click", function () {
+        if (this.files.length > 0) previewPDF(this);
+    });
+
+    function clearFile(id) {
+        const input = document.getElementById(id);
+        input.value = '';
+    }
+
+    function handleFileLabel(id) {
+        const input = document.getElementById(id);
+        if (input.files.length > 0) {
+        console.log(`File dipilih di #${id}:`, input.files[0].name);
+        }
+    }
+</script>
+
+<!-- hapus pengajuan -->
 <script>
 document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
     event.preventDefault(); // Mencegah form langsung terkirim
@@ -474,6 +512,7 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
         });
     });
 </script>
+
 <script>
 $(document).ready(function() {
     // Ambil bidang saat instansi berubah

@@ -49,7 +49,7 @@ $pemagang_2 = query("SELECT SUM(
         JOIN tb_instansi 
             ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
         WHERE tb_instansi.id_instansi = '$id_instansi'
-        AND tb_pengajuan.status_pengajuan NOT IN ('0', '1', '6')
+        AND tb_pengajuan.status_pengajuan NOT IN ('1', '3')
     ")[0];
 // ========================== end of admin insatansi level 2 ===============================
 

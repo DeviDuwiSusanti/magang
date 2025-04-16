@@ -676,24 +676,106 @@ p {
     padding: 0.75rem 1.5rem;
 }
 
-/* Default: Sidebar disembunyikan di layar kecil */
 @media (max-width: 992px) {
     #sidebar {
         position: fixed;
-        left: -250px; /* Sembunyikan sidebar */
-        width: 250px;
-        height: 100%;
-        background: #343a40;
+        top: 0;
+        left: -260px; /* sembunyi dulu */
+        height: 100vh;
+        z-index: 1050;
+        background-color: #0e223e;
         transition: left 0.3s ease-in-out;
     }
 
     #sidebar.show-sidebar {
-        left: 0; /* Munculkan sidebar */
+        left: 0;
+    }
+
+    .main {
+        margin-left: 0 !important;
     }
 }
+
 
 /* Label modal */
 
 .select2-container--open .select2-dropdown {
     z-index: 9999 !important;
+}
+
+.navbar-greeting {
+    padding-left: 10px;
+}
+
+.greeting-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.clock-text {
+    font-size: 0.95rem;
+    color: #6c757d;
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 0.5px;
+    animation: blink 1s step-start infinite;
+}
+
+/* Dark Mode */
+body.dark-mode .greeting-text {
+    color: #f1f1f1;
+}
+
+body.dark-mode .clock-text {
+    color: #bbbbbb;
+}
+
+/* Animasi masuk */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Jam berkedip-kedip halus */
+@keyframes blink {
+    50% { opacity: 0.7; }
+}
+
+/* Responsive biar aman di mobile */
+@media (max-width: 576px) {
+    .greeting-text {
+        font-size: 1rem;
+    }
+
+    .clock-text {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-greeting {
+        text-align: center;
+        padding-left: 0;
+        width: 100%;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .dropdown-menu {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .dropdown-menu .dropdown-item {
+        padding: 0.5rem 1rem;
+    }
+
+    .mode-toggle {
+        font-size: 1.3rem;
+        margin-top: 5px;
+    }
 }

@@ -73,9 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal" title="Tambah Bidang">
                 <i class="bi bi-plus-circle me-1"></i> Tambah Bidang
             </button>
+            <a href="admin2_print_bidang.php" target="_blank" class="btn btn-success btn-sm" title="Cetak Bidang"><i class="bi bi-printer me-1"></i> Cetak</a>
         </div>
         <div class="table-responsive-sm">
             <div class="bungkus-2">
@@ -118,7 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                         data-deskripsi="<?= $bd['deskripsi_bidang'] ?>"
                                         data-kriteria="<?= $bd['kriteria_bidang'] ?>"
                                         data-kuota="<?= $bd['kuota_bidang'] ?>"
-                                        data-dokumen="<?= $bd['dokumen_prasyarat'] ?>">
+                                        data-dokumen="<?= $bd['dokumen_prasyarat'] ?>"
+                                        title="Edit Data Bidang">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" onclick="hapus_bidang_admin_instansi('<?= $bd['id_bidang'] ?>')">
@@ -257,4 +259,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
     //     $('#myTable_length').appendTo('#entries-wrapper');
     //     $('#myTable_filter').appendTo('#search-wrapper');
     // });
+
+    // Inisialisasi tooltip secara global
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
 </script>
