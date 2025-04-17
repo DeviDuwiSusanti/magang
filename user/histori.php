@@ -3,6 +3,9 @@ include "../koneksi.php";
 include "../layout/sidebarUser.php";
 include "functions.php";
 
+// Initialize user ID from session
+$id_user = $_SESSION['id_user'];  // <-- ADD THIS LINE HERE
+
 // Ambil daftar pengajuan magang berdasarkan id_user
 if ($_SESSION['ketua']) { // Ketua kelompok level (3)
     $sql = "SELECT * 
@@ -58,11 +61,11 @@ $no = 1;
                     $query1 = mysqli_query($conn, $sql1);
                     $detail = mysqli_fetch_assoc($query1);
 
-                    // Query Detail Profile User
+                    // Query Detail Profile User - perbaikan
                     $sql2 = "SELECT * FROM tb_profile_user pu 
-                             INNER JOIN tb_user u ON pu.id_user = u.id_user 
-                             INNER JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
-                             WHERE pu.id_user = '$id_user'";
+                            INNER JOIN tb_user u ON pu.id_user = u.id_user 
+                            INNER JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
+                            WHERE pu.id_user = '$id_user'";
                     $query2 = mysqli_query($conn, $sql2);
                     $profile = mysqli_fetch_assoc($query2);
                 ?>
