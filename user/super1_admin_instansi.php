@@ -7,9 +7,9 @@
 
     if(isset($_POST["generate_admin_instansi"])) {
         if(generate_admin_instansi($_POST) > 0) { ?>
-            <script>generate_admin_instansi_success()</script>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Generate Admin Instansi Berhasil", "super1_admin_instansi.php"); </script>
         <?php } else { ?>
-            <script>generate_admin_instansi_failed()</script>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Generate Admin Instansi Gagal", "super1_admin_instansi.php"); </script>
         <?php }
     }
 ?>

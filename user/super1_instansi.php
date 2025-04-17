@@ -6,26 +6,26 @@
     if(isset($_GET["id_instansi_ini"])) {
         $id_instansi = $_GET["id_instansi_ini"];
         
-        if(hapus_instansi($id_instansi, $id_user)) { 
-            echo "<script>hapus_instansi_super_admin_success()</script>";
-        } else { 
-            echo "<script>hapus_instansi_super_admin_gagal()</script>";
-        }
+        if(hapus_instansi($id_instansi, $id_user)) { ?>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data Instansi Berhasil", "super1_instansi.php"); </script>
+        <?php  } else {  ?>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data Instansi Gagal", "super1_instansi.php"); </script>
+        <?php  }
     }
 
     if(isset($_POST["tambah_instansi"])) {
         if(tambah_instansi_super_admin($_POST) > 0) { ?>
-            <script>tambah_instansi_super_admin_success()</script>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Instansi Berhasil", "super1_instansi.php"); </script>
         <?php } else { ?>
-            <script>tambah_instansi_super_admin_gagal()</script>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Instansi Gagal", "super1_instansi.php"); </script>
         <?php }
     }
 
     if(isset($_POST["edit_instansi"])) {
         if(edit_instansi_super_admin($_POST) > 0) { ?>
-            <script>edit_instansi_super_admin_success()</script>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data Instansi Berhasil", "super1_instansi.php"); </script>
         <?php } else { ?>
-            <script>edit_instansi_super_admin_gagal()</script>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data Instansi Gagal", "super1_instansi.php"); </script>
         <?php }
     }
 ?>

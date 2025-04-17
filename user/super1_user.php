@@ -3,38 +3,38 @@ include '../layout/sidebarUser.php';
 
 // Query untuk mengambil data user
 $user = query("SELECT u.*, p.*, i.nama_pendek, b.nama_bidang FROM tb_profile_user p 
-               JOIN tb_user u ON p.id_user = u.id_user 
-               LEFT JOIN tb_instansi i ON p.id_instansi = i.id_instansi
-               LEFT JOIN tb_bidang b ON p.id_bidang = b.id_bidang
-               WHERE u.status_active = '1' AND p.status_active = '1'");
+                JOIN tb_user u ON p.id_user = u.id_user 
+                LEFT JOIN tb_instansi i ON p.id_instansi = i.id_instansi
+                LEFT JOIN tb_bidang b ON p.id_bidang = b.id_bidang
+                WHERE u.status_active = '1' AND p.status_active = '1'");
 $no = 1;
 
 // Handle hapus data
 if (isset($_GET["id_user_ini"])) {
     $id_user_ini = $_GET["id_user_ini"];
-    if (hapus_user_super_admin($id_user_ini, $id_user)) { 
-        echo "<script>hapus_user_super_admin_success()</script>";
-    } else { 
-        echo "<script>hapus_user_super_admin_gagal()</script>";
-    }
+    if (hapus_user_super_admin($id_user_ini, $id_user)) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data User Berhasil", "super1_user.php"); </script>
+    <?php } else { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data User Gagal", "super1_user.php"); </script>
+    <?php }
 }
 
 // Handle tambah data
 if (isset($_POST["tambah_admin_instansi"])) {
-    if (tambah_admin_instansi($_POST)) { 
-        echo "<script>tambah_user_super_admin_success()</script>";
-    } else { 
-        echo "<script>tambah_user_super_admin_gagal()</script>";
-    }
+    if (tambah_admin_instansi($_POST)) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data User Berhasil", "super1_user.php"); </script>
+    <?php } else { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data User Gagal", "super1_user.php"); </script>
+    <?php  }
 }
 
 // Handle edit data
 if (isset($_POST["edit_data_user"])) {
-    if (super_admin_edit($_POST)) { 
-        echo "<script>edit_user_super_admin_success()</script>";
-    } else { 
-        echo "<script>edit_user_super_admin_gagal()</script>";
-    }
+    if (super_admin_edit($_POST)) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data User Berhasil", "super1_user.php"); </script>
+    <?php } else { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data User Gagal", "super1_user.php"); </script>
+    <?php }
 }
 ?>
 
