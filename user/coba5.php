@@ -48,7 +48,7 @@ $query = mysqli_query($conn, $sql);
 
         <?php if (!$sembunyikan_tombol): ?>
             <div class="d-flex justify-content-end mb-4">
-                <a href="?pengajuanBaru=<?= '1' ?>" class="btn btn-primary">Tambah Pengajuan</a>
+                <a href="pengajuan.php" class="btn btn-primary">Tambah Pengajuan</a>
             </div>
         <?php endif; ?>
 
@@ -83,43 +83,24 @@ $query = mysqli_query($conn, $sql);
                                     $start_date = new DateTime($row['tanggal_mulai']);
                                     $end_date = new DateTime($row['tanggal_selesai']);
                                     $interval = $start_date->diff($end_date);
-
-                                    $bulan = $interval->m;
-                                    $hari = $interval->d;
-                                    $minggu = floor($hari / 7);
-
-                                    echo $bulan . " Bulan " . $minggu . " Minggu";
+                                    echo $interval->m . " Bulan " . $interval->d . " Hari";
                                 } else {
                                     echo "Durasi Tidak Diketahui";
                                 } 
                             ?>
                         </td>
                         <td class="text-center">
-                            <!-- Tombol Detail -->
-                            <a href="#" class="btn btn-sm btn-primary" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#modalDetail<?= $row['id_pengajuan']; ?>">
-                                <i class="bi bi-eye"></i>
+                            <a href="#" class="text-decoration-none" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#modalDetail<?= $row['id_pengajuan']; ?>">
+                                <i class="bi bi-eye" style="font-size: 20px;"></i>
+                            </a>
+                            
+                            <a href="?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-info">
+                                <i class="bi bi-people-fill me-1"></i>
                             </a>
 
-                            <?php
-                            $status_pengajuan = $row['status_pengajuan'];
-
-                            if ($status_pengajuan == 2): ?>
-                                <a href="persyaratan_daftar.php" class="btn btn-sm btn-success text-white" title="Upload Dokumen">
-                                    <i class="bi bi-upload"></i>
-                                </a>
-                            <?php endif; ?>
-
-                            <?php if ($status_pengajuan < 2 || $status_pengajuan > 5): ?>
-                                <a href="pengajuan.php?id_pengajuanEdit=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-warning text-white" title="Edit Pengajuan">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                            <?php endif; ?>
-
-                            <?php if ($status_pengajuan != 3 && $status_pengajuan != 5): ?>
-                                <a href="?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-info text-white" title="Lihat Anggota">
-                                    <i class="bi bi-people"></i>
-                                </a>
-                            <?php endif; ?>
+                            <a href="pengajuan.php?id_pengajuanEdit=<?= $id_pengajuan ?>">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </a>
                         </td>
                     </tr>
                     
@@ -155,10 +136,33 @@ $query = mysqli_query($conn, $sql);
                                     <p><strong>Bidang:</strong> <?= $detail['nama_bidang']; ?></p>
                                     <p><strong>Jenis Pengajuan:</strong> <?= $detail['jenis_pengajuan']; ?></p>
                                     <p><strong>Status Lamaran:</strong> <?= getStatusText($detail['status_pengajuan']); ?></p>
-                                    <p><strong>Durasi:</strong><?= isset($interval) ? $interval->m . " Bulan " . floor($interval->d / 7) . " Minggu" : "Durasi Tidak Diketahui"; ?></p>                                    <p><strong>Periode Magang:</strong> <?= formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']) ?> </p>
+                                    <p><strong>Durasi:</strong> <?= isset($interval) ? $interval->m . " Bulan " . $interval->d . " Hari" : "Durasi Tidak Diketahui"; ?></p>
+                                    <p><strong>Periode Magang:</strong> <?= formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']) ?> </p>
 
                                  <!-- Tombol Aksi dalam Modal -->
+                                 <?php 
+                                    $status_pengajuan = $row['status_pengajuan'];
+
+                                    // Atur class untuk tombol berdasarkan status pengajuan
+                                    $disable_upload = ($status_pengajuan != 2) ? 'btn-secondary disabled' : 'btn-primary';
+                                    $disable_edit = ($status_pengajuan >= 2 && $status_pengajuan <= 5) ? 'btn-secondary disabled' : 'btn-primary';
+                                    $disable_anggota = ( $status_pengajuan == 3 || $status_pengajuan == 5) ? 'btn-secondary disabled' : 'btn-primary';
+                                    ?>
+
                                     <div class="modal-footer flex-column align-items-start">
+                                        <div class="d-flex gap-2">
+                                            <a href="persyaratan_daftar.php" class="btn btn-sm <?= $disable_upload ?>">
+                                                <i class="bi bi-upload"></i> Dokumen
+                                            </a>
+
+                                            <a href="pengajuan.php?id_pengajuanEdit=<?= $id_pengajuan ?>" class="btn btn-sm <?= $disable_edit ?>">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+
+                                            <a href="detail_anggota.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-sm <?= $disable_anggota ?>">
+                                                <i class="bi bi-people"></i> Anggota
+                                            </a>
+                                        </div>
                                             <div class="d-flex justify-content-end w-100 mt-2">
                                                 <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
                                             </div>
@@ -181,6 +185,6 @@ $query = mysqli_query($conn, $sql);
 
 <?php 
 include "detail_anggota.php";
-// include "pengajuan2.php";
-include "../layout/footerDashboard.php"; ?>
+include "../layout/footerDashboard.php"; 
+?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

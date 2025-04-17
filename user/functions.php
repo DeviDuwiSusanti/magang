@@ -546,7 +546,7 @@ function hapusPengajuan($POST, $id_user){
 }
 
 // =========== ANGGOTA ===========
-function updateAnggota($POST, $id_user, $id_pengajuan){
+function updateAnggota($POST, $id_user){
     global $conn;
     $id_userUpdate = $POST['id_user'];
     $nama_anggota = $POST['nama_user'];
@@ -560,7 +560,7 @@ function updateAnggota($POST, $id_user, $id_pengajuan){
     }
 
     if (mysqli_query($conn, $sqlUpdate2)){
-        showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+        showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "status_pengajuan.php");
         exit();
     }else{
         showAlert('Gagal!', 'Data anggota gagal diupdate. Silakan coba lagi.', 'error');
@@ -582,7 +582,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     if (mysqli_query($conn, $sqlTambah)){
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
-            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "status_pengajuan.php");
             exit();
         }else{
             showAlert('Gagal!', 'Data anggota gagal di tambah. Silakan coba lagi.', 'error');
@@ -603,7 +603,7 @@ function hapusAnggota($id_user, $id_pengajuan){
             AND tb_profile_user.id_pengajuan = '$id_pengajuan'";
 
     if (mysqli_query($conn, $sql2)){
-        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "status_pengajuan.php");
         exit();
     }else{
         showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');

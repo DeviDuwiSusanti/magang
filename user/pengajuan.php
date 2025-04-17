@@ -236,19 +236,21 @@ if (!ISSET($_GET['id_pengajuanEdit'])){?>
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
-                        <div class="d-flex gap-2">
+                    <div class="d-flex gap-4">
+                        <div class="mb-3" style="flex: 1;">
+                            <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
                             <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
-                                <option value="" disabled selected>-- pilih jenis pengajuan --</option>
+                                <option value="" disabled selected> -- Pilih Pengajuan --</option>
                                 <option value="magang">Magang</option>
                                 <option value="kerja praktek">Kerja Praktek</option>
                                 <option value="pkl">PKL</option>
                                 <option value="penelitian">Penelitian</option>
                             </select>
-                            <span class="align-self-center">-</span>
+                        </div>
+                        <div class="mb-3" style="flex: 1;">
+                            <label for="kelompok_pribadi" class="form-label">Personil</label>
                             <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi">
-                                <option value="" disabled selected>-- pilih personil --</option>
+                                <option value="" disabled selected> -- Pilih Personil --</option>
                                 <option value="Kelompok">Kelompok</option>
                                 <option value="Pribadi">Pribadi</option>
                             </select>
@@ -269,20 +271,19 @@ if (!ISSET($_GET['id_pengajuanEdit'])){?>
                         </div>
                     </div>
                 
-                    <div class="mb-3">
-                        <label class="form-label">Unggah CV dan KTP</label>
-                        <div class="d-flex gap-2">
-                            <div class="w-100 position-relative">
-                                <input type="file" class="form-control" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
-                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('ktp')">&times;</button>
-                                <small class="form-text text-muted">Upload KTP (.pdf)</small>
-                            </div>
-                            <span class="align-self-center"></span>
-                            <div class="w-100 position-relative">
-                                <input type="file" class="form-control" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
-                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('ktp')">&times;</button>
-                                <small class="form-text text-muted">Upload CV (.pdf)</small>
-                            </div>
+                    <div class="d-flex gap-4">
+                        <!-- KTP -->
+                        <div class="mb-3 position-relative" style="flex: 1;">
+                            <label for="ktp" class="form-label">Unggah KTP</label>
+                            <input type="file" class="form-control pe-5" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
+                            <small id="ktp-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('ktp')"></small>
+                        </div>
+
+                        <!-- CV -->
+                        <div class="mb-3 position-relative" style="flex: 1;">
+                            <label for="cv" class="form-label">Unggah CV</label>
+                            <input type="file" class="form-control pe-5" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
+                            <small id="cv-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('cv')"></small>
                         </div>
                     </div>
 
@@ -400,24 +401,21 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                         </div>
                     </div>
                 
-                    <div class="mb-3">
-                        <label class="form-label">Unggah CV dan KTP</label>
-                        <div class="d-flex gap-2">
-                            <!-- Upload KTP -->
-                            <div class="w-100 position-relative">
-                                <input type="file" class="form-control pe-5" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
-                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('ktp')">&times;</button>
-                                <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[0]['file_path']) ?>" target="_blank">Lihat KTP</a></p>
-                            </div>
+                    <div class="d-flex gap-4">
+                        <!-- KTP -->
+                        <div class="mb-3 position-relative" style="flex: 1;">
+                            <label for="ktp" class="form-label">Unggah KTP</label>
+                            <input type="file" class="form-control pe-5" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
+                            <small id="ktp-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('ktp')"></small>
+                            <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[0]['file_path']) ?>" target="_blank">Lihat KTP</a></p>
+                        </div>
 
-                            <span class="align-self-center"></span>
-
-                            <!-- Upload CV -->
-                            <div class="w-100 position-relative">
-                                <input type="file" class="form-control pe-5" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
-                                <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-50 end-0 translate-middle-y me-2" onclick="clearFile('cv')">&times;</button>
-                                <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
-                            </div>
+                        <!-- CV -->
+                        <div class="mb-3 position-relative" style="flex: 1;">
+                            <label for="cv" class="form-label">Unggah CV</label>
+                            <input type="file" class="form-control pe-5" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
+                            <small id="cv-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('cv')"></small>
+                            <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
                         </div>
                     </div>
 
@@ -452,33 +450,31 @@ if (ISSET($_GET['id_pengajuanEdit'])){
 
 <!-- Melihat preview dan hapus dokumen -->
 <script>
-    const previewPDF = input => {
-        const file = input.files[0];
-        if (file && file.type === "application/pdf") {
-            window.open(URL.createObjectURL(file), "_blank");
-        }
-    };
-
-    document.getElementById("ktp").addEventListener("click", function () {
-        if (this.files.length > 0) previewPDF(this);
-    });
-
-    document.getElementById("cv").addEventListener("click", function () {
-        if (this.files.length > 0) previewPDF(this);
-    });
-
-    function clearFile(id) {
-        const input = document.getElementById(id);
-        input.value = '';
-    }
-
     function handleFileLabel(id) {
         const input = document.getElementById(id);
+        const label = document.getElementById(`${id}-label`);
+
         if (input.files.length > 0) {
-        console.log(`File dipilih di #${id}:`, input.files[0].name);
+            label.textContent = input.files[0].name;
+        } else {
+            label.textContent = '';
+        }
+    }
+
+    function previewFile(id) {
+        const input = document.getElementById(id);
+        const file = input.files[0];
+
+        if (file) {
+            const fileURL = URL.createObjectURL(file);
+            const previewWindow = window.open(fileURL, '_blank');
+            previewWindow.focus();
+        } else {
+            alert("Tidak ada file yang dipilih untuk preview.");
         }
     }
 </script>
+
 
 <!-- hapus pengajuan -->
 <script>

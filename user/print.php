@@ -188,7 +188,7 @@ if (!$row) {
                     <td style="text-align: left;"><?= formatTanggalLengkapIndonesia($row2['tanggal_logbook']) ?></td>
                     <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
                     <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
-                    <td style="text-align: left;"><?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?> </td>
+                    <td><?= date('H:i', strtotime($row['jam_mulai'])) ?> - <?= date('H:i', strtotime($row['jam_selesai'])) ?></td>
                     <td style="text-align: left;"><img src="<?= $row2['foto_kegiatan'] ?>" alt="Gambar kegiatan"></td>
                     <td style="text-align: left;"><img src="<?= $row2['tanda_tangan'] ?>" alt="TTD"></td>
                 </tr>
@@ -199,7 +199,7 @@ if (!$row) {
         </tbody>
         <tfoot>
             <tr>
-                <th>Total Logbook</th>
+                <th>Total</th>
                 <td colspan="6"><?= $total_logbook ?> Logbook</td>
             </tr>
         </tfoot>
