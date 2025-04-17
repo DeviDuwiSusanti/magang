@@ -103,12 +103,11 @@ $query = mysqli_query($conn, $sql);
                             <?php
                             $status_pengajuan = $row['status_pengajuan'];
 
-                            if ($status_pengajuan == 2): ?>
-                                <a href="persyaratan_daftar.php" class="btn btn-sm btn-success text-white" title="Upload Dokumen">
-                                    <i class="bi bi-upload"></i>
-                                </a>
+                           if ($status_pengajuan == 2): ?>
+                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#daftarDokumenModal">
+                                <i class="bi bi-upload"></i></button>
                             <?php endif; ?>
-
+                            
                             <?php if ($status_pengajuan < 2 || $status_pengajuan > 5): ?>
                                 <a href="pengajuan.php?id_pengajuanEdit=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-warning text-white" title="Edit Pengajuan">
                                     <i class="bi bi-pencil-square"></i>
@@ -180,6 +179,7 @@ $query = mysqli_query($conn, $sql);
 </div>
 
 <?php 
+include "persyaratan_daftar.php";
 include "detail_anggota.php";
 // include "pengajuan2.php";
 include "../layout/footerDashboard.php"; ?>
