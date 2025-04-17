@@ -110,7 +110,7 @@ $query = mysqli_query($conn, $sql);
                             <?php endif; ?>
 
                             <?php if ($status_pengajuan < 2 || $status_pengajuan > 5): ?>
-                                <a href="pengajuan.php?id_pengajuanEdit=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-warning text-white" title="Edit Pengajuan">
+                                <a href="?id_pengajuanEdit=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-warning text-white" title="Edit Pengajuan">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                             <?php endif; ?>
@@ -181,6 +181,6 @@ $query = mysqli_query($conn, $sql);
 
 <?php 
 include "detail_anggota.php";
-// include "pengajuan2.php";
+include "pengajuan2.php";
 include "../layout/footerDashboard.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
