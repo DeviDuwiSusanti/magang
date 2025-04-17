@@ -86,6 +86,18 @@ function deleteOldDocument($id_dokumen) {
     }
 }
 
+function deleteGambarLogbook($id_logbook){
+    global $conn;
+    // Ambil file lama dari database
+    $query = "SELECT foto_kegiatan FROM tb_logbook 
+               WHERE id_logbook = '$id_logbook'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    $file_path = $row['foto_kegiatan'];
+    if (file_exists($file_path)) {
+        unlink($file_path); // Hapus file fisik
+    }
+}
 function hapusFolderPengajuan($id_pengajuan) {
     $folder = "../assets/doc/$id_pengajuan/";
 
@@ -287,7 +299,14 @@ function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
     $jam_selesai = $POST['jam_selesai'];
     $ttd = $POST['ttd'];
     
-    $uploadedFoto = uploadFoto($FILES['gambar_kegiatan'], '../assets/img/logbook/');
+     // Buat folder user jika belum ada
+     $user_folder = '../assets/img/logbook/' . $id_user . '/';
+     if (!file_exists($user_folder)) {
+         mkdir($user_folder, 0777, true);
+     }
+     
+     // Upload foto ke folder user
+    $uploadedFoto = uploadFoto($FILES['gambar_kegiatan'], $user_folder);
     $target_file = $uploadedFoto['path'];
 
     $id_logbook = generateLogbookId($conn, $id_pengajuan);
@@ -308,10 +327,11 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
     global $conn;
     // Inisialisasi foto_kegiatan (default: data lama)
     $foto_kegiatan = $row['foto_kegiatan'];
+    deleteGambarLogbook($id_logbook);
 
     // Jika ada file baru diunggah
     if (!empty($FILES['gambar_kegiatan']['name'])) {
-        $uploadResult = uploadFoto($FILES['gambar_kegiatan'], "../assets/img/logbook/");
+        $uploadResult = uploadFoto($FILES['gambar_kegiatan'], '../assets/img/logbook/' . $id_user . '/');
         if ($uploadResult) {
             $foto_kegiatan = $uploadResult['path'];
         }
@@ -341,6 +361,7 @@ function hapusLogbook($id_user){
     $sql2 =  "UPDATE tb_logbook SET status_active = '0', change_by = '$id_user' WHERE id_logbook = '$id_logbook'";
     $query2 = mysqli_query($conn, $sql2);
     if ($query2) {
+        deleteGambarLogbook($id_logbook);
         showAlert('Berhasil!', 'Logbook Berhasil Dihapus', 'success', "logbook_daftar.php");
         exit();
     } else {
@@ -432,7 +453,6 @@ function inputPengajuan($POST, $FILES, $id_user){
         }
     }
     if ($query5) {?>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <?php
         showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "status_pengajuan.php");
         exit();
@@ -496,7 +516,6 @@ function updatePengajuan($POST, $FILES, $id_user){
         }
     } 
     ?>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php
      if ($query_update1){
         showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
@@ -535,7 +554,6 @@ function hapusPengajuan($POST, $id_user){
         hapusFolderPengajuan($id_pengajuan);
         
         if ($result){?>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <?php
             unset($_SESSION['id_pengajuan']);
             unset($_SESSION['status_pengajuan']);

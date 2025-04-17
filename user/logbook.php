@@ -1,5 +1,4 @@
-<?php 
-include "../layout/sidebarUser.php";
+<?php include "../layout/sidebarUser.php";
 include "functions.php"; 
 confirmDeleteScript();
 
@@ -13,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['input_logbook'])) {
     inputLogbook($_POST, $_FILES, $id_pengajuan, $id_user);
 }
 
-// =============== QUERY UPDATE====================
+// =============== QUERY UPDATE ====================
 $id_logbook_edit = null;
 $dataLama = null;
 
@@ -39,7 +38,7 @@ $query3 = mysqli_query($conn, $sql3);
 $status_pengajuan = mysqli_fetch_assoc($query3)['status_pengajuan'];
 
 // akses anggota
-$sql_anggota = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user AND u.status_active = '1'";
+$sql_anggota = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user  AND u.status_active = '1'";
 $query_anggota = mysqli_query($conn, $sql_anggota);
 
 // HAPUS LOGBOOK
@@ -86,7 +85,7 @@ if (isset($_GET['id_logbook_hapus'])) {
                     ?>
                 </span>
             </li>
-        </ol>
+            </ol>
         
         <div class="mb-4 dropdown-divider"></div>
         
@@ -102,10 +101,10 @@ if (isset($_GET['id_logbook_hapus'])) {
                     <?php
                     }
                     ?>
-                    <a href="javascript:void(0)" onclick="printInline('<?= $id_pengajuan ?>')" class="btn btn-success">
-                        <i class="bi bi-printer me-1"></i> Cetak
-                    </a>
-
+                <a href="print.php?id_pengajuan=<?= $id_pengajuan ?>" class="btn btn-success">
+                    <i class="bi bi-printer me-1"></i>
+                    Cetak
+                </a>
             <?php          
             }
             ?>
@@ -138,8 +137,9 @@ if (isset($_GET['id_logbook_hapus'])) {
                                 <td><?= formatTanggalLengkapIndonesia($row['tanggal_logbook']) ?></td>
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
-                                <td><?= date('H:i', strtotime($row['jam_mulai'])) ?> - <?= date('H:i', strtotime($row['jam_selesai'])) ?></td>
+                                <td><?= $row['jam_mulai'] ?> - <?= $row['jam_selesai'] ?></td>
                                 <td><img src="<?= $row['foto_kegiatan'] ?>" alt="" style="width: 150px; height: 100px;"></td>
+
                                 <td><img src="<?= $row['tanda_tangan'] ?>" alt="TTD" style="width: 150px; height: 100px;"></td>
                                 <?php
                                 if ($status_pengajuan != '5' && $id_user_anggota == $id_user){?> 
@@ -189,18 +189,14 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                         <label for="tanggal" class="form-label">Tanggal</label>
                         <input type="date" class="form-control" id="tanggal" name="tanggal" min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
                     </div>
-
-                    <div class="d-flex gap-4">
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="kegiatan" class="form-label">Kegiatan</label>
-                            <textarea class="form-control" id="kegiatan" name="kegiatan" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="keterangan" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
-                        </div>
+                    <div class="mb-3">
+                        <label for="kegiatan" class="form-label">Kegiatan</label>
+                        <input type="text" class="form-control" id="kegiatan" name="kegiatan">
                     </div>
-
+                    <div class="mb-3">
+                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
+                    </div>
                     <div class="mb-3">
                         <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
                         <div class="d-flex gap-2">
@@ -209,7 +205,6 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                             <input type="time" class="form-control" id="jam_selesai" name="jam_selesai">
                         </div>
                     </div>
-
                     <div class="d-flex gap-4">
                         <div class="mb-3" style="flex: 1;">
                             <label for="gambar_kegiatan" class="form-label">Unggah Gambar Kegiatan (Landscape Only)</label>
@@ -223,7 +218,6 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                             <input type="hidden" name="ttd" id="signature-data">
                         </div>
                     </div>
-
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" name="input_logbook" class="btn btn-primary"><i class="bi bi-floppy me-1"></i>Simpan</button>
@@ -591,46 +585,5 @@ $(document).ready(function() {
         });
     });
 });
-</script>
-
-<!-- ====== ajax untuk print ====== -->
-<script>
-function printInline(id_pengajuan) {
-    fetch('print.php?id_pengajuan=' + id_pengajuan)
-        .then(response => response.text())
-        .then(html => {
-            const printArea = document.createElement('div');
-            printArea.id = 'print-area';
-            printArea.innerHTML = html;
-            printArea.style.display = 'none';
-
-            document.body.appendChild(printArea);
-
-            const originalContent = document.body.innerHTML;
-            document.body.innerHTML = printArea.innerHTML;
-
-            // Simpan fungsi redirect di variable supaya bisa dihapus kalau perlu
-            const redirectAfterPrint = () => {
-                // Balikin isi halaman sebelumnya
-                document.body.innerHTML = originalContent;
-                // Hapus elemen sementara
-                document.getElementById('print-area')?.remove();
-                // Redirect ke halaman daftar logbook
-                window.location.href = 'logbook_daftar.php';
-            };
-
-            window.onafterprint = redirectAfterPrint;
-
-            // Paksa browser menunggu 100ms agar DOM siap sebelum print
-            setTimeout(() => {
-                window.print();
-            }, 100);
-        })
-        .catch(err => {
-            console.error('Gagal memuat halaman cetak:', err);
-            Swal.fire('Gagal!', 'Tidak bisa menampilkan cetakan.', 'error');
-        });
-}
-
 </script>
 
