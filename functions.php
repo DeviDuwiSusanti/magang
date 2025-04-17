@@ -158,13 +158,19 @@ function generateIdPendidikan_universitas($nama_pendidikan, $fakultas, $jurusan)
     global $conn;
     
     // 1. Cek apakah kombinasi data sudah ada
-    $query = "SELECT id_pendidikan FROM tb_pendidikan 
+    $query = "SELECT id_pendidikan, status_active FROM tb_pendidikan 
                 WHERE nama_pendidikan = '$nama_pendidikan' 
                 AND fakultas = '$fakultas' 
                 AND jurusan = '$jurusan'";
     $result = mysqli_query($conn, $query);
     if(mysqli_num_rows($result) > 0) {
-        return 0;
+        $row = mysqli_fetch_assoc($result);
+        if($row["status_active"] == 0) {
+            return 0;
+        } 
+        else {
+            return 1;
+        }
     }
     
     // 2. Generate kode nama pendidikan (3 digit pertama)
@@ -228,7 +234,7 @@ function generateIdPendidikan_universitas($nama_pendidikan, $fakultas, $jurusan)
 function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
     global $conn;
 
-    $query_check = "SELECT id_pendidikan FROM tb_pendidikan 
+    $query_check = "SELECT id_pendidikan, status_active FROM tb_pendidikan 
                     WHERE nama_pendidikan = '$nama_pendidikan' 
                     AND jurusan = '$jurusan' 
                     AND fakultas IS NULL 
@@ -236,7 +242,11 @@ function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
     $result_check = mysqli_query($conn, $query_check);
     if (mysqli_num_rows($result_check) > 0) {
         $row = mysqli_fetch_assoc($result_check);
-        return $row["id_pendidikan"];
+        if($row["status_active"] == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     // 2. Cek apakah nama_pendidikan sudah pernah ada
@@ -278,15 +288,19 @@ function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
     function tambah_data_sekolah($POST) {
         global $conn;
         $id_user = $POST["id_user"];
+        $alamat_pendidikan = $POST["alamat_pendidikan"];
         $nama_sekolah = $POST["nama_sekolah_hidden"];
         $jurusan_sekolah = $POST["jurusan_sekolah_hidden"];
-        $alamat_pendidikan = $POST["alamat_pendidikan"];
         $id_pendidikan = generateIdPendidikan_sekolah($nama_sekolah, $jurusan_sekolah);
-        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_sekolah', '$jurusan_sekolah', '$alamat_pendidikan', '$id_user')";
         if($id_pendidikan == 0) {
-            return 0;
+            return 404;
         }
-        if($query) {
+        if($id_pendidikan == 1) {
+            return 405;
+        }
+
+        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_sekolah', '$jurusan_sekolah', '$alamat_pendidikan', '$id_user')";
+        if(mysqli_query($conn, $query)) {
             return mysqli_affected_rows($conn);
         } else {
             return 0;
@@ -303,11 +317,15 @@ function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
         $jurusan_universitas = $POST["jurusan_universitas_hidden"];
         $alamat_pendidikan = $POST["alamat_pendidikan"];
         $id_pendidikan = generateIdPendidikan_universitas($nama_universitas, $fakultas_universitas, $jurusan_universitas);
-        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, fakultas, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_universitas', '$jurusan_universitas', '$alamat_pendidikan', '$id_user')";
         if($id_pendidikan == 0) {
-            return 0;
+            return 404;
         }
-        if($query) {
+        if($id_pendidikan == 1) {
+            return 405;
+        }
+
+        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, fakultas, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_universitas', '$fakultas_universitas', '$jurusan_universitas', '$alamat_pendidikan', '$id_user')";
+        if(mysqli_query($conn, $query)) {
             return mysqli_affected_rows($conn);
         } else {
             return 0;

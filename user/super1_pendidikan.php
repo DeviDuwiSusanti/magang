@@ -24,23 +24,55 @@ if(isset($_POST["edit_pendidikan"])) {
     <?php }
 }
 
-if(isset($_POST["tambah_sekolah"])) {
-    if (tambah_data_sekolah($POST) > 0) {
+if (isset($_POST["tambah_sekolah"])) {
+    $result = tambah_data_sekolah($_POST);
 
-    }
+    if ($result == 404) { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php");
+        </script>
+    <?php } elseif ($result == 405) { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php");
+        </script>
+    <?php } elseif ($result > 0) { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php");
+        </script>
+    <?php } else { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php");
+        </script>
+    <?php }
 }
 
 
+if (isset($_POST["tambah_universitas"])) {
+    $result = tambah_data_universitas($_POST);
 
-if(isset($_POST["tambah_universitas"])) {
-    if (tambah_data_sekolah($POST) > 0) {
-
-    }
+    if ($result == 404) { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php");
+        </script>
+    <?php } elseif ($result == 405) { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php");
+        </script>
+    <?php } elseif ($result > 0) { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php");
+        </script>
+    <?php } else { ?>
+        <script>
+        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php");
+        </script>
+    <?php }
 }
+
 
 // Ambil semua jurusan berdasarkan sekolah yang tersedia
 $sekolahData = [];
-$rows = query("SELECT nama_pendidikan, jurusan FROM tb_pendidikan WHERE fakultas IS NULL OR fakultas = ''");
+$rows = query("SELECT nama_pendidikan, jurusan FROM tb_pendidikan WHERE (fakultas IS NULL OR fakultas = '') AND status_active = '1' ");
 
 foreach ($rows as $row) {
     $nama = $row['nama_pendidikan'];
@@ -58,7 +90,7 @@ foreach ($rows as $row) {
 
 // Struktur data perguruan tinggi
 $universitasData = [];
-$perguruan_tinggi = query("SELECT * FROM tb_pendidikan WHERE fakultas IS NOT NULL AND fakultas != '' ORDER BY nama_pendidikan ASC");
+$perguruan_tinggi = query("SELECT * FROM tb_pendidikan WHERE (fakultas IS NOT NULL AND fakultas != '') AND status_active = '1' ");
 foreach ($perguruan_tinggi as $kampus) {
     $universitasData[$kampus['nama_pendidikan']][$kampus['fakultas']][] = [
         'id_pendidikan' => $kampus['id_pendidikan'],
@@ -82,20 +114,15 @@ foreach ($perguruan_tinggi as $kampus) {
             </ol>
         </div>
         <div class="container mt-5 mb-5">                        
-            <!-- Tambah Data Button -->
+            <!-- Tambah Data Buttons (Tanpa Dropdown) -->
             <div class="mb-3 text-end">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-plus-circle me-1"></i>Tambah Data
+                    <button type="button" class="btn btn-success me-2" id="tambahSekolah">
+                        <i class="bi bi-plus-circle me-1"></i>Sekolah
                     </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#" class="dropdown-item" id="tambahSekolah">Sekolah</a>
-                        </li>
-                        <li>
-                            <a href="#" class="dropdown-item" id="tambahUniversitas">Perguruan Tinggi</a>
-                        </li>
-                    </ul>
+                    <button type="button" class="btn btn-primary" id="tambahUniversitas">
+                        <i class="bi bi-plus-circle me-1"></i>Perguruan Tinggi
+                    </button>
                 </div>
             </div>
 

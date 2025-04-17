@@ -104,6 +104,29 @@ function alertSuccessEdit(message, redirectUrl) {
   });
 }
 
+
+
+
+
+
+
+function alert_berhasil_gagal_super_admin(icon, title, text, link) {
+  Swal.fire({
+    icon : icon,
+    title : title,
+    text : text,
+    confirmButtonColor : "#3085d6",
+    confirmButtonText : "OK",
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = link;
+    }
+  })
+}
+
+
+
+
 // Edit profile admin instansi
 function edit_profile_admin_instansi_success() {
   Swal.fire({
