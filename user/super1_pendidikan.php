@@ -24,6 +24,19 @@ if(isset($_POST["edit_pendidikan"])) {
     <?php }
 }
 
+if(isset($_POST["tambah_sekolah"])) {
+    if (tambah_data_sekolah($POST) > 0) {
+
+    }
+}
+
+
+
+if(isset($_POST["tambah_universitas"])) {
+    if (tambah_data_sekolah($POST) > 0) {
+
+    }
+}
 
 // Ambil semua jurusan berdasarkan sekolah yang tersedia
 $sekolahData = [];
@@ -141,7 +154,8 @@ foreach ($perguruan_tinggi as $kampus) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formEditPendidikan" action="" method="POST" enctype="multipart/form-data">
+                    <form id="formEditPendidikan" action="" method="POST">
+                        <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                         <input type="hidden" name="id_pendidikan" id="id_pendidikan_edit">
                         <input type="hidden" name="id_user" id="id_user_edit">
                         <div class="mb-3">
@@ -182,7 +196,8 @@ foreach ($perguruan_tinggi as $kampus) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="proses_tambah_sekolah.php" method="POST">
+                    <form action="" method="POST">
+                    <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                     <div class="mb-3">
                         <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
                         <select class="form-control select2" id="nama_sekolah" name="nama_sekolah" required>
@@ -204,9 +219,14 @@ foreach ($perguruan_tinggi as $kampus) {
                         <input type="hidden" id="jurusan_sekolah_hidden" name="jurusan_sekolah_hidden">
                     </div>
 
+                    <div class="mb-3">
+                        <label for="alamat_pendidikan" class="form-label">Alamat </label>
+                        <textarea name="alamat_pendidikan" id="almaat_pendidikan" class="form-control"></textarea>
+                    </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" name="tambah_sekolah" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
                 </div>
@@ -223,7 +243,8 @@ foreach ($perguruan_tinggi as $kampus) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="proses_tambah_universitas.php" method="POST">
+                    <form action="" method="POST">
+                    <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                         <div class="mb-3">
                             <label for="nama_universitas" class="form-label">Nama Universitas</label>
                             <select class="form-control select2" id="nama_universitas" name="nama_universitas" required>
@@ -250,15 +271,22 @@ foreach ($perguruan_tinggi as $kampus) {
                             </select>
                             <input type="hidden" id="jurusan_universitas_hidden" name="jurusan_universitas_hidden">
                         </div>
+
+                        <div class="mb-3">
+                            <label for="alamat_pendidikan" class="form-label">Alamat </label>
+                            <textarea name="alamat_pendidikan" id="almaat_pendidikan" class="form-control"></textarea>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" name="tambah_universitas" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+    
 
     <?php include "../layout/footerDashboard.php" ?>
 
