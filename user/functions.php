@@ -432,7 +432,6 @@ function inputPengajuan($POST, $FILES, $id_user){
         }
     }
     if ($query5) {?>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <?php
         showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "status_pengajuan.php");
         exit();
@@ -496,7 +495,6 @@ function updatePengajuan($POST, $FILES, $id_user){
         }
     } 
     ?>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php
      if ($query_update1){
         showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
@@ -535,7 +533,6 @@ function hapusPengajuan($POST, $id_user){
         hapusFolderPengajuan($id_pengajuan);
         
         if ($result){?>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <?php
             unset($_SESSION['id_pengajuan']);
             unset($_SESSION['status_pengajuan']);

@@ -84,173 +84,207 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
     
     <style>
-.detail-lowongan {
-    top: 20px;
-    height: calc(100vh - 150px);
-    overflow-y: auto;
-}
+        .detail-lowongan {
+            top: 20px;
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+        }
 
-#detailBidangCard {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 100%;
-}
+        #detailBidangCard {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 100%;
+        }
 
-.card-header {
-    border-radius: 10px 10px 0 0 !important;
-}
+        .card-header {
+            border-radius: 10px 10px 0 0 !important;
+        }
 
-@media (max-width: 992px) {
-    .detail-lowongan {
-        position: static;
-        height: auto;
-        margin-top: 20px;
-    }
-}
-</style>
+        @media (max-width: 992px) {
+            .detail-lowongan {
+                position: static;
+                height: auto;
+                margin-top: 20px;
+            }
+        }
+
+        #defaultBidangMessage {
+            padding: 20px;
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
 
-<div class="modal fade" id="pengajuanModal" tabindex="-1" aria-labelledby="pengajuanModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="pengajuanModalLabel">Tambah Pengajuan Baru</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <!-- Kolom Form (7 bagian dari 12) -->
-                    <div class="col-md-7">
-                        <div class="form-container" id="formContainer">
-                            <div class="form-wrapper" id="formWrapper">
-                                <form id="pengajuanForm" class="form-profile" method="POST" enctype="multipart/form-data">
-                                    <div id="step1">
-                                        <h4>Step 1: Daftar Pengajuan</h4>
-                                        <div class="mb-3">
-                                            <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                                            <select class="form-control select2" name="id_instansi" id="instansi" style="width: 100%;">
-                                                <option value="" disabled selected>-- Pilih Instansi --</option>
-                                                <?php
-                                                if (mysqli_num_rows($result_instansi) > 0) {
-                                                    while ($row = mysqli_fetch_assoc($result_instansi)) {
-                                                        echo '<option value="'.$row['id_instansi'].'">'.$row['nama_panjang'].' (Kuota: '.$row['total_kuota'].')</option>';
+<!-- ======== INPUT PENGAJUAN ======= -->
+<?php if (isset($_GET['pengajuanBaru'])){ ?>
+    <!-- untuk menampilkan modal pengajuan -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = new bootstrap.Modal(document.getElementById('pengajuanModal'));
+            modal.show();
+            
+            // Saat modal ditutup, hapus query string id_logbook_tambah dan reload halaman
+            const modalElement = document.getElementById('pengajuanModal');
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('pengajuanBaru');
+                window.location.href = url.toString();
+            });
+        });
+    </script>
+    <div class="modal fade" id="pengajuanModal" tabindex="-1" aria-labelledby="pengajuanModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="pengajuanModalLabel">Tambah Pengajuan Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- Kolom Form (7 bagian dari 12) -->
+                        <div class="col-lg-8">
+                            <div class="form-container" id="formContainer">
+                                <div class="form-wrapper" id="formWrapper">
+                                    <form id="pengajuanForm" class="form-profile" method="POST" enctype="multipart/form-data">
+                                        <div id="step1">
+                                            <h4>Step 1: Daftar Pengajuan</h4>
+                                            <div class="mb-3">
+                                                <label for="instansi" class="form-label">Instansi yang Dituju</label>
+                                                <select class="form-control select2" name="id_instansi" id="instansi">
+                                                    <option value="" disabled selected>-- Pilih Instansi --</option>
+                                                    <?php
+                                                    if (mysqli_num_rows($result_instansi) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result_instansi)) {
+                                                            echo '<option value="'.$row['id_instansi'].'">'.$row['nama_panjang'].' (Kuota: '.$row['total_kuota'].')</option>';
+                                                        }
                                                     }
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="bidang" class="form-label">Bidang yang Dipilih</label>
-                                            <select class="form-control" name="id_bidang" id="bidang">
-                                                <option value="" disabled selected> -- Pilih Bidang --</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="d-flex gap-4">
-                                            <div class="mb-3" style="flex: 1;">
-                                                <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
-                                                <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
-                                                    <option value="" disabled selected> -- Pilih Pengajuan --</option>
-                                                    <option value="magang">Magang</option>
-                                                    <option value="kerja praktek">Kerja Praktek</option>
-                                                    <option value="pkl">PKL</option>
-                                                    <option value="penelitian">Penelitian</option>
+                                                    ?>
                                                 </select>
                                             </div>
-                                            <div class="mb-3" style="flex: 1;">
-                                                <label for="kelompok_pribadi" class="form-label">Personil</label>
-                                                <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi">
-                                                    <option value="" disabled selected> -- Pilih Personil --</option>
-                                                    <option value="Kelompok">Kelompok</option>
-                                                    <option value="Pribadi">Pribadi</option>
+
+                                            <div class="mb-3">
+                                                <label for="bidang" class="form-label">Bidang yang Dipilih</label>
+                                                <select class="form-control" name="id_bidang" id="bidang">
+                                                    <option value="" disabled selected> -- Pilih Bidang --</option>
                                                 </select>
                                             </div>
-                                        </div>
 
-                                        <div class="mb-3">
-                                            <label for="jumlah_anggota" class="form-label">Jumlah Anggota</label>
-                                            <input type="number" class="form-control" id="jumlah_anggota" name="jumlah_anggota">
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">Tanggal Pelaksanaan</label>
-                                            <div class="d-flex gap-2">
-                                                <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" placeholder="-- mulai --">
-                                                <span class="align-self-center">-</span>
-                                                <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" placeholder="-- selesai --">
-                                            </div>
-                                        </div>
-                                    
-                                        <div class="d-flex gap-4">
-                                            <!-- KTP -->
-                                            <div class="mb-3 position-relative" style="flex: 1;">
-                                                <label for="ktp" class="form-label">Unggah KTP</label>
-                                                <input type="file" class="form-control pe-5" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
-                                                <small id="ktp-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('ktp')"></small>
-                                            </div>
-
-                                            <!-- CV -->
-                                            <div class="mb-3 position-relative" style="flex: 1;">
-                                                <label for="cv" class="form-label">Unggah CV</label>
-                                                <input type="file" class="form-control pe-5" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
-                                                <small id="cv-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('cv')"></small>
-                                            </div>
-                                        </div>
-                                        <button type="submit" id="submitButton" name="pengajuan_pribadi" class="btn btn-success btn-sm" style="display: inline-block;" onclick="validateForm(event)">Kirim</button>
-                                        <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep(event)"  style="display: none;">Next</button>
-                                    </div>
-
-                                    <!-- Step 2 -->
-                                    <div id="step2" style="display: none;">
-                                        <h4>Step 2: Informasi Anggota</h4><br><br>
-                                        <div id="ketuaContainer">
-                                            <!-- Anggota 1 (Readonly, diisi otomatis dari profil user) -->
-                                            <div class="mb-3 anggota-group d-flex align-items-center">
-                                                <span class="me-2 fw-bold">1.</span>
-                                                <div class="row flex-grow-1 gx-2">
-                                                <div class="col">
-                                                    <input type="text" class="form-control" value="<?= $pendaftar['nama_user'] ?>" readonly>
+                                            <div class="d-flex gap-4">
+                                                <div class="mb-3" style="flex: 1;">
+                                                    <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
+                                                    <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
+                                                        <option value="" disabled selected> -- Pilih Pengajuan --</option>
+                                                        <option value="magang">Magang</option>
+                                                        <option value="kerja praktek">Kerja Praktek</option>
+                                                        <option value="pkl">PKL</option>
+                                                        <option value="penelitian">Penelitian</option>
+                                                    </select>
                                                 </div>
-                                                <div class="col">
-                                                    <input type="text" class="form-control" value="<?= $pendaftar['email'] ?>" readonly>
-                                                </div>
-                                                <div class="col">
-                                                    <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
-                                                </div>
-                                                <div class="col">
-                                                    <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : $pendaftar['nisn'] ?>"  readonly>
-                                                </div>
+                                                <div class="mb-3" style="flex: 1;">
+                                                    <label for="kelompok_pribadi" class="form-label">Personil</label>
+                                                    <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi">
+                                                        <option value="" disabled selected> -- Pilih Personil --</option>
+                                                        <option value="Kelompok">Kelompok</option>
+                                                        <option value="Pribadi">Pribadi</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- Placeholder untuk anggota tambahan -->
-                                        <div id="anggotaContainer"></div>
 
-                                        <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
-                                        <button type="submit" name="pengajuan_kelompok" onclick="validateForm(event)" class="btn btn-success btn-sm">Kirim</button>
-                                    </div>
-                                </form>
+                                            <div class="mb-3">
+                                                <label for="jumlah_anggota" class="form-label">Jumlah Anggota</label>
+                                                <input type="number" class="form-control" id="jumlah_anggota" name="jumlah_anggota">
+                                            </div>
+
+                                            <div class="d-flex gap-4">
+                                                <div class="mb-3" style="flex: 1;">
+                                                    <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                                                    <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" placeholder="-- mulai --">
+                                                </div>
+                                                <div class="mb-3" style="flex: 1;">
+                                                    <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+                                                    <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" placeholder="-- selesai --">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="d-flex gap-4">
+                                                <!-- KTP -->
+                                                <div class="mb-3 position-relative" style="flex: 1;">
+                                                    <label for="ktp" class="form-label">Unggah KTP</label>
+                                                    <input type="file" class="form-control pe-5" id="ktp" name="ktp" accept=".pdf" onchange="handleFileLabel('ktp')">
+                                                    <small id="ktp-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('ktp')"></small>
+                                                </div>
+
+                                                <!-- CV -->
+                                                <div class="mb-3 position-relative" style="flex: 1;">
+                                                    <label for="cv" class="form-label">Unggah CV</label>
+                                                    <input type="file" class="form-control pe-5" id="cv" name="cv" accept=".pdf" onchange="handleFileLabel('cv')">
+                                                    <small id="cv-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('cv')"></small>
+                                                </div>
+                                            </div>
+                                            <button type="submit" id="submitButton" name="pengajuan_pribadi" class="btn btn-success btn-sm" style="display: inline-block;" onclick="validateForm(event)">Kirim</button>
+                                            <button type="button" id="nextButton" class="btn btn-primary btn-sm" onclick="nextStep(event)"  style="display: none;">Next</button>
+                                        </div>
+
+                                        <!-- Step 2 -->
+                                        <div id="step2" style="display: none;">
+                                            <h4>Step 2: Informasi Anggota</h4><br><br>
+                                            <div id="ketuaContainer">
+                                                <!-- Anggota 1 (Readonly, diisi otomatis dari profil user) -->
+                                                <div class="mb-3 anggota-group d-flex align-items-center">
+                                                    <span class="me-2 fw-bold">1.</span>
+                                                    <div class="row flex-grow-1 gx-2">
+                                                    <div class="col">
+                                                        <input type="text" class="form-control" value="<?= $pendaftar['nama_user'] ?>" readonly>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="text" class="form-control" value="<?= $pendaftar['email'] ?>" readonly>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : $pendaftar['nisn'] ?>"  readonly>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Placeholder untuk anggota tambahan -->
+                                            <div id="anggotaContainer"></div>
+
+                                            <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
+                                            <button type="submit" name="pengajuan_kelompok" onclick="validateForm(event)" class="btn btn-success btn-sm">Kirim</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-
-                    <!-- Kolom Detail (5 bagian dari 12) -->
-                    <div class="col-md-5">
-                        <div class="detail-lowongan">
-                            <div class="card" id="detailBidangCard">
-                                <div class="card-body">
-                                    <h5 class="card-title" id="bidangNama"></h5>
-                                    <p><strong>Deskripsi:</strong></p>
-                                    <p id="bidangDeskripsi"></p>
-                                    <p><strong>Kriteria:</strong></p>
-                                    <p id="bidangKriteria"></p>
-                                    <p><strong>Dokumen Prasyarat:</strong></p>
-                                    <p id="bidangDokumen"></p>
-                                    <p><strong>Kuota:</strong> <span id="bidangKuota"></span></p>
+                        <!-- Kolom Detail (4 bagian dari 12) -->
+                        <div class="col-lg-4">
+                            <div class="detail-lowongan sticky-top" id="detailBidangContainer">
+                                <div class="card" id="detailBidangCard">
+                                    <div class="card-header bg-primary">
+                                        <h5 class="card-title text-white mb-0">Detail Bidang</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="defaultBidangMessage">
+                                            <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
+                                        </div>
+                                        <div id="bidangDetailContent" style="display: none;">
+                                            <h1 class="card-subtitle mb-2 text-muted" id="bidangNama"></h1><hr>
+                                            <p class="text-start"><strong><i class="bi bi-text-paragraph me-2"></i>Deskripsi:</strong></p>
+                                            <p class="text-start"id="bidangDeskripsi"></p><hr>
+                                            <p class="text-start"><strong><i class="bi bi-list-check me-2"></i>Kriteria:</strong></p>
+                                            <p class="text-start" id="bidangKriteria"></p><hr>
+                                            <p class="text-start"><strong><i class="bi bi-file-earmark-text me-2"></i>Dokumen Prasyarat:</strong></p>
+                                            <p class="text-start"id="bidangDokumen"></p><hr>
+                                            <p class="text-start"><strong><i class="bi bi-people-fill me-2"></i>Kuota:</strong> <span id="bidangKuota"></span></p><hr>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -259,12 +293,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </div>
-</div>
 
 
 <!-- ============= UPDATE PENGAJUAN =========== -->
+
 <?php
-if (ISSET($_GET['id_pengajuanEdit'])){
+} else if (isset($_GET['id_pengajuanEdit'])){?>
+<!-- untuk menjalankan modal edit pengajuan -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = new bootstrap.Modal(document.getElementById('editPengajuanModal'));
+            modal.show();
+            
+            // Saat modal ditutup, hapus query string id_logbook_tambah dan reload halaman
+            const modalElement = document.getElementById('editPengajuanModal');
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('id_pengajuanEdit');
+                window.location.href = url.toString();
+            });
+        });
+    </script>
+<?php
+// query untuk akses data pengajuan sebelumnya
     $id_pengajuanEdit  = $_GET['id_pengajuanEdit'];
     // akses data pengajuan user
     $sql_pengajuan = "SELECT * FROM tb_pengajuan p, tb_bidang b, tb_instansi i WHERE p.id_pengajuan = '$id_pengajuanEdit' AND p.id_bidang = b.id_bidang AND p.id_instansi = i.id_instansi;"; 
@@ -274,7 +325,7 @@ if (ISSET($_GET['id_pengajuanEdit'])){
     $sql_dokumen = "SELECT file_path FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuanEdit' ORDER BY id_dokumen ASC";
     $query_dokumen = mysqli_query($conn, $sql_dokumen);
     $daftar_dokumen = mysqli_fetch_all($query_dokumen, MYSQLI_ASSOC);
-}
+
 ?>
 <!-- Modal Edit Pengajuan -->
 <div class="modal fade" id="editPengajuanModal" tabindex="-1" aria-labelledby="editPengajuanModalLabel" aria-hidden="true">
@@ -298,13 +349,15 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                                         <h4>Informasi Pengajuan</h4>
                                         <div class="mb-3">           
                                             <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                                            <select class="form-control select2" name="id_instansi" id="instansi" required>
+                                            <select class="form-control select2" name="id_instansi" id="instansi">
                                                 <option value="<?= $pengajuan['id_instansi'] ?>"><?= $pengajuan['nama_panjang'] ?></option>
                                                 <?php
                                                 if (mysqli_num_rows($result_instansi) > 0) {
                                                     while ($row = mysqli_fetch_assoc($result_instansi)) {
                                                         echo '<option value="'.$row['id_instansi'].'">'.$row['nama_panjang'].' (Kuota: '.$row['total_kuota'].')</option>';
                                                     }
+                                                }else{
+                                                    echo '<option> no name </option>';
                                                 }
                                                 ?>
                                             </select>
@@ -313,7 +366,7 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                                         <div class="mb-3">
                                             <label for="bidang" class="form-label">Bidang yang Dipilih</label>
                                             <select class="form-control" name="id_bidang" id="bidang">
-                                                <option value="<?= $pengajuan['id_bidang'] ?>" data-kuota="<?= $pengajuan['kuota_bidang'] ?>"><?= $pengajuan['nama_bidang'] ?></option>
+                                                <option value="<?= $pengajuan['id_bidang'] ?>"><?= $pengajuan['nama_bidang'] ?></option>
                                             </select>
                                         </div>
 
@@ -328,11 +381,13 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                                             </select>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label class="form-label">Tanggal Pelaksanaan</label>
-                                            <div class="d-flex gap-2">
+                                        <div class="d-flex gap-4">
+                                            <div class="mb-3" style="flex: 1;">
+                                                <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
                                                 <input type="text" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="<?= !empty($pengajuan['tanggal_mulai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_mulai'])) : '' ?>" placeholder="dd/mm/yyyy">
-                                                <span class="align-self-center">-</span>
+                                            </div>
+                                            <div class="mb-3" style="flex: 1;">
+                                                <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
                                                 <input type="text" class="form-control" id="tanggal_selesai" name="tanggal_selesai" value="<?= !empty($pengajuan['tanggal_selesai']) ? date('d/m/Y', strtotime($pengajuan['tanggal_selesai'])) : '' ?>" placeholder="dd/mm/yyyy">
                                             </div>
                                         </div>
@@ -355,15 +410,12 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                                             </div>
                                         </div>
 
-                                        <div class="d-flex justify-content-between mt-4">
                                             <button type="submit" name="update_pengajuan" class="btn btn-success">
-                                                <i class="bi bi-save me-1"></i> Update Pengajuan
+                                                <i class="bi bi-save me-1"></i> Update
                                             </button>
-                                            <button type="button" class="btn btn-danger" id="hapusPengajuanBtn">
-                                                <i class="bi bi-trash me-1"></i> Hapus Pengajuan
-                                            </button>
-                                            <input type="hidden" name="hapus_pengajuan" id="hapusPengajuanFlag" value="0">
-                                        </div>
+                                            
+                                            <input type="hidden" name="hapus_pengajuan"> <!-- Tanda penghapusan -->
+                                            <button type="submit" class="btn btn-danger btn-sm" id="hapusPengajuan"><i class="bi bi-trash me-1"></i> Hapus</button>      
                                     </div>
                                 </form>
                             </div>
@@ -378,15 +430,20 @@ if (ISSET($_GET['id_pengajuanEdit'])){
                                     <h5 class="card-title text-white mb-0">Detail Bidang</h5>
                                 </div>
                                 <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h6>
-                                    <hr>
-                                    <p><strong>Deskripsi:</strong></p>
-                                    <p id="bidangDeskripsi"><?= $pengajuan['deskripsi_bidang'] ?></p>
-                                    <p><strong>Kriteria:</strong></p>
-                                    <p id="bidangKriteria"><?= $pengajuan['kriteria_bidang'] ?></p>
-                                    <p><strong>Dokumen Prasyarat:</strong></p>
-                                    <p id="bidangDokumen"><?= $pengajuan['dokumen_prasyarat'] ?></p>
-                                    <p><strong>Kuota:</strong> <span class="badge bg-primary" id="bidangKuota"><?= $pengajuan['kuota_bidang'] ?></span></p>
+                                    <div id="defaultBidangMessage">
+                                        <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
+                                    </div>
+                                    <div id="bidangDetailContent" style="display: none;">
+                                        <h1 class="card-subtitle mb-2 text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h1>
+                                        <hr>
+                                        <p class="text-start"><strong><i class="bi bi-text-paragraph me-2"></i></strong></p>
+                                        <p class="text-start"id="bidangDeskripsi"><?= $pengajuan['deskripsi_bidang'] ?></p><hr>
+                                        <p class="text-start"><strong><i class="bi bi-list-check me-2"></i>Kriteria:</strong></p>
+                                        <p class="text-start" id="bidangKriteria"><?= $pengajuan['kriteria_bidang'] ?></p><hr>
+                                        <p class="text-start"><strong><i class="bi bi-file-earmark-text me-2"></i>Dokumen Prasyarat:</strong></p>
+                                        <p class="text-start" id="bidangDokumen"><?= $pengajuan['dokumen_prasyarat'] ?></p><hr>
+                                        <p class="text-start"><strong><i class="bi bi-people-fill me-2"></i>Kuota:</strong> <span id="bidangKuota"><?= $pengajuan['kuota_bidang'] ?></span></p><hr>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -396,46 +453,121 @@ if (ISSET($_GET['id_pengajuanEdit'])){
         </div>
     </div>
 </div>
+<?php
+}
+?>
 </body>
 </html>
-<!-- js tambah anggota baru -->
-<?php if (isset($_GET['pengajuanBaru'])): ?>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var modal = new bootstrap.Modal(document.getElementById('pengajuanModal'));
-            modal.show();
-            
-            // Saat modal ditutup, hapus query string id_logbook_tambah dan reload halaman
-            const modalElement = document.getElementById('pengajuanModal');
-            modalElement.addEventListener('hidden.bs.modal', function () {
-                const url = new URL(window.location.href);
-                url.searchParams.delete('pengajuanBaru');
-                window.location.href = url.toString();
+
+<!-- hapus pengajuan -->
+<script>
+document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
+    event.preventDefault(); // Mencegah form langsung terkirim
+
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Kirim form secara manual
+            document.getElementById('editPengajuanForm').submit();
+        }
+    });
+});
+</script>
+
+
+
+<!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
+<script>
+    $(document).ready(function() {
+        $('#instansi').select2({
+            placeholder: "-- Pilih Instansi --",
+            allowClear: true
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Cek apakah ada data bidang yang sudah dipilih sebelumnya
+        <?php if(isset($pengajuan['id_bidang']) && !empty($pengajuan['id_bidang'])): ?>
+            // Jika ada data sebelumnya, tampilkan detail bidang
+            $("#defaultBidangMessage").hide();
+            $("#bidangDetailContent").show();
+            $("#detailBidangContainer").show();
+        <?php else: ?>
+            // Jika tidak ada data, tampilkan pesan default
+            $("#defaultBidangMessage").show();
+            $("#bidangDetailContent").hide();
+        <?php endif; ?>
+
+        // Ambil bidang saat instansi berubah
+        $("#instansi").change(function() {
+            var id_instansi = $(this).val();
+
+            $.ajax({
+                url: "cek.php",
+                type: "POST",
+                data: { id_instansi: id_instansi },
+                success: function(response) {
+                    $("#bidang").html('<option value="" disabled selected> -- Pilih Bidang --</option>' + response);
+                    $("#defaultBidangMessage").show();
+                    $("#bidangDetailContent").hide();
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: " + status + " - " + error);
+                }
             });
         });
-    </script>
-<?php endif; ?>
 
+        // Ambil detail bidang saat bidang dipilih
+        $("#bidang").change(function() {
+            var id_bidang = $(this).val();
 
-<!-- js tambah anggota baru -->
-<?php if (isset($_GET['id_pengajuanEdit'])): ?>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var modal = new bootstrap.Modal(document.getElementById('editPengajuanModal'));
-            modal.show();
-            
-            // Saat modal ditutup, hapus query string id_logbook_tambah dan reload halaman
-            const modalElement = document.getElementById('editPengajuanModal');
-            modalElement.addEventListener('hidden.bs.modal', function () {
-                const url = new URL(window.location.href);
-                url.searchParams.delete('id_pengajuanEdit');
-                window.location.href = url.toString();
+            $.ajax({
+                url: "cek.php",
+                type: "POST",
+                data: { id_bidang: id_bidang },
+                dataType: "json",
+                success: function(response) {
+                    if (response.error) {
+                        $("#detailBidangContainer").hide();
+                    } else {
+                        // Sembunyikan pesan default dan tampilkan detail
+                        $("#defaultBidangMessage").hide();
+                        $("#bidangDetailContent").show();
+                        
+                        $("#bidangNama").text(response.nama_bidang);
+                        $("#bidangDeskripsi").text(response.deskripsi_bidang);
+                        $("#bidangKriteria").text(response.kriteria_bidang);
+                        $("#bidangDokumen").text(response.dokumen_prasyarat);
+                        $("#bidangKuota").text(response.kuota_bidang);
+                        $("#detailBidangContainer").show();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error: " + status + " - " + error);
+                    $("#detailBidangContainer").hide();
+                }
             });
         });
-    </script>
-<?php endif; ?>
 
-<!-- Melihat preview dan hapus dokumen -->
+        // Jika ada bidang yang dipilih sebelumnya, pilih opsi yang sesuai
+        <?php if(isset($pengajuan['id_bidang']) && !empty($pengajuan['id_bidang'])): ?>
+            // Trigger change event untuk menampilkan detail bidang
+            $("#bidang").val("<?= $pengajuan['id_bidang'] ?>").trigger('change');
+        <?php endif; ?>
+    });
+</script>
+
+<!-- Melihat preview dokumen -->
 <script>
     function handleFileLabel(id) {
         const input = document.getElementById(id);
@@ -462,78 +594,6 @@ if (ISSET($_GET['id_pengajuanEdit'])){
     }
 </script>
 
-<!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
-<script>
-$(document).ready(function() {
-    // Inisialisasi Select2 untuk modal tambah
-    $('#pengajuanModal #instansi').select2({
-        placeholder: "Pilih Instansi",
-        allowClear: true,
-        dropdownParent: $('#pengajuanModal')
-    });
-
-    // Inisialisasi Select2 untuk modal edit
-    $('#editPengajuanModal #instansi').select2({
-        placeholder: "Pilih Instansi",
-        allowClear: true,
-        dropdownParent: $('#editPengajuanModal')
-    });
-});
-</script>
-
-<script>
-$(document).ready(function() {
-    // Ambil bidang saat instansi berubah
-    $("#instansi").change(function() {
-        var id_instansi = $(this).val();
-
-        $.ajax({
-            url: "cek.php",
-            type: "POST",
-            data: { id_instansi: id_instansi },
-            success: function(response) {
-                $("#bidang").html('<option value="" disabled selected> -- Pilih Bidang --</option>' + response);
-                $("#detailBidangContainer").hide(); // Sembunyikan detail bidang jika instansi berubah
-                $("#formWrapper").removeClass("shift-left").addClass("center-form"); // Kembalikan posisi tengah
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX Error: " + status + " - " + error);
-            }
-        });
-    });
-
-     // Ambil detail bidang saat bidang dipilih
-     $("#bidang").change(function() {
-        var id_bidang = $(this).val();
-
-        $.ajax({
-            url: "cek.php",
-            type: "POST",
-            data: { id_bidang: id_bidang },
-            dataType: "json",
-            success: function(response) {
-                if (response.error) {
-                    $("#detailBidangContainer").hide();
-                } else {
-                    $("#bidangNama").text(response.nama_bidang);
-                    $("#bidangDeskripsi").text(response.deskripsi_bidang);
-                    $("#bidangKriteria").text(response.kriteria_bidang);
-                    $("#bidangDokumen").text(response.dokumen_prasyarat);
-                    $("#bidangKuota").text(response.kuota_bidang);
-                    $("#detailBidangContainer").show();
-                    
-                    // Geser form ke kiri setelah bidang dipilih
-                    $("#formWrapper").removeClass("center-form").addClass("shift-left");
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("AJAX Error: " + status + " - " + error);
-            }
-        });
-    });
-
-});
-</script>
 
 <!-- SCRIPT UNTUK VALIDASI FORM -->
 <script>
