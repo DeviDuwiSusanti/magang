@@ -65,11 +65,11 @@ $no = 1;
                         <td class="text-center"><?= $no++ ?></td>
                         <td><?= htmlspecialchars($data['nama_panjang']) ?></td>
                         <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
-                        <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
+                        <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td>
                         <td><?= formatPeriode($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td>                        
                         <td class="text-center">
-                            <a href="#" class="text-decoration-none" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
-                                <i class="bi bi-eye" style="font-size: 20px;"></i>
+                            <a href="#" class="btn btn-sm btn-primary" title="Lihat Detail" data-bs-toggle="modal" data-bs-target="#modalDetail<?= $row['id_pengajuan']; ?>">
+                                <i class="bi bi-eye"></i>
                             </a>
                         </td>
                     </tr>

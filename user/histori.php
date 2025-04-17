@@ -3,6 +3,9 @@ include "../koneksi.php";
 include "../layout/sidebarUser.php";
 include "functions.php";
 
+// Initialize user ID from session
+$id_user = $_SESSION['id_user'];  // <-- ADD THIS LINE HERE
+
 // Ambil daftar pengajuan magang berdasarkan id_user
 if ($_SESSION['ketua']) { // Ketua kelompok level (3)
     $sql = "SELECT * 
@@ -10,6 +13,7 @@ if ($_SESSION['ketua']) { // Ketua kelompok level (3)
             LEFT JOIN tb_instansi ON tb_pengajuan.id_instansi = tb_instansi.id_instansi 
             LEFT JOIN tb_bidang ON tb_pengajuan.id_bidang = tb_bidang.id_bidang
             WHERE tb_pengajuan.status_pengajuan = '5' 
+            AND tb_pengajuan.status_active = '1'
             AND tb_pengajuan.id_user = '{$_SESSION['id_user']}'";
 } else if ($_SESSION['anggota']) { // Anggota kelompok level (4)
     $sql = "SELECT p.*, i.nama_panjang, b.nama_bidang
@@ -19,8 +23,10 @@ if ($_SESSION['ketua']) { // Ketua kelompok level (3)
             JOIN tb_bidang b ON p.id_bidang = b.id_bidang
             JOIN tb_instansi i ON p.id_instansi = i.id_instansi
             WHERE pu.id_user = '{$_SESSION['id_user']}' 
-            AND p.status_pengajuan = '5'";
+            AND p.status_pengajuan = '5'
+            AND p.status_active = '1'";
 }
+
 
 $query = mysqli_query($conn, $sql);
 $no = 1;
@@ -55,11 +61,11 @@ $no = 1;
                     $query1 = mysqli_query($conn, $sql1);
                     $detail = mysqli_fetch_assoc($query1);
 
-                    // Query Detail Profile User
+                    // Query Detail Profile User - perbaikan
                     $sql2 = "SELECT * FROM tb_profile_user pu 
-                             INNER JOIN tb_user u ON pu.id_user = u.id_user 
-                             INNER JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
-                             WHERE pu.id_user = '$id_user'";
+                            INNER JOIN tb_user u ON pu.id_user = u.id_user 
+                            INNER JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
+                            WHERE pu.id_user = '$id_user'";
                     $query2 = mysqli_query($conn, $sql2);
                     $profile = mysqli_fetch_assoc($query2);
                 ?>
@@ -70,9 +76,9 @@ $no = 1;
                         <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
                         <td><?= formatPeriode($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td>                        
                         <td class="text-center">
-                            <a href="#" class="text-decoration-none" title="Lihat Detail" 
+                            <a href="#" class="btn btn-sm btn-primary" title="Lihat Detail" 
                                data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
-                                <i class="bi bi-eye" style="font-size: 20px;"></i>
+                               <i class="bi bi-eye"></i>
                             </a>
                         </td>
                     </tr>

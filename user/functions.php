@@ -179,17 +179,31 @@ function confirmDeleteScript() {
     </script>";
 }
 
-// Fungsi untuk menghitung durasi dalam bulan dan hari
+// Fungsi untuk menghitung durasi dalam bulan dan minggu
 function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
-    $start_date = new DateTime($tanggal_mulai);
-    $end_date = new DateTime($tanggal_selesai);
-    $interval = $start_date->diff($end_date);
+    // Memeriksa apakah kedua tanggal tersedia
+    if (!empty($tanggal_mulai) && !empty($tanggal_selesai)) {
+        // Membuat objek DateTime dari tanggal mulai dan selesai
+        $start_date = new DateTime($tanggal_mulai);
+        $end_date = new DateTime($tanggal_selesai);
+        
+        // Menghitung selisih antara kedua tanggal
+        $interval = $start_date->diff($end_date);
+        
+        // Mendapatkan jumlah bulan dan hari
+        $bulan = $interval->m;
+        $hari = $interval->d;
+        $minggu = floor($hari / 7); // Menghitung minggu berdasarkan sisa hari
 
-    $bulan = $interval->m + ($interval->y * 12);
-    $hari = $interval->d;
-
-    return ($bulan > 0 ? "$bulan Bulan " : "") . ($hari > 0 ? "$hari Hari" : "");
+        // Mengembalikan string dalam format "X Bulan Y Minggu"
+        return $bulan . " Bulan " . $minggu . " Minggu";
+    } else {
+        // Jika tanggal tidak valid, kembalikan pesan
+        return "Durasi Tidak Diketahui";
+    }
 }
+
+
 
 // Fungsi untuk format tanggal Lengkap Indonesia
 function formatTanggalLengkapIndonesia($tanggal) {
