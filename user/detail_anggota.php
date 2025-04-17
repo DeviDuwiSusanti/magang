@@ -3,7 +3,9 @@ confirmDeleteScript();
 
 // query awal
 if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEdit'])) {
-    $id_pengajuan = $_GET['id_pengajuan'];
+    if (isset($_GET['id_pengajuan'])){
+        $id_pengajuan = $_GET['id_pengajuan'];
+    }
     $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user AND u.status_active = '1'";
     $query = mysqli_query($conn, $sql);
 

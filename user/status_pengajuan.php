@@ -48,7 +48,7 @@ $query = mysqli_query($conn, $sql);
 
         <?php if (!$sembunyikan_tombol): ?>
             <div class="d-flex justify-content-end mb-4">
-                <a href="pengajuan.php" class="btn btn-primary">Tambah Pengajuan</a>
+                <a href="?pengajuanBaru=<?= '1' ?>" class="btn btn-primary">Tambah Pengajuan</a>
             </div>
         <?php endif; ?>
 
@@ -116,7 +116,7 @@ $query = mysqli_query($conn, $sql);
                             <?php endif; ?>
 
                             <?php if ($status_pengajuan != 3 && $status_pengajuan != 5): ?>
-                                <a href="detail_anggota.php?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-info text-white" title="Lihat Anggota">
+                                <a href="?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-info text-white" title="Lihat Anggota">
                                     <i class="bi bi-people"></i>
                                 </a>
                             <?php endif; ?>
@@ -179,5 +179,8 @@ $query = mysqli_query($conn, $sql);
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php"; ?>
+<?php 
+include "detail_anggota.php";
+// include "pengajuan2.php";
+include "../layout/footerDashboard.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
