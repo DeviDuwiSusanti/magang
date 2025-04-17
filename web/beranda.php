@@ -105,30 +105,30 @@ include "functions.php";
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper">
                     <?php
-                        $query = getBidangInstansi($conn);
+                        $instansi = "SELECT * FROM tb_instansi";
+                        $query = mysqli_query($conn, $instansi);
                         while ($row = mysqli_fetch_assoc($query)){
                             $pemagang_aktif = getPemagangAktif2($conn, $row['id_instansi']);
                             $nama_instansi = $row['nama_panjang'];
                             $kata_pertama = explode(' ', $nama_instansi)[0]; // Pecah string dan ambil kata pertama
 
-                            $sql2 = "SELECT COUNT(*) AS jumlah_lowongan FROM tb_bidang WHERE id_instansi = '$row[id_instansi]'";
+                            $sql2 = "SELECT SUM(kuota_bidang) AS jumlah_lowongan FROM tb_bidang WHERE id_instansi = '$row[id_instansi]'";
                             $query2 = mysqli_query($conn, $sql2);
                             $row2 = mysqli_fetch_assoc($query2);
                             $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
                             ?>
-                            <article class="popular__card swiper-slide" style="text-align: center;">
-                                <a href="<?= $row['deskripsi_instansi'] ?>" target="_blank">
+                            <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;"
+                                onclick="showDeskripsiInstansi(`<?= $row['deskripsi_instansi'] ?>`)">
                                     <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                     <div class="popular__data">
                                         <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
                                         <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
                                         <br>
                                         <p class="popular__description">
-                                            <i class="bx bx-briefcase"></i> <?= $row2['jumlah_lowongan'] ?> Lowongan <br />
+                                            <i class="bx bx-briefcase"></i> <?= $jumlah_lowongan ?> Lowongan <br />
                                             <i class="bx bxs-group"></i> <?= $pemagang_aktif ?> Pemagang Aktif
                                         </p>
                                     </div>
-                                </a>
                             </article>
                         <?php
                         }
@@ -152,5 +152,27 @@ include "functions.php";
 
         <?php include "../layout/footerUser.php" ?>
 </body>
-
 </html>
+
+<!-- Modal Deskripsi Instansi-->
+<script>
+    function showDeskripsiInstansi(deskripsi) {
+        document.getElementById('modalDeskripsiInstansi').innerHTML = deskripsi;
+        var modal = new bootstrap.Modal(document.getElementById('instansiModal'));
+        modal.show();
+    }
+</script>
+
+<div class="modal fade" id="instansiModal" tabindex="-1" aria-labelledby="instansiModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="instansiModalLabel">Deskripsi Instansi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body" id="modalDeskripsiInstansi">
+        <!-- Deskripsi akan ditampilkan di sini -->
+      </div>
+    </div>
+  </div>
+</div>

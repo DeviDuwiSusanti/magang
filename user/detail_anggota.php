@@ -1,12 +1,11 @@
 <?php 
-include "../layout/sidebarUser.php"; 
-include "functions.php";
 confirmDeleteScript();
 
-
-// TABEL DAFTAR ANGGOTA
+// query awal
 if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEdit'])) {
-    $id_pengajuan = $_GET['id_pengajuan'];
+    if (isset($_GET['id_pengajuan'])){
+        $id_pengajuan = $_GET['id_pengajuan'];
+    }
     $sql = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user AND u.status_active = '1'";
     $query = mysqli_query($conn, $sql);
 
@@ -24,27 +23,28 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
     $sql3 = "SELECT * FROM tb_pengajuan p, tb_bidang b WHERE p.id_pengajuan = '$id_pengajuan' AND p.id_bidang = b.id_bidang";
     $query3 = mysqli_query($conn, $sql3);
     $row3 = mysqli_fetch_assoc($query3);
-    ?>
+}
+?>
 
-    <div class="main-content p-3">
-        <div class="container-fluid">
-            <h1 class="mb-4">Daftar Anggota</h1>
-            <ol class="breadcrumb mb-4">
-                <li class="breadcrumb-item active">Daftar Anggota <?= $row3['jenis_pengajuan'] ?></li>
-            </ol>
-            <div class="mb-4 dropdown-divider"></div>
-            <div class="mb-4 text-end">
-                <?php
-                if ($row3['status_pengajuan'] == '1' && $jumlah_anggota < $row3['kuota_bidang']){?>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahAnggotaModal">
-                        <i class="bi bi-plus-circle me-1"></i> Tambah Anggota
-                    </button>
-                <?php
-                }
-                ?>
+<!-- Modal Daftar Anggota -->
+<div class="modal fade" id="anggotaModal" tabindex="-1" aria-labelledby="anggotaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="anggotaModalLabel">Daftar Anggota <?= $row3['jenis_pengajuan'] ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
-            <div class="table-responsive-sm">
-                <div class="bungkus-2">
+            <div class="modal-body">
+
+                <!-- Tombol Tambah Anggota -->
+                <?php if ($row3['status_pengajuan'] == '1' && $jumlah_anggota < $row3['kuota_bidang']) { ?>
+                    <div class="mb-3 text-end">
+                        <a href="?anggotaBaru=<?= '1' ?>" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle me-1"></i>Tambah Anggota</a>
+                    </div>
+                <?php } ?>
+
+                <!-- Tabel Anggota -->
+                <div class="table-responsive-sm">
                     <table id="myTable" class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
@@ -53,52 +53,50 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                 <th>Email</th>
                                 <th>NIK</th>
                                 <th>Nim/Nisn</th>
-                                <?php
-                                if ($row3['status_pengajuan'] == '1' ){?>
+                                <?php if ($row3['status_pengajuan'] == '1') { ?>
                                     <th>Aksi</th>
-                                <?php
-                                }
-                                ?>
+                                <?php } ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            while ($row = mysqli_fetch_assoc($query)){?>
+                            $no = 1;
+                            while ($row = mysqli_fetch_assoc($query)) { ?>
                                 <tr>
                                     <td><?= $no ?></td>
                                     <td><?= $row['nama_user'] ?></td>
                                     <td><?= $row['email'] ?></td>
                                     <td><?= $row['nik'] ?></td>
-                                    <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>           
+                                    <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
                                     <?php if ($row3['status_pengajuan'] == '1'): ?>
                                         <td>
-                                        <?php $isKetua = cekStatusUser($row['id_user']) === 'Ketua'; ?>
-                                            <a href="<?= $isKetua ? '#' : "?id_userEdit={$row['id_user']}&id_pengajuan={$id_pengajuan}" ?>"
+                                            <?php $isKetua = cekStatusUser($row['id_user']) === 'Ketua'; ?>
+                                            <a href="<?= $isKetua ? '#' : "?id_userEdit={$row['id_user']}" ?>"
                                                 class="btn btn-warning btn-sm <?= $isKetua ? 'disabled' : '' ?>">
-                                                <i class="bi bi-pencil"></i> Edit
+                                                <i class="bi bi-pencil"></i>
                                             </a>
                                             <a href="javascript:void(0);"
-                                            onclick="confirmDelete('?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>', 'anggota <?= $row['nama_user'] ?>')"
-                                            class="btn btn-danger btn-sm <?= $isKetua ? 'disabled' : '' ?>">
-                                                <i class="bi bi-trash"></i> Hapus
+                                                onclick="confirmDelete('?id_userHapus=<?= $row['id_user'] ?>&id_pengajuan=<?= $id_pengajuan ?>', 'anggota <?= $row['nama_user'] ?>')"
+                                                class="btn btn-danger btn-sm <?= $isKetua ? 'disabled' : '' ?>">
+                                                <i class="bi bi-trash"></i>
                                             </a>
-
                                         </td>
                                     <?php endif; ?>
                                 </tr>
-                            <?php
-                            $no++;
-                            }
-                            ?>
+                            <?php $no++; } ?>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
         </div>
     </div>
-<?php
-}
+</div>
 
+<?php
 $id_userEdit = null;
 $editRow = null;
 if (isset($_GET['id_userEdit'])) {
@@ -116,6 +114,47 @@ if (ISSET($_POST['tambah_anggota'])){
     tambahAnggota($_POST, $id_user, $id_pengajuan);
 }
 ?>
+
+<!-- Modal Tambah Anggota -->
+<div class="modal fade" id="tambahAnggotaModal" tabindex="-1" aria-labelledby="tambahAnggotaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tambahAnggotaModalLabel">Tambah Anggota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST" class="form_tambahAnggota">                
+                    <div class="mb-3">
+                        <label for="nama_user" class="form-label">Nama</label>
+                        <input type="text" class="form-control" id="nama_user" name="nama_user">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nik" class="form-label">NIK</label>
+                        <input type="number" class="form-control" id="nik" name="nik">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nim" class="form-label">Nim/Nisn</label>
+                        <input type="number" class="form-control" id="nim" name="nim">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" name="tambah_anggota" class="btn btn-primary">Tambah Anggota</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Edit Anggota -->
 <div class="modal fade" id="editAnggotaModal" tabindex="-1" aria-labelledby="editAnggotaModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -125,7 +164,7 @@ if (ISSET($_POST['tambah_anggota'])){
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="detail_anggota.php" method="POST" class="form_editAnggota">
+                <form action="" method="POST" class="form_editAnggota">
                     <input type="hidden" name="id_user" id="edit_id_user"  value="<?= $id_userEdit ?>">
 
                     <div class="mb-3">
@@ -158,6 +197,44 @@ if (ISSET($_POST['tambah_anggota'])){
     </div>
 </div>
 
+
+
+<!-- js tabel daftar anggota -->
+<?php 
+if (isset($_GET['id_pengajuan'])): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = new bootstrap.Modal(document.getElementById('anggotaModal'));
+        modal.show();
+
+        document.getElementById('anggotaModal').addEventListener('hidden.bs.modal', function () {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('id_pengajuan');
+            window.location.href = url.toString();
+        });
+    });
+    </script>
+<?php endif; ?>
+
+<!-- js tambah anggota baru -->
+<?php if (isset($_GET['anggotaBaru'])): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = new bootstrap.Modal(document.getElementById('tambahAnggotaModal'));
+            modal.show();
+            
+            // Saat modal ditutup, hapus query string id_logbook_tambah dan reload halaman
+            const modalElement = document.getElementById('tambahAnggotaModal');
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.delete('anggotaBaru');
+                window.location.href = url.toString();
+            });
+        });
+    </script>
+<?php endif; ?>
+
+<!-- js edit anggota -->
 <?php if ($id_userEdit): ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -174,50 +251,6 @@ if (ISSET($_POST['tambah_anggota'])){
         });
     </script>
 <?php endif; ?>
-
-<!-- Modal Tambah Anggota -->
-<div class="modal fade" id="tambahAnggotaModal" tabindex="-1" aria-labelledby="tambahAnggotaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tambahAnggotaModalLabel">Tambah Anggota</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="detail_anggota.php" method="POST" class="form_tambahAnggota">                
-                    <div class="mb-3">
-                        <label for="nama_user" class="form-label">Nama</label>
-                        <input type="text" class="form-control" id="nama_user" name="nama_user">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="nik" class="form-label">NIK</label>
-                        <input type="number" class="form-control" id="nik" name="nik">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="nim" class="form-label">Nim/Nisn</label>
-                        <input type="number" class="form-control" id="nim" name="nim">
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" name="tambah_anggota" class="btn btn-primary">Tambah Anggota</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<?php
-include "../layout/footerDashboard.php" 
-?>
-
 
 <!-- ==========  VALIDASIIII ===============-->
 <script>
