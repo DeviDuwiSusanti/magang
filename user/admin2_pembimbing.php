@@ -127,6 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                         class="btn <?= $btnClass ?> btn-sm"
                         data-bs-toggle="modal"
                         data-bs-target="#tambahPembimbingModal"
+                        title="Tambah Pembimbing"
                         <?= $disabled ? 'disabled title="Semua bidang sudah memiliki pembimbing"' : '' ?>>
                         <i class="bi bi-plus-circle me-1"></i> Tambah Pembimbing
                     </button>
@@ -169,7 +170,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                                             data-nip="<?= $pembimbing['nip'] ?>"
                                             data-jabatan="<?= $pembimbing['jabatan'] ?>"
                                             data-telepon="<?= $pembimbing['telepone_pembimbing'] ?>"
-                                            data-id_bidang="<?= $pembimbing['id_bidang'] ?>">
+                                            data-id_bidang="<?= $pembimbing['id_bidang'] ?>"
+                                            title="Edit Data Pembimbing">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" onclick="hapus_pembimbing_admin_instansi('<?= $pembimbing['id_pembimbing'] ?>')">
@@ -366,6 +368,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     }
                 }
             });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 </script>

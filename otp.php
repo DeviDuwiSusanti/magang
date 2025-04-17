@@ -50,6 +50,7 @@
     <title>Verifikasi OTP</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" href="./assets/img/logo_kab_sidoarjo.png" type="image/png">
     <style>
         body {
             background: #e2ecf4;
