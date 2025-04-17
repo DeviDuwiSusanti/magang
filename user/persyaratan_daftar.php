@@ -133,37 +133,26 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['hapus_laporan'])) {
             </table>
         </div>
     </div>
-    <div class="text-end mt-3">
-    <a href="status_pengajuan.php" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-x-circle"></i> Tutup
-    </a>
 </div>
-
-</div>
-
 
 <!-- Proses Upload -->
 <?php 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $deskripsi = $_POST['deskripsi'] ?? 'Tidak ada deskripsi';
-    $file_name = $_FILES['file']['name'];
-    $file_tmp = $_FILES['file']['tmp_name'];
-    $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-    
+    $file_extension = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+
     if ($file_extension !== "pdf") {
         echo json_encode(["status" => "error", "message" => "Hanya file PDF yang diperbolehkan!"]);
         exit();
     }
-    
-    $upload_dir = "../assets/doc/"; 
-    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
-    
-    $file_path = $upload_dir . uniqid() . "_" . basename($file_name);
-    
-    if (move_uploaded_file($file_tmp, $file_path)) {
+
+    // Panggil fungsi uploadFileUser dari functions.php
+    $upload_result = uploadFileUser($_FILES['file'], $id_pengajuan);
+
+    if ($upload_result) {
         $id_dokumen = generateIdDokumen($conn, $id_pengajuan);
         $stmt = $conn->prepare("INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) VALUES (?, ?, '2', ?, ?, ?, ?, '1', NOW(), NOW())");
-        $stmt->bind_param("ssssss", $id_dokumen, $deskripsi, $file_path, $id_pengajuan, $id_user, $id_user);
+        $stmt->bind_param("ssssss", $id_dokumen, $deskripsi, $upload_result['path'], $id_pengajuan, $id_user, $id_user);
         $stmt->execute();
         echo json_encode(["status" => "success", "message" => "File berhasil diunggah!"]);
     } else {
@@ -195,12 +184,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     </div>
 </div>
 
-
 <!-- Bootstrap Bundle (termasuk Popper) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
 <style>

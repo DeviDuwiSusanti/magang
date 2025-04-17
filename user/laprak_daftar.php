@@ -66,7 +66,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
             $icon = "error";
             break;
         default:
-            $laporan_akhir = uploadFile($_FILES['laporan_akhir']);
+            // Panggil fungsi uploadFileUser
+            $laporan_akhir = uploadFileUser($_FILES['laporan_akhir'], $id_pengajuan);
             if (!isset($laporan_akhir['error'])) {
                 $laporan_name = $laporan_akhir['name'];
                 $laporan_path = $laporan_akhir['path'];
@@ -96,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     </script>";
     exit;
 }
+
 
 // Tambahkan skrip hapus file
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
