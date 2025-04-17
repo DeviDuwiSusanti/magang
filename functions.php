@@ -1,6 +1,5 @@
 <?php
-
-use Dom\Mysql;
+    use Dom\Mysql;
 
     include "koneksi.php";
 
@@ -13,13 +12,10 @@ use Dom\Mysql;
         } return $rows;
     }
 
-
-
     function generateUserId($conn) {
         $date = date("ymd");
         $hour = date("H");
         $baseId = $date . $hour;
-
         $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
         
         if($result && mysqli_num_rows($result) > 0) {
@@ -38,7 +34,6 @@ use Dom\Mysql;
         $date = date("ymd");
         $hour = date("H");
         $baseId = $date . $hour;
-
         $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
         
         if($result && mysqli_num_rows($result) > 0) {
@@ -51,9 +46,6 @@ use Dom\Mysql;
         $newId = $baseId . $newCounter;
         return $newId;
     }
-
-
-
 
 
     function uploadImage($file, $old_img, $directory) {
@@ -73,8 +65,8 @@ use Dom\Mysql;
 
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $randomName = uniqid() . "." . $extension;
-
         $uploadPath = $directory . $randomName;
+
         if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
             throw new Exception("Gagal mengupload file.");
         } 
@@ -82,11 +74,9 @@ use Dom\Mysql;
     }
 
 
-
     function checking($conn, $table, $column, $value) {
         $column = mysqli_real_escape_string($conn, $column);
         $value = mysqli_real_escape_string($conn, $value);
-
         $query = "SELECT $column FROM $table WHERE $column = '$value'";
         $result = mysqli_query($conn, $query);
         return mysqli_num_rows($result) > 0;
@@ -127,7 +117,7 @@ use Dom\Mysql;
         }
     }
 
-    // Validasi NIK dan NISN
+    // Validasi NIK dan NISN kemungkinan di hapus
     if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
         header("Location: register.php?error=nik_terdaftar");
         exit;
@@ -161,50 +151,202 @@ use Dom\Mysql;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // =========================================================== SUPER ADMIN LEVEL (1) ========================================================
 
-// ================================ PROFILE SUPER ADMIN ================================
-    function edit_profile_super_admin($POST_edit) {
-        global $conn;
-        $id_user = $POST_edit["id_user"];
-        $nama_user = $POST_edit["nama_user"];
-        $tempat_lahir = $POST_edit["tempat_lahir"];
-        $tanggal_lahir = $POST_edit["tanggal_lahir"];
-        $telepone = $POST_edit["telepone"];
-        $alamat_user = $POST_edit["alamat_user"];
-        $jenis_kelamin = $POST_edit["jenis_kelamin"];
-        $gambar_lama = $POST_edit["gambar_lama"];
-        $gambar = uploadImage($_FILES["gambar"], $gambar_lama, "../assets/img/user/");
+// ============================= PENDIDIKAN SUPER ADMIN =========================
+function generateIdPendidikan_universitas($nama_pendidikan, $fakultas, $jurusan) {
+    global $conn;
+    
+    // 1. Cek apakah kombinasi data sudah ada
+    $query = "SELECT id_pendidikan FROM tb_pendidikan 
+                WHERE nama_pendidikan = '$nama_pendidikan' 
+                AND fakultas = '$fakultas' 
+                AND jurusan = '$jurusan'";
+    $result = mysqli_query($conn, $query);
+    if(mysqli_num_rows($result) > 0) {
+        return 0;
+    }
+    
+    // 2. Generate kode nama pendidikan (3 digit pertama)
+    $query_nama = "SELECT DISTINCT LEFT(id_pendidikan, 3) as kode 
+                    FROM tb_pendidikan 
+                    WHERE nama_pendidikan = '$nama_pendidikan' 
+                    AND LENGTH(id_pendidikan) = 7 
+                    LIMIT 1";
+    $result_nama = mysqli_query($conn, $query_nama);
+    if(mysqli_num_rows($result_nama) > 0) {
+        $row = mysqli_fetch_assoc($result_nama);
+        $kode_nama = $row['kode'];
+    } else {
+        // Jika nama pendidikan baru, buat kode baru
+        $query_max = "SELECT MAX(CAST(LEFT(id_pendidikan, 3) AS UNSIGNED)) as max_kode 
+                        FROM tb_pendidikan 
+                        WHERE LENGTH(id_pendidikan) = 7";
+        $result_max = mysqli_query($conn, $query_max);
+        $row_max = mysqli_fetch_assoc($result_max);
+        $next_kode = ($row_max['max_kode'] ?? 0) + 1;
+        $kode_nama = str_pad($next_kode, 3, '0', STR_PAD_LEFT);
+    }
+    
+    // 3. Generate kode fakultas (2 digit)
+    $query_fakultas = "SELECT DISTINCT SUBSTRING(id_pendidikan, 4, 2) as kode 
+                        FROM tb_pendidikan 
+                        WHERE LEFT(id_pendidikan, 3) = '$kode_nama' 
+                        AND fakultas = '$fakultas' 
+                        LIMIT 1";
+    $result_fakultas = mysqli_query($conn, $query_fakultas);
+    
+    if(mysqli_num_rows($result_fakultas) > 0) {
+        // Jika fakultas sudah ada, gunakan kode yang sama
+        $row_fak = mysqli_fetch_assoc($result_fakultas);
+        $kode_fakultas = $row_fak['kode'];
+    } else {
+        // Jika fakultas baru, buat kode baru
+        $query_max_fak = "SELECT MAX(CAST(SUBSTRING(id_pendidikan, 4, 2) AS UNSIGNED)) as max_kode 
+                            FROM tb_pendidikan 
+                            WHERE LEFT(id_pendidikan, 3) = '$kode_nama'";
+        $result_max_fak = mysqli_query($conn, $query_max_fak);
+        $row_max_fak = mysqli_fetch_assoc($result_max_fak);
+        $next_kode_fak = ($row_max_fak['max_kode'] ?? 0) + 1;
+        $kode_fakultas = str_pad($next_kode_fak, 2, '0', STR_PAD_LEFT);
+    }
+    
+    // 4. Generate kode jurusan (2 digit terakhir)
+    $query_jurusan = "SELECT MAX(CAST(RIGHT(id_pendidikan, 2) AS UNSIGNED)) as max_kode 
+                        FROM tb_pendidikan 
+                        WHERE LEFT(id_pendidikan, 5) = '$kode_nama$kode_fakultas'";
+    
+    $result_jurusan = mysqli_query($conn, $query_jurusan);
+    $row_jurusan = mysqli_fetch_assoc($result_jurusan);
+    $next_kode_jur = ($row_jurusan['max_kode'] ?? 0) + 1;
+    $kode_jurusan = str_pad($next_kode_jur, 2, '0', STR_PAD_LEFT);
+    return $kode_nama . $kode_fakultas . $kode_jurusan;
+}
 
-        $query = "UPDATE tb_profile_user SET 
-                    nama_user = '$nama_user',
-                    tempat_lahir = '$tempat_lahir',
-                    tanggal_lahir = '$tanggal_lahir',
-                    telepone_user = '$telepone',
-                    jenis_kelamin = '$jenis_kelamin',
-                    alamat_user = '$alamat_user',
-                    gambar_user = '$gambar',
-                    change_by = '$id_user'
-                    WHERE id_user = '$id_user'
-            ";
-        if(mysqli_query($conn, $query)) {
+
+
+function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
+    global $conn;
+
+    $query_check = "SELECT id_pendidikan FROM tb_pendidikan 
+                    WHERE nama_pendidikan = '$nama_pendidikan' 
+                    AND jurusan = '$jurusan' 
+                    AND fakultas IS NULL 
+                    AND LENGTH(id_pendidikan) = 5";
+    $result_check = mysqli_query($conn, $query_check);
+    if (mysqli_num_rows($result_check) > 0) {
+        $row = mysqli_fetch_assoc($result_check);
+        return $row["id_pendidikan"];
+    }
+
+    // 2. Cek apakah nama_pendidikan sudah pernah ada
+    $query_nama = "SELECT LEFT(id_pendidikan, 3) as kode 
+                    FROM tb_pendidikan 
+                    WHERE nama_pendidikan = '$nama_pendidikan' 
+                    AND LENGTH(id_pendidikan) = 5 
+                    LIMIT 1";
+    $result_nama = mysqli_query($conn, $query_nama);
+
+    if (mysqli_num_rows($result_nama) > 0) {
+        $kode_nama = mysqli_fetch_assoc($result_nama)['kode'];
+    } else {
+        $query_max = "SELECT MAX(CAST(LEFT(id_pendidikan, 3) AS UNSIGNED)) as max_kode 
+                        FROM tb_pendidikan 
+                        WHERE LENGTH(id_pendidikan) = 5";
+        $result_max = mysqli_query($conn, $query_max);
+        $row_max = mysqli_fetch_assoc($result_max);
+        $next_kode = ($row_max['max_kode'] ?? 0) + 1;
+        $kode_nama = str_pad($next_kode, 3, '0', STR_PAD_LEFT);
+    }
+
+    // 3. Cari kode jurusan terakhir
+    $query_jurusan = "SELECT MAX(CAST(RIGHT(id_pendidikan, 2) AS UNSIGNED)) as max_kode 
+                        FROM tb_pendidikan 
+                        WHERE LEFT(id_pendidikan, 3) = '$kode_nama' 
+                        AND LENGTH(id_pendidikan) = 5";
+    $result_jurusan = mysqli_query($conn, $query_jurusan);
+    $row_jurusan = mysqli_fetch_assoc($result_jurusan);
+    $next_kode_jur = ($row_jurusan['max_kode'] ?? 0) + 1;
+    $kode_jurusan = str_pad($next_kode_jur, 2, '0', STR_PAD_LEFT);
+
+    $new_id = $kode_nama . $kode_jurusan;
+    return $new_id;
+}
+
+
+
+    function tambah_data_sekolah($POST) {
+        global $conn;
+        $id_user = $POST["id_user"];
+        $nama_sekolah = $POST["nama_sekolah_hidden"];
+        $jurusan_sekolah = $POST["jurusan_sekolah_hidden"];
+        $alamat_pendidikan = $POST["alamat_pendidikan"];
+        $id_pendidikan = generateIdPendidikan_sekolah($nama_sekolah, $jurusan_sekolah);
+        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_sekolah', '$jurusan_sekolah', '$alamat_pendidikan', '$id_user')";
+        if($id_pendidikan == 0) {
+            return 0;
+        }
+        if($query) {
             return mysqli_affected_rows($conn);
         } else {
             return 0;
         }
     }
+
+
+
+    function tambah_data_universitas($POST) {
+        global $conn;
+        $id_user = $POST["id_user"];
+        $nama_universitas = $POST["nama_universitas_hidden"];
+        $fakultas_universitas = $POST["fakultas_universitas_hidden"];
+        $jurusan_universitas = $POST["jurusan_universitas_hidden"];
+        $alamat_pendidikan = $POST["alamat_pendidikan"];
+        $id_pendidikan = generateIdPendidikan_universitas($nama_universitas, $fakultas_universitas, $jurusan_universitas);
+        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, fakultas, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_universitas', '$jurusan_universitas', '$alamat_pendidikan', '$id_user')";
+        if($id_pendidikan == 0) {
+            return 0;
+        }
+        if($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+
+
+    function hapus_pendidikan_super_admin($id_pendidikan, $id_user) {
+        global $conn;
+        $query = mysqli_query($conn, "UPDATE tb_pendidikan SET status_active = '0', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
+        if ($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+
+
+
+    function edit_pendidikan($POST) {
+        global $conn;
+        $id_pendidikan = $POST["id_pendidikan"];
+        $id_user = $POST["id_user"];
+        $nama_pendidikan = $POST["nama_pendidikan"];
+        $fakultas = $POST["fakultas"];
+        $jurusan = $POST["jurusan"];
+        $alamat_pendidikan = $POST["alamat_pendidikan"]; 
+        $query = mysqli_query($conn, "UPDATE tb_pendidikan SET nama_pendidikan = '$nama_pendidikan', fakultas = '$fakultas', jurusan = '$jurusan', alamat_pendidikan = '$alamat_pendidikan', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
+        if($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+// ============================== END OF PENDIDIKAN IN SUPER ADMIN ================================
+
+
+
+
 
 
 // ================================ INSTANSI SUPER ADMIN =================================
@@ -227,7 +369,7 @@ function tambah_instansi_super_admin($POST) {
     }
 
     $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, 'ssssssssss', $id_instansi, $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $telepone_instansi, $deskripsi_instansi, $gambar_instansi, $id_user);
 
@@ -280,7 +422,7 @@ function tambah_instansi_super_admin($POST) {
                 telepone_instansi = ?,
                 gambar_instansi = ?,
                 change_by = ?
-              WHERE id_instansi = ?";
+                WHERE id_instansi = ?";
     $stmt = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, 'sssssssssi', $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $deskripsi_instansi, $telepone_instansi, $gambar_instansi, $id_user, $id_instansi);
 
@@ -291,9 +433,12 @@ function tambah_instansi_super_admin($POST) {
         return 0;
     }
 }
+// =========================================== END OF INSTANSI IN SUPER ADMIN ==============================
 
 
 
+
+// ======================================= GENERATE ADMIN INSTANSI AND PENGAJUAN =====================================
     function generate_admin_instansi($POST) {
         global $conn;
         $id_super_admin = $POST["id_super_admin"];
@@ -307,8 +452,22 @@ function tambah_instansi_super_admin($POST) {
         }
     }
     
-    
-    
+
+    function hapus_pengajuan_by_super_admin($id_pengajuan, $change_by) {
+        global $conn;
+        $query = mysqli_query($conn, "UPDATE tb_pengajuan SET status_active = '0', change_by = '$change_by' WHERE id_pengajuan = '$id_pengajuan'");
+        if($query) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+// ============================== END OF GENERATE ADMIN INSTASNI IN SUPER ADMIN =========================
+
+
+
+
+// ============================== START OF CRUD USER IN SUPER ADMIN ==============================================
     function tambah_admin_instansi($POST) {
         global $conn;
         $create_by = $POST["id_user"];
@@ -335,8 +494,6 @@ function tambah_instansi_super_admin($POST) {
     }
     
     
-    
-
 
     function super_admin_edit($POST) {
         global $conn;
@@ -376,72 +533,25 @@ function tambah_instansi_super_admin($POST) {
             return 0;
         }
     }
-
-
-    function hapus_pengajuan_by_super_admin($id_pengajuan, $change_by) {
-        global $conn;
-        $query = mysqli_query($conn, "UPDATE tb_pengajuan SET status_active = '0', change_by = '$change_by' WHERE id_pengajuan = '$id_pengajuan'");
-        if($query) {
-            return mysqli_affected_rows($conn);
-        } else {
-            return 0;
-        }
-    }
-
-
-
-    function hapus_pendidikan_super_admin($id_pendidikan, $id_user) {
-        global $conn;
-        $query = mysqli_query($conn, "UPDATE tb_pendidikan SET status_active = '0', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
-        if ($query) {
-            return mysqli_affected_rows($conn);
-        } else {
-            return 0;
-        }
-    }
-
-
-    function edit_pendidikan($POST) {
-        global $conn;
-        $id_pendidikan = $POST["id_pendidikan"];
-        $id_user = $POST["id_user"];
-        $nama_pendidikan = $POST["nama_pendidikan"];
-        $fakultas = $POST["fakultas"];
-        $jurusan = $POST["jurusan"];
-        $alamat_pendidikan = $POST["alamat_pendidikan"]; 
-        $query = mysqli_query($conn, "UPDATE tb_pendidikan SET nama_pendidikan = '$nama_pendidikan', fakultas = '$fakultas', jurusan = '$jurusan', alamat_pendidikan = '$alamat_pendidikan', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
-        if($query) {
-            return mysqli_affected_rows($conn);
-        } else {
-            return 0;
-        }
-    }
+// ====================================== END OF CRUD USER IN SUPER ADMIN ===================================
 
 
 
 
-
-
+// =================================== START SETTING IN SUPER ADMIN =================================
     function edit_email_super_admin($POST) {
         global $conn;
         $email_baru = mysqli_real_escape_string($conn, $POST["email_baru"]); // Hindari SQL injection
         $id_user = mysqli_real_escape_string($conn, $POST["id_user"]); // Hindari SQL injection
-    
+
         $query = "UPDATE tb_user SET email = '$email_baru', change_by = '$id_user' WHERE id_user = '$id_user'";
-    
         if (mysqli_query($conn, $query)) {
             return mysqli_affected_rows($conn); // Kembalikan jumlah baris yang terpengaruh
         } else {
             die("Error: " . mysqli_error($conn)); // Debugging error MySQL
         }
     }    
-
-
-
-
-
-
-
+// ============================ END OF SETTINGS IN SUPER ADMIN =================================
 // ====================================== END OF SUPER ADMIN LEVEL (1) ============================================================
 
 
