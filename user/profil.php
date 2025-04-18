@@ -6,6 +6,51 @@ $query2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($query2);
 ?>
 
+
+<!-- Modal Preview Gambar -->
+<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img class="image-modal-content" id="modalPreviewImage">
+</div>
+
+<style>
+    /* style for preview image */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999; /* Lebih tinggi dari modal Bootstrap */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+    }
+
+    .image-modal-close:hover {
+        color: #ccc;
+    }
+</style>
+
 <div class="main-content p-4">
     <div class="container-fluid">
         <h1 class="mb-4">Profile Saya</h1>
@@ -16,7 +61,7 @@ $row2 = mysqli_fetch_assoc($query2);
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
                 <div class="card-body top">
-                    <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
+                    <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;" onclick="openImageModal(this)">
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>
 
@@ -256,6 +301,20 @@ if (isset($_POST['update_profil'])) {
         </div>
     </div>
 </div>
+
+<script>
+    function openImageModal(img) {
+        const modal = document.getElementById("imageModalPreview");
+        const modalImg = document.getElementById("modalPreviewImage");
+
+        modal.style.display = "flex"; // make it center using flex
+        modalImg.src = img.src;
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModalPreview").style.display = "none";
+    }
+</script>
 
 <script>
     function previewFile() {

@@ -144,7 +144,7 @@ if (isset($_POST["edit_data_user"])) {
                                 <td><?= $u["telepone_user"] ?></td>
                                 <td><?= $u["alamat_user"] ?></td>
                                 <td>
-                                    <img src="../assets/img/user/<?= $u["gambar_user"] ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;" onclick="openImageModal(this)">
+                                    <img src="../assets/img/user/<?= !empty($u['gambar_user']) ? $u['gambar_user'] : 'avatar.png' ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;" onclick="openImageModal(this)">
                                 </td>
                                 <td><?= $level ?></td>
                                 <td class="d-flex justify-content-center gap-2">

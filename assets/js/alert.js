@@ -108,8 +108,7 @@ function alertSuccessEdit(message, redirectUrl) {
 
 
 
-
-
+// ================== super admin =================
 function alert_berhasil_gagal_super_admin(icon, title, text, link) {
   Swal.fire({
     icon : icon,
@@ -123,6 +122,95 @@ function alert_berhasil_gagal_super_admin(icon, title, text, link) {
     }
   })
 }
+
+
+
+function confirm_hapus_instansi_super_admin(id_instansi) {
+  Swal.fire ({
+    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
+    icon: "warning",
+    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
+    confirmButtonText: "YA! Hapus",
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "super1_instansi.php?id_instansi_ini=" + id_instansi;
+    }
+  });
+}
+
+
+
+function confirm_hapus_user_super_admin(id_user) {
+  Swal.fire ({
+    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
+    icon: "warning",
+    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
+    confirmButtonText: "YA! Hapus",
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "super1_user.php?id_user_ini=" + id_user;
+    }
+  });
+}
+
+
+function hapus_pengajuan_by_super_admin(id_pengajuan) {
+  Swal.fire({
+    title: "Apakah Anda yakin Ingin Menghapus Pengajuan Ini",
+    icon: "warning",
+    text: "Data Yang Dihapus Tidak Dapat Dikembalikan Lagi",
+    confirmButtonText: "Ya! Hapus",
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor : "#d33",
+    cancelButtonText : "Batal",
+    showCancelButton: true,
+  }).then((result) =>  {
+    if(result.isConfirmed) {
+      window.location.href = "super1_pengajuan.php?id_pengajuan_ini=" + id_pengajuan;
+    }
+  })
+}
+
+
+function confirm_hapus_pendidikan_super_admin(id_pendidikan) {
+  Swal.fire ({
+    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
+    icon: "warning",
+    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
+    confirmButtonText: "YA! Hapus",
+    showCancelButton: true,
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "super1_pendidikan.php?id_pendidikan_ini=" + id_pendidikan;
+    }
+  });
+}
+
+
+// ============================= end bagian super admin =======================
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -407,6 +495,8 @@ function tidak_ada_perubahan_profile() {
   })
 }
 
+
+
 // Logout admin instansi
 function logout_admin_instansi() {
   Swal.fire({
@@ -441,434 +531,7 @@ function logout_admin_instansi() {
 
 
 
-
-
-
-
-// =================================== SWEET ALERT SUPER ADMIN LEVEL(1) =======================================
-// edit profile
-function edit_profile_super_admin_success() {
-  Swal.fire({
-    icon: "success",
-    title: "Berhasil Edit Profile Saya",
-    text: "Edit Profile Berhasil Dilakukan",
-    confirmButtonColor: "#3085d6",
-    confirmButtonText: "OK",
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "profile.php";
-    }
-  })
-}
-
-function edit_profile_super_admin_gagal() {
-  Swal.fire({
-    icon: "error",
-    title: "Gagal Edit Profile Saya",
-    text: "Edit Profile Gagal Dilakukan",
-    confirmButtonColor: "#3085d6",
-    confirmButtonText: "OK",
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "profile.php";
-    }
-  })
-}
-
-
-// crud tabel instansi
-function tambah_instansi_super_admin_success() {
-  Swal.fire({
-    icon: "success",
-    title: "Berhasil",
-    text: "Tambah Instansi Berhasil Dilakukan",
-    confirmButtonColor: "#3085d6",
-    confirmButtonText: "OK",
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_instansi.php";
-    }
-  })
-}
-
-
-function tambah_instansi_super_admin_gagal() {
-  Swal.fire({
-    icon: "error",
-    title: "Gagal",
-    text: "Tambah Instansi Gagal Dilakukan",
-    confirmButtonColor: "#3085d6",
-    confirmButtonText: "OK",
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_instansi.php";
-    }
-  })
-}
-
-
-function edit_instansi_super_admin_success() {
-  Swal.fire({
-    icon: "success",
-    title: "Berhasil",
-    text : "Edit Data Instansi Berhasil :)",
-    confirmButtonColor : "#3085d6",
-    confirmButtonText: "OK",
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_instansi.php";
-    }
-  })
-}
-
-function edit_instansi_super_admin_gagal() {
-  Swal.fire({
-    title: "Gagal",
-    icon: "error",
-    text: "Edit Data Instansi Gagal :(",
-    confirmButtonText : "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_instansi.php";
-    }
-  })
-}
-
-
-function confirm_hapus_instansi_super_admin(id_instansi) {
-  Swal.fire ({
-    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
-    icon: "warning",
-    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
-    confirmButtonText: "YA! Hapus",
-    showCancelButton: true,
-    cancelButtonText: "Batal",
-    cancelButtonColor: "#d33",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_instansi.php?id_instansi_ini=" + id_instansi;
-    }
-  });
-}
-
-
-function hapus_instansi_super_admin_success() {
-  Swal.fire({
-    title: "Berhasil!",
-    icon: "success",
-    text: "Data Instansi Berhasil Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_instansi.php";
-    }
-  })
-}
-
-function hapus_instansi_super_admin_gagal() {
-  Swal.fire({
-    title: "Gagal!",
-    icon: "error",
-    text: "Data Instansi Gagal Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_instansi.php";
-    }
-  })
-}
-
-
-
-
-// crud tabel user by super admin
-function confirm_hapus_user_super_admin(id_user) {
-  Swal.fire ({
-    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
-    icon: "warning",
-    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
-    confirmButtonText: "YA! Hapus",
-    showCancelButton: true,
-    cancelButtonText: "Batal",
-    cancelButtonColor: "#d33",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_user.php?id_user_ini=" + id_user;
-    }
-  });
-}
-
-
-function hapus_user_super_admin_success() {
-  Swal.fire({
-    title: "Berhasil!",
-    icon: "success",
-    text: "Data User Berhasil Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_user.php";
-    }
-  })
-}
-
-function hapus_user_super_admin_gagal() {
-  Swal.fire({
-    title: "Gagal!",
-    icon: "error",
-    text: "Data User Gagal Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_user.php";
-    }
-  })
-}
-
-
-
-function tambah_user_super_admin_success() {
-  Swal.fire ({
-    title: "Berhasil",
-    icon : "success",
-    text : "Tambah Admin Instansi Berhasil",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then ((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_user.php";
-    }
-  })
-}
-
-
-function tambah_user_super_admin_gagal() {
-  Swal.fire ({
-    title: "Gagal",
-    icon : "error",
-    text : "Tambah Admin Instansi Gagal",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then ((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_user.php";
-    }
-  })
-}
-
-
-function edit_user_super_admin_success() {
-  Swal.fire ({
-    title: "Berhasil",
-    icon : "success",
-    text : "Edit User Berhasil",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then ((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_user.php";
-    }
-  })
-}
-
-
-function edit_user_super_admin_gagal() {
-  Swal.fire ({
-    title: "Gagal",
-    icon : "error",
-    text : "Edit User Gagal",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then ((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_user.php";
-    }
-  })
-}
-
-
-// hapus tabel Pengajuan
-function hapus_pengajuan_by_super_admin(id_pengajuan) {
-  Swal.fire({
-    title: "Apakah Anda yakin Ingin Menghapus Pengajuan Ini",
-    icon: "warning",
-    text: "Data Yang Dihapus Tidak Dapat Dikembalikan Lagi",
-    confirmButtonText: "Ya! Hapus",
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor : "#d33",
-    cancelButtonText : "Batal",
-    showCancelButton: true,
-  }).then((result) =>  {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pengajuan.php?id_pengajuan_ini=" + id_pengajuan;
-    }
-  })
-}
-
-
-function hapus_pengajuan_super_admin_success() {
-  Swal.fire({
-    title: "Berhasil!",
-    icon: "success",
-    text: "Pengajuan User Berhasil Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pengajuan.php";
-    }
-  })
-}
-
-function hapus_pengajuan_super_admin_gagal() {
-  Swal.fire({
-    title: "Gagal!",
-    icon: "error",
-    text: "Pengajuan User Gagal Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pengajuan.php";
-    }
-  })
-}
-
-// generate admin instansi
-function generate_admin_instansi_success(){
-  Swal.fire({
-    title: "Berhasil!",
-    icon: "success",
-    text: "Berhasil Menjadikan Admin Instansi",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_admin_instansi.php";
-    }
-  })
-}
-
-function generate_admin_instansi_gagal() {
-  Swal.fire({
-    title: "Gagal!",
-    icon: "error",
-    text: "Gagal Menjadikan Admin Instansi",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_admin_instansi.php";
-    }
-  })
-}
-
-
-
-// halaman pendidikan
-
-// crud tabel user by super admin
-function confirm_hapus_pendidikan_super_admin(id_pendidikan) {
-  Swal.fire ({
-    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
-    icon: "warning",
-    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
-    confirmButtonText: "YA! Hapus",
-    showCancelButton: true,
-    cancelButtonText: "Batal",
-    cancelButtonColor: "#d33",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pendidikan.php?id_pendidikan_ini=" + id_pendidikan;
-    }
-  });
-}
-
-
-function hapus_pendidikan_super_admin_success() {
-  Swal.fire({
-    title: "Berhasil!",
-    icon: "success",
-    text: "Data Pendidikan Berhasil Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pendidikan.php";
-    }
-  })
-}
-
-function hapus_pendidikan_super_admin_gagal() {
-  Swal.fire({
-    title: "Gagal!",
-    icon: "error",
-    text: "Data Pendidikan Gagal Dihapus",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pendidikan.php";
-    }
-  })
-}
-
-
-
-function edit_pendidikan_super_admin_success() {
-  Swal.fire({
-    icon: "success",
-    title: "Berhasil",
-    text : "Edit Data pendidikan Berhasil :)",
-    confirmButtonColor : "#3085d6",
-    confirmButtonText: "OK",
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pendidikan.php";
-    }
-  })
-}
-
-function edit_pendidikan_super_admin_gagal() {
-  Swal.fire({
-    title: "Gagal",
-    icon: "error",
-    text: "Edit Data pendidikan Gagal :(",
-    confirmButtonText : "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if(result.isConfirmed) {
-      window.location.href = "super1_pendidikan.php";
-    }
-  })
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// halmaan settings
+//============================ halmaan settings ===========================
 function confirm_edit_email_super_admin() {
   let emailBaru = document.getElementById("email_baru").value.trim();
 
