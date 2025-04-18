@@ -30,6 +30,52 @@
     }
 ?>
 
+
+<!-- Modal Preview Gambar -->
+<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img class="image-modal-content" id="modalPreviewImage">
+</div>
+
+<style>
+    /* style for preview image */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999; /* Lebih tinggi dari modal Bootstrap */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+    }
+
+    .image-modal-close:hover {
+        color: #ccc;
+    }
+</style>
+
+
 <div class="container-fluid px-4">
     <h1 class="mt-4">Halaman Daftar Instansi</h1>
 </div>
@@ -65,7 +111,7 @@
                         <td><?= $opd["nama_pendek"] ?></td>
                         <td><?= $opd["nama_panjang"] ?></td>
                         <td><?= $opd["group_instansi"] ?></td>
-                        <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi"></td>
+                        <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi" onclick="openImageModal(this)"></td>
 
                         <td class="d-flex justify-content-center gap-2">
                             <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_instansi_super_admin(<?= $opd['id_instansi'] ?>)">
@@ -145,7 +191,7 @@
                     <div class="input-field ">
                         <label for="image">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
                         <div class="image-preview" id="imagePreview">
-                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="file" class="input" id="image" name="gambar_instansi" accept="image/*" onchange="validateFile()">
                     </div>
@@ -203,7 +249,7 @@
                     <div class="input-field">
                         <label for="gambar_instansi_edit">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
                         <div class="image-preview" id="imagePreviewEdit">
-                            <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                            <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
                             <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $opd["gambar_instansi"] ?>">
                         </div>
                         <input type="file" class="input" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="validateFileEdit()">
@@ -283,6 +329,21 @@ function validateFile() {
             reader.readAsDataURL(file);
         }
     }
+
+
+    function openImageModal(img) {
+        const modal = document.getElementById("imageModalPreview");
+        const modalImg = document.getElementById("modalPreviewImage");
+
+        modal.style.display = "flex"; // make it center using flex
+        modalImg.src = img.src;
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModalPreview").style.display = "none";
+    }
+
+
 
     function validateFileEdit() {
     const fileInput = document.getElementById('gambar_instansi_edit');

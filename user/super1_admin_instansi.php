@@ -14,6 +14,53 @@
     }
 ?>
 
+
+
+<!-- Modal Preview Gambar -->
+<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img class="image-modal-content" id="modalPreviewImage">
+</div>
+
+<style>
+    /* style for preview image */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999; /* Lebih tinggi dari modal Bootstrap */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+    }
+
+    .image-modal-close:hover {
+        color: #ccc;
+    }
+</style>
+
+
 <main>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Halaman Daftar Calon Admin Instansi</h1>
@@ -46,7 +93,7 @@
                             <td><?= $calon["telepone_user"] ?></td>
                             <td><?= $calon["alamat_user"] ?></td>
                             <td>
-                                <img src="../assets/img/user/<?= $calon["gambar_user"] ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                <img src="../assets/img/user/<?= $calon["gambar_user"] ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;" onclick="openImageModal(this)">
                             </td>
                             <td><?= ($calon["level"] == '2' ? "Admin Instansi" : "Bukan Admin Instansi") ?></td>
                             <td>
@@ -82,7 +129,7 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <img id="modal-gambar" src="" alt="Gambar User" class="img-thumbnail mb-3" width="100">
+                    <img id="modal-gambar" src="" alt="Gambar User" class="img-thumbnail mb-3" width="100" onclick="openImageModal(this)">
                 </div>
                 <table class="table">
                     <tr><td><strong>Nama:</strong></td><td id="modal-nama"></td></tr>
@@ -158,4 +205,18 @@
     });
 });
 
+</script>
+
+<script>
+    function openImageModal(img) {
+        const modal = document.getElementById("imageModalPreview");
+        const modalImg = document.getElementById("modalPreviewImage");
+
+        modal.style.display = "flex"; // make it center using flex
+        modalImg.src = img.src;
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModalPreview").style.display = "none";
+    }
 </script>
