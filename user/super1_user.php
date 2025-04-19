@@ -21,7 +21,14 @@ if (isset($_GET["id_user_ini"])) {
 
 // Handle tambah data
 if (isset($_POST["tambah_admin_instansi"])) {
-    if (tambah_admin_instansi($_POST)) { ?>
+    $result = tambah_admin_instansi($_POST);
+    if ($result === 404) { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Email Sudah Terdaftar Didalam Database, Silahkan Periksa Atau gunakan email Yang Lain", "super1_user.php"); </script>
+    <?php } else if ($result === 405) { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "NIK Sudah Terdaftar Didialam Database, Silahkan Periksa Atau Gunakan NIK Yang Lain", "super1_user.php"); </script>
+    <?php } else if ($result === 406) { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "NIP Sudah Terdaftar Didialam Database, Silahkan Periksa Atau Gunakan NIP Yang Lain", "super1_user.php"); </script>
+    <?php } else if ($result > 0) { ?>
         <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data User Berhasil", "super1_user.php"); </script>
     <?php } else { ?>
         <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data User Gagal", "super1_user.php"); </script>
@@ -238,7 +245,7 @@ if (isset($_POST["edit_data_user"])) {
 
                         <div class="mb-3 col-6">
                             <label for="telepon" class="form-label">Telepon</label>
-                            <input type="tel" class="form-control" id="telepon" name="telepone_user">
+                            <input type="tel" class="form-control" id="telepon" name="telepone_user" pattern="[0-9]{8,15}" maxlength="15">
                             <small id="telepon_error" class="text-danger"></small>
                         </div>
                     </div>
@@ -508,4 +515,31 @@ if (isset($_POST["edit_data_user"])) {
             ]
         })
     })
+</script>
+
+
+<!-- validasi -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const nikInput = document.getElementById("nik");
+    const nipInput = document.getElementById("nip");
+
+    nikInput.addEventListener("input", function () {
+        const warning = document.getElementById("nik_error");
+        if (this.value.length < 16) {
+            warning.textContent = "NIK harus terdiri dari 16 digit.";
+        } else {
+            warning.textContent = "";
+        }
+    });
+
+    nipInput.addEventListener("input", function () {
+        const warning = document.getElementById("nip_error");
+        if (this.value.length < 18) {
+            warning.textContent = "NIP harus terdiri dari 18 digit.";
+        } else {
+            warning.textContent = "";
+        }
+    });
+});
 </script>

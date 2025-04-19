@@ -382,8 +382,7 @@ function tambah_instansi_super_admin($POST) {
     $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
     if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
-        header("Location: instansi.php?error=id_instansi_terdaftar");
-        exit;
+        return 404;
     }
 
     $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
@@ -500,7 +499,17 @@ function tambah_instansi_super_admin($POST) {
         $telepone_user = $POST["telepone_user"];
         $alamat_user = $POST["alamat_user"];
         $gambar_user = uploadImage($_FILES["gambar_user"], "avatar.png", "../assets/img/user/");
-    
+        
+        if (checking($conn, 'tb_user', 'email', $email)) {
+            return 404;
+        }
+        if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
+            return 405;
+        }
+        if (checking($conn, 'tb_profile_user', 'nip', $nip)) {
+            return 406;
+        }
+
         $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
         $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
                             VALUES ('$id_user', '$nama_user', '$nik', '$nip', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
@@ -568,7 +577,20 @@ function tambah_instansi_super_admin($POST) {
         } else {
             die("Error: " . mysqli_error($conn)); // Debugging error MySQL
         }
-    }    
+    }
+    
+    function generate_super_admin($POST) {
+        global $conn;
+        $change_by = $POST["change_by"];
+        $calon = $POST["calon"];
+
+        $query = "UPDATE tb_user SET level = '1', change_by = '$change_by' WHERE id_user = '$calon'";
+        if (mysqli_query($conn, $query)) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
 // ============================ END OF SETTINGS IN SUPER ADMIN =================================
 // ====================================== END OF SUPER ADMIN LEVEL (1) ============================================================
 
