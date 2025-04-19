@@ -15,7 +15,7 @@ $row2 = mysqli_fetch_assoc($query2);
         <div class="dropdown-divider"></div>
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
-                <div class="card-body top">
+                <div class="card-body top-2">
                     <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>

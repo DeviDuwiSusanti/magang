@@ -81,7 +81,7 @@
     cursor: pointer;
     border: none;
     background: none;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--text-color);
 }
 
@@ -779,3 +779,76 @@ body.dark-mode .clock-text {
         margin-top: 5px;
     }
 }
+
+.datatable-scrollable {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.datatable-wrapper {
+    overflow-x: auto;
+}
+
+.datatable-header,
+.datatable-footer {
+    background: #fff;
+    z-index: 2;
+}
+
+body.dark-mode .datatable-header,
+body.dark-mode .datatable-footer {
+    background: #212529;
+    color: #f1f1f1;
+}
+
+/* body.dark-mode .datatable-header select {
+    background-color: #212529;
+    color: #ffffff;
+    border: 1px solid #444;
+} */
+
+body.dark-mode select {
+    appearance: none; /* hilangkan default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-color: #212529;
+    color: white;
+    border: 1px solid #555;
+
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='white' class='bi bi-caret-down-fill' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658c-.566-.62-.106-1.658.753-1.658h9.592c.86 0 1.32 1.038.754 1.658L8.753 11.14a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1em;
+    padding-right: 2rem;
+}
+
+body.dark-mode .dataTables_wrapper .dataTables_paginate,
+body.dark-mode .dataTables_wrapper .dataTables_info {
+    color: #ffffff;
+}
+
+body.dark-mode .dataTables_wrapper .paginate_button {
+    background-color: #2a2a3d !important;
+    color: #fff !important;
+    border: 1px solid #555 !important;
+}
+
+body.dark-mode .dataTables_wrapper .paginate_button.current {
+    background-color: #007bff !important;
+    color: #fff !important;
+}
+
+
+
+/* Batasi elemen-elemen DataTables agar gak melebihi lebar container */
+/* .dataTables_wrapper .row {
+    margin-left: 0;
+    margin-right: 0;
+} */
+
+/* .dataTables_wrapper .row > div {
+    overflow-x: auto;
+    white-space: nowrap;
+} */
+
