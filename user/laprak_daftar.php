@@ -5,14 +5,20 @@ include "functions.php";
 
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // Maksimum ukuran file 5MB
 
-// Ambil ID User & ID Pengajuan
-if (!isset($_SESSION['id_user']) || !isset($_SESSION['id_pengajuan'])) {
+// Ambil ID User dari session dan ID Pengajuan dari parameter GET
+if (!isset($_SESSION['id_user'])) {
     echo "<script>alert('Session tidak ditemukan, silakan login kembali.'); window.location.href='../login.php';</script>";
     exit;
 }
 
 $id_user = $_SESSION['id_user'];
-$id_pengajuan = $_SESSION['id_pengajuan'];
+$id_pengajuan = isset($_GET['id_pengajuan']) ? mysqli_real_escape_string($conn, $_GET['id_pengajuan']) : '';
+
+if (empty($id_pengajuan)) {
+    echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='histori.php';</script>";
+    exit;
+}
+
 
 // Ambil level user
 $sql_user = "SELECT level FROM tb_user WHERE id_user = '$id_user'";
@@ -66,7 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
             $icon = "error";
             break;
         default:
-            $laporan_akhir = uploadFile($_FILES['laporan_akhir']);
+            // Panggil fungsi uploadFileUser
+            $laporan_akhir = uploadFileUser($_FILES['laporan_akhir'], $id_pengajuan);
             if (!isset($laporan_akhir['error'])) {
                 $laporan_name = $laporan_akhir['name'];
                 $laporan_path = $laporan_akhir['path'];
@@ -96,6 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     </script>";
     exit;
 }
+
 
 // Tambahkan skrip hapus file
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {

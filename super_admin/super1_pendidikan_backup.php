@@ -8,73 +8,36 @@ $no = 1;
 // Handle hapus data
 if (isset($_GET["id_pendidikan_ini"])) {
     $id_pendidikan_ini = $_GET["id_pendidikan_ini"];
-    if (hapus_pendidikan_super_admin($id_pendidikan_ini, $id_user)) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data Pendidikan Berhasil", "super1_pendidikan.php"); </script>
-    <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data Pendidikan Gagal", "super1_pendidikan.php"); </script>
-    <?php }
+    if (hapus_pendidikan_super_admin($id_pendidikan_ini, $id_user)) { 
+        echo "<script>hapus_pendidikan_super_admin_success()</script>";
+    } else { 
+        echo "<script>hapus_pendidikan_super_admin_gagal()</script>";
+    }
 }
 
 
 if(isset($_POST["edit_pendidikan"])) {
     if(edit_pendidikan($_POST) > 0) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data Pendidikan Berhasil", "super1_pendidikan.php"); </script>
+        <script>edit_pendidikan_super_admin_success()</script>
     <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data Pendidikan Gagal", "super1_pendidikan.php"); </script>
-    <?php }
-}
-
-if (isset($_POST["tambah_sekolah"])) {
-    $result = tambah_data_sekolah($_POST);
-
-    if ($result == 404) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php"); </script>
-    <?php } elseif ($result == 405) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php"); </script>
-    <?php } elseif ($result > 0) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php"); </script>
-    <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
+        <script>edit_pendidikan_super_admin_gagal()</script>
     <?php }
 }
 
 
-if (isset($_POST["tambah_universitas"])) {
-    $result = tambah_data_universitas($_POST);
-
-    if ($result == 404) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php"); </script>
-    <?php } elseif ($result == 405) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php"); </script>
-    <?php } elseif ($result > 0) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php"); </script>
-    <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
-    <?php }
-}
-
-
-// Ambil semua jurusan berdasarkan sekolah yang tersedia
+// Struktur data sekolah
 $sekolahData = [];
-$rows = query("SELECT nama_pendidikan, jurusan FROM tb_pendidikan WHERE (fakultas IS NULL OR fakultas = '') AND status_active = '1' ");
-
-foreach ($rows as $row) {
-    $nama = $row['nama_pendidikan'];
-    $jurusan = $row['jurusan'];
-
-    if (!isset($sekolahData[$nama])) {
-        $sekolahData[$nama] = [];
-    }
-
-    if ($jurusan && !in_array($jurusan, $sekolahData[$nama])) {
-        $sekolahData[$nama][] = $jurusan;
-    }
+$sekolah = query("SELECT * FROM tb_pendidikan WHERE fakultas IS NULL");
+foreach ($sekolah as $school) {
+    $sekolahData[$school['nama_pendidikan']][] = [
+        'id_pendidikan' => $school['id_pendidikan'],
+        'jurusan' => $school['jurusan']
+    ];
 }
-
 
 // Struktur data perguruan tinggi
 $universitasData = [];
-$perguruan_tinggi = query("SELECT * FROM tb_pendidikan WHERE (fakultas IS NOT NULL AND fakultas != '') AND status_active = '1' ");
+$perguruan_tinggi = query("SELECT * FROM tb_pendidikan WHERE fakultas IS NOT NULL");
 foreach ($perguruan_tinggi as $kampus) {
     $universitasData[$kampus['nama_pendidikan']][$kampus['fakultas']][] = [
         'id_pendidikan' => $kampus['id_pendidikan'],
@@ -98,15 +61,20 @@ foreach ($perguruan_tinggi as $kampus) {
             </ol>
         </div>
         <div class="container mt-5 mb-5">                        
-            <!-- Tambah Data Buttons (Tanpa Dropdown) -->
+            <!-- Tambah Data Button -->
             <div class="mb-3 text-end">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-success me-2" id="tambahSekolah">
-                        <i class="bi bi-plus-circle me-1"></i>Sekolah
+                    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-plus-circle me-1"></i>Tambah Data
                     </button>
-                    <button type="button" class="btn btn-primary" id="tambahUniversitas">
-                        <i class="bi bi-plus-circle me-1"></i>Perguruan Tinggi
-                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#" class="dropdown-item" id="tambahSekolah">Sekolah</a>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-item" id="tambahUniversitas">Perguruan Tinggi</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
@@ -165,8 +133,7 @@ foreach ($perguruan_tinggi as $kampus) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formEditPendidikan" action="" method="POST">
-                        <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
+                    <form id="formEditPendidikan" action="" method="POST" enctype="multipart/form-data">
                         <input type="hidden" name="id_pendidikan" id="id_pendidikan_edit">
                         <input type="hidden" name="id_user" id="id_user_edit">
                         <div class="mb-3">
@@ -207,37 +174,29 @@ foreach ($perguruan_tinggi as $kampus) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
-                    <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
-                    <div class="mb-3">
-                        <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
-                        <select class="form-control select2" id="nama_sekolah" name="nama_sekolah" required>
-                            <option value="">Pilih Sekolah</option>
-                            <?php
-                            $sekolah = query("SELECT DISTINCT nama_pendidikan FROM tb_pendidikan WHERE fakultas IS NULL");
-                            foreach ($sekolah as $s) : ?>
-                                <option value="<?= $s['nama_pendidikan'] ?>"><?= $s['nama_pendidikan'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <input type="hidden" id="nama_sekolah_hidden" name="nama_sekolah_hidden">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="jurusan_sekolah" class="form-label">Jurusan</label>
-                        <select class="form-control select2" id="jurusan_sekolah" name="jurusan_sekolah" required>
-                            <option value="">Pilih Jurusan</option>
-                        </select>
-                        <input type="hidden" id="jurusan_sekolah_hidden" name="jurusan_sekolah_hidden">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="alamat_pendidikan" class="form-label">Alamat </label>
-                        <textarea name="alamat_pendidikan" id="almaat_pendidikan" class="form-control"></textarea>
-                    </div>
-
+                    <form action="proses_tambah_sekolah.php" method="POST">
+                        <div class="mb-3">
+                            <label for="nama_sekolah" class="form-label">Nama Sekolah</label>
+                            <select class="form-control select2" id="nama_sekolah" name="nama_sekolah" required>
+                                <option value="">Pilih Sekolah</option>
+                                <?php
+                                $sekolah = query("SELECT DISTINCT nama_pendidikan FROM tb_pendidikan WHERE fakultas IS NULL");
+                                foreach ($sekolah as $s) : ?>
+                                    <option value="<?= $s['nama_pendidikan'] ?>"><?= $s['nama_pendidikan'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <input type="hidden" id="nama_sekolah_hidden" name="nama_sekolah_hidden">
+                        </div>
+                        <div class="mb-3">
+                            <label for="jurusan_sekolah" class="form-label">Jurusan</label>
+                            <select class="form-control select2" id="jurusan_sekolah" name="jurusan_sekolah" required>
+                                <option value="">Pilih Jurusan</option>
+                            </select>
+                            <input type="hidden" id="jurusan_sekolah_hidden" name="jurusan_sekolah_hidden">
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" name="tambah_sekolah" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
                 </div>
@@ -254,8 +213,7 @@ foreach ($perguruan_tinggi as $kampus) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST">
-                    <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
+                    <form action="proses_tambah_universitas.php" method="POST">
                         <div class="mb-3">
                             <label for="nama_universitas" class="form-label">Nama Universitas</label>
                             <select class="form-control select2" id="nama_universitas" name="nama_universitas" required>
@@ -282,22 +240,15 @@ foreach ($perguruan_tinggi as $kampus) {
                             </select>
                             <input type="hidden" id="jurusan_universitas_hidden" name="jurusan_universitas_hidden">
                         </div>
-
-                        <div class="mb-3">
-                            <label for="alamat_pendidikan" class="form-label">Alamat </label>
-                            <textarea name="alamat_pendidikan" id="almaat_pendidikan" class="form-control"></textarea>
-                        </div>
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" name="tambah_universitas" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    
 
     <?php include "../layout/footerDashboard.php" ?>
 
@@ -402,13 +353,45 @@ foreach ($perguruan_tinggi as $kampus) {
                     });
                 }
             });
-        });
-</script>
 
+            // Event listener untuk pilihan universitas
+            document.getElementById("nama_universitas").addEventListener("change", function() {
+                let facultySelect = document.getElementById("fakultas_universitas");
+                let selectedUniversity = this.value;
+
+                // Kosongkan opsi sebelumnya
+                facultySelect.innerHTML = '<option value="">Pilih Fakultas</option>';
+
+                if (selectedUniversity && universitasData[selectedUniversity]) {
+                    Object.keys(universitasData[selectedUniversity]).forEach(fakultas => {
+                        let option = new Option(fakultas, fakultas);
+                        facultySelect.appendChild(option);
+                    });
+                }
+            });
+
+            // Event listener untuk pilihan fakultas
+            document.getElementById("fakultas_universitas").addEventListener("change", function() {
+                let prodiSelect = document.getElementById("jurusan_universitas");
+                let selectedUniversity = document.getElementById("nama_universitas").value;
+                let selectedFaculty = this.value;
+
+                // Kosongkan opsi sebelumnya
+                prodiSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
+
+                if (selectedUniversity && selectedFaculty && universitasData[selectedUniversity][selectedFaculty]) {
+                    universitasData[selectedUniversity][selectedFaculty].forEach(item => {
+                        let option = new Option(item.jurusan, item.id_pendidikan);
+                        prodiSelect.appendChild(option);
+                    });
+                }
+            });
+        });
+    </script>
 
 <script>
         $(document).ready(function() {
-             // Inisialisasi Select2 dengan opsi input manual
+            // Inisialisasi Select2 dengan opsi input manual
             $('#nama_sekolah, #jurusan_sekolah').select2({
                 tags: true, // Aktifkan input manual
                 placeholder: "Pilih atau ketik manual",
@@ -416,93 +399,32 @@ foreach ($perguruan_tinggi as $kampus) {
                 dropdownParent: $('#modalTambahSekolah') // Dropdown muncul di dalam modal
             });
 
-            // Update jurusan berdasarkan sekolah yang dipilih
-            $('#nama_sekolah').on('change', function () {
-                const selectedSekolah = $(this).val();
-                const jurusanSelect = $('#jurusan_sekolah');
-
-                // Reset jurusan
-                jurusanSelect.empty().trigger('change');
-                $('#jurusan_sekolah_hidden').val(''); // reset hidden
-
-                if (sekolahData[selectedSekolah]) {
-                    sekolahData[selectedSekolah].forEach(jurusan => {
-                        const option = new Option(jurusan, jurusan, false, false);
-                        jurusanSelect.append(option);
-                    });
-                }
-
-                jurusanSelect.trigger('change'); // Refresh Select2
-                $('#nama_sekolah_hidden').val(selectedSekolah); // Update hidden value
-            });
-            
-            $('#nama_sekolah').on('change', function() {
-            $('#nama_sekolah_hidden').val($(this).val());
-        });
-
-            $('#jurusan_sekolah').on('change', function() {
-            $('#jurusan_sekolah_hidden').val($(this).val());
-        });
-
-
-
-        
-            // Inisialisasi Select2
             $('#nama_universitas, #fakultas_universitas, #jurusan_universitas').select2({
-                tags: true,
+                tags: true, // Aktifkan input manual
                 placeholder: "Pilih atau ketik manual",
                 allowClear: true,
-                dropdownParent: $('#modalTambahUniversitas')
+                dropdownParent: $('#modalTambahUniversitas') // Dropdown muncul di dalam modal
             });
 
-            // Dinamis fakultas saat universitas dipilih
-            $('#nama_universitas').on('change', function () {
-                const selectedUniversity = $(this).val();
-                const fakultasSelect = $('#fakultas_universitas');
-                const jurusanSelect = $('#jurusan_universitas');
-
-                fakultasSelect.empty().trigger('change');
-                jurusanSelect.empty().trigger('change');
-                $('#fakultas_universitas_hidden').val('');
-                $('#jurusan_universitas_hidden').val('');
-
-                if (universitasData[selectedUniversity]) {
-                    Object.keys(universitasData[selectedUniversity]).forEach(fakultas => {
-                        const option = new Option(fakultas, fakultas, false, false);
-                        fakultasSelect.append(option);
-                    });
-                }
-
-                fakultasSelect.trigger('change');
-                $('#nama_universitas_hidden').val(selectedUniversity);
+            // Simpan nilai yang dipilih atau diinput manual ke input hidden
+            $('#nama_sekolah').on('change', function() {
+                $('#nama_sekolah_hidden').val($(this).val());
             });
 
-            // Dinamis jurusan saat fakultas dipilih
-            $('#fakultas_universitas').on('change', function () {
-                const selectedUniversity = $('#nama_universitas').val();
-                const selectedFaculty = $(this).val();
-                const jurusanSelect = $('#jurusan_universitas');
-
-                jurusanSelect.empty().trigger('change');
-                $('#jurusan_universitas_hidden').val('');
-
-                if (universitasData[selectedUniversity] &&
-                    universitasData[selectedUniversity][selectedFaculty]) {
-                    universitasData[selectedUniversity][selectedFaculty].forEach(item => {
-                        const option = new Option(item.jurusan, item.jurusan, false, false);
-                        jurusanSelect.append(option);
-                    });
-                }
-
-                jurusanSelect.trigger('change');
-                $('#fakultas_universitas_hidden').val(selectedFaculty);
+            $('#jurusan_sekolah').on('change', function() {
+                $('#jurusan_sekolah_hidden').val($(this).val());
             });
 
-            // Simpan input manual ke hidden
-            $('#jurusan_universitas').on('change', function () {
+            $('#nama_universitas').on('change', function() {
+                $('#nama_universitas_hidden').val($(this).val());
+            });
+
+            $('#fakultas_universitas').on('change', function() {
+                $('#fakultas_universitas_hidden').val($(this).val());
+            });
+
+            $('#jurusan_universitas').on('change', function() {
                 $('#jurusan_universitas_hidden').val($(this).val());
             });
-
-            
         });
     </script>

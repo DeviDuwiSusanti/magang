@@ -1,6 +1,6 @@
 <?php 
     include '../layout/sidebarUser.php';
-    $super_admin = query("SELECT * FROM tb_user WHERE id_user = '$id_user'")[0];
+    $email = query("SELECT email FROM tb_user WHERE id_user = '$id_user'")[0];
     $admin_instansi = query("SELECT * FROM tb_profile_user , tb_user  WHERE tb_profile_user.id_user = tb_user.id_user AND tb_user.level = '2'");
 
     if (isset($_POST["edit_email"])) {
@@ -10,6 +10,15 @@
             echo "<script>edit_email_super_admin_gagal();</script>";
         }
     }
+
+    if(isset($_POST["generate_super_admin"])) {
+        if(generate_super_admin($_POST) > 0 ) { ?>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Menjadikan Super Admin Berhasil", "setting.php"); </script>
+        <?php } else { ?>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Menjadikan Super Admin Gagal", "setting.php"); </script>
+        <?php }
+    }
+    
 ?>
 
 <div class="container mt-4">
@@ -25,11 +34,10 @@
 
     <div class="row">
         <div id="email" class="col-md-12">
-            <!-- Edit Email Super Admin -->
             <div class="card mb-4 p-4">
                 <h4><i class="bi bi-envelope"></i> Edit Email</h4>
-                <p>Email Saat Ini: <strong><?= $super_admin["email"] ?></strong></p>
-                <!-- Form Edit Email Super Admin -->
+                <p>Email Saat Ini: <strong><?= $email["email"] ?></strong></p>
+                
                 <form action="" method="POST" id="edit-email-form">
                     <div class="mb-3">
                         <label for="email_baru" class="form-label">Email Baru</label>
@@ -40,6 +48,7 @@
                         <i class="bi bi-save"></i> Simpan Perubahan
                     </button>
                 </form>
+
             </div>
         </div>
 
@@ -52,13 +61,15 @@
                 <form action="" method="POST" id="jadikan-super-admin-form">
                     <div class="mb-3">
                         <label for="user" class="form-label">Pilih User</label>
-                        <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
-                        <select class="form-select select2" id="user">
-                            <option selected disabled>Pilih User</option>
+                        <input type="hidden" name="change_by" id="change_by" value="<?= $id_user ?>">
+
+                        <select class="form-select select2" id="calon" name="calon" required>
+                            <option value="" selected disabled hidden>Pilih User</option>
                             <?php foreach($admin_instansi as $calon) : ?>
-                            <option value="<?= $calon["id_user"] ?>"><?= $calon["nama_user"] ?></option>
+                                <option value="<?= $calon["id_user"] ?>"><?= $calon["nama_user"] ?></option>
                             <?php endforeach; ?>
                         </select>
+
                     </div>
                     <button type="submit" name="generate_super_admin" class="btn btn-warning"><i class="bi bi-person-badge"></i> Jadikan Super Admin</button>
                 </form>
@@ -70,7 +81,7 @@
             <h4 class="mt-5"><i class="bi bi-person-plus"></i> Tambah Super Admin Baru</h4>
             <form action="" class="form-profile" method="POST" enctype="multipart/form-data" id="tambah-super-admin-form">
             
-            <input type="hidden" name="id_super_admin" id="id_super_admin" value="<?= $super_admin["id_user"] ?>">
+            <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?> ">
             <!-- Nama -->
             <div class="mb-3">
                 <label for="nama_lengkap" class="form-label">Nama Lengkap</label>

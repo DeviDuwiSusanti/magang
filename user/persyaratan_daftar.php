@@ -1,136 +1,100 @@
 <?php
-include "../layout/sidebarUser.php";
-include '../koneksi.php';
-include "functions.php";
+// persyaratan_daftar.php
+// Harus disertakan setelah session_start() dan koneksi ke database ($conn)
+// Pastikan $id_user dan $id_pengajuan sudah tersedia (misal dari session)
 
-// Pastikan id_pengajuan ada di session
-if (isset($_GET['id_pengajuan'])) {
-    $_SESSION['id_pengajuan'] = $_GET['id_pengajuan'];
+// Ambil id_user dan id_pengajuan jika belum didefinisikan
+if (!isset($id_user)) {
+    session_start();
+    $id_user = $_SESSION['id_user'] ?? '';
 }
-$id_pengajuan = $_SESSION['id_pengajuan'] ?? '';
+if (!isset($id_pengajuan)) {
+    $id_pengajuan = $_SESSION['id_pengajuan'] ?? '';
+}
 
-// Query untuk mendapatkan daftar dokumen dengan jenis 'persyaratan' yang sudah diunggah
+// Query daftar dokumen persyaratan
 $stmt = $conn->prepare("SELECT * FROM tb_dokumen WHERE id_user = ? AND jenis_dokumen = '2' AND id_pengajuan = ? AND status_active = 1");
 $stmt->bind_param("ss", $id_user, $id_pengajuan);
 $stmt->execute();
 $result = $stmt->get_result();
-
-// Proses hapus file
-if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['hapus_laporan'])) {
-    $id_dokumen = $_POST['id_dokumen'];
-
-    // Ambil file_path berdasarkan id_dokumen
-    $stmt_get = $conn->prepare("SELECT file_path, id_user FROM tb_dokumen WHERE id_dokumen = ?");
-    $stmt_get->bind_param("s", $id_dokumen);
-    $stmt_get->execute();
-    $result_get = $stmt_get->get_result();
-    $file_data = $result_get->fetch_assoc();
-
-    // Pastikan hanya user yang mengunggah yang bisa menghapus
-    if ($file_data && $file_data['id_user'] == $id_user) {
-        $file_path = $file_data['file_path'];
-
-        // Menghapus file fisik 
-        if (!empty($file_path) && file_exists($file_path)) {
-            unlink($file_path);
-        }
-
-        // Update status_active menjadi 0 di database
-        $stmt_update = $conn->prepare("UPDATE tb_dokumen SET status_active = 0 WHERE id_dokumen = ?");
-        $stmt_update->bind_param("s", $id_dokumen);
-        
-        if ($stmt_update->execute()) {
-            echo "<script>
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Laporan berhasil dihapus!',
-                }).then(() => { window.location.href = 'persyaratan_daftar.php'; });
-            </script>";
-        } else {
-            echo "<script>
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal menghapus laporan!',
-                });
-            </script>";
-        }
-    }
-}
 ?>
 
-<div class="main-content p-3">
-    <div class="container-fluid">
-        <h1 class="mb-4">Daftar Dokumen Persyaratan yang Telah Diunggah</h1>
-        <div class="mb-4 dropdown-divider"></div>
-
-        <div class="mb-4 text-end">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#unggahModal">
-                <i class="bi bi-upload me-1"></i> Unggah Persyaratan Baru
-            </button>
-        </div>
-
+<!-- Modal Daftar Dokumen -->
+<div class="modal fade" id="daftarDokumenModal" tabindex="-1" aria-labelledby="daftarDokumenModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="daftarDokumenModalLabel">Daftar Dokumen Persyaratan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
         <div class="table-responsive-sm">
-            <table id="myTable" class="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Dokumen</th>
-                        <th>Tanggal Unggah</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $no = 1;
-                    while ($row = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $no ?></td>
-                            <td><a href="<?= htmlspecialchars($row['file_path']) ?>" target="_blank"> <?= htmlspecialchars($row['nama_dokumen']) ?></a></td>
-                            <td><?= htmlspecialchars($row['create_date']) ?></td>
-                            <td class="text-center">
-                                <?php if ($row['id_user'] == $id_user): ?>
-                                    <form method="POST">
-                                        <input type="hidden" name="id_dokumen" value="<?= $row['id_dokumen'] ?>">
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="konfirmasiHapus(this)">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </button>
-                                        <input type="hidden" name="hapus_laporan" value="1">
-                                    </form>
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Dokumen</th>
+                <th>Tgl. Unggah</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php $no = 1; while ($row = $result->fetch_assoc()): ?>
+              <tr>
+                <td><?= $no++ ?></td>
+                <td>
+                  <a href="<?= htmlspecialchars($row['file_path']) ?>" target="_blank">
+                    <?= htmlspecialchars($row['nama_dokumen']) ?>
+                  </a>
+                </td>
+                <td><?= htmlspecialchars($row['create_date']) ?></td>
+                <td>
+                  <?php if ($row['id_user'] == $id_user): ?>
+                  <form method="POST" onsubmit="return confirm('Yakin hapus dokumen ini?');">
+                    <input type="hidden" name="id_dokumen" value="<?= $row['id_dokumen'] ?>">
+                    <input type="hidden" name="hapus_laporan" value="1">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </form>
+                  <?php else: ?>
+                  <button class="btn btn-secondary btn-sm" disabled>
+                    <i class="bi bi-trash"></i>
+                  </button>
+                  <?php endif; ?>
+                </td>
+              </tr>
+              <?php endwhile; ?>
+            </tbody>
+          </table>
+        </div>
+        <!-- Tombol Unggah Baru di dalam modal -->
+        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#unggahModal">
+          <i class="bi bi-upload"></i> Unggah Persyaratan Baru
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-                                    <!-- Tambahkan SweetAlert -->
-                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                                    <script>
-                                        function konfirmasiHapus(button) {
-                                            Swal.fire({
-                                                title: "Apakah Anda yakin?",
-                                                text: "Laporan yang dihapus tidak dapat dikembalikan!",
-                                                icon: "warning",
-                                                showCancelButton: true,
-                                                confirmButtonColor: "#d33",
-                                                cancelButtonColor: "#3085d6",
-                                                confirmButtonText: "Ya, hapus!",
-                                                cancelButtonText: "Batal"
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    button.closest("form").submit();
-                                                }
-                                            });
-                                        }
-                                    </script>
-
-                                <?php else: ?>
-                                    <button class="btn btn-secondary btn-sm" disabled>
-                                        <i class="bi bi-trash"></i> Hapus
-                                    </button>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php
-                        $no++;
-                    }
-                    ?>
-                </tbody>
-            </table>
+<!-- Modal Unggah Persyaratan -->
+<div class="modal fade" id="unggahModal" tabindex="-1" aria-labelledby="unggahModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="unggahModalLabel">Unggah Persyaratan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="" class="dropzone" id="myDropzone" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="id_pengajuan" value="<?= $id_pengajuan ?>">
+                    <input type="hidden" name="id_user" value="<?= $id_user ?>">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-primary" id="submit-all">Unggah</button>
+            </div>
         </div>
     </div>
 </div>
@@ -139,24 +103,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['hapus_laporan'])) {
 <?php 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $deskripsi = $_POST['deskripsi'] ?? 'Tidak ada deskripsi';
-    $file_name = $_FILES['file']['name'];
-    $file_tmp = $_FILES['file']['tmp_name'];
-    $file_extension = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-    
+    $file_extension = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
+
     if ($file_extension !== "pdf") {
         echo json_encode(["status" => "error", "message" => "Hanya file PDF yang diperbolehkan!"]);
         exit();
     }
-    
-    $upload_dir = "../assets/doc/"; 
-    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
-    
-    $file_path = $upload_dir . uniqid() . "_" . basename($file_name);
-    
-    if (move_uploaded_file($file_tmp, $file_path)) {
+
+    // Panggil fungsi uploadFileUser dari functions.php
+    $upload_result = uploadFileUser($_FILES['file'], $id_pengajuan);
+
+    if ($upload_result) {
         $id_dokumen = generateIdDokumen($conn, $id_pengajuan);
         $stmt = $conn->prepare("INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by, status_active, create_date, change_date) VALUES (?, ?, '2', ?, ?, ?, ?, '1', NOW(), NOW())");
-        $stmt->bind_param("ssssss", $id_dokumen, $deskripsi, $file_path, $id_pengajuan, $id_user, $id_user);
+        $stmt->bind_param("ssssss", $id_dokumen, $deskripsi, $upload_result['path'], $id_pengajuan, $id_user, $id_user);
         $stmt->execute();
         echo json_encode(["status" => "success", "message" => "File berhasil diunggah!"]);
     } else {
@@ -364,8 +324,17 @@ let myDropzone = new Dropzone("#myDropzone", {
                 text: "Semua file berhasil diunggah!",
                 confirmButtonText: "OK"
             }).then(() => {
-                window.location.href = "persyaratan_daftar.php";
+                // Menutup modal unggah
+                $('#unggahModal').modal('hide');
+                
+                // Menampilkan halaman status_pengajuan.php
+                window.location.href = "status_pengajuan.php";  // Ganti dengan URL yang sesuai
             });
+        });
+
+        // Kalau modal unggah ditutup, langsung redirect ke halaman status pengajuan
+        $('#unggahModal').on('hidden.bs.modal', function () {
+            window.location.href = "status_pengajuan.php";
         });
 
         dz.on("error", function (file, message) {
@@ -377,6 +346,4 @@ let myDropzone = new Dropzone("#myDropzone", {
         });
     }
 });
-
 </script>
-<?php include "../layout/footerDashboard.php"; ?>

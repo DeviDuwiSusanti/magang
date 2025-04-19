@@ -86,6 +86,18 @@ function deleteOldDocument($id_dokumen) {
     }
 }
 
+function deleteGambarLogbook($id_logbook){
+    global $conn;
+    // Ambil file lama dari database
+    $query = "SELECT foto_kegiatan FROM tb_logbook 
+               WHERE id_logbook = '$id_logbook'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    $file_path = $row['foto_kegiatan'];
+    if (file_exists($file_path)) {
+        unlink($file_path); // Hapus file fisik
+    }
+}
 function hapusFolderPengajuan($id_pengajuan) {
     $folder = "../assets/doc/$id_pengajuan/";
 
@@ -179,17 +191,31 @@ function confirmDeleteScript() {
     </script>";
 }
 
-// Fungsi untuk menghitung durasi dalam bulan dan hari
+// Fungsi untuk menghitung durasi dalam bulan dan minggu
 function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
-    $start_date = new DateTime($tanggal_mulai);
-    $end_date = new DateTime($tanggal_selesai);
-    $interval = $start_date->diff($end_date);
+    // Memeriksa apakah kedua tanggal tersedia
+    if (!empty($tanggal_mulai) && !empty($tanggal_selesai)) {
+        // Membuat objek DateTime dari tanggal mulai dan selesai
+        $start_date = new DateTime($tanggal_mulai);
+        $end_date = new DateTime($tanggal_selesai);
+        
+        // Menghitung selisih antara kedua tanggal
+        $interval = $start_date->diff($end_date);
+        
+        // Mendapatkan jumlah bulan dan hari
+        $bulan = $interval->m;
+        $hari = $interval->d;
+        $minggu = floor($hari / 7); // Menghitung minggu berdasarkan sisa hari
 
-    $bulan = $interval->m + ($interval->y * 12);
-    $hari = $interval->d;
-
-    return ($bulan > 0 ? "$bulan Bulan " : "") . ($hari > 0 ? "$hari Hari" : "");
+        // Mengembalikan string dalam format "X Bulan Y Minggu"
+        return $bulan . " Bulan " . $minggu . " Minggu";
+    } else {
+        // Jika tanggal tidak valid, kembalikan pesan
+        return "Durasi Tidak Diketahui";
+    }
 }
+
+
 
 // Fungsi untuk format tanggal Lengkap Indonesia
 function formatTanggalLengkapIndonesia($tanggal) {
@@ -273,7 +299,14 @@ function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
     $jam_selesai = $POST['jam_selesai'];
     $ttd = $POST['ttd'];
     
-    $uploadedFoto = uploadFoto($FILES['gambar_kegiatan'], '../assets/img/logbook/');
+     // Buat folder user jika belum ada
+     $user_folder = '../assets/img/logbook/' . $id_user . '/';
+     if (!file_exists($user_folder)) {
+         mkdir($user_folder, 0777, true);
+     }
+     
+     // Upload foto ke folder user
+    $uploadedFoto = uploadFoto($FILES['gambar_kegiatan'], $user_folder);
     $target_file = $uploadedFoto['path'];
 
     $id_logbook = generateLogbookId($conn, $id_pengajuan);
@@ -294,10 +327,11 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
     global $conn;
     // Inisialisasi foto_kegiatan (default: data lama)
     $foto_kegiatan = $row['foto_kegiatan'];
+    deleteGambarLogbook($id_logbook);
 
     // Jika ada file baru diunggah
     if (!empty($FILES['gambar_kegiatan']['name'])) {
-        $uploadResult = uploadFoto($FILES['gambar_kegiatan'], "../assets/img/logbook/");
+        $uploadResult = uploadFoto($FILES['gambar_kegiatan'], '../assets/img/logbook/' . $id_user . '/');
         if ($uploadResult) {
             $foto_kegiatan = $uploadResult['path'];
         }
@@ -327,6 +361,7 @@ function hapusLogbook($id_user){
     $sql2 =  "UPDATE tb_logbook SET status_active = '0', change_by = '$id_user' WHERE id_logbook = '$id_logbook'";
     $query2 = mysqli_query($conn, $sql2);
     if ($query2) {
+        deleteGambarLogbook($id_logbook);
         showAlert('Berhasil!', 'Logbook Berhasil Dihapus', 'success', "logbook_daftar.php");
         exit();
     } else {
@@ -418,7 +453,6 @@ function inputPengajuan($POST, $FILES, $id_user){
         }
     }
     if ($query5) {?>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <?php
         showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "status_pengajuan.php");
         exit();
@@ -482,7 +516,6 @@ function updatePengajuan($POST, $FILES, $id_user){
         }
     } 
     ?>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <?php
      if ($query_update1){
         showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
@@ -521,7 +554,6 @@ function hapusPengajuan($POST, $id_user){
         hapusFolderPengajuan($id_pengajuan);
         
         if ($result){?>
-            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <?php
             unset($_SESSION['id_pengajuan']);
             unset($_SESSION['status_pengajuan']);
@@ -532,7 +564,7 @@ function hapusPengajuan($POST, $id_user){
 }
 
 // =========== ANGGOTA ===========
-function updateAnggota($POST, $id_user, $id_pengajuan){
+function updateAnggota($POST, $id_user){
     global $conn;
     $id_userUpdate = $POST['id_user'];
     $nama_anggota = $POST['nama_user'];
@@ -546,7 +578,7 @@ function updateAnggota($POST, $id_user, $id_pengajuan){
     }
 
     if (mysqli_query($conn, $sqlUpdate2)){
-        showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+        showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "status_pengajuan.php");
         exit();
     }else{
         showAlert('Gagal!', 'Data anggota gagal diupdate. Silakan coba lagi.', 'error');
@@ -568,7 +600,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     if (mysqli_query($conn, $sqlTambah)){
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
-            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "status_pengajuan.php");
             exit();
         }else{
             showAlert('Gagal!', 'Data anggota gagal di tambah. Silakan coba lagi.', 'error');
@@ -589,7 +621,7 @@ function hapusAnggota($id_user, $id_pengajuan){
             AND tb_profile_user.id_pengajuan = '$id_pengajuan'";
 
     if (mysqli_query($conn, $sql2)){
-        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "detail_anggota.php?id_pengajuan={$id_pengajuan}");
+        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "status_pengajuan.php");
         exit();
     }else{
         showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');
