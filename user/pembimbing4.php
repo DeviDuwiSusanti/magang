@@ -7,13 +7,14 @@
 
     $user_id = $pengajuan["id_user"];
 
+    // Ambil ID pendidikan dari user pertama (karena semua sama)
     $id_pendidikan_data = query("SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$user_id'")[0];
     $id_pendidikan = $id_pendidikan_data["id_pendidikan"];
 
-
+    // Ambil detail pendidikan
     $pendidikan_user = query("SELECT * FROM tb_pendidikan WHERE id_pendidikan = '$id_pendidikan'")[0];
 
-
+    // Ambil daftar anggota dari pengajuan
     $daftar_anggota = query("SELECT pu.nama_user, pu.gambar_user, u.email
                             FROM tb_profile_user pu 
                             JOIN tb_user u ON pu.id_user = u.id_user 
@@ -29,11 +30,11 @@
             <li class="breadcrumb-item active">Berikut adalah anggota peserta magang dari pengajuan Anda</li>
         </ol>
     </div>
-    <div class="container mt-5">                        
+    <div class="container mt-5">                         
         <div class="card shadow-lg">
             <div class="card-body">
-                <table id="table_anggota" class="table table-bordered table-hover text-center align-middle">
-                    <thead>
+                <table id="table_anggota" class="table table-striped table-bordered align-middle text-center">
+                    <thead class="table-light small">
                         <tr>
                             <th>No.</th>
                             <th>Nama Lengkap</th>
@@ -52,14 +53,25 @@
                             <td><?= $no++ ?></td>
                             <td><?= $anggota["nama_user"] ?></td>
                             <td><?= $anggota["email"] ?></td>
+                            <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
+                            <td>Pendidikan</td>
+                            <td>Jurusan</td>
+                            <!-- Tombol dengan Bootstrap Icons untuk Logbook, Nilai, Sertifikat -->
                             <td>
-                                <img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle">
+                                <button class="btn btn-info btn-sm openModal" data-bs-toggle="modal" data-bs-target="#logbookModal">
+                                    <i class="bi bi-book"></i>
+                                </button>
                             </td>
-                            <td><?= $pendidikan_user["nama_pendidikan"] ?></td>
-                            <td><?= $pendidikan_user["jurusan"] ?></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                                <button class="btn btn-warning btn-sm openModal" data-bs-toggle="modal" data-bs-target="#nilaiModal">
+                                    <i class="bi bi-bar-chart"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-success btn-sm openModal" data-bs-toggle="modal" data-bs-target="#sertifikatModal">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                </button>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -69,41 +81,94 @@
     </div>
 </main>
 
-<?php include "../layout/footerDashboard.php"; ?>
 
-<!-- DataTables JS -->
+
+<!-- Modal untuk Logbook -->
+<div class="modal fade" id="logbookModal" tabindex="-1" aria-labelledby="logbookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logbookModalLabel">Logbook Peserta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Logbook</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal untuk Nilai -->
+<div class="modal fade" id="nilaiModal" tabindex="-1" aria-labelledby="nilaiModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nilaiModalLabel">Unggah Nilai</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Nilai</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal untuk Sertifikat -->
+<div class="modal fade" id="sertifikatModal" tabindex="-1" aria-labelledby="sertifikatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sertifikatModalLabel">Unggah Sertifikat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Sertifikat.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php include "../layout/footerDashboard.php"; ?>
+<!-- Script untuk DataTable -->
 <script>
     $(document).ready(function() {
         $('#table_anggota').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "lengthMenu": [5, 10],
-            "columnDefs": [{"orderable": false, "targets": [3]}],
-            "language": {
-                "search": "Cari : ",
-                "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                "info": "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-                "paginate": {
-                    "first": "Awal",
-                    "last": "Akhir",
-                    "next": "Selanjutnya",
-                    "previous": "Sebelumnya"
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            lengthMenu: [5, 10],
+            columnDefs: [{ orderable: false, targets: [3] }],
+            language: {
+                search: "Cari : ",
+                lengthMenu: "Tampilkan _MENU_ data per halaman",
+                info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Awal",
+                    last: "Akhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
                 }
-            },
-            dom: 'Blfrtip',
-            buttons: [
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="bi bi-file-earmark-pdf"></i> PDF',
-                    className: 'btn btn-danger m-2',
-                    title: 'Laporan Daftar Anggota Pengajuan',
-                    exportOptions: {
-                        columns: [0, 1, 2, 4, 5] // kolom foto tidak di-export
-                    }
-                }
-            ]
+            }
+        });
+
+        // Event listener untuk membuka modal dengan JavaScript
+        $(".openModal").on("click", function() {
+            var type = $(this).data("type");
+            var id = $(this).data("id");
+            var modalId = "#" + type + "Modal" + id;
+
+            // Membuka modal sesuai dengan ID yang ditentukan
+            $(modalId).modal('show');
         });
     });
 </script>
+
