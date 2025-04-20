@@ -2,12 +2,22 @@
     include '../layout/sidebarUser.php'; 
 
     // Ambil id_pengajuan yang ditangani oleh pembimbing ini
-    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user'")[0];
+    $pengajuan = query("SELECT id_pengajuan, id_user FROM tb_pengajuan WHERE id_pembimbing = '$id_user'")[0];
     $pengajuan_user = $pengajuan["id_pengajuan"];
 
-    // Ambil daftar anggota dari pengajuan tersebut
+    $user_id = $pengajuan["id_user"];
 
-    $daftar_anggota = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = tb_user.id_user AND tb_profile_user.id_pengajuan = '$pengajuan_user' AND tb_profile_user.status_active = '1'");
+    $id_pendidikan_data = query("SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$user_id'")[0];
+    $id_pendidikan = $id_pendidikan_data["id_pendidikan"];
+
+
+    $pendidikan_user = query("SELECT * FROM tb_pendidikan WHERE id_pendidikan = '$id_pendidikan'")[0];
+
+
+    $daftar_anggota = query("SELECT pu.nama_user, pu.gambar_user, u.email
+                            FROM tb_profile_user pu 
+                            JOIN tb_user u ON pu.id_user = u.id_user 
+                            WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
 
     $no = 1;
 ?>
@@ -29,8 +39,11 @@
                             <th>Nama Lengkap</th>
                             <th>Email</th>
                             <th>Foto</th>
-                            <!-- <th>Pendidikan</th>
-                            <th>Jurusan</th> -->
+                            <th>Pendidikan</th>
+                            <th>Jurusan</th>
+                            <th>Logbook Peserta</th>
+                            <th>Unggah Nilai</th>
+                            <th>Unggah Sertifikat</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,8 +55,11 @@
                             <td>
                                 <img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle">
                             </td>
-                            <!-- <td><?= $anggota["nama_pendidikan"] ?></td>
-                            <td><?= $anggota["jurusan"] ?></td> -->
+                            <td><?= $pendidikan_user["nama_pendidikan"] ?></td>
+                            <td><?= $pendidikan_user["jurusan"] ?></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                         <?php endforeach; ?>
                     </tbody>

@@ -226,33 +226,9 @@ if (isset($_SESSION['email'])) {
                 <?php if($level == 4): ?>
                     <!-- Daftar Peserta Magang -->
                     <li class="sidebar-item">
-                        <a href="pembimbing4_peserta_magang.php" class="sidebar-link">
+                        <a href="pembimbing4.php" class="sidebar-link">
                             <i class="bi bi-people-fill"></i>
                             <span>Peserta Magang</span>
-                        </a>
-                    </li>
-
-                    <!-- Laporan Harian / Mingguan -->
-                    <li class="sidebar-item">
-                        <a href="pembimbing4_logbook_peserta.php" class="sidebar-link">
-                            <i class="bi bi-journal-text"></i>
-                            <span>Laporan Kegiatan</span>
-                        </a>
-                    </li>
-
-                    <!-- Upload Sertifikat -->
-                    <li class="sidebar-item">
-                        <a href="pembimbing4_upload_sertifikat.php" class="sidebar-link">
-                            <i class="bi bi-file-earmark-medical-fill"></i>
-                            <span>Sertifikat</span>
-                        </a>
-                    </li>
-
-                    <!-- Upload Nilai -->
-                    <li class="sidebar-item">
-                        <a href="pembimbing4_upload_nilai.php" class="sidebar-link">
-                            <i class="bi bi-file-earmark-bar-graph-fill"></i>
-                            <span>Nilai</span>
                         </a>
                     </li>
                 <?php endif; ?>
