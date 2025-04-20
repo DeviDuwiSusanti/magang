@@ -99,7 +99,7 @@
                             data-steps='[{"step":"Jika magang Kamu sudah selesai, maka kamu bisa cek sertifikat dan nilai."}, 
                             {"step":"Masuk ke dashboard user, dan klik Sertifikat dan Nilai", "img":"../assets/img/tentang/dashboard2.png"},
                             {"step":"Kamu akan diarahkan ke halaman Histori.", "img":"../assets/img/tentang/histori.png"},
-                            {"step":"Klik Cetak Sertifikat atau Nilai.", "img":"../assets/img/tentang/detail_histori.png"},
+                            {"step":"Klik icon Cetak Sertifikat atau Nilai."},
                             {"step":"Jika sertifikat atau nilai belum tersedia, artinya admin instansi belum menggunggah sertifikat dan nilai Kamu. Jadi bersabar yaa."}]'>Lihat</button>
                         </div>
                     </div>
