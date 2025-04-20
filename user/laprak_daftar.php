@@ -12,7 +12,7 @@ if (!isset($_SESSION['id_user'])) {
 }
 
 $id_user = $_SESSION['id_user'];
-$id_pengajuan = $_GET['id_pengajuan'] ?? null;
+
 
 if (empty($id_pengajuan)) {
     echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='histori.php';</script>";

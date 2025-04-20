@@ -699,5 +699,30 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
     } else {
         showAlert('Gagal!', 'Profil gagal diupdate. Silakan coba lagi.', 'error');
     } 
-}   
+} 
+
+//Cetak Nilai dan Sertifikat
+function cetakSertifikat($conn, $id_pengajuan_cetak) {
+    $cekDokumen = mysqli_query($conn, "SELECT * FROM tb_dokumen 
+        WHERE id_pengajuan = '$id_pengajuan_cetak' 
+        AND jenis_dokumen = '4' 
+        AND status_active = '1'");
+
+    if (mysqli_num_rows($cekDokumen) > 0) {
+        $dokumen = mysqli_fetch_assoc($cekDokumen);
+        $file_path = $dokumen['file_path'];
+
+        echo "<script>window.open('$file_path', '_blank');</script>";
+    } else {
+        echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
+        echo "<script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Nilai belum ada!',
+                text: 'Sertifikat & nilai belum tersedia.',
+            });
+        </script>";
+    }
+}
+
 ?>

@@ -6,6 +6,12 @@ include "functions.php";
 // Initialize user ID from session
 $id_user = $_SESSION['id_user'];  // <-- ADD THIS LINE HERE
 
+//Untuk cetak nilai
+if (isset($_GET['cetak'])) {
+    $id_pengajuan_cetak = $_GET['cetak'];
+    cetakSertifikat($conn, $id_pengajuan_cetak);
+}
+
 // Ambil daftar pengajuan magang berdasarkan id_user
 if ($_SESSION['ketua']) { // Ketua kelompok level (3)
     $sql = "SELECT * 
@@ -26,7 +32,6 @@ if ($_SESSION['ketua']) { // Ketua kelompok level (3)
             AND p.status_pengajuan = '5'
             AND p.status_active = '1'";
 }
-
 
 $query = mysqli_query($conn, $sql);
 $no = 1;
@@ -75,37 +80,36 @@ $no = 1;
                         <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
                         <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
                           <!-- Kolom Aksi -->
-        <td class="text-center">
-            <div class="d-flex gap-1 justify-content-center flex-wrap">
-                <!-- Tombol Detail -->
-                <a href="#" class="btn btn-sm btn-primary" title="Lihat Detail" 
-                   data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
-                   <i class="bi bi-eye"></i>
-                </a>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                <!-- Tombol Detail -->
+                                <a href="#" class="btn btn-sm btn-primary" title="Lihat Detail" 
+                                data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
+                                <i class="bi bi-eye"></i>
+                                </a>
 
-                <!-- Tombol Sertifikat -->
-                <a href="path/to/sertifikat_<?= $data['id_pengajuan'] ?>.pdf" class="btn btn-primary btn-sm px-3" download title="Download Sertifikat & Nilai">
-                    <i class="bi bi-printer"></i>
-                </a>
-            </div>
-        </td>
+                                <!-- Tombol Sertifikat -->
+                                <a href="?cetak=<?= $data['id_pengajuan'] ?>" class="btn btn-primary btn-sm px-3" title="Cetak Sertifikat & Nilai">
+                                <i class="bi bi-printer"></i>
+                                </a>
+                            </div>
+                        </td>
 
-        <!-- Kolom Logbook & Laporan -->
-        <td class="text-center">
-            <div class="d-flex gap-1 justify-content-center flex-wrap">
-                <!-- Tombol Laporan -->
-                <a href="laprak_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Laporan">
-                    <i class="bi bi-journal-text"></i>
-                </a>
+                        <!-- Kolom Logbook & Laporan -->
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                <!-- Tombol Laporan -->
+                                <a href="laprak_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Laporan">
+                                    <i class="bi bi-journal-text"></i>
+                                </a>
 
-                <!-- Tombol Logbook -->
-                <a href="logbook.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Logbook">
-                    <i class="bi bi-journal-bookmark"></i>
-                </a>
-            </div>
-        </td>
-    </tr>
-
+                                <!-- Tombol Logbook -->
+                                <a href="logbook.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Logbook">
+                                    <i class="bi bi-journal-bookmark"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                     </tr>
                     
                     <!-- Modal Detail -->
