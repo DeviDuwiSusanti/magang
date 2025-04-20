@@ -65,7 +65,7 @@
     </h2>
     <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
-        Pendaftaran dapat dilakukan atau diwakilkan oleh salah satu anggota kelompok saja yaa. Dan pastikan anggoota kelompok yang lain sudah punya akun di sistem ini yaa.
+        Pendaftaran dapat dilakukan atau diwakilkan oleh salah satu anggota kelompok saja yaa.
       </div>
     </div>
   </div>

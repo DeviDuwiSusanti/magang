@@ -278,6 +278,10 @@ if (isset($_SESSION['email'])) {
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Profile Saya</span>
                                 </a>
+                                <a href="../web/beranda.php" class="dropdown-item">
+                                    <i class="bi bi-house-door"></i>
+                                    <span>Beranda</span>
+                                </a>
                                 <div class="dropdown-divider"></div>
                                 <a href="setting.php" class="dropdown-item">
                                     <i class="bi bi-gear"></i>
