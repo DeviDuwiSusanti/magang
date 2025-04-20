@@ -270,10 +270,12 @@ if (isset($_SESSION['email'])) {
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
+                                <?php if($level == 3) : ?>
                                 <a href="bantuan.php" class="dropdown-item">
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>
+                                <?php endif; ?>
                                 <div class="dropdown-divider"></div>
                                 <a href="../logout.php" class="dropdown-item">
                                     <i class="bi bi-box-arrow-right"></i>

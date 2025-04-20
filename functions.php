@@ -13,39 +13,42 @@
     }
 
     function generateUserId($conn) {
-        $date = date("ymd");
-        $hour = date("H");
-        $baseId = $date . $hour;
-        $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
-        
-        if($result && mysqli_num_rows($result) > 0) {
-            $lastId = mysqli_fetch_assoc($result)["id_user"];
-            $lastCounter = intval(substr($lastId, -4, 2));
+        $baseId = date("ymdH");
+        $query = "SELECT id_user FROM tb_user WHERE LEFT(id_user, 8) = '$baseId' ORDER BY id_user DESC LIMIT 1";
+        $result = mysqli_query($conn, $query);
+    
+        if ($result && mysqli_num_rows($result) > 0) {
+            $lastId = mysqli_fetch_assoc($result)['id_user'];
+            // Ambil counter 2 digit setelah baseId (posisi ke-9 dan 10)
+            $lastCounter = intval(substr($lastId, 8, 2));
             $newCounter = str_pad($lastCounter + 1, 2, "0", STR_PAD_LEFT);
         } else {
             $newCounter = "01";
         }
-        $newId = $baseId . $newCounter . "00";
+    
+        $newId = $baseId . $newCounter . "00"; // Tambah 00 di akhir
         return $newId;
     }
+    
 
 
     function generate_user_id_level_1_2($conn) {
-        $date = date("ymd");
-        $hour = date("H");
-        $baseId = $date . $hour;
-        $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
-        
-        if($result && mysqli_num_rows($result) > 0) {
-            $lastId = mysqli_fetch_assoc($result)["id_user"];
-            $lastCounter = intval(substr($lastId, 2));
+        $baseId = date("ymdH");
+        $query = "SELECT id_user FROM tb_user WHERE LEFT(id_user, 8) = '$baseId' ORDER BY id_user DESC LIMIT 1";
+        $result = mysqli_query($conn, $query);
+    
+        if ($result && mysqli_num_rows($result) > 0) {
+            $lastId = mysqli_fetch_assoc($result)['id_user'];
+            $lastCounter = intval(substr($lastId, 8, 2)); // Ambil 2 digit setelah 8
             $newCounter = str_pad($lastCounter + 1, 2, "0", STR_PAD_LEFT);
         } else {
             $newCounter = "01";
         }
+    
         $newId = $baseId . $newCounter;
         return $newId;
     }
+    
 
 
     function uploadImage($file, $old_img, $directory) {
@@ -485,7 +488,7 @@ function tambah_instansi_super_admin($POST) {
 
 
 // ============================== START OF CRUD USER IN SUPER ADMIN ==============================================
-    function tambah_admin_instansi($POST) {
+    function tambah_user_by_super_admin($POST) {
         global $conn;
         $create_by = $POST["id_user"];
         $id_user = generate_user_id_level_1_2($conn);
@@ -494,6 +497,7 @@ function tambah_instansi_super_admin($POST) {
         $nip = $POST["nip"];
         $gender = $POST["jenis_kelamin"];
         $email = $POST["email"];
+        $level = $POST["level"];
         $tempat_lahir = $POST["tempat_lahir"];
         $tanggal_lahir = $POST["tanggal_lahir"];
         $telepone_user = $POST["telepone_user"];
@@ -510,7 +514,7 @@ function tambah_instansi_super_admin($POST) {
             return 406;
         }
 
-        $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
+        $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$create_by') ");
         $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
                             VALUES ('$id_user', '$nama_user', '$nik', '$nip', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
         if($query_user && $query_profile) {
@@ -565,17 +569,20 @@ function tambah_instansi_super_admin($POST) {
 
 
 
-// =================================== START SETTING IN SUPER ADMIN =================================
-    function edit_email_super_admin($POST) {
+// =================================== START SETTING  =================================
+    function edit_email_user($POST) {
         global $conn;
         $email_baru = mysqli_real_escape_string($conn, $POST["email_baru"]); // Hindari SQL injection
         $id_user = mysqli_real_escape_string($conn, $POST["id_user"]); // Hindari SQL injection
 
+        if (checking($conn, 'tb_user', 'email', $email_baru)) {
+            return 404;
+        }
         $query = "UPDATE tb_user SET email = '$email_baru', change_by = '$id_user' WHERE id_user = '$id_user'";
         if (mysqli_query($conn, $query)) {
-            return mysqli_affected_rows($conn); // Kembalikan jumlah baris yang terpengaruh
+            return mysqli_affected_rows($conn);
         } else {
-            die("Error: " . mysqli_error($conn)); // Debugging error MySQL
+            return 0;
         }
     }
     

@@ -532,10 +532,11 @@ function logout_admin_instansi() {
 
 
 //============================ halmaan settings ===========================
-function confirm_edit_email_super_admin() {
-  let emailBaru = document.getElementById("email_baru").value.trim();
 
-  // Validasi email kosong
+function confirm_edit_email_user() {
+  const emailBaru = document.getElementById("email_baru").value.trim();
+
+  // 1. Validasi kosong
   if (emailBaru === "") {
     Swal.fire({
       title: "Gagal!",
@@ -544,74 +545,39 @@ function confirm_edit_email_super_admin() {
       confirmButtonText: "OK",
       confirmButtonColor: "#d33"
     });
-    return; // Hentikan eksekusi jika email kosong
+    return;
   }
 
-  // Validasi format email menggunakan regex
-  let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // 2. Validasi format email
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(emailBaru)) {
     Swal.fire({
       title: "Gagal!",
       icon: "error",
-      text: "Format email tidak valid! Gunakan format yang benar, misalnya: contoh@email.com",
+      text: "Format email tidak valid! Contoh: user@example.com",
       confirmButtonText: "OK",
       confirmButtonColor: "#d33"
     });
-    return; // Hentikan eksekusi jika format email salah
+    return;
   }
 
-  // Jika email valid, tampilkan konfirmasi
+  // 3. Konfirmasi sebelum submit
   Swal.fire({
     title: "Apakah Anda Yakin?",
+    text: "Mengubah email akan membuat Anda logout dan harus login ulang.",
     icon: "warning",
-    text: "Jika Anda mengganti email, Anda akan keluar dari dashboard dan harus login ulang.",
     showCancelButton: true,
     confirmButtonText: "Ya, Ubah Email",
     cancelButtonText: "Batal",
-    cancelButtonColor: "#d33",
-    confirmButtonColor: "#3085d6"
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33"
   }).then((result) => {
     if (result.isConfirmed) {
-      console.log("Form akan disubmit..."); // Debugging
       document.getElementById("edit-email-form").submit();
     }
   });
 }
 
-
-
-
-
-
-// Jika sukses mengganti email
-function edit_email_super_admin_success() {
-  Swal.fire({
-    title: "Berhasil!",
-    icon: "success",
-    text: "Email berhasil diubah. Anda akan keluar dan harus login kembali.",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = "../logout.php"; // Redirect ke halaman logout
-    }
-  });
-}
-
-// Jika gagal mengganti email
-function edit_email_super_admin_gagal() {
-  Swal.fire({
-    title: "Gagal!",
-    icon: "error",
-    text: "Gagal mengubah email. Silakan coba lagi.",
-    confirmButtonText: "OK",
-    confirmButtonColor: "#3085d6"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = "settings.php"; // Redirect kembali ke halaman settings
-    }
-  });
-}
 
 
 
