@@ -51,7 +51,7 @@ $no = 1;
                     <th class="text-center">Bidang</th>
                     <th class="text-center">Durasi</th>
                     <th class="text-center">Aksi</th>
-                    <th class="text-center">Logbook & Laporan</th>
+                    <th class="text-center">Laporan & Logbook</th>
                 </tr>
             </thead>
                 <tbody>
