@@ -21,7 +21,7 @@ if (isset($_GET["id_user_ini"])) {
 
 // Handle tambah data
 if (isset($_POST["tambah_admin_instansi"])) {
-    $result = tambah_admin_instansi($_POST);
+    $result = tambah_user_by_super_admin($_POST);
     if ($result === 404) { ?>
         <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Email Sudah Terdaftar Didalam Database, Silahkan Periksa Atau gunakan email Yang Lain", "super1_user.php"); </script>
     <?php } else if ($result === 405) { ?>
@@ -197,7 +197,8 @@ if (isset($_POST["edit_data_user"])) {
             <div class="modal-body">
                 <form id="formTambah" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_user" value="<?= $id_user ?>">
-                    <!-- Form fields for tambah data -->
+                    <input type="hidden" name="level" id="level" value="2">
+                    
                     <div class="mb-3">  
                         <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control" id="nama_lengkap" name="nama_user" required>

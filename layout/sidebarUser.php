@@ -222,6 +222,19 @@ if (isset($_SESSION['email'])) {
                     </li>
                 <?php endif; ?>
 
+
+                <?php if($level == 4): ?>
+                    <!-- Daftar Peserta Magang -->
+                    <li class="sidebar-item">
+                        <a href="pembimbing4.php" class="sidebar-link">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Peserta Magang</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+
+
                 <li class="sidebar-item">
                     <a href="setting.php" class="sidebar-link">
                         <i class="bi bi-gear"></i>
@@ -270,10 +283,12 @@ if (isset($_SESSION['email'])) {
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
+                                <?php if($level == 3) : ?>
                                 <a href="bantuan.php" class="dropdown-item">
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>
+                                <?php endif; ?>
                                 <div class="dropdown-divider"></div>
                                 <a href="../logout.php" class="dropdown-item">
                                     <i class="bi bi-box-arrow-right"></i>
