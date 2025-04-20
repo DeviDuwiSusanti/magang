@@ -7,18 +7,9 @@ $id_instansi = $_SESSION['id_instansi'];
 $no = 1;
 
 // Query untuk data utama pengajuan
-$sql = "SELECT
-            pu.nama_user,
+$sql = "SELECT pu.nama_user,
             b.nama_bidang,
-            p.jenis_pengajuan,
-            p.jumlah_pelamar,
-            p.tanggal_mulai,
-            p.tanggal_selesai,
-            p.id_pengajuan,
-            p.id_user,
-            p.status_pengajuan,
-            p.status_active,
-            pembimbing.nama_user AS nama_pembimbing
+            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, pembimbing.nama_user AS nama_pembimbing
         FROM tb_pengajuan AS p
         INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
         INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
@@ -57,7 +48,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
             <li class="breadcrumb-item active">Daftar Data Pemagang</li>
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
-        <div class="table-responsive-sm">
+        <div class="table-responsive">
             <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
             <div class="bungkus-2 datatable-scrollable">
                 <table id="myTable" class="table table-striped table-hover">
@@ -126,6 +117,7 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                     </tbody>
                 </table>
             </div>
+            <div class="datatable-footer mt-2"></div> <!-- Tempat info dan pagination -->
         </div>
     </div>
 </div>

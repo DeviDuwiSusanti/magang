@@ -69,7 +69,6 @@
     color: #bbb !important;
 }
 
-
 .dark-mode input:focus,
 .dark-mode textarea:focus,
 .dark-mode select:focus {
@@ -593,6 +592,7 @@ p {
     color: #f8f9fa;
     text-decoration: none;
     transition: color 0.3s ease, transform 0.3s ease;
+    font-size: 14px;
 }
 
 .footer a:hover {
@@ -719,7 +719,7 @@ p {
     color: #6c757d;
     font-family: 'Courier New', Courier, monospace;
     letter-spacing: 0.5px;
-    animation: blink 1s step-start infinite;
+    /* animation: blink 1s step-start infinite; */
 }
 
 /* Dark Mode */
@@ -780,6 +780,39 @@ body.dark-mode .clock-text {
     }
 }
 
+/* Light Mode */
+#hamburger-btn {
+    font-size: 1.5rem !important;
+    border: none !important;
+    background-color: #f0f0f0 !important;
+    color: #333 !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease in-out !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  #hamburger-btn:hover {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+  }
+  
+  /* Dark Mode */
+  @media (prefers-color-scheme: dark) {
+    #hamburger-btn {
+      background-color: #333 !important;
+      color: #fff !important;
+      box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1) !important;
+    }
+  
+    #hamburger-btn:hover {
+      background-color: #444 !important;
+      color: #ddd !important;
+    }
+  }
+  
+
 .datatable-scrollable {
     overflow-x: auto;
     width: 100%;
@@ -797,7 +830,7 @@ body.dark-mode .clock-text {
 
 body.dark-mode .datatable-header,
 body.dark-mode .datatable-footer {
-    background: #212529;
+    background: #212529 !important;
     color: #f1f1f1;
 }
 
@@ -823,7 +856,7 @@ body.dark-mode select {
     padding-right: 2rem;
 }
 
-body.dark-mode .dataTables_wrapper .dataTables_paginate,
+/* body.dark-mode .dataTables_wrapper .dataTables_paginate,
 body.dark-mode .dataTables_wrapper .dataTables_info {
     color: #ffffff;
 }
@@ -832,23 +865,10 @@ body.dark-mode .dataTables_wrapper .paginate_button {
     background-color: #2a2a3d !important;
     color: #fff !important;
     border: 1px solid #555 !important;
-}
+} */
 
 body.dark-mode .dataTables_wrapper .paginate_button.current {
     background-color: #007bff !important;
     color: #fff !important;
 }
-
-
-
-/* Batasi elemen-elemen DataTables agar gak melebihi lebar container */
-/* .dataTables_wrapper .row {
-    margin-left: 0;
-    margin-right: 0;
-} */
-
-/* .dataTables_wrapper .row > div {
-    overflow-x: auto;
-    white-space: nowrap;
-} */
 

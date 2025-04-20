@@ -36,7 +36,7 @@ $total_pengajuan_2 = query("SELECT COUNT(*) AS total
     JOIN tb_instansi 
         ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
     WHERE tb_instansi.id_instansi = '$id_instansi'
-    AND tb_pengajuan.status_pengajuan = '1'")[0];
+    AND tb_pengajuan.status_pengajuan IN ('1', '2')")[0];
 
 // Query untuk menghitung total pemagang
 $pemagang_2 = query("SELECT SUM(
@@ -87,6 +87,17 @@ $sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_dokumen WHERE id_user = '$id_user
 $query5 = mysqli_query($conn, $sql5);
 $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 
+
+// ===================== pembimbing ======================
+$pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user'")[0];
+$pengajuan_user = $pengajuan["id_pengajuan"];
+$daftar_anggota = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = tb_user.id_user AND tb_profile_user.id_pengajuan = '$pengajuan_user' AND tb_profile_user.status_active = '1'");
+
+$daftar_peserta_magang = count($daftar_anggota);
+// $pendidikan_1 = query("SELECT COUNT(*) AS total FROM tb_pendidikan WHERE status_active = 1")[0];
+// $pengajuan_1 = query("SELECT COUNT(*) AS total FROM tb_pengajuan WHERE status_active = 1")[0];
+// $user_1 = query("SELECT COUNT(*) AS total FROM tb_user WHERE status_active = 1")[0];
+// ============================== end of pembimbing =========================
 
 ?>
 
@@ -282,48 +293,12 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
                             <h5 class="card-title">Peserta Magang</h5>
-                            <h2 class="card-text text-success"><?= 0 ?></h2>
+                            <h2 class="card-text text-success"><?= $daftar_peserta_magang ?></h2>
                             <p class="text-muted">Daftar Peserta Yang Saya Bimbing</p>
-                            <a href="pembimbing4_peserta_magang.php" class="btn btn-success mt-3 detail">View Details</a>
+                            <a href="pembimbing4.php" class="btn btn-success mt-3 detail">View Details</a>
                         </div>
                     </div>
                 </div>
-                <!-- Card 2 -->
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Logbook Peserta</h5>
-                            <h2 class="card-text text-warning"><?= 0 ?></h2>
-                            <p class="text-muted">Lihat Dan Laporan Harian Peserta</p>
-                            <a href="pembimbing4_logbook_peserta.php" class="btn btn-warning mt-3 detail">View Details</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Sertifikat Peserta</h5>
-                            <h2 class="card-text text-primary"><?= 0 ?></h2>
-                            <p class="text-muted">Halaman Unggah Sertifikat Peserta Magang</p>
-                            <a href="pembimbing4_upload_sertifikat.php" class="btn btn-primary mt-3 detail">View Details</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Nilai Peserta</h5>
-                            <h2 class="card-text text-danger"><?= 0 ?></h2>
-                            <p class="text-muted">Halaman Unggah Nilai Peserta Magang</p>
-                            <a href="super1_pengajuan.php" class="btn btn-danger mt-3 detail">View Details</a>
-                        </div>
-                    </div>
-                </div>
-
             <?php endif; ?>
 
 
