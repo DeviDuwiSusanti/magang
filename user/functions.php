@@ -436,7 +436,8 @@ function inputPengajuan($POST, $FILES, $id_user){
         }
     }
 
-    $sql2 = "INSERT INTO tb_pengajuan VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
+    $sql2 = "INSERT INTO tb_pengajuan (id_pengajuan, id_user, id_instansi, id_bidang, jenis_pengajuan, jumlah_pelamar, tanggal_mulai, tanggal_selesai, status_pengajuan, status_active, create_by, create_date, change_by, change_date) 
+    VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
     $query2 = mysqli_query($conn, $sql2);
 
     $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
