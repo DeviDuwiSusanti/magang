@@ -6,6 +6,12 @@ include "functions.php";
 // Initialize user ID from session
 $id_user = $_SESSION['id_user'];  // <-- ADD THIS LINE HERE
 
+//Untuk cetak nilai
+if (isset($_GET['cetak'])) {
+    $id_pengajuan_cetak = $_GET['cetak'];
+    cetakSertifikat($conn, $id_pengajuan_cetak);
+}
+
 // Ambil daftar pengajuan magang berdasarkan id_user
 if ($_SESSION['ketua']) { // Ketua kelompok level (3)
     $sql = "SELECT * 
@@ -27,7 +33,6 @@ if ($_SESSION['ketua']) { // Ketua kelompok level (3)
             AND p.status_active = '1'";
 }
 
-
 $query = mysqli_query($conn, $sql);
 $no = 1;
 ?>
@@ -39,16 +44,16 @@ $no = 1;
 
         <div class="bungkus">
             <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th class="text-center">No</th>
-                        <th class="text-center">Instansi</th>
-                        <th class="text-center">Bidang</th>
-                        <th class="text-center">Durasi</th>
-                        <th class="text-center">Periode Magang</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
-                </thead>
+            <thead>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Instansi</th>
+                    <th class="text-center">Bidang</th>
+                    <th class="text-center">Durasi</th>
+                    <th class="text-center">Aksi</th>
+                    <th class="text-center">Laporan & Logbook</th>
+                </tr>
+            </thead>
                 <tbody>
                 <?php while ($data = mysqli_fetch_assoc($query)) { 
                     $id_pengajuan = $data['id_pengajuan'];
@@ -74,13 +79,37 @@ $no = 1;
                         <td><?= htmlspecialchars($data['nama_panjang']) ?></td>
                         <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
                         <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
-                        <td><?= formatPeriode($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td>                        
+                          <!-- Kolom Aksi -->
                         <td class="text-center">
-                            <a href="#" class="btn btn-sm btn-primary" title="Lihat Detail" 
-                               data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
-                               <i class="bi bi-eye"></i>
-                            </a>
+                            <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                <!-- Tombol Detail -->
+                                <a href="#" class="btn btn-sm btn-primary" title="Lihat Detail" 
+                                data-bs-toggle="modal" data-bs-target="#modalDetail<?= $data['id_pengajuan']; ?>">
+                                <i class="bi bi-eye"></i>
+                                </a>
+
+                                <!-- Tombol Sertifikat -->
+                                <a href="?cetak=<?= $data['id_pengajuan'] ?>" class="btn btn-primary btn-sm px-3" title="Cetak Sertifikat & Nilai">
+                                <i class="bi bi-printer"></i>
+                                </a>
+                            </div>
                         </td>
+
+                        <!-- Kolom Logbook & Laporan -->
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                <!-- Tombol Laporan -->
+                                <a href="laprak_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Laporan">
+                                    <i class="bi bi-journal-text"></i>
+                                </a>
+
+                                <!-- Tombol Logbook -->
+                                <a href="logbook.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Logbook">
+                                    <i class="bi bi-journal-bookmark"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
                     </tr>
                     
                     <!-- Modal Detail -->
@@ -110,17 +139,6 @@ $no = 1;
 
                                 <!-- Tombol Aksi dalam Modal -->
                                 <div class="modal-footer flex-column align-items-start">
-                                    <div class="d-flex gap-1">
-                                        <a href="path/to/sertifikat.pdf" class="btn btn-primary btn-sm px-3" download>
-                                            <i class="bi bi-printer"></i> Sertifikat & Nilai
-                                        </a>
-                                        <a href="laprak_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3">
-                                            <i class="bi bi-book"></i> Laporan
-                                        </a>
-                                        <a href="logbook_daftar.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3">
-                                            <i class="bi bi-book"></i> Logbook
-                                        </a>
-                                    </div>
                                     <div class="d-flex justify-content-end w-100 mt-2">
                                         <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
                                     </div>

@@ -197,7 +197,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 if (isset($status_pengajuan) && $status_pengajuan == '4') { ?>
                     <li class="sidebar-item">
-                        <a href="logbook_daftar.php" class="sidebar-link">
+                        <a href="logbook.php" class="sidebar-link">
                             <i class="bi bi-journal-check"></i>
                             <span>Logbook Harian</span>
                         </a>
@@ -277,6 +277,10 @@ if (isset($_SESSION['email'])) {
                                 <a href="profil.php?id_user=<?= $id_user ?>" class="dropdown-item">
                                     <i class="bi bi-pencil-square"></i>
                                     <span>Profile Saya</span>
+                                </a>
+                                <a href="../web/beranda.php" class="dropdown-item">
+                                    <i class="bi bi-house-door"></i>
+                                    <span>Beranda</span>
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a href="setting.php" class="dropdown-item">

@@ -483,7 +483,6 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
 </script>
 
 
-
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
 <script>
     $(document).ready(function() {
