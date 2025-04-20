@@ -12,11 +12,13 @@ if (!isset($_SESSION['id_user'])) {
 }
 
 $id_user = $_SESSION['id_user'];
+$id_pengajuan = $_GET['id_pengajuan'] ?? null;
 
 if (empty($id_pengajuan)) {
     echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='histori.php';</script>";
     exit;
 }
+
 
 
 // Ambil level user
@@ -95,12 +97,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     }
 
     echo "<script>
-        Swal.fire({
-            icon: '$icon',
-            title: '$msg',
-        }).then(() => { window.location.href = 'laprak_daftar.php'; });
+    Swal.fire({
+        icon: '$icon',
+        title: '$msg',
+    }).then(() => { window.location.href = 'laprak_daftar.php?id_pengajuan=$id_pengajuan'; });
     </script>";
     exit;
+
 }
 
 
@@ -128,11 +131,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
             $sql_update = "UPDATE tb_dokumen SET status_active = 0 WHERE id_dokumen = '$id_dokumen'";
             if (mysqli_query($conn, $sql_update)) {
                 echo "<script>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Laporan berhasil dihapus!',
-                    }).then(() => { window.location.href = 'laprak_daftar.php'; });
-                </script>";
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Laporan berhasil dihapus!',
+                }).then(() => { window.location.href = 'laprak_daftar.php?id_pengajuan=$id_pengajuan'; });
+            </script>";            
             } else {
                 echo "<script>
                     Swal.fire({
