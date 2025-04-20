@@ -1,8 +1,4 @@
 <?php
-// persyaratan_daftar.php
-// Harus disertakan setelah session_start() dan koneksi ke database ($conn)
-// Pastikan $id_user dan $id_pengajuan sudah tersedia (misal dari session)
-
 // Ambil id_user dan id_pengajuan jika belum didefinisikan
 if (!isset($id_user)) {
     session_start();
@@ -11,6 +7,61 @@ if (!isset($id_user)) {
 if (!isset($id_pengajuan)) {
     $id_pengajuan = $_SESSION['id_pengajuan'] ?? '';
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_laporan'])) {
+    $id_dokumen = $_POST['id_dokumen'];
+
+    // Ambil file path dari database
+    $query = $conn->prepare("SELECT file_path FROM tb_dokumen WHERE id_dokumen = ?");
+    $query->bind_param("s", $id_dokumen);
+    $query->execute();
+    $result = $query->get_result();
+    $data = $result->fetch_assoc();
+
+    if ($data) {
+        // Hapus file dari folder (fisik)
+        if (file_exists($data['file_path'])) {
+            unlink($data['file_path']);
+        }
+
+        // Update status_active jadi 0 (soft delete)
+        $stmt = $conn->prepare("UPDATE tb_dokumen SET status_active = 0, change_date = NOW() WHERE id_dokumen = ?");
+        $stmt->bind_param("s", $id_dokumen);
+        $stmt->execute();
+
+        $status = 'success';
+        $msg = 'Dokumen berhasil dihapus.';
+    } else {
+        $status = 'error';
+        $msg = 'Dokumen tidak ditemukan.';
+    }
+
+    // Tampilkan SweetAlert
+    switch ($status) {
+        case 'success':
+            $icon = 'success';
+            break;
+        case 'error':
+            $icon = 'error';
+            break;
+        default:
+            $icon = 'info';
+    }
+
+    echo "<script>
+        Swal.fire({
+            icon: '$icon',
+            title: '".ucfirst($status)."!',
+            text: '$msg'
+        }).then(() => {
+            window.location.href = window.location.href;
+        });
+    </script>";
+    exit;
+}
+
+
 
 // Query daftar dokumen persyaratan
 $stmt = $conn->prepare("SELECT * FROM tb_dokumen WHERE id_user = ? AND jenis_dokumen = '2' AND id_pengajuan = ? AND status_active = 1");
@@ -50,13 +101,13 @@ $result = $stmt->get_result();
                 <td><?= htmlspecialchars($row['create_date']) ?></td>
                 <td>
                   <?php if ($row['id_user'] == $id_user): ?>
-                  <form method="POST" onsubmit="return confirm('Yakin hapus dokumen ini?');">
-                    <input type="hidden" name="id_dokumen" value="<?= $row['id_dokumen'] ?>">
-                    <input type="hidden" name="hapus_laporan" value="1">
-                    <button type="submit" class="btn btn-danger btn-sm">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </form>
+                    <form method="POST" class="hapus-dokumen-form">
+                        <input type="hidden" name="id_dokumen" value="<?= $row['id_dokumen'] ?>">
+                        <input type="hidden" name="hapus_laporan" value="1">
+                        <button type="button" class="btn btn-danger btn-sm hapus-btn">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
                   <?php else: ?>
                   <button class="btn btn-secondary btn-sm" disabled>
                     <i class="bi bi-trash"></i>
@@ -153,6 +204,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<!-- Script hapus dokumen -->
+<script>
+document.querySelectorAll('.hapus-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const form = this.closest('form');
+
+        Swal.fire({
+            title: 'Yakin mau hapus dokumen ini?',
+            text: "File akan dihapus dari sistem!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();  // submit form kalau user setuju
+            }
+        });
+    });
+});
+</script>
 
 <style>
    .dropzone {
