@@ -95,7 +95,6 @@ $pengajuan_user = $pengajuan["id_pengajuan"];
 $daftar_anggota = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = tb_user.id_user AND tb_profile_user.id_pengajuan = '$pengajuan_user' AND tb_profile_user.status_active = '1'");
 
 $daftar_peserta_magang = count($daftar_anggota);
-
 endif;
 ?>
 
