@@ -25,7 +25,7 @@ include "functions.php";
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="../assets/css/web.css" />
+    <link rel="stylesheet" href="../assets/css/beranda.css" />
     <link rel="stylesheet" href="../assets/css/style2.css" />
     <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
     <title>Home</title>
@@ -117,7 +117,7 @@ include "functions.php";
                             $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
                             if ($jumlah_lowongan !=0){?>
                                 <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;"
-                                    onclick="showDeskripsiInstansi(`<?= $row['deskripsi_instansi'] ?>`)">
+                                onclick="showDeskripsiInstansi(`<?= !empty($row['deskripsi_instansi']) ? addslashes($row['deskripsi_instansi']) : 'Belum ada deskripsi.' ?>`)">
                                         <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
                                         <div class="popular__data">
                                             <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
@@ -176,3 +176,4 @@ include "functions.php";
     </div>
   </div>
 </div>
+
