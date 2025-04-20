@@ -796,7 +796,7 @@ function tambah_instansi_super_admin($POST) {
         $nip                    = $POST["edit_nip"];
         $jabatan                = $POST["edit_jabatan"];
         $telepone_pembimbing    = $POST["edit_telepone_pembimbing"];
-        $id_bidang_baru         = $POST["id_bidang"];
+        $id_bidang_baru         = $POST["id_bidang"] ?? null;
     
         // Cek bidang lama dari database
         $query_bidang_lama = "SELECT id_bidang FROM tb_profile_user WHERE id_user = '$id_pembimbing'";
@@ -804,8 +804,14 @@ function tambah_instansi_super_admin($POST) {
         $row = mysqli_fetch_assoc($result);
         $id_bidang_lama = $row['id_bidang'];
     
+        // Jika input bidang kosong/null, fallback ke bidang lama
+        if ($id_bidang_baru === null || $id_bidang_baru === '') {
+            $id_bidang_baru = $id_bidang_lama;
+        }
+    
         // Jika bidang berubah, buat ID pembimbing baru
         if ($id_bidang_lama != $id_bidang_baru) {
+            // Cek dulu apakah bidang valid
             $query_check_bidang = "SELECT id_bidang FROM tb_bidang WHERE id_bidang = '$id_bidang_baru'";
             mysqli_query($conn, $query_check_bidang);
     
@@ -851,6 +857,7 @@ function tambah_instansi_super_admin($POST) {
     
         return mysqli_affected_rows($conn);
     }
+    
 
     function hapus_pembimbing($id, $id_user) {
         global $conn;

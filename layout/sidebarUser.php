@@ -197,7 +197,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 if (isset($status_pengajuan) && $status_pengajuan == '4') { ?>
                     <li class="sidebar-item">
-                        <a href="logbook_daftar.php" class="sidebar-link">
+                        <a href="logbook.php" class="sidebar-link">
                             <i class="bi bi-journal-check"></i>
                             <span>Logbook Harian</span>
                         </a>
@@ -252,7 +252,7 @@ if (isset($_SESSION['email'])) {
         </aside>
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
-                <button class="btn d-lg-none me-3" id="hamburger-btn" style="font-size: 1.5rem; border: none; background: none;">
+                <button class="d-lg-none me-3" id="hamburger-btn">
                     <i class="bi bi-list"></i>
                 </button>
                 <div class="navbar-greeting d-flex flex-column justify-content-center me-auto">
@@ -323,50 +323,14 @@ if (isset($_SESSION['email'])) {
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
                 <!-- Inisialisasi DataTables -->
-            <script>
+            <!-- <script>
                 $(document).ready(function() {
                     $('#myTable').DataTable();
                 });
-            </script>
+            </script> -->
 
             <!-- Inisialisasi DataTables -->
             <script>
-                // $(document).ready(function() {
-                //     // var table = $('#myTable').DataTable();
-
-                //     // Event handler untuk tombol "show-detail"
-                //     $('#myTable tbody').on('click', 'a.show-detail', function(e) {
-                //         e.preventDefault();
-
-                //         var detailData = $(this).data('detail');
-                //         var detailHtml = '<ul>';
-                //         $.each(detailData, function(index, name) {
-                //             detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
-                //         });
-                //         detailHtml += '</ul>';
-
-                //         var tr = $(this).closest('tr');
-                //         var row = table.row(tr);
-
-                //         // Sembunyikan detail yang lain sebelum menampilkan yang baru
-                //         if (!row.child.isShown()) {
-                //             $('#myTable tbody tr.shown').not(tr).each(function() {
-                //                 table.row(this).child.hide();
-                //                 $(this).removeClass('shown');
-                //             });
-                //         }
-
-                //         // Tampilkan atau sembunyikan detail dari baris yang diklik
-                //         if (row.child.isShown()) {
-                //             row.child.hide();
-                //             tr.removeClass('shown');
-                //         } else {
-                //             row.child(detailHtml).show();
-                //             tr.addClass('shown');
-                //         }
-                //     });
-                // });
-
                 // Toggle sidebar tampilan mobile
                 const hamburgerBtn = document.getElementById('hamburger-btn');
                 const sidebar = document.getElementById('sidebar');

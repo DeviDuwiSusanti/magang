@@ -12,7 +12,6 @@ if (!isset($_SESSION['id_user'])) {
 }
 
 $id_user = $_SESSION['id_user'];
-$id_pengajuan = isset($_GET['id_pengajuan']) ? mysqli_real_escape_string($conn, $_GET['id_pengajuan']) : '';
 
 if (empty($id_pengajuan)) {
     echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='histori.php';</script>";
@@ -252,18 +251,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="uploadForm" action="" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h5 class="modal-title">Unggah Laporan Akhir</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="file" class="form-control" name="laporan_akhir" id="fileInput">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Unggah</button>
-                </div>
-            </form>
+        <form id="uploadForm" action="" method="POST" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title">Unggah Laporan Akhir</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="file" class="form-control mb-2" name="laporan_akhir" id="fileInput">
+                <small class="text-muted">Format nama file: <strong>nama_bidang.pdf</strong> (contoh: <i>Revika_TIK.pdf</i>)</small>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Unggah</button>
+            </div>
+        </form>
         </div>
     </div>
 </div>

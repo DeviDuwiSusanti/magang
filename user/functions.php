@@ -316,7 +316,7 @@ function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
             VALUES ('$id_logbook', '$tanggal', '$kegiatan', '$keterangan', '$jam_mulai', '$jam_selesai', '$target_file', '$ttd', '$id_pengajuan', '$id_user', '$id_user')";
 
     if (mysqli_query($conn, $sql)) {
-        showAlert('Berhasil!', 'Logbook Berhasil Diinput', 'success', "logbook_daftar.php");
+        showAlert('Berhasil!', 'Logbook Berhasil Diinput', 'success', "logbook.php");
         exit();
     } else {
         showAlert('Gagal!', 'Logbook gagal diinput. Silakan coba lagi.', 'error');
@@ -348,7 +348,7 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
     change_by = '$id_user' WHERE id_logbook = '$id_logbook'";
 
     if (mysqli_query($conn, $sql2)) {
-        showAlert('Berhasil!', 'Logbook Berhasil Diupdate', 'success', "logbook_daftar.php");
+        showAlert('Berhasil!', 'Logbook Berhasil Diupdate', 'success', "logbook.php");
         exit();
     } else {
         showAlert('Gagal!', 'Logbook gagal diupdate. Silakan coba lagi.', 'error');
@@ -362,7 +362,7 @@ function hapusLogbook($id_user){
     $query2 = mysqli_query($conn, $sql2);
     if ($query2) {
         deleteGambarLogbook($id_logbook);
-        showAlert('Berhasil!', 'Logbook Berhasil Dihapus', 'success', "logbook_daftar.php");
+        showAlert('Berhasil!', 'Logbook Berhasil Dihapus', 'success', "logbook.php");
         exit();
     } else {
         showAlert('Gagal!', 'Logbook gagal dihapus. Silakan coba lagi.', 'error');

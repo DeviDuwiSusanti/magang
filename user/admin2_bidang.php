@@ -72,13 +72,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             <li class="breadcrumb-item active">Kelola Bidang Instansi</li>
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
-        <!-- <div class="mb-4 text-end">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal" title="Tambah Bidang">
-                <i class="bi bi-plus-circle me-1"></i> Tambah Bidang
-            </button>
-        </div> -->
         <div class="table-responsive-sm">
-            <div class="bungkus-2">
+            <div class="datatable-header mb-2"></div>
+            <div class="bungkus-2 datatable-scrollable">
                 <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -121,6 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     </tbody>
                 </table>
             </div>
+            <div class="datatable-footer mt-2"></div>
         </div>
     </div>
 </div>
