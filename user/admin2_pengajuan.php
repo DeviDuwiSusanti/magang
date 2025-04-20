@@ -16,7 +16,7 @@ $sql = "SELECT
         WHERE p.id_instansi = '$id_instansi'
             AND p.status_active = '1'
             AND p.status_pengajuan IN ('1', '2')
-        ORDER BY p.id_pengajuan DESC
+        ORDER BY p.id_pengajuan ASC
 ";
 $result = mysqli_query($conn, $sql);
 
@@ -55,7 +55,9 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     $id_user = $row3['id_user'];
     $id_pengajuan = $row3['id_pengajuan'];
     $dokumen_list = explode(', ', $row3['daftar_dokumen']);
-    $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
+    $full_paths = $dokumen_list;
+
+    $daftar_dokumen[$id_user][$id_pengajuan] = $full_paths;
 }
 $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 ?>
@@ -88,7 +90,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                             <?php
-                            $id_pengajuan = $row['id_pengajuan'];
+                            // $id_pengajuan = $row['id_pengajuan'];
                             $status_pengajuan = $row['status_pengajuan'];
                             ?>
                             <tr>
@@ -102,7 +104,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         <?= isset($nama_pengaju[$row['id_pengajuan']]) ? count(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : 0 ?>
                                     </a>
                                 </td>
-                                <td class="text-center align-middle">
+                                <!-- <td class="text-center align-middle">
                                     <a href="#" class="show-doc btn btn-sm btn-primary" title="Lihat Dokumen"
                                         data-bs-toggle="modal" data-bs-target="#dokumenModal"
                                         data-doc='<?= !empty($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
@@ -110,7 +112,21 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                                         : '[]' ?>'>
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
+                                </td> -->
+                                <td class="text-center align-middle">
+                                    <a href="#"
+                                        class="show-doc btn btn-sm btn-primary"
+                                        title="Lihat Dokumen"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#dokumenModal"
+                                        data-doc='<?= htmlspecialchars(json_encode(
+                                                        $daftar_dokumen[$row['id_user']][$row['id_pengajuan']] ?? [],
+                                                        JSON_UNESCAPED_SLASHES
+                                                    ), ENT_QUOTES, "UTF-8") ?>'>
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
                                 </td>
+
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
@@ -141,13 +157,19 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         <i class="bi bi-zoom-in"></i>
                                     </button>
                                 </td>
+                                <?php
+                                $isDisabled = ($row['kirim_zoom'] == 0);
+                                $btnClass = $isDisabled ? 'btn-secondary' : 'btn-primary';
+                                ?>
+
                                 <td class="text-center align-middle">
                                     <button
-                                        class="btn btn-primary btn-sm aksi-btn"
+                                        class="btn <?= $btnClass ?> btn-sm aksi-btn"
                                         data-bs-toggle="modal"
                                         data-bs-target="#aksiModal"
                                         data-id="<?= $id_pengajuan ?>"
-                                        data-status="<?= $status_pengajuan ?>">
+                                        data-status="<?= $status_pengajuan ?>"
+                                        <?= $isDisabled ? 'disabled' : '' ?>>
                                         <i class="bi bi-ui-checks"></i>
                                         Proses
                                     </button>
@@ -244,7 +266,7 @@ $query = "SELECT pu.id_user, pu.nama_user, b.nama_bidang
           FROM tb_profile_user pu
           JOIN tb_bidang b ON pu.id_bidang = b.id_bidang
           JOIN tb_user u ON pu.id_user = u.id_user
-          WHERE u.level = 5";
+          WHERE u.level = 4";
 
 $result = mysqli_query($conn, $query);
 ?>
@@ -501,31 +523,51 @@ $result = mysqli_query($conn, $query);
 
         docLinks.forEach(link => {
             link.addEventListener('click', function() {
-                const data = JSON.parse(this.getAttribute('data-doc'));
+                let data = [];
+
+                try {
+                    data = JSON.parse(this.getAttribute('data-doc') || '[]');
+                } catch (e) {
+                    console.error('Gagal parse dokumen:', e);
+                    data = [];
+                }
+
                 const tabList = document.getElementById('docTabList');
                 const tabContent = document.getElementById('docTabContent');
 
                 tabList.innerHTML = '';
                 tabContent.innerHTML = '';
 
-                if (data.length === 0) {
-                    tabList.innerHTML = '<li class="nav-item"><span class="nav-link active">Tidak ada dokumen</span></li>';
-                    tabContent.innerHTML = '<div class="tab-pane fade show active p-2">Tidak tersedia dokumen untuk ditampilkan.</div>';
+                if (!Array.isArray(data) || data.length === 0) {
+                    tabList.innerHTML = `
+                    <li class="nav-item">
+                        <span class="nav-link active">Tidak ada dokumen</span>
+                    </li>`;
+                    tabContent.innerHTML = `
+                    <div class="tab-pane fade show active p-2">
+                        Tidak tersedia dokumen untuk ditampilkan.
+                    </div>`;
                     return;
                 }
 
                 data.forEach((doc, index) => {
                     const tabId = `doc-tab-${index}`;
-                    const filename = doc.split('/').pop(); // Ambil nama file dari URL
+                    const filename = doc.split('/').pop();
 
                     // Tab header
                     const tab = document.createElement('li');
                     tab.classList.add('nav-item');
                     tab.innerHTML = `
-            <button class="nav-link ${index === 0 ? 'active' : ''}" id="${tabId}-tab" data-bs-toggle="tab" data-bs-target="#${tabId}" type="button" role="tab" aria-controls="${tabId}" aria-selected="${index === 0 ? 'true' : 'false'}">
-              Dokumen ${index + 1}
-            </button>
-          `;
+                    <button class="nav-link ${index === 0 ? 'active' : ''}" 
+                            id="${tabId}-tab" 
+                            data-bs-toggle="tab" 
+                            data-bs-target="#${tabId}" 
+                            type="button" 
+                            role="tab" 
+                            aria-controls="${tabId}" 
+                            aria-selected="${index === 0 ? 'true' : 'false'}">
+                        Dokumen ${index + 1}
+                    </button>`;
                     tabList.appendChild(tab);
 
                     // Tab content
@@ -536,15 +578,17 @@ $result = mysqli_query($conn, $query);
                     tabPane.setAttribute('role', 'tabpanel');
                     tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
 
-                    const isPdf = doc.endsWith('.pdf');
-                    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(doc);
+                    const isPdf = doc.toLowerCase().endsWith('.pdf');
+                    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc);
 
                     if (isPdf) {
                         tabPane.innerHTML = `<iframe src="${doc}" width="100%" height="500px" style="border: none;"></iframe>`;
                     } else if (isImage) {
-                        tabPane.innerHTML = `<img src="${doc}" alt="${filename}" class="img-fluid">`;
+                        tabPane.innerHTML = `<img src="${doc}" alt="${filename}" class="img-fluid rounded shadow">`;
                     } else {
-                        tabPane.innerHTML = `<a href="${doc}" target="_blank" class="btn btn-outline-primary">Lihat atau Unduh ${filename}</a>`;
+                        tabPane.innerHTML = `<a href="${doc}" target="_blank" class="btn btn-outline-primary">
+                        Lihat atau Unduh ${filename}
+                    </a>`;
                     }
 
                     tabContent.appendChild(tabPane);
@@ -552,6 +596,7 @@ $result = mysqli_query($conn, $query);
             });
         });
     });
+
 
     // Modal aksi
     document.addEventListener("DOMContentLoaded", function() {

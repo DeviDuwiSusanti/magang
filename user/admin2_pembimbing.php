@@ -43,7 +43,7 @@ $list_bidang = query("SELECT tb_bidang.*,
                 LEFT JOIN tb_user 
                     ON tb_profile_user.id_user = tb_user.id_user
                 WHERE tb_bidang.id_instansi = '$id_instansi'
-                AND (tb_user.level = '5' OR tb_user.level IS NULL)
+                AND (tb_user.level = '4' OR tb_user.level IS NULL)
                 AND (tb_bidang.status_active = '1' OR tb_bidang.status_active = '0')
 ");
 
@@ -331,7 +331,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     <div class="mb-3">
                         <label for="edit_bidang" class="form-label">Pilih Bidang</label>
                         <select id="edit_bidang" name="id_bidang" class="form-select select2">
-                            <option disabled>Pilih Bidang</option>
+                            <option value="" disabled selected hidden>Pilih Bidang</option>
                             <?php foreach ($list_bidang as $bidang): ?>
                                 <option value="<?= $bidang['id_bidang']; ?>"
                                     <?= (!empty($bidang['id_pembimbing']) && $bidang['id_pembimbing'] != $pembimbing['id_pembimbing']) ? 'disabled' : ''; ?>
@@ -357,6 +357,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
 <script src="../assets/js/validasi.js"></script>
 
 <script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Pilih Data",
+            allowClear: true,
+            width: '100%', // biar mengikuti lebar parent
+            minimumResultsForSearch: 0
+        });
+    });
+
     // Event listener untuk nik
     document.getElementById("nik_pembimbing").addEventListener("input", function(e) {
         this.value = this.value.replace(/\D/g, "");
@@ -401,7 +410,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
     document.getElementById("telepone_pembimbing").addEventListener("input", function(e) {
         this.value = this.value.replace(/\D/g, "");
 
-        const maxLength = 15;
+        const maxLength = 12;
         if (this.value.length > maxLength) {
             this.value = this.value.slice(0, maxLength);
         }
@@ -411,7 +420,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
     document.getElementById("edit_telepone_pembimbing").addEventListener("input", function(e) {
         this.value = this.value.replace(/\D/g, "");
 
-        const maxLength = 15;
+        const maxLength = 12;
         if (this.value.length > maxLength) {
             this.value = this.value.slice(0, maxLength);
         }

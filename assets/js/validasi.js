@@ -481,8 +481,8 @@ function validateTambahPembimbing() {
   if (telepon === "") {
     showError("telepone_pembimbing", "telepone_error", "Nomor telepon tidak boleh kosong.");
     isValid = false;
-  } else if (!/^\d+$/.test(telepon)) {
-    showError("telepone_pembimbing", "telepone_error", "Telepon harus berupa angka.");
+  } else if (!/^[0-9]{11,12}$/.test(telepon)) {
+    showError("edit_telepone_pembimbing", "telepone_error", "Nomor telepon harus terdiri dari 11-12 digit angka.");
     isValid = false;
   }
 
@@ -542,8 +542,8 @@ function validateEditPembimbing() {
   if (telepon === "") {
     showError("edit_telepone_pembimbing", "edit_telepone_error", "Nomor telepon tidak boleh kosong.");
     isValid = false;
-  } else if (!/^[0-9]{12,15}$/.test(telepon)) {
-    showError("edit_telepone_pembimbing", "edit_telepone_error", "Nomor telepon harus terdiri dari 12-15 digit angka.");
+  } else if (!/^[0-9]{11,12}$/.test(telepon)) {
+    showError("edit_telepone_pembimbing", "edit_telepone_error", "Nomor telepon harus terdiri dari 11-12 digit angka.");
     isValid = false;
   }
 
