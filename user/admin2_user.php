@@ -1,4 +1,4 @@
-<?php 
+<?php
 include '../layout/sidebarUser.php';
 include "update_status.php";
 include "functions.php";
@@ -58,8 +58,9 @@ $json_nama_pengaju = json_encode($nama_pengaju);
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
         <div class="table-responsive-sm">
-            <div class="bungkus-2">
-                <table id="myTable" class="table table-striped table-bordered table-hover">
+            <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
+            <div class="bungkus-2 datatable-scrollable">
+                <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -130,3 +131,67 @@ $json_nama_pengaju = json_encode($nama_pengaju);
 </div>
 
 <?php include "../layout/footerDashboard.php" ?>
+
+<script>
+    $(document).ready(function() {
+        // Cek apakah sedang di mobile untuk scrollX
+        var isMobile = window.innerWidth < 768;
+
+        // Inisialisasi DataTable hanya sekali
+        var table = $('#myTable').DataTable({
+            scrollX: isMobile,
+            responsive: true,
+            dom: '<"datatable-header row mb-2"' +
+                '<"col-md-6 text-md-start text-center"l>' +
+                '<"col-md-6 text-md-end text-center d-flex justify-content-end align-items-center gap-2"f>' +
+                '>t' +
+                '<"datatable-footer row mt-2"' +
+                '<"col-md-6 text-md-start text-center"i>' +
+                '<"col-md-6 text-md-end text-center"p>' +
+                '>',
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                emptyTable: "Tidak ada data pemagang yang tersedia",
+                zeroRecords: "Tidak ada data pemagang yang cocok",
+                paginate: {
+                    previous: "Sebelumnya",
+                    next: "Berikutnya"
+                }
+            }
+        });
+
+        // Event handler untuk tombol "show-detail"
+        $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+            e.preventDefault();
+
+            var detailData = $(this).data('detail');
+            var detailHtml = '<ul>';
+            $.each(detailData, function(index, name) {
+                detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+            });
+            detailHtml += '</ul>';
+
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            // Sembunyikan detail yang lain sebelum menampilkan yang baru
+            if (!row.child.isShown()) {
+                $('#myTable tbody tr.shown').not(tr).each(function() {
+                    table.row(this).child.hide();
+                    $(this).removeClass('shown');
+                });
+            }
+
+            // Tampilkan atau sembunyikan detail dari baris yang diklik
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                row.child(detailHtml).show();
+                tr.addClass('shown');
+            }
+        });
+    });
+</script>

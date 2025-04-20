@@ -13,6 +13,7 @@ $bidang = "SELECT
             pu.id_user AS id_pembimbing, 
             pu.nama_user AS nama_pembimbing, 
             pu.nik AS nik_pembimbing, 
+            u.email AS email_pembimbing,
             pu.nip, 
             pu.jabatan, 
             pu.telepone_user AS telepone_pembimbing, 
@@ -122,26 +123,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     <?php
                     $disabled = $jumlahBidangBelumAdaPembimbing === 0;
                     $btnClass = $disabled ? 'btn-secondary' : 'btn-primary';
-                    ?>
-                    <button type="button"
-                        class="btn <?= $btnClass ?> btn-sm"
+                    $tombol = '<button type="button"
+                        class="btn ' . $btnClass . ' btn-sm ms-2"
                         data-bs-toggle="modal"
                         data-bs-target="#tambahPembimbingModal"
                         title="Tambah Pembimbing"
-                        <?= $disabled ? 'disabled title="Semua bidang sudah memiliki pembimbing"' : '' ?>>
-                        <i class="bi bi-plus-circle me-1"></i> Tambah Pembimbing
-                    </button>
+                        ' . ($disabled ? 'disabled title="Semua bidang sudah memiliki pembimbing"' : '') . '>
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </button>';
+                    ?>
                 </div>
             <?php endif; ?>
-
-
-            <!-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahPembimbingModal">
-                <i class="bi bi-plus-circle me-1"></i> Tambah Pembimbing
-            </button> -->
         </div>
         <div class="table-responsive-sm">
-            <div class="bungkus-2">
-                <table id="myTable" class="table table-striped table-bordered table-hover">
+            <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
+            <div class="bungkus-2 datatable-scrollable">
+                <table id="myTable" class="table table-striped table-hover nowrap" style="width:100%">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -166,6 +163,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                                             data-bs-toggle="modal" data-bs-target="#editPembimbingModal"
                                             data-id_pembimbing="<?= $pembimbing['id_pembimbing'] ?>"
                                             data-nama_pembimbing="<?= $pembimbing['nama_pembimbing'] ?>"
+                                            data-email_pembimbing="<?= $pembimbing['email_pembimbing'] ?>"
                                             data-nik="<?= $pembimbing['nik_pembimbing'] ?>"
                                             data-nip="<?= $pembimbing['nip'] ?>"
                                             data-jabatan="<?= $pembimbing['jabatan'] ?>"
@@ -184,9 +182,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     </tbody>
                 </table>
             </div>
+            <div class="datatable-footer mt-2"></div> <!-- Tempat info dan pagination -->
         </div>
     </div>
 </div>
+
+<?php include "../layout/footerDashboard.php" ?>
 
 <!-- Modal Tambah Pembimbing -->
 <div class="modal fade" id="tambahPembimbingModal" tabindex="-1" aria-labelledby="tambahPembimbingModalLabel" aria-hidden="true">
@@ -199,72 +200,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
             <div class="modal-body">
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateTambahPembimbing()">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
-
-                    <div class="mb-3">
-                        <label for="nama_pembimbing" class="form-label">Nama Pembimbing</label>
-                        <input type="text" class="form-control" id="nama_pembimbing" name="nama_pembimbing" placeholder="Masukkan nama pembimbing">
-                        <small id="nama_pembimbing_error" class="text-danger"></small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email Pembimbing</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pembimbing">
-                        <small id="email_error" class="text-danger"></small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nik_pembimbing" class="form-label">NIK Pembimbing</label>
-                        <input type="text" class="form-control" id="nik_pembimbing" name="nik_pembimbing" placeholder="Masukkan NIK pembimbing">
-                        <small id="nik_pembimbing_error" class="text-danger"></small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nip" class="form-label">NIP Pembimbing</label>
-                        <input type="text" class="form-control" id="nip" name="nip" placeholder="Masukkan NIP pembimbing">
-                        <small id="nip_error" class="text-danger"></small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="jabatan" class="form-label">Jabatan</label>
-                        <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Masukkan jabatan pembimbing">
-                        <small id="jabatan_error" class="text-danger"></small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="gender" class="form-label">Jenis Kelamin</label>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_l" value="1">
-                                <label class="form-check-label" for="gender_l">Laki-Laki</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_p" value="0">
-                                <label class="form-check-label" for="gender_p">Perempuan</label>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nama_pembimbing" class="form-label">Nama Pembimbing</label>
+                            <input type="text" class="form-control" id="nama_pembimbing" name="nama_pembimbing" placeholder="Masukkan nama pembimbing">
+                            <small id="nama_pembimbing_error" class="text-danger"></small>
                         </div>
-                        <small id="gender_error" class="text-danger"></small>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email Pembimbing</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pembimbing">
+                            <small id="email_error" class="text-danger"></small>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="telepone_pembimbing" class="form-label">Telepon</label>
-                        <input type="text" class="form-control" id="telepone_pembimbing" name="telepone_pembimbing" placeholder="Masukkan nomor telepon">
-                        <small id="telepone_error" class="text-danger"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nik_pembimbing" class="form-label">NIK Pembimbing</label>
+                            <input type="text" class="form-control" id="nik_pembimbing" name="nik_pembimbing" placeholder="Masukkan NIK pembimbing">
+                            <small id="nik_pembimbing_error" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nip" class="form-label">NIP Pembimbing</label>
+                            <input type="text" class="form-control" id="nip" name="nip" placeholder="Masukkan NIP pembimbing">
+                            <small id="nip_error" class="text-danger"></small>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="bidang" class="form-label">Pilih Bidang</label>
-                        <?php if (!empty($list_bidang)): ?>
-                            <select id="id_bidang" name="id_bidang" class="form-select select2">
-                                <?php foreach ($list_bidang as $bidang): ?>
-                                    <option value="<?= $bidang['id_bidang']; ?>" <?= !empty($bidang['id_pembimbing']) ? 'disabled' : ''; ?>>
-                                        <?= $bidang['nama_bidang']; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        <?php else: ?>
-                            <p>Tidak ada bidang yang tersedia.</p>
-                        <?php endif; ?>
-                        <small id="bidang_error" class="text-danger"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="jabatan" class="form-label">Jabatan</label>
+                            <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Masukkan jabatan pembimbing">
+                            <small id="jabatan_error" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="gender" class="form-label">Jenis Kelamin</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_l" value="1">
+                                    <label class="form-check-label" for="gender_l">Laki-Laki</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_kelamin" id="gender_p" value="0">
+                                    <label class="form-check-label" for="gender_p">Perempuan</label>
+                                </div>
+                            </div>
+                            <small id="gender_error" class="text-danger"></small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="telepone_pembimbing" class="form-label">Telepon</label>
+                            <input type="text" class="form-control" id="telepone_pembimbing" name="telepone_pembimbing" placeholder="Masukkan nomor telepon">
+                            <small id="telepone_error" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="bidang" class="form-label">Pilih Bidang</label>
+                            <?php if (!empty($list_bidang)): ?>
+                                <select id="id_bidang" name="id_bidang" class="form-select select2">
+                                    <?php foreach ($list_bidang as $bidang): ?>
+                                        <option value="<?= $bidang['id_bidang']; ?>" <?= !empty($bidang['id_pembimbing']) ? 'disabled' : ''; ?>>
+                                            <?= $bidang['nama_bidang']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            <?php else: ?>
+                                <p>Tidak ada bidang yang tersedia.</p>
+                            <?php endif; ?>
+                            <small id="bidang_error" class="text-danger"></small>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -288,30 +289,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditPembimbing()">
                     <input type="hidden" id="edit_id_user" name="edit_id_user" value="<?= $id_user ?>">
                     <input type="hidden" id="edit_id_pembimbing" name="edit_id_pembimbing">
-                    <div class="mb-3">
-                        <label for="nama_pembimbing" class="form-label">Nama Pembimbing</label>
-                        <input type="text" class="form-control" id="edit_nama_pembimbing" name="edit_nama_pembimbing">
-                        <small id="edit_nama_pembimbing_error" class="text-danger"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nama_pembimbing" class="form-label">Nama Pembimbing</label>
+                            <input type="text" class="form-control" id="edit_nama_pembimbing" name="edit_nama_pembimbing">
+                            <small id="edit_nama_pembimbing_error" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email Pembimbing</label>
+                            <input type="email" class="form-control" id="edit_email" name="edit_email">
+                            <small id="edit_email_error" class="text-danger"></small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="nik_pembimbing" class="form-label">NIK Pembimbing</label>
-                        <input type="text" class="form-control" id="edit_nik_pembimbing" name="edit_nik_pembimbing">
-                        <small id="edit_nik_pembimbing_error" class="text-danger"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nik_pembimbing" class="form-label">NIK Pembimbing</label>
+                            <input type="text" class="form-control" id="edit_nik_pembimbing" name="edit_nik_pembimbing">
+                            <small id="edit_nik_pembimbing_error" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nip" class="form-label">NIP Pembimbing</label>
+                            <input type="text" class="form-control" id="edit_nip" name="edit_nip">
+                            <small id="edit_nip_error" class="text-danger"></small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="nip" class="form-label">NIP Pembimbing</label>
-                        <input type="text" class="form-control" id="edit_nip" name="edit_nip">
-                        <small id="edit_nip_error" class="text-danger"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="jabatan" class="form-label">Jabatan</label>
-                        <input type="text" class="form-control" id="edit_jabatan" name="edit_jabatan">
-                        <small id="edit_jabatan_error" class="text-danger"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telepone_pembimbing" class="form-label">Telepon</label>
-                        <input type="text" class="form-control" id="edit_telepone_pembimbing" name="edit_telepone_pembimbing">
-                        <small id="edit_telepone_error" class="text-danger"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="jabatan" class="form-label">Jabatan</label>
+                            <input type="text" class="form-control" id="edit_jabatan" name="edit_jabatan">
+                            <small id="edit_jabatan_error" class="text-danger"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="telepone_pembimbing" class="form-label">Telepon</label>
+                            <input type="text" class="form-control" id="edit_telepone_pembimbing" name="edit_telepone_pembimbing">
+                            <small id="edit_telepone_error" class="text-danger"></small>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="edit_bidang" class="form-label">Pilih Bidang</label>
@@ -338,7 +350,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php" ?>
 <script src="../assets/js/validasi.js"></script>
 
 <script>
@@ -349,6 +360,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
             button.addEventListener("click", function() {
                 document.getElementById("edit_id_pembimbing").value = this.getAttribute("data-id_pembimbing");
                 document.getElementById("edit_nama_pembimbing").value = this.getAttribute("data-nama_pembimbing");
+                document.getElementById("edit_email").value = this.getAttribute("data-email_pembimbing");
                 document.getElementById("edit_nik_pembimbing").value = this.getAttribute("data-nik");
                 document.getElementById("edit_nip").value = this.getAttribute("data-nip");
                 document.getElementById("edit_jabatan").value = this.getAttribute("data-jabatan");
@@ -372,6 +384,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
     });
 
     document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+
+    // $('#tambahPembimbingModal').on('shown.bs.modal', function() {
+    //     $('#pilih_bidang').select2({
+    //         dropdownParent: $('#tambahPembimbingModal')
+    //     });
+    // });
+
+    $(document).ready(function() {
+        var isMobile = window.innerWidth < 768;
+
+        var table = $('#myTable').DataTable({
+            scrollX: isMobile,
+            responsive: true,
+            dom: '<"datatable-header row mb-2"' +
+                '<"col-md-6 text-md-start text-center"l>' +
+                '<"col-md-6 text-md-end text-center d-flex justify-content-end align-items-center gap-2"f>' +
+                '>t' +
+                '<"datatable-footer row mt-2"' +
+                '<"col-md-6 text-md-start text-center"i>' +
+                '<"col-md-6 text-md-end text-center"p>' +
+                '>',
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    previous: "Sebelumnya",
+                    next: "Berikutnya"
+                }
+            }
+        });
+
+        // Tambahkan tombol ke samping search
+        var tombol = `<?= $tombol ?>`;
+        $('.dataTables_filter').append(tombol);
+        // 🔥 Inisialisasi tooltip untuk tombol yang baru ditambahkan
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
         tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);

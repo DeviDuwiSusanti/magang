@@ -318,40 +318,55 @@ if (isset($_SESSION['email'])) {
 
             <!-- Inisialisasi DataTables -->
             <script>
-                $(document).ready(function() {
-                    var table = $('#myTable').DataTable();
+                // $(document).ready(function() {
+                //     // var table = $('#myTable').DataTable();
 
-                    // Event handler untuk tombol "show-detail"
-                    $('#myTable tbody').on('click', 'a.show-detail', function(e) {
-                        e.preventDefault();
+                //     // Event handler untuk tombol "show-detail"
+                //     $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+                //         e.preventDefault();
 
-                        var detailData = $(this).data('detail');
-                        var detailHtml = '<ul>';
-                        $.each(detailData, function(index, name) {
-                            detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
-                        });
-                        detailHtml += '</ul>';
+                //         var detailData = $(this).data('detail');
+                //         var detailHtml = '<ul>';
+                //         $.each(detailData, function(index, name) {
+                //             detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+                //         });
+                //         detailHtml += '</ul>';
 
-                        var tr = $(this).closest('tr');
-                        var row = table.row(tr);
+                //         var tr = $(this).closest('tr');
+                //         var row = table.row(tr);
 
-                        // Sembunyikan detail yang lain sebelum menampilkan yang baru
-                        if (!row.child.isShown()) {
-                            $('#myTable tbody tr.shown').not(tr).each(function() {
-                                table.row(this).child.hide();
-                                $(this).removeClass('shown');
-                            });
-                        }
+                //         // Sembunyikan detail yang lain sebelum menampilkan yang baru
+                //         if (!row.child.isShown()) {
+                //             $('#myTable tbody tr.shown').not(tr).each(function() {
+                //                 table.row(this).child.hide();
+                //                 $(this).removeClass('shown');
+                //             });
+                //         }
 
-                        // Tampilkan atau sembunyikan detail dari baris yang diklik
-                        if (row.child.isShown()) {
-                            row.child.hide();
-                            tr.removeClass('shown');
-                        } else {
-                            row.child(detailHtml).show();
-                            tr.addClass('shown');
-                        }
-                    });
+                //         // Tampilkan atau sembunyikan detail dari baris yang diklik
+                //         if (row.child.isShown()) {
+                //             row.child.hide();
+                //             tr.removeClass('shown');
+                //         } else {
+                //             row.child(detailHtml).show();
+                //             tr.addClass('shown');
+                //         }
+                //     });
+                // });
+
+                // Toggle sidebar tampilan mobile
+                const hamburgerBtn = document.getElementById('hamburger-btn');
+                const sidebar = document.getElementById('sidebar');
+
+                hamburgerBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('show-sidebar');
+                });
+
+                // Optional: klik di luar sidebar untuk nutup
+                document.addEventListener('click', (e) => {
+                    if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                        sidebar.classList.remove('show-sidebar');
+                    }
                 });
 
                 function updateGreetingAndClock() {
@@ -384,20 +399,6 @@ if (isset($_SESSION['email'])) {
                 // Update setiap detik
                 setInterval(updateGreetingAndClock, 1000);
                 updateGreetingAndClock();
-
-                const hamburgerBtn = document.getElementById('hamburger-btn');
-                const sidebar = document.getElementById('sidebar');
-
-                hamburgerBtn.addEventListener('click', () => {
-                    sidebar.classList.toggle('show-sidebar');
-                });
-
-                // Optional: klik di luar sidebar untuk nutup
-                document.addEventListener('click', (e) => {
-                    if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                        sidebar.classList.remove('show-sidebar');
-                    }
-                });
             </script>
 </body>
 

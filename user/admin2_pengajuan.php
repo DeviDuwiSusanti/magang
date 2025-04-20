@@ -68,8 +68,9 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="table-responsive-sm">
-            <div class="bungkus-2">
-                <table id="myTable" class="table table-striped table-bordered table-hover">
+            <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
+            <div class="bungkus-2 datatable-scrollable">
+                <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -124,8 +125,11 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     ?>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <?php $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : ''; ?>
-                                    <button type="button" class="btn btn-warning btn-sm zoom-btn"
+                                    <?php
+                                    $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : '';
+                                    $btn_class = ($row['kirim_zoom'] == 1) ? 'btn-secondary' : 'btn-warning';  // Tentukan warna tombol
+                                    ?>
+                                    <button type="button" class="btn <?= $btn_class ?> btn-sm zoom-btn"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="<?= ($row['kirim_zoom'] == 1) ? 'Informasi Zoom sudah dikirim' : 'Tambah Informasi Zoom' ?>"
                                         data-bs-target="#zoomModal" data-id="<?= $row['id_pengajuan'] ?>" <?= $disabled ?>>
@@ -138,7 +142,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         data-id="<?= $row['id_pengajuan'] ?>">
                                         <i class="bi bi-check-circle"></i> Terima
                                     </button>
-                                    <!-- Menggunakan tooltip, untuk membuka modalnya pakai fungsi -->
                                     <button
                                         class="btn btn-danger btn-sm tolak-btn"
                                         data-bs-toggle="tooltip"
@@ -158,6 +161,8 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         </div>
     </div>
 </div>
+
+<?php include "../layout/footerDashboard.php" ?>
 
 <!-- Modal untuk Menampilkan Daftar Dokumen -->
 <div class="modal fade" id="dokumenModal" tabindex="-1" aria-labelledby="dokumenModalLabel" aria-hidden="true">
@@ -222,36 +227,40 @@ $result = mysqli_query($conn, $query);
             <div class="modal-body">
                 <form id="zoomForm" onsubmit="return validateZoomForm()">
                     <input type="hidden" name="pengajuan_id" id="pengajuan_id_zoom">
-                    <div class="mb-3">
-                        <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
-                        <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
-                        <div class="text-danger" id="tanggal_pelaksanaan_error"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
-                        <div class="input-group clockpicker">
-                            <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan">
-                            <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
+                            <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
+                            <small class="text-danger" id="tanggal_pelaksanaan_error"></small>
                         </div>
-                        <small class="text-danger" id="jam_pelaksanaan_error"></small>
+                        <div class="col-md-6 mb-3">
+                            <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
+                            <div class="input-group clockpicker">
+                                <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan">
+                                <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                            </div>
+                            <small class="text-danger" id="jam_pelaksanaan_error"></small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
-                        <select class="form-control" id="pembimbing" name="pembimbing">
-                            <option value="">-- Pilih Pembimbing --</option>
-                            <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                <option value="<?= $row['id_user']; ?>">
-                                    <?= $row['nama_user'] . ' - <span class="badge bg-primary">' . $row['nama_bidang'] . '</span>'; ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                        <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
-                        <small class="text-danger" id="pembimbing_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="link_zoom" class="form-label">Link Zoom</label>
-                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789">
-                        <small class="text-danger" id="link_zoom_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
+                            <select class="form-control" id="pembimbing" name="pembimbing">
+                                <option value="">-- Pilih Pembimbing --</option>
+                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                    <option value="<?= $row['id_user']; ?>">
+                                        <?= $row['nama_user'] . ' - <span class="badge bg-primary">' . $row['nama_bidang'] . '</span>'; ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+                            <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
+                            <small class="text-danger" id="pembimbing_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="link_zoom" class="form-label">Link Zoom</label>
+                            <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789">
+                            <small class="text-danger" id="link_zoom_error"></small>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -263,7 +272,6 @@ $result = mysqli_query($conn, $query);
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php" ?>
 <script src="../assets/js/validasi.js"></script>
 
 <script>
@@ -581,5 +589,85 @@ $result = mysqli_query($conn, $query);
 
             return tooltip;
         });
+    });
+
+    $(document).ready(function() {
+        // Cek apakah sedang di mobile untuk scrollX
+        var isMobile = window.innerWidth < 768;
+
+        // Inisialisasi DataTable hanya sekali
+        var table = $('#myTable').DataTable({
+            scrollX: isMobile,
+            responsive: true,
+            dom: '<"datatable-header row mb-2"' +
+                '<"col-md-6 text-md-start text-center"l>' +
+                '<"col-md-6 text-md-end text-center d-flex justify-content-end align-items-center gap-2"f>' +
+                '>t' +
+                '<"datatable-footer row mt-2"' +
+                '<"col-md-6 text-md-start text-center"i>' +
+                '<"col-md-6 text-md-end text-center"p>' +
+                '>',
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                emptyTable: "Tidak ada data pengajuan yang tersedia",
+                zeroRecords: "Tidak ada data pengajuan yang cocok",
+                paginate: {
+                    previous: "Sebelumnya",
+                    next: "Berikutnya"
+                }
+            }
+        });
+
+        // Event handler untuk tombol "show-detail"
+        $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+            e.preventDefault();
+
+            const detailData = $(this).data('detail');
+            const tr = $(this).closest('tr');
+            const row = table.row(tr);
+
+            // Sembunyikan detail lain jika ada
+            if (!row.child.isShown()) {
+                $('#myTable tbody tr.shown').not(tr).each(function() {
+                    table.row(this).child.hide();
+                    $(this).removeClass('shown');
+                });
+            }
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Generate HTML tab structure
+                let tabNav = '<ul class="nav nav-tabs mb-2" id="detailTab" role="tablist">';
+                let tabContent = '<div class="tab-content">';
+
+                detailData.forEach((name, index) => {
+                    const activeClass = index === 0 ? 'active' : '';
+                    const tabId = `tab-${row.index()}-${index}`;
+
+                    tabNav += `
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link ${activeClass}" id="${tabId}-tab" data-bs-toggle="tab" data-bs-target="#${tabId}" type="button" role="tab">${index + 1}</button>
+                </li>
+            `;
+
+                    tabContent += `
+                <div class="tab-pane fade ${activeClass ? 'show active' : ''}" id="${tabId}" role="tabpanel">
+                    <p>${name}</p>
+                </div>
+            `;
+                });
+
+                tabNav += '</ul>';
+                tabContent += '</div>';
+
+                row.child(`<div>${tabNav}${tabContent}</div>`).show();
+                tr.addClass('shown');
+            }
+        });
+
     });
 </script>
