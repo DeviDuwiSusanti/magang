@@ -15,8 +15,8 @@ $sql = "SELECT
             INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
         WHERE p.id_instansi = '$id_instansi'
             AND p.status_active = '1'
-            AND p.status_pengajuan IN ('1', '6')
-        ORDER BY p.id_pengajuan ASC
+            AND p.status_pengajuan IN ('1', '2')
+        ORDER BY p.id_pengajuan DESC
 ";
 $result = mysqli_query($conn, $sql);
 
@@ -87,6 +87,10 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     </thead>
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                            <?php
+                            $id_pengajuan = $row['id_pengajuan'];
+                            $status_pengajuan = $row['status_pengajuan'];
+                            ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= $row['nama_user'] ?></td>
@@ -99,7 +103,8 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     </a>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <a href="#" class="show-doc btn btn-sm btn-primary" title="Lihat Dokumen" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Dokumen"
+                                    <a href="#" class="show-doc btn btn-sm btn-primary" title="Lihat Dokumen"
+                                        data-bs-toggle="modal" data-bs-target="#dokumenModal"
                                         data-doc='<?= !empty($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
                                                         ? htmlspecialchars(json_encode($daftar_dokumen[$row['id_user']][$row['id_pengajuan']], JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8')
                                                         : '[]' ?>'>
@@ -137,20 +142,14 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     </button>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <button type="button" class="btn btn-success btn-sm terima-btn"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Terima Pengajuan"
-                                        data-id="<?= $row['id_pengajuan'] ?>">
-                                        <i class="bi bi-check-circle"></i> Terima
-                                    </button>
                                     <button
-                                        class="btn btn-danger btn-sm tolak-btn"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="Tolak Pengajuan"
-                                        data-bs-target="#tolakModal"
-                                        data-bs-toggle-second="modal"
-                                        data-id="<?= $row['id_pengajuan'] ?>">
-                                        <i class="bi bi-person-x"></i> Tolak
+                                        class="btn btn-primary btn-sm aksi-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#aksiModal"
+                                        data-id="<?= $id_pengajuan ?>"
+                                        data-status="<?= $status_pengajuan ?>">
+                                        <i class="bi bi-ui-checks"></i>
+                                        Proses
                                     </button>
                                 </td>
                             </tr>
@@ -158,6 +157,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     </tbody>
                 </table>
             </div>
+            <div class="datatable-footer mt-2"></div> <!-- Tempat info dan pagination -->
         </div>
     </div>
 </div>
@@ -166,18 +166,51 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
 <!-- Modal untuk Menampilkan Daftar Dokumen -->
 <div class="modal fade" id="dokumenModal" tabindex="-1" aria-labelledby="dokumenModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="dokumenModalLabel">Dokumen yang Dilengkapi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <ul id="dokumenList"></ul>
+                <ul class="nav nav-tabs" id="docTabList" role="tablist"></ul>
+                <div class="tab-content pt-3" id="docTabContent"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal tunggal -->
+<div class="modal fade" id="aksiModal" tabindex="-1" aria-labelledby="aksiModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAksiPengajuan">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aksiModalLabel">Proses Pengajuan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id_pengajuan" id="id_pengajuan">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="radioTerima" value="terima">
+                        <label class="form-check-label" for="radioTerima">Terima Pengajuan</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="radioTolak" value="tolak">
+                        <label class="form-check-label" for="radioTolak">Tolak Pengajuan</label>
+                    </div>
+                    <div id="alasanTolakContainer" class="mt-3" style="display: none;">
+                        <label for="alasan_tolak" class="form-label">Alasan Penolakan</label>
+                        <textarea class="form-control" id="alasan_tolak" name="alasan_tolak" rows="3" placeholder="Tuliskan alasan penolakan..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -275,213 +308,6 @@ $result = mysqli_query($conn, $query);
 <script src="../assets/js/validasi.js"></script>
 
 <script>
-    // Fungsi untuk menampilkan dokumen dalam modal
-    document.addEventListener("DOMContentLoaded", function() {
-        let dokumenModal = document.getElementById("dokumenModal");
-        let dokumenList = document.getElementById("dokumenList");
-
-        document.querySelectorAll(".show-doc").forEach(function(element) {
-            element.addEventListener("click", function(event) {
-                event.preventDefault();
-
-                let docData = this.getAttribute("data-doc");
-                let docList = [];
-
-                try {
-                    docList = JSON.parse(docData);
-                    if (!Array.isArray(docList)) {
-                        docList = [];
-                    }
-                } catch (e) {
-                    console.error("Error parsing JSON:", e);
-                    docList = [];
-                }
-
-                // Bersihkan daftar sebelum menambahkan dokumen baru
-                dokumenList.innerHTML = "";
-
-                if (!docList || docList.length === 0) {
-                    dokumenList.innerHTML = "<p class='text-muted'>Tidak ada dokumen tersedia.</p>";
-                } else {
-                    docList.forEach(function(doc) {
-                        let listItem = document.createElement("li");
-                        let link = document.createElement("a");
-
-                        link.href = doc;
-                        link.textContent = doc.split('/').pop(); // Menampilkan nama file
-                        link.classList.add("doc-link");
-
-                        if (doc.toLowerCase().endsWith(".pdf")) {
-                            link.addEventListener("click", function(event) {
-                                event.preventDefault();
-                                showPreview(doc);
-                            });
-                        } else {
-                            link.setAttribute("target", "_blank");
-                        }
-
-                        listItem.appendChild(link);
-                        dokumenList.appendChild(listItem);
-                    });
-                }
-
-                // Tampilkan modal
-                let modal = new bootstrap.Modal(dokumenModal);
-                modal.show();
-            });
-        });
-
-        // Fungsi untuk menampilkan preview dokumen PDF di modal
-        function showPreview(url) {
-            let modalBody = dokumenModal.querySelector(".modal-body");
-            let oldPreview = document.getElementById("pdfPreview");
-            if (oldPreview) {
-                oldPreview.remove();
-            }
-
-            // Gunakan iframe agar lebih kompatibel di semua browser
-            let preview = document.createElement("iframe");
-            preview.src = url;
-            preview.width = "100%";
-            preview.height = "500px";
-            preview.style.border = "none";
-            preview.id = "pdfPreview";
-
-            modalBody.appendChild(preview);
-        }
-
-        // Reset hanya bagian daftar dokumen, bukan seluruh modal
-        dokumenModal.addEventListener("hidden.bs.modal", function() {
-            let preview = document.getElementById("pdfPreview");
-            document.querySelectorAll(".modal-backdrop").forEach(function(backdrop) {
-                backdrop.remove();
-            });
-
-            if (preview) {
-                preview.remove();
-            }
-
-            document.body.classList.remove("modal-open");
-            document.body.style.paddingRight = "";
-        });
-    });
-
-    // Kode untuk tombol tolak
-    document.querySelectorAll('.tolak-btn').forEach((btn) => {
-        // Tooltip tetap aktif
-        new bootstrap.Tooltip(btn);
-
-        btn.addEventListener('click', function() {
-            const id = this.getAttribute('data-id'); // Ambil ID dari tombol
-            const inputHidden = document.getElementById('id_pengajuan_tolak');
-            if (inputHidden) inputHidden.value = id;
-
-            // Show modalnya (jika tidak pakai data-bs-toggle langsung)
-            const targetModal = btn.getAttribute('data-bs-target');
-            const modal = new bootstrap.Modal(document.querySelector(targetModal));
-            modal.show();
-        });
-    });
-
-
-    // Fungsi untuk mengirim data penolakan
-    function confirmDelete() {
-        event.preventDefault();
-
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data pengajuan akan ditolak!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, tolak!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Ambil data dari form
-                var id_pengajuan = document.getElementById("id_pengajuan_tolak").value;
-                var alasan_tolak = document.getElementById("alasan_tolak").value;
-
-                // Kirim data dengan AJAX
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "admin2_tolak_pengajuan.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                xhr.onload = function() {
-                    if (xhr.status == 200) {
-                        Swal.fire({
-                            title: 'Berhasil!',
-                            text: 'Pengajuan telah ditolak.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            location.reload(); // Refresh halaman
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Gagal!',
-                            text: 'Terjadi kesalahan, coba lagi.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                };
-
-                xhr.send("id_pengajuan=" + id_pengajuan + "&alasan_tolak=" + alasan_tolak);
-            }
-        });
-    }
-
-    // Alert untuk penerimaan pengajuan dengan AJAX
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".terima-btn").forEach(button => {
-            button.addEventListener("click", function() {
-                let id_pengajuan = this.getAttribute("data-id");
-
-                Swal.fire({
-                    title: "Konfirmasi",
-                    text: "Apakah Anda yakin ingin menerima pengajuan ini?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Ya, Terima!",
-                    cancelButtonText: "Batal"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Kirim data dengan AJAX
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "admin2_terima_pengajuan.php", true);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                        xhr.onload = function() {
-                            if (xhr.status == 200) {
-                                Swal.fire({
-                                    title: 'Berhasil!',
-                                    text: 'Pengajuan telah diterima dan email telah dikirim.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    location.reload(); // Refresh halaman
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Gagal!',
-                                    text: 'Terjadi kesalahan, coba lagi.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        };
-
-                        xhr.send("id_pengajuan=" + id_pengajuan);
-                    }
-                });
-            });
-        });
-    });
-
     // Fungsi untuk menampilkan modal Zoom
     document.addEventListener("DOMContentLoaded", function() {
         let zoomModal = document.getElementById("zoomModal");
@@ -668,6 +494,143 @@ $result = mysqli_query($conn, $query);
                 tr.addClass('shown');
             }
         });
+    });
 
+    document.addEventListener('DOMContentLoaded', function() {
+        const docLinks = document.querySelectorAll('.show-doc');
+
+        docLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const data = JSON.parse(this.getAttribute('data-doc'));
+                const tabList = document.getElementById('docTabList');
+                const tabContent = document.getElementById('docTabContent');
+
+                tabList.innerHTML = '';
+                tabContent.innerHTML = '';
+
+                if (data.length === 0) {
+                    tabList.innerHTML = '<li class="nav-item"><span class="nav-link active">Tidak ada dokumen</span></li>';
+                    tabContent.innerHTML = '<div class="tab-pane fade show active p-2">Tidak tersedia dokumen untuk ditampilkan.</div>';
+                    return;
+                }
+
+                data.forEach((doc, index) => {
+                    const tabId = `doc-tab-${index}`;
+                    const filename = doc.split('/').pop(); // Ambil nama file dari URL
+
+                    // Tab header
+                    const tab = document.createElement('li');
+                    tab.classList.add('nav-item');
+                    tab.innerHTML = `
+            <button class="nav-link ${index === 0 ? 'active' : ''}" id="${tabId}-tab" data-bs-toggle="tab" data-bs-target="#${tabId}" type="button" role="tab" aria-controls="${tabId}" aria-selected="${index === 0 ? 'true' : 'false'}">
+              Dokumen ${index + 1}
+            </button>
+          `;
+                    tabList.appendChild(tab);
+
+                    // Tab content
+                    const tabPane = document.createElement('div');
+                    tabPane.classList.add('tab-pane', 'fade', 'p-2');
+                    if (index === 0) tabPane.classList.add('show', 'active');
+                    tabPane.id = tabId;
+                    tabPane.setAttribute('role', 'tabpanel');
+                    tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
+
+                    const isPdf = doc.endsWith('.pdf');
+                    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(doc);
+
+                    if (isPdf) {
+                        tabPane.innerHTML = `<iframe src="${doc}" width="100%" height="500px" style="border: none;"></iframe>`;
+                    } else if (isImage) {
+                        tabPane.innerHTML = `<img src="${doc}" alt="${filename}" class="img-fluid">`;
+                    } else {
+                        tabPane.innerHTML = `<a href="${doc}" target="_blank" class="btn btn-outline-primary">Lihat atau Unduh ${filename}</a>`;
+                    }
+
+                    tabContent.appendChild(tabPane);
+                });
+            });
+        });
+    });
+
+    // Modal aksi
+    document.addEventListener("DOMContentLoaded", function() {
+        const modal = document.getElementById("aksiModal");
+        const form = document.getElementById("formAksiPengajuan");
+        const idInput = document.getElementById("id_pengajuan");
+        const radioTerima = document.getElementById("radioTerima");
+        const radioTolak = document.getElementById("radioTolak");
+        const alasanTolak = document.getElementById("alasan_tolak");
+        const alasanContainer = document.getElementById("alasanTolakContainer");
+
+        document.querySelectorAll(".aksi-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                const id = this.getAttribute("data-id");
+                const status = this.getAttribute("data-status");
+
+                // Reset form & isi data baru
+                form.reset();
+                alasanContainer.style.display = "none";
+                idInput.value = id;
+
+                // Atur status radio "terima" sesuai kondisi
+                radioTerima.disabled = (status === "2");
+            });
+        });
+
+        // Show/hide alasan penolakan
+        radioTolak.addEventListener("change", function() {
+            alasanContainer.style.display = "block";
+        });
+
+        radioTerima.addEventListener("change", function() {
+            alasanContainer.style.display = "none";
+        });
+
+        // Submit form
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const id_pengajuan = idInput.value;
+            const status = form.querySelector("input[name='status']:checked")?.value;
+            const alasan = alasanTolak.value.trim();
+
+            if (status === "tolak" && alasan === "") {
+                Swal.fire("Alasan Wajib!", "Silakan isi alasan penolakan.", "warning");
+                return;
+            }
+
+            Swal.fire({
+                title: "Konfirmasi",
+                text: `Anda yakin ingin ${status === 'terima' ? 'menerima' : 'menolak'} pengajuan ini?`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Lanjutkan",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("POST", "admin2_proses_pengajuan.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    let postData = `id_pengajuan=${encodeURIComponent(id_pengajuan)}&status=${encodeURIComponent(status)}`;
+                    if (status === "tolak") {
+                        postData += `&alasan_tolak=${encodeURIComponent(alasan)}`;
+                    }
+
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            Swal.fire("Sukses!", "Pengajuan berhasil diproses dan email terkirim.", "success").then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire("Gagal!", "Terjadi kesalahan saat mengirim.", "error");
+                        }
+                    };
+
+                    xhr.send(postData);
+                }
+            });
+        });
     });
 </script>

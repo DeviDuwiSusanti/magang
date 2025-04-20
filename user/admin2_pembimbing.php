@@ -44,7 +44,7 @@ $list_bidang = query("SELECT tb_bidang.*,
                     ON tb_profile_user.id_user = tb_user.id_user
                 WHERE tb_bidang.id_instansi = '$id_instansi'
                 AND (tb_user.level = '5' OR tb_user.level IS NULL)
-                AND tb_bidang.status_active = '1' OR tb_bidang.status_active = '0'
+                AND (tb_bidang.status_active = '1' OR tb_bidang.status_active = '0')
 ");
 
 $no = 1;
@@ -58,6 +58,7 @@ $bidangBelumAdaPembimbing = array_filter($list_bidang, function ($bidang) {
 
 $jumlahBidangBelumAdaPembimbing = count($bidangBelumAdaPembimbing);
 
+// Handle tambah pembimbing
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_pembimbing'])) {
     if (tambah_pembimbing($_POST) > 0) {
         echo "
@@ -74,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_pembimbing'])) 
     }
 }
 
+// Handle hapus pembimbing
 if (isset($_GET['id_pembimbing_ini'])) {
     $id = $_GET['id_pembimbing_ini'];
     if (hapus_pembimbing($id, $id_user)) {
@@ -91,6 +93,7 @@ if (isset($_GET['id_pembimbing_ini'])) {
     }
 }
 
+// Handle edit pembimbing
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
     if (edit_pembimbing($_POST) > 0) {
         echo "
@@ -331,7 +334,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                             <option disabled>Pilih Bidang</option>
                             <?php foreach ($list_bidang as $bidang): ?>
                                 <option value="<?= $bidang['id_bidang']; ?>"
-                                    <?= (!empty($bidang['id_pembimbing']) && $bidang['id_pembimbing'] != $pembimbing['id_pembimbing']) ? 'disabled' : ''; ?>>
+                                    <?= (!empty($bidang['id_pembimbing']) && $bidang['id_pembimbing'] != $pembimbing['id_pembimbing']) ? 'disabled' : ''; ?>
+                                    <?= ($bidang['id_bidang'] == $pembimbing['id_bidang']) ? 'selected' : ''; ?>>
                                     <?= $bidang['nama_bidang']; ?>
                                 </option>
                             <?php endforeach; ?>
@@ -353,6 +357,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
 <script src="../assets/js/validasi.js"></script>
 
 <script>
+    // Event listener untuk nik
+    document.getElementById("nik_pembimbing").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, "");
+
+        const maxLength = 16;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    })
+
+    // Event listener untuk nik edit
+    document.getElementById("edit_nik_pembimbing").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, "");
+
+        const maxLength = 16;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    })
+
+    // Event listener untuk nip
+    document.getElementById("nip").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, "");
+
+        const maxLength = 18;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    })
+
+    // Event listener untuk nip edit
+    document.getElementById("edit_nip").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, "");
+
+        const maxLength = 18;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    })
+
+    // Event listener untuk telepon
+    document.getElementById("telepone_pembimbing").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, "");
+
+        const maxLength = 15;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    })
+
+    // Event listener untuk telepon edit
+    document.getElementById("edit_telepone_pembimbing").addEventListener("input", function(e) {
+        this.value = this.value.replace(/\D/g, "");
+
+        const maxLength = 15;
+        if (this.value.length > maxLength) {
+            this.value = this.value.slice(0, maxLength);
+        }
+    });
+
     document.addEventListener("DOMContentLoaded", function() {
         const editButtons = document.querySelectorAll(".editPembimbingBtn");
 
@@ -414,6 +478,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                 search: "Cari:",
                 lengthMenu: "Tampilkan _MENU_ data",
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                emptyTable: "Tidak ada data pembimbing yang tersedia",
+                zeroRecords: "Tidak ada data pembimbing yang cocok",
                 paginate: {
                     previous: "Sebelumnya",
                     next: "Berikutnya"

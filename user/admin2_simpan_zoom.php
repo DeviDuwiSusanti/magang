@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Update kolom kirim_zoom menjadi 1
                     $update_query = "UPDATE tb_pengajuan SET kirim_zoom = 1 WHERE id_pengajuan = '$id_pengajuan'";
                     mysqli_query($conn, $update_query);
-                    
+
                     echo "<script>
                         Swal.fire({
                             title: 'Berhasil!',

@@ -36,7 +36,7 @@ $total_pengajuan_2 = query("SELECT COUNT(*) AS total
     JOIN tb_instansi 
         ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
     WHERE tb_instansi.id_instansi = '$id_instansi'
-    AND tb_pengajuan.status_pengajuan = '1'")[0];
+    AND tb_pengajuan.status_pengajuan IN ('1', '2')")[0];
 
 // Query untuk menghitung total pemagang
 $pemagang_2 = query("SELECT SUM(

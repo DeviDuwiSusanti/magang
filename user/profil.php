@@ -60,13 +60,8 @@ $row2 = mysqli_fetch_assoc($query2);
         <div class="dropdown-divider"></div>
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
-<<<<<<< HEAD
-                <div class="card-body top-2">
-                    <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
-=======
                 <div class="card-body top">
                     <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;" onclick="openImageModal(this)">
->>>>>>> 757f9edaee061032d211868d1245831fde982385
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>
 
