@@ -82,6 +82,12 @@
     flex-wrap: wrap;
     gap: 20px;
 }
+
+.dark-theme .modal-content{
+    background-color: var(--container-color);
+    border: 1px solid var(--border-color);
+}
+
 .dark-theme .accordion-item {
     background-color: var(--container-color);
     border: 1px solid var(--border-color);

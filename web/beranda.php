@@ -97,11 +97,10 @@ include "functions.php";
                     </div>
                 </div>
 
-
                 <br><br><br>
                 <h2 class="section__title" style="text-align: center" data-aos="fade-up">Gabung Bersama Kami</h2>
                 <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
-                "S-Match telah membantu peserta dalam melaksanakan program magang berkualitas di Sidoarjo. Temukan peluang magang terbaik untuk karier masa depan Anda!"</span><br>
+                "Sidoarjo Internship telah membantu peserta dalam melaksanakan program magang berkualitas di Sidoarjo. Temukan peluang magang terbaik untuk karier masa depan Anda!"</span><br>
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper">
                     <?php
@@ -116,21 +115,22 @@ include "functions.php";
                             $query2 = mysqli_query($conn, $sql2);
                             $row2 = mysqli_fetch_assoc($query2);
                             $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
-                            ?>
-                            <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;"
-                                onclick="showDeskripsiInstansi(`<?= $row['deskripsi_instansi'] ?>`)">
-                                    <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                                    <div class="popular__data">
-                                        <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
-                                        <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
-                                        <br>
-                                        <p class="popular__description">
-                                            <i class="bx bx-briefcase"></i> <?= $jumlah_lowongan ?> Lowongan <br />
-                                            <i class="bx bxs-group"></i> <?= $pemagang_aktif ?> Pemagang Aktif
-                                        </p>
-                                    </div>
-                            </article>
-                        <?php
+                            if ($jumlah_lowongan !=0){?>
+                                <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;"
+                                    onclick="showDeskripsiInstansi(`<?= $row['deskripsi_instansi'] ?>`)">
+                                        <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                                        <div class="popular__data">
+                                            <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
+                                            <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
+                                            <br>
+                                            <p class="popular__description">
+                                                <i class="bx bx-briefcase"></i> <?= $jumlah_lowongan ?> Lowongan <br />
+                                                <i class="bx bxs-group"></i> <?= $pemagang_aktif ?> Pemagang Aktif
+                                            </p>
+                                        </div>
+                                </article>
+                            <?php
+                            }
                         }
                         ?>
                     </div>
