@@ -84,7 +84,7 @@
                             </div>
                             <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Laporan Akhir" 
                             data-steps='[{"step":"Masuk ke dashboard user, dan klik laporan akhir", "img":"../assets/img/tentang/dashboard2.png"}, 
-                            {"step":"Klik Unggah Laporan Akhir.", "img":"../assets/img/tentang/detail_kegiatan.png"}]'>Lihat</button>
+                            {"step":"Klik Tambah Laporan Akhir.", "img":"../assets/img/tentang/laprak.png"}]'>Lihat</button>
                         </div>
 
                         <!-- Cek Sertifikat -->
@@ -122,7 +122,7 @@
                     <ol id="modalSteps"></ol>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
