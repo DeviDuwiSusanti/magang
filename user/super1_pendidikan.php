@@ -8,19 +8,19 @@ $no = 1;
 // Handle hapus data
 if (isset($_GET["id_pendidikan_ini"])) {
     $id_pendidikan_ini = $_GET["id_pendidikan_ini"];
-    if (hapus_pendidikan_super_admin($id_pendidikan_ini, $id_user)) { 
-        echo "<script>hapus_pendidikan_super_admin_success()</script>";
-    } else { 
-        echo "<script>hapus_pendidikan_super_admin_gagal()</script>";
-    }
+    if (hapus_pendidikan_super_admin($id_pendidikan_ini, $id_user)) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data Pendidikan Berhasil", "super1_pendidikan.php"); </script>
+    <?php } else { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data Pendidikan Gagal", "super1_pendidikan.php"); </script>
+    <?php }
 }
 
 
 if(isset($_POST["edit_pendidikan"])) {
     if(edit_pendidikan($_POST) > 0) { ?>
-        <script>edit_pendidikan_super_admin_success()</script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data Pendidikan Berhasil", "super1_pendidikan.php"); </script>
     <?php } else { ?>
-        <script>edit_pendidikan_super_admin_gagal()</script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data Pendidikan Gagal", "super1_pendidikan.php"); </script>
     <?php }
 }
 
@@ -28,21 +28,13 @@ if (isset($_POST["tambah_sekolah"])) {
     $result = tambah_data_sekolah($_POST);
 
     if ($result == 404) { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php"); </script>
     <?php } elseif ($result == 405) { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php"); </script>
     <?php } elseif ($result > 0) { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php"); </script>
     <?php } else { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
     <?php }
 }
 
@@ -51,21 +43,13 @@ if (isset($_POST["tambah_universitas"])) {
     $result = tambah_data_universitas($_POST);
 
     if ($result == 404) { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php"); </script>
     <?php } elseif ($result == 405) { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php"); </script>
     <?php } elseif ($result > 0) { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php"); </script>
     <?php } else { ?>
-        <script>
-        alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php");
-        </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
     <?php }
 }
 

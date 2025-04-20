@@ -222,6 +222,43 @@ if (isset($_SESSION['email'])) {
                     </li>
                 <?php endif; ?>
 
+
+                <?php if($level == 4): ?>
+                    <!-- Daftar Peserta Magang -->
+                    <li class="sidebar-item">
+                        <a href="pembimbing4_peserta_magang.php" class="sidebar-link">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Peserta Magang</span>
+                        </a>
+                    </li>
+
+                    <!-- Laporan Harian / Mingguan -->
+                    <li class="sidebar-item">
+                        <a href="pembimbing4_logbook_peserta.php" class="sidebar-link">
+                            <i class="bi bi-journal-text"></i>
+                            <span>Laporan Kegiatan</span>
+                        </a>
+                    </li>
+
+                    <!-- Upload Sertifikat -->
+                    <li class="sidebar-item">
+                        <a href="pembimbing4_upload_sertifikat.php" class="sidebar-link">
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                            <span>Sertifikat</span>
+                        </a>
+                    </li>
+
+                    <!-- Upload Nilai -->
+                    <li class="sidebar-item">
+                        <a href="pembimbing4_upload_nilai.php" class="sidebar-link">
+                            <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                            <span>Nilai</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+
+
                 <li class="sidebar-item">
                     <a href="setting.php" class="sidebar-link">
                         <i class="bi bi-gear"></i>
@@ -270,10 +307,12 @@ if (isset($_SESSION['email'])) {
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
+                                <?php if($level == 3) : ?>
                                 <a href="bantuan.php" class="dropdown-item">
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>
+                                <?php endif; ?>
                                 <div class="dropdown-divider"></div>
                                 <a href="../logout.php" class="dropdown-item">
                                     <i class="bi bi-box-arrow-right"></i>
@@ -316,40 +355,55 @@ if (isset($_SESSION['email'])) {
 
             <!-- Inisialisasi DataTables -->
             <script>
-                $(document).ready(function() {
-                    var table = $('#myTable').DataTable();
+                // $(document).ready(function() {
+                //     // var table = $('#myTable').DataTable();
 
-                    // Event handler untuk tombol "show-detail"
-                    $('#myTable tbody').on('click', 'a.show-detail', function(e) {
-                        e.preventDefault();
+                //     // Event handler untuk tombol "show-detail"
+                //     $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+                //         e.preventDefault();
 
-                        var detailData = $(this).data('detail');
-                        var detailHtml = '<ul>';
-                        $.each(detailData, function(index, name) {
-                            detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
-                        });
-                        detailHtml += '</ul>';
+                //         var detailData = $(this).data('detail');
+                //         var detailHtml = '<ul>';
+                //         $.each(detailData, function(index, name) {
+                //             detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+                //         });
+                //         detailHtml += '</ul>';
 
-                        var tr = $(this).closest('tr');
-                        var row = table.row(tr);
+                //         var tr = $(this).closest('tr');
+                //         var row = table.row(tr);
 
-                        // Sembunyikan detail yang lain sebelum menampilkan yang baru
-                        if (!row.child.isShown()) {
-                            $('#myTable tbody tr.shown').not(tr).each(function() {
-                                table.row(this).child.hide();
-                                $(this).removeClass('shown');
-                            });
-                        }
+                //         // Sembunyikan detail yang lain sebelum menampilkan yang baru
+                //         if (!row.child.isShown()) {
+                //             $('#myTable tbody tr.shown').not(tr).each(function() {
+                //                 table.row(this).child.hide();
+                //                 $(this).removeClass('shown');
+                //             });
+                //         }
 
-                        // Tampilkan atau sembunyikan detail dari baris yang diklik
-                        if (row.child.isShown()) {
-                            row.child.hide();
-                            tr.removeClass('shown');
-                        } else {
-                            row.child(detailHtml).show();
-                            tr.addClass('shown');
-                        }
-                    });
+                //         // Tampilkan atau sembunyikan detail dari baris yang diklik
+                //         if (row.child.isShown()) {
+                //             row.child.hide();
+                //             tr.removeClass('shown');
+                //         } else {
+                //             row.child(detailHtml).show();
+                //             tr.addClass('shown');
+                //         }
+                //     });
+                // });
+
+                // Toggle sidebar tampilan mobile
+                const hamburgerBtn = document.getElementById('hamburger-btn');
+                const sidebar = document.getElementById('sidebar');
+
+                hamburgerBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('show-sidebar');
+                });
+
+                // Optional: klik di luar sidebar untuk nutup
+                document.addEventListener('click', (e) => {
+                    if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                        sidebar.classList.remove('show-sidebar');
+                    }
                 });
 
                 function updateGreetingAndClock() {
@@ -382,20 +436,6 @@ if (isset($_SESSION['email'])) {
                 // Update setiap detik
                 setInterval(updateGreetingAndClock, 1000);
                 updateGreetingAndClock();
-
-                const hamburgerBtn = document.getElementById('hamburger-btn');
-                const sidebar = document.getElementById('sidebar');
-
-                hamburgerBtn.addEventListener('click', () => {
-                    sidebar.classList.toggle('show-sidebar');
-                });
-
-                // Optional: klik di luar sidebar untuk nutup
-                document.addEventListener('click', (e) => {
-                    if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                        sidebar.classList.remove('show-sidebar');
-                    }
-                });
             </script>
 </body>
 

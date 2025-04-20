@@ -3,40 +3,94 @@ include '../layout/sidebarUser.php';
 
 // Query untuk mengambil data user
 $user = query("SELECT u.*, p.*, i.nama_pendek, b.nama_bidang FROM tb_profile_user p 
-               JOIN tb_user u ON p.id_user = u.id_user 
-               LEFT JOIN tb_instansi i ON p.id_instansi = i.id_instansi
-               LEFT JOIN tb_bidang b ON p.id_bidang = b.id_bidang
-               WHERE u.status_active = '1' AND p.status_active = '1'");
+                JOIN tb_user u ON p.id_user = u.id_user 
+                LEFT JOIN tb_instansi i ON p.id_instansi = i.id_instansi
+                LEFT JOIN tb_bidang b ON p.id_bidang = b.id_bidang
+                WHERE u.status_active = '1' AND p.status_active = '1'");
 $no = 1;
 
 // Handle hapus data
 if (isset($_GET["id_user_ini"])) {
     $id_user_ini = $_GET["id_user_ini"];
-    if (hapus_user_super_admin($id_user_ini, $id_user)) { 
-        echo "<script>hapus_user_super_admin_success()</script>";
-    } else { 
-        echo "<script>hapus_user_super_admin_gagal()</script>";
-    }
+    if (hapus_user_super_admin($id_user_ini, $id_user)) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data User Berhasil", "super1_user.php"); </script>
+    <?php } else { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data User Gagal", "super1_user.php"); </script>
+    <?php }
 }
 
 // Handle tambah data
 if (isset($_POST["tambah_admin_instansi"])) {
-    if (tambah_admin_instansi($_POST)) { 
-        echo "<script>tambah_user_super_admin_success()</script>";
-    } else { 
-        echo "<script>tambah_user_super_admin_gagal()</script>";
-    }
+    $result = tambah_user_by_super_admin($_POST);
+    if ($result === 404) { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Email Sudah Terdaftar Didalam Database, Silahkan Periksa Atau gunakan email Yang Lain", "super1_user.php"); </script>
+    <?php } else if ($result === 405) { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "NIK Sudah Terdaftar Didialam Database, Silahkan Periksa Atau Gunakan NIK Yang Lain", "super1_user.php"); </script>
+    <?php } else if ($result === 406) { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "NIP Sudah Terdaftar Didialam Database, Silahkan Periksa Atau Gunakan NIP Yang Lain", "super1_user.php"); </script>
+    <?php } else if ($result > 0) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data User Berhasil", "super1_user.php"); </script>
+    <?php } else { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data User Gagal", "super1_user.php"); </script>
+    <?php  }
 }
 
 // Handle edit data
 if (isset($_POST["edit_data_user"])) {
-    if (super_admin_edit($_POST)) { 
-        echo "<script>edit_user_super_admin_success()</script>";
-    } else { 
-        echo "<script>edit_user_super_admin_gagal()</script>";
-    }
+    if (super_admin_edit($_POST)) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data User Berhasil", "super1_user.php"); </script>
+    <?php } else { ?>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data User Gagal", "super1_user.php"); </script>
+    <?php }
 }
 ?>
+
+
+<!-- Modal Preview Gambar -->
+<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img class="image-modal-content" id="modalPreviewImage">
+</div>
+
+<style>
+    /* style for preview image */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999; /* Lebih tinggi dari modal Bootstrap */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+    }
+
+    .image-modal-close:hover {
+        color: #ccc;
+    }
+</style>
+
+
 
 <main>
     <div class="container-fluid px-4">
@@ -97,7 +151,7 @@ if (isset($_POST["edit_data_user"])) {
                                 <td><?= $u["telepone_user"] ?></td>
                                 <td><?= $u["alamat_user"] ?></td>
                                 <td>
-                                    <img src="../assets/img/user/<?= $u["gambar_user"] ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;">
+                                    <img src="../assets/img/user/<?= !empty($u['gambar_user']) ? $u['gambar_user'] : 'avatar.png' ?>" alt="Gambar user" class="img-thumbnail" style="width: 100px;" onclick="openImageModal(this)">
                                 </td>
                                 <td><?= $level ?></td>
                                 <td class="d-flex justify-content-center gap-2">
@@ -143,55 +197,60 @@ if (isset($_POST["edit_data_user"])) {
             <div class="modal-body">
                 <form id="formTambah" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_user" value="<?= $id_user ?>">
-                    <!-- Form fields for tambah data -->
-                    <div class="mb-3">
+                    <input type="hidden" name="level" id="level" value="2">
+                    
+                    <div class="mb-3">  
                         <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control" id="nama_lengkap" name="nama_user" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nik" class="form-label">NIK</label>
-                        <input type="text" class="form-control" id="nik" name="nik" required maxlength="16">
-                        <small id="nik_error" class="text-danger"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nip" class="form-label">NIP</label>
-                        <input type="text" class="form-control" id="nip" name="nip" required maxlength="18">
-                        <small id="nip_error" class="text-danger"></small>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                        <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir">
-                    </div>
-                    <div class="mb-3">
-                        <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                        <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
-                    </div>
 
-                    <div class="mb-3">
-                        <div class="form-group">
-                            <label class="form-label">Pilih Jenis Kelamin:</label>
-                            <div class="d-flex">
-                                <div class="form-check me-3">
-                                    <input class="form-check-input" type="radio" id="male" name="jenis_kelamin" value="1" required>
-                                    <label class="form-check-label" for="male">Laki-laki</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="female" name="jenis_kelamin" value="0" required>
-                                    <label class="form-check-label" for="female">Perempuan</label>
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="nik" class="form-label">NIK</label>
+                            <input type="text" class="form-control" id="nik" name="nik" required maxlength="16">
+                            <small id="nik_error" class="text-danger"></small>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="nip" class="form-label">NIP</label>
+                            <input type="text" class="form-control" id="nip" name="nip" required maxlength="18">
+                            <small id="nip_error" class="text-danger"></small>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
+                            <input type="text" class="form-control" id="tempat_lahir" name="tempat_lahir">
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                            <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir">
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <div class="form-group">
+                                <label class="form-label">Pilih Jenis Kelamin:</label>
+                                <div class="d-flex">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" id="male" name="jenis_kelamin" value="1" required>
+                                        <label class="form-check-label" for="male">Laki-laki</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="female" name="jenis_kelamin" value="0" required>
+                                        <label class="form-check-label" for="female">Perempuan</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="telepon" class="form-label">Telepon</label>
+                            <input type="tel" class="form-control" id="telepon" name="telepone_user" pattern="[0-9]{8,15}" maxlength="15">
+                            <small id="telepon_error" class="text-danger"></small>
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="telepon" class="form-label">Telepon</label>
-                        <input type="tel" class="form-control" id="telepon" name="telepone_user">
-                        <small id="telepon_error" class="text-danger"></small>
-                    </div>
                     <div class="mb-3">
                         <label for="alamat" class="form-label">Alamat</label>
                         <textarea class="form-control" id="alamat" name="alamat_user" rows="3"></textarea>
@@ -199,7 +258,7 @@ if (isset($_POST["edit_data_user"])) {
                     <div class="mb-3">
                         <label for="gambar" class="form-label">Upload Foto</label>
                         <div class="image-preview" id="imagePreviewTambah">
-                            <img src="../assets/img/user/avatar.png" id="previewImageTambah" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                            <img src="../assets/img/user/avatar.png" id="previewImageTambah" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="file" class="form-control" id="gambar" name="gambar_user" accept="image/*" onchange="validateFileTambah()">
                     </div>
@@ -256,7 +315,7 @@ if (isset($_POST["edit_data_user"])) {
                     <div class="mb-3">
                         <label for="edit_gambar" class="form-label">Upload Foto</label>
                         <div class="image-preview" id="imagePreviewEdit">
-                            <img src="../assets/img/user/avatar.png" id="previewImageEdit" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                            <img src="../assets/img/user/avatar.png" id="previewImageEdit" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="hidden" name="gambar_lama" id="gambar_lama">
                         <input type="file" class="form-control" id="edit_gambar" name="gambar_user" accept="image/*" onchange="validateFileEdit()">
@@ -297,6 +356,18 @@ if (isset($_POST["edit_data_user"])) {
             };
             reader.readAsDataURL(file);
         }
+    }
+
+    function openImageModal(img) {
+        const modal = document.getElementById("imageModalPreview");
+        const modalImg = document.getElementById("modalPreviewImage");
+
+        modal.style.display = "flex"; // make it center using flex
+        modalImg.src = img.src;
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModalPreview").style.display = "none";
     }
 
     // Fungsi untuk validasi file edit data
@@ -445,4 +516,31 @@ if (isset($_POST["edit_data_user"])) {
             ]
         })
     })
+</script>
+
+
+<!-- validasi -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const nikInput = document.getElementById("nik");
+    const nipInput = document.getElementById("nip");
+
+    nikInput.addEventListener("input", function () {
+        const warning = document.getElementById("nik_error");
+        if (this.value.length < 16) {
+            warning.textContent = "NIK harus terdiri dari 16 digit.";
+        } else {
+            warning.textContent = "";
+        }
+    });
+
+    nipInput.addEventListener("input", function () {
+        const warning = document.getElementById("nip_error");
+        if (this.value.length < 18) {
+            warning.textContent = "NIP harus terdiri dari 18 digit.";
+        } else {
+            warning.textContent = "";
+        }
+    });
+});
 </script>
