@@ -15,8 +15,8 @@ $sql = "SELECT
             INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
         WHERE p.id_instansi = '$id_instansi'
             AND p.status_active = '1'
-            AND p.status_pengajuan IN ('1', '6')
-        ORDER BY p.id_pengajuan ASC
+            AND p.status_pengajuan IN ('1', '2')
+        ORDER BY p.id_pengajuan DESC
 ";
 $result = mysqli_query($conn, $sql);
 
@@ -68,8 +68,9 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
         </ol>
         <div class="mb-4 dropdown-divider"></div>
         <div class="table-responsive-sm">
-            <div class="bungkus-2">
-                <table id="myTable" class="table table-striped table-bordered table-hover">
+            <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
+            <div class="bungkus-2 datatable-scrollable">
+                <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -86,6 +87,10 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     </thead>
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                            <?php
+                            $id_pengajuan = $row['id_pengajuan'];
+                            $status_pengajuan = $row['status_pengajuan'];
+                            ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= $row['nama_user'] ?></td>
@@ -98,7 +103,8 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     </a>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <a href="#" class="show-doc btn btn-sm btn-primary" title="Lihat Dokumen" data-bs-toggle="tooltip" data-bs-placement="top" title="Lihat Dokumen"
+                                    <a href="#" class="show-doc btn btn-sm btn-primary" title="Lihat Dokumen"
+                                        data-bs-toggle="modal" data-bs-target="#dokumenModal"
                                         data-doc='<?= !empty($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
                                                         ? htmlspecialchars(json_encode($daftar_dokumen[$row['id_user']][$row['id_pengajuan']], JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8')
                                                         : '[]' ?>'>
@@ -124,8 +130,11 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     ?>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <?php $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : ''; ?>
-                                    <button type="button" class="btn btn-warning btn-sm zoom-btn"
+                                    <?php
+                                    $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : '';
+                                    $btn_class = ($row['kirim_zoom'] == 1) ? 'btn-secondary' : 'btn-warning';  // Tentukan warna tombol
+                                    ?>
+                                    <button type="button" class="btn <?= $btn_class ?> btn-sm zoom-btn"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                         title="<?= ($row['kirim_zoom'] == 1) ? 'Informasi Zoom sudah dikirim' : 'Tambah Informasi Zoom' ?>"
                                         data-bs-target="#zoomModal" data-id="<?= $row['id_pengajuan'] ?>" <?= $disabled ?>>
@@ -133,21 +142,14 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     </button>
                                 </td>
                                 <td class="text-center align-middle">
-                                    <button type="button" class="btn btn-success btn-sm terima-btn"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" title="Terima Pengajuan"
-                                        data-id="<?= $row['id_pengajuan'] ?>">
-                                        <i class="bi bi-check-circle"></i> Terima
-                                    </button>
-                                    <!-- Menggunakan tooltip, untuk membuka modalnya pakai fungsi -->
                                     <button
-                                        class="btn btn-danger btn-sm tolak-btn"
-                                        data-bs-toggle="tooltip"
-                                        data-bs-placement="top"
-                                        title="Tolak Pengajuan"
-                                        data-bs-target="#tolakModal"
-                                        data-bs-toggle-second="modal"
-                                        data-id="<?= $row['id_pengajuan'] ?>">
-                                        <i class="bi bi-person-x"></i> Tolak
+                                        class="btn btn-primary btn-sm aksi-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#aksiModal"
+                                        data-id="<?= $id_pengajuan ?>"
+                                        data-status="<?= $status_pengajuan ?>">
+                                        <i class="bi bi-ui-checks"></i>
+                                        Proses
                                     </button>
                                 </td>
                             </tr>
@@ -155,24 +157,60 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     </tbody>
                 </table>
             </div>
+            <div class="datatable-footer mt-2"></div> <!-- Tempat info dan pagination -->
         </div>
     </div>
 </div>
 
+<?php include "../layout/footerDashboard.php" ?>
+
 <!-- Modal untuk Menampilkan Daftar Dokumen -->
 <div class="modal fade" id="dokumenModal" tabindex="-1" aria-labelledby="dokumenModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="dokumenModalLabel">Dokumen yang Dilengkapi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <ul id="dokumenList"></ul>
+                <ul class="nav nav-tabs" id="docTabList" role="tablist"></ul>
+                <div class="tab-content pt-3" id="docTabContent"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal tunggal -->
+<div class="modal fade" id="aksiModal" tabindex="-1" aria-labelledby="aksiModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAksiPengajuan">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="aksiModalLabel">Proses Pengajuan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id_pengajuan" id="id_pengajuan">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="radioTerima" value="terima">
+                        <label class="form-check-label" for="radioTerima">Terima Pengajuan</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="status" id="radioTolak" value="tolak">
+                        <label class="form-check-label" for="radioTolak">Tolak Pengajuan</label>
+                    </div>
+                    <div id="alasanTolakContainer" class="mt-3" style="display: none;">
+                        <label for="alasan_tolak" class="form-label">Alasan Penolakan</label>
+                        <textarea class="form-control" id="alasan_tolak" name="alasan_tolak" rows="3" placeholder="Tuliskan alasan penolakan..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -222,36 +260,40 @@ $result = mysqli_query($conn, $query);
             <div class="modal-body">
                 <form id="zoomForm" onsubmit="return validateZoomForm()">
                     <input type="hidden" name="pengajuan_id" id="pengajuan_id_zoom">
-                    <div class="mb-3">
-                        <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
-                        <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
-                        <div class="text-danger" id="tanggal_pelaksanaan_error"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
-                        <div class="input-group clockpicker">
-                            <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan">
-                            <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
+                            <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
+                            <small class="text-danger" id="tanggal_pelaksanaan_error"></small>
                         </div>
-                        <small class="text-danger" id="jam_pelaksanaan_error"></small>
+                        <div class="col-md-6 mb-3">
+                            <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
+                            <div class="input-group clockpicker">
+                                <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan">
+                                <span class="input-group-text"><i class="bi bi-clock"></i></span>
+                            </div>
+                            <small class="text-danger" id="jam_pelaksanaan_error"></small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
-                        <select class="form-control" id="pembimbing" name="pembimbing">
-                            <option value="">-- Pilih Pembimbing --</option>
-                            <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                <option value="<?= $row['id_user']; ?>">
-                                    <?= $row['nama_user'] . ' - <span class="badge bg-primary">' . $row['nama_bidang'] . '</span>'; ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
-                        <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
-                        <small class="text-danger" id="pembimbing_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="link_zoom" class="form-label">Link Zoom</label>
-                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789">
-                        <small class="text-danger" id="link_zoom_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
+                            <select class="form-control" id="pembimbing" name="pembimbing">
+                                <option value="">-- Pilih Pembimbing --</option>
+                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                                    <option value="<?= $row['id_user']; ?>">
+                                        <?= $row['nama_user'] . ' - <span class="badge bg-primary">' . $row['nama_bidang'] . '</span>'; ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+                            <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
+                            <small class="text-danger" id="pembimbing_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="link_zoom" class="form-label">Link Zoom</label>
+                            <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789">
+                            <small class="text-danger" id="link_zoom_error"></small>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -263,217 +305,9 @@ $result = mysqli_query($conn, $query);
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php" ?>
 <script src="../assets/js/validasi.js"></script>
 
 <script>
-    // Fungsi untuk menampilkan dokumen dalam modal
-    document.addEventListener("DOMContentLoaded", function() {
-        let dokumenModal = document.getElementById("dokumenModal");
-        let dokumenList = document.getElementById("dokumenList");
-
-        document.querySelectorAll(".show-doc").forEach(function(element) {
-            element.addEventListener("click", function(event) {
-                event.preventDefault();
-
-                let docData = this.getAttribute("data-doc");
-                let docList = [];
-
-                try {
-                    docList = JSON.parse(docData);
-                    if (!Array.isArray(docList)) {
-                        docList = [];
-                    }
-                } catch (e) {
-                    console.error("Error parsing JSON:", e);
-                    docList = [];
-                }
-
-                // Bersihkan daftar sebelum menambahkan dokumen baru
-                dokumenList.innerHTML = "";
-
-                if (!docList || docList.length === 0) {
-                    dokumenList.innerHTML = "<p class='text-muted'>Tidak ada dokumen tersedia.</p>";
-                } else {
-                    docList.forEach(function(doc) {
-                        let listItem = document.createElement("li");
-                        let link = document.createElement("a");
-
-                        link.href = doc;
-                        link.textContent = doc.split('/').pop(); // Menampilkan nama file
-                        link.classList.add("doc-link");
-
-                        if (doc.toLowerCase().endsWith(".pdf")) {
-                            link.addEventListener("click", function(event) {
-                                event.preventDefault();
-                                showPreview(doc);
-                            });
-                        } else {
-                            link.setAttribute("target", "_blank");
-                        }
-
-                        listItem.appendChild(link);
-                        dokumenList.appendChild(listItem);
-                    });
-                }
-
-                // Tampilkan modal
-                let modal = new bootstrap.Modal(dokumenModal);
-                modal.show();
-            });
-        });
-
-        // Fungsi untuk menampilkan preview dokumen PDF di modal
-        function showPreview(url) {
-            let modalBody = dokumenModal.querySelector(".modal-body");
-            let oldPreview = document.getElementById("pdfPreview");
-            if (oldPreview) {
-                oldPreview.remove();
-            }
-
-            // Gunakan iframe agar lebih kompatibel di semua browser
-            let preview = document.createElement("iframe");
-            preview.src = url;
-            preview.width = "100%";
-            preview.height = "500px";
-            preview.style.border = "none";
-            preview.id = "pdfPreview";
-
-            modalBody.appendChild(preview);
-        }
-
-        // Reset hanya bagian daftar dokumen, bukan seluruh modal
-        dokumenModal.addEventListener("hidden.bs.modal", function() {
-            let preview = document.getElementById("pdfPreview");
-            document.querySelectorAll(".modal-backdrop").forEach(function(backdrop) {
-                backdrop.remove();
-            });
-
-            if (preview) {
-                preview.remove();
-            }
-
-            document.body.classList.remove("modal-open");
-            document.body.style.paddingRight = "";
-        });
-    });
-
-    // Kode untuk tombol tolak
-    document.querySelectorAll('.tolak-btn').forEach((btn) => {
-        // Tooltip tetap aktif
-        new bootstrap.Tooltip(btn);
-
-        btn.addEventListener('click', function() {
-            const id = this.getAttribute('data-id'); // Ambil ID dari tombol
-            const inputHidden = document.getElementById('id_pengajuan_tolak');
-            if (inputHidden) inputHidden.value = id;
-
-            // Show modalnya (jika tidak pakai data-bs-toggle langsung)
-            const targetModal = btn.getAttribute('data-bs-target');
-            const modal = new bootstrap.Modal(document.querySelector(targetModal));
-            modal.show();
-        });
-    });
-
-
-    // Fungsi untuk mengirim data penolakan
-    function confirmDelete() {
-        event.preventDefault();
-
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Data pengajuan akan ditolak!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, tolak!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Ambil data dari form
-                var id_pengajuan = document.getElementById("id_pengajuan_tolak").value;
-                var alasan_tolak = document.getElementById("alasan_tolak").value;
-
-                // Kirim data dengan AJAX
-                var xhr = new XMLHttpRequest();
-                xhr.open("POST", "admin2_tolak_pengajuan.php", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                xhr.onload = function() {
-                    if (xhr.status == 200) {
-                        Swal.fire({
-                            title: 'Berhasil!',
-                            text: 'Pengajuan telah ditolak.',
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            location.reload(); // Refresh halaman
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Gagal!',
-                            text: 'Terjadi kesalahan, coba lagi.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                };
-
-                xhr.send("id_pengajuan=" + id_pengajuan + "&alasan_tolak=" + alasan_tolak);
-            }
-        });
-    }
-
-    // Alert untuk penerimaan pengajuan dengan AJAX
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".terima-btn").forEach(button => {
-            button.addEventListener("click", function() {
-                let id_pengajuan = this.getAttribute("data-id");
-
-                Swal.fire({
-                    title: "Konfirmasi",
-                    text: "Apakah Anda yakin ingin menerima pengajuan ini?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Ya, Terima!",
-                    cancelButtonText: "Batal"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Kirim data dengan AJAX
-                        var xhr = new XMLHttpRequest();
-                        xhr.open("POST", "admin2_terima_pengajuan.php", true);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                        xhr.onload = function() {
-                            if (xhr.status == 200) {
-                                Swal.fire({
-                                    title: 'Berhasil!',
-                                    text: 'Pengajuan telah diterima dan email telah dikirim.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    location.reload(); // Refresh halaman
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Gagal!',
-                                    text: 'Terjadi kesalahan, coba lagi.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        };
-
-                        xhr.send("id_pengajuan=" + id_pengajuan);
-                    }
-                });
-            });
-        });
-    });
-
     // Fungsi untuk menampilkan modal Zoom
     document.addEventListener("DOMContentLoaded", function() {
         let zoomModal = document.getElementById("zoomModal");
@@ -580,6 +414,223 @@ $result = mysqli_query($conn, $query);
             });
 
             return tooltip;
+        });
+    });
+
+    $(document).ready(function() {
+        // Cek apakah sedang di mobile untuk scrollX
+        var isMobile = window.innerWidth < 768;
+
+        // Inisialisasi DataTable hanya sekali
+        var table = $('#myTable').DataTable({
+            scrollX: isMobile,
+            responsive: true,
+            dom: '<"datatable-header row mb-2"' +
+                '<"col-md-6 text-md-start text-center"l>' +
+                '<"col-md-6 text-md-end text-center d-flex justify-content-end align-items-center gap-2"f>' +
+                '>t' +
+                '<"datatable-footer row mt-2"' +
+                '<"col-md-6 text-md-start text-center"i>' +
+                '<"col-md-6 text-md-end text-center"p>' +
+                '>',
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                emptyTable: "Tidak ada data pengajuan yang tersedia",
+                zeroRecords: "Tidak ada data pengajuan yang cocok",
+                paginate: {
+                    previous: "Sebelumnya",
+                    next: "Berikutnya"
+                }
+            }
+        });
+
+        // Event handler untuk tombol "show-detail"
+        $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+            e.preventDefault();
+
+            const detailData = $(this).data('detail');
+            const tr = $(this).closest('tr');
+            const row = table.row(tr);
+
+            // Sembunyikan detail lain jika ada
+            if (!row.child.isShown()) {
+                $('#myTable tbody tr.shown').not(tr).each(function() {
+                    table.row(this).child.hide();
+                    $(this).removeClass('shown');
+                });
+            }
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                // Generate HTML tab structure
+                let tabNav = '<ul class="nav nav-tabs mb-2" id="detailTab" role="tablist">';
+                let tabContent = '<div class="tab-content">';
+
+                detailData.forEach((name, index) => {
+                    const activeClass = index === 0 ? 'active' : '';
+                    const tabId = `tab-${row.index()}-${index}`;
+
+                    tabNav += `
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link ${activeClass}" id="${tabId}-tab" data-bs-toggle="tab" data-bs-target="#${tabId}" type="button" role="tab">${index + 1}</button>
+                </li>
+            `;
+
+                    tabContent += `
+                <div class="tab-pane fade ${activeClass ? 'show active' : ''}" id="${tabId}" role="tabpanel">
+                    <p>${name}</p>
+                </div>
+            `;
+                });
+
+                tabNav += '</ul>';
+                tabContent += '</div>';
+
+                row.child(`<div>${tabNav}${tabContent}</div>`).show();
+                tr.addClass('shown');
+            }
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const docLinks = document.querySelectorAll('.show-doc');
+
+        docLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const data = JSON.parse(this.getAttribute('data-doc'));
+                const tabList = document.getElementById('docTabList');
+                const tabContent = document.getElementById('docTabContent');
+
+                tabList.innerHTML = '';
+                tabContent.innerHTML = '';
+
+                if (data.length === 0) {
+                    tabList.innerHTML = '<li class="nav-item"><span class="nav-link active">Tidak ada dokumen</span></li>';
+                    tabContent.innerHTML = '<div class="tab-pane fade show active p-2">Tidak tersedia dokumen untuk ditampilkan.</div>';
+                    return;
+                }
+
+                data.forEach((doc, index) => {
+                    const tabId = `doc-tab-${index}`;
+                    const filename = doc.split('/').pop(); // Ambil nama file dari URL
+
+                    // Tab header
+                    const tab = document.createElement('li');
+                    tab.classList.add('nav-item');
+                    tab.innerHTML = `
+            <button class="nav-link ${index === 0 ? 'active' : ''}" id="${tabId}-tab" data-bs-toggle="tab" data-bs-target="#${tabId}" type="button" role="tab" aria-controls="${tabId}" aria-selected="${index === 0 ? 'true' : 'false'}">
+              Dokumen ${index + 1}
+            </button>
+          `;
+                    tabList.appendChild(tab);
+
+                    // Tab content
+                    const tabPane = document.createElement('div');
+                    tabPane.classList.add('tab-pane', 'fade', 'p-2');
+                    if (index === 0) tabPane.classList.add('show', 'active');
+                    tabPane.id = tabId;
+                    tabPane.setAttribute('role', 'tabpanel');
+                    tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
+
+                    const isPdf = doc.endsWith('.pdf');
+                    const isImage = /\.(jpg|jpeg|png|gif)$/i.test(doc);
+
+                    if (isPdf) {
+                        tabPane.innerHTML = `<iframe src="${doc}" width="100%" height="500px" style="border: none;"></iframe>`;
+                    } else if (isImage) {
+                        tabPane.innerHTML = `<img src="${doc}" alt="${filename}" class="img-fluid">`;
+                    } else {
+                        tabPane.innerHTML = `<a href="${doc}" target="_blank" class="btn btn-outline-primary">Lihat atau Unduh ${filename}</a>`;
+                    }
+
+                    tabContent.appendChild(tabPane);
+                });
+            });
+        });
+    });
+
+    // Modal aksi
+    document.addEventListener("DOMContentLoaded", function() {
+        const modal = document.getElementById("aksiModal");
+        const form = document.getElementById("formAksiPengajuan");
+        const idInput = document.getElementById("id_pengajuan");
+        const radioTerima = document.getElementById("radioTerima");
+        const radioTolak = document.getElementById("radioTolak");
+        const alasanTolak = document.getElementById("alasan_tolak");
+        const alasanContainer = document.getElementById("alasanTolakContainer");
+
+        document.querySelectorAll(".aksi-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                const id = this.getAttribute("data-id");
+                const status = this.getAttribute("data-status");
+
+                // Reset form & isi data baru
+                form.reset();
+                alasanContainer.style.display = "none";
+                idInput.value = id;
+
+                // Atur status radio "terima" sesuai kondisi
+                radioTerima.disabled = (status === "2");
+            });
+        });
+
+        // Show/hide alasan penolakan
+        radioTolak.addEventListener("change", function() {
+            alasanContainer.style.display = "block";
+        });
+
+        radioTerima.addEventListener("change", function() {
+            alasanContainer.style.display = "none";
+        });
+
+        // Submit form
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const id_pengajuan = idInput.value;
+            const status = form.querySelector("input[name='status']:checked")?.value;
+            const alasan = alasanTolak.value.trim();
+
+            if (status === "tolak" && alasan === "") {
+                Swal.fire("Alasan Wajib!", "Silakan isi alasan penolakan.", "warning");
+                return;
+            }
+
+            Swal.fire({
+                title: "Konfirmasi",
+                text: `Anda yakin ingin ${status === 'terima' ? 'menerima' : 'menolak'} pengajuan ini?`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Lanjutkan",
+                cancelButtonText: "Batal"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("POST", "admin2_proses_pengajuan.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                    let postData = `id_pengajuan=${encodeURIComponent(id_pengajuan)}&status=${encodeURIComponent(status)}`;
+                    if (status === "tolak") {
+                        postData += `&alasan_tolak=${encodeURIComponent(alasan)}`;
+                    }
+
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            Swal.fire("Sukses!", "Pengajuan berhasil diproses dan email terkirim.", "success").then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire("Gagal!", "Terjadi kesalahan saat mengirim.", "error");
+                        }
+                    };
+
+                    xhr.send(postData);
+                }
+            });
         });
     });
 </script>

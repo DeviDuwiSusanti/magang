@@ -102,35 +102,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_instansi" value="<?= $instansi["id_instansi"] ?>">
                     <input type="hidden" id="group_instansi" name="group_instansi" value="<?= $instansi["group_instansi"] ?>">
-                    <div class="mb-3">
-                        <label for="nama_panjang" class="form-label">Nama Lengkap Instansi</label>
-                        <input type="text" class="form-control" data-error-id="nama_panjang_error" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_panjang"] ?>">
-                        <small class="text-danger" id="nama_panjang_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nama_panjang" class="form-label">Nama Lengkap Instansi</label>
+                            <input type="text" class="form-control" data-error-id="nama_panjang_error" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_panjang"] ?>">
+                            <small class="text-danger" id="nama_panjang_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="nama_pendek" class="form-label">Nama Singkat Instansi</label>
+                            <input type="text" class="form-control" data-error-id="nama_pendek_error" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_pendek"] ?>">
+                            <small class="text-danger" id="nama_pendek_error"></small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="nama_pendek" class="form-label">Nama Singkat Instansi</label>
-                        <input type="text" class="form-control" data-error-id="nama_pendek_error" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama instansi" value="<?= $instansi["nama_pendek"] ?>">
-                        <small class="text-danger" id="nama_pendek_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
+                            <textarea class="form-control" data-error-id="deskripsi_instansi_error" id="deskripsi_instansi" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"><?= $instansi["deskripsi_instansi"] ?></textarea>
+                            <small class="text-danger" id="deskripsi_instansi_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="alamat_instansi" class="form-label">Alamat</label>
+                            <textarea class="form-control" data-error-id="alamat_instansi_error" id="alamat_instansi" name="alamat_instansi" rows="3" placeholder="Masukkan alamat lengkap"><?= $instansi["alamat_instansi"] ?></textarea>
+                            <small class="text-danger" id="alamat_instansi_error"></small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
-                        <textarea class="form-control" data-error-id="deskripsi_instansi_error" id="deskripsi_instansi" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"><?= $instansi["deskripsi_instansi"] ?></textarea>
-                        <small class="text-danger" id="deskripsi_instansi_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="alamat_instansi" class="form-label">Alamat</label>
-                        <textarea class="form-control" data-error-id="alamat_instansi_error" id="alamat_instansi" name="alamat_instansi" rows="3" placeholder="Masukkan alamat lengkap"><?= $instansi["alamat_instansi"] ?></textarea>
-                        <small class="text-danger" id="alamat_instansi_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telepone_instansi" class="form-label">Telepon</label>
-                        <input type="text" class="form-control" data-error-id="telepone_instansi_error" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon" value="<?= $instansi["telepone_instansi"] ?>">
-                        <small class="text-danger" id="telepone_instansi_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lokasi_instansi" class="form-label">Link Lokasi</label>
-                        <textarea class="form-control" data-error-id="lokasi_instansi_error" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan link lokasi"><?= $instansi["lokasi_instansi"] ?></textarea>
-                        <small class="text-danger" id="lokasi_instansi_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="lokasi_instansi" class="form-label">Link Lokasi</label>
+                            <textarea class="form-control" data-error-id="lokasi_instansi_error" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan link lokasi"><?= $instansi["lokasi_instansi"] ?></textarea>
+                            <small class="text-danger" id="lokasi_instansi_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="telepone_instansi" class="form-label">Telepon</label>
+                            <input type="text" class="form-control" data-error-id="telepone_instansi_error" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon" value="<?= $instansi["telepone_instansi"] ?>">
+                            <small class="text-danger" id="telepone_instansi_error"></small>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="gambar_instansi" class="form-label">Foto Profil</label>
@@ -139,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                             <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $instansi["gambar_instansi"] ?>">
                         </div>
                         <input type="file" class="form-control" data-error-id="gambar_instansi_error" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="previewFile()">
-                        <small class="text-muted">Kosong Jika tidak ingin di ganti</small>
+                        <small class="text-muted">Kosong Jika tidak ingin di ganti</small> <br>
                         <small class="text-danger" id="gambar_instansi_error"></small>
                     </div>
                     <div class="modal-footer">

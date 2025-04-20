@@ -8,11 +8,11 @@
     if(isset($_GET["id_pengajuan_ini"])) {
         $id_pengajuan = $_GET["id_pengajuan_ini"];
         
-        if(hapus_pengajuan_by_super_admin($id_pengajuan, $id_user)) { 
-            echo "<script>hapus_pengajuan_super_admin_success()</script>";
-        } else { 
-            echo "<script>hapus_pengajuan_super_admin_gagal()</script>";
-        }
+        if(hapus_pengajuan_by_super_admin($id_pengajuan, $id_user)) { ?>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data Pengajuan Berhasil", "super1_pengajuan.php"); </script>
+        <?php  } else { ?>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data Pengajuan Gagal", "super1_pengajuan.php"); </script>
+        <?php }
     }
 ?>
 

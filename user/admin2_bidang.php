@@ -72,25 +72,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             <li class="breadcrumb-item active">Kelola Bidang Instansi</li>
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
-        <div class="mb-4 text-end">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal" title="Tambah Bidang">
-                <i class="bi bi-plus-circle me-1"></i> Tambah Bidang
-            </button>
-            <a href="admin2_print_bidang.php" target="_blank" class="btn btn-success btn-sm" title="Cetak Bidang"><i class="bi bi-printer me-1"></i> Cetak</a>
-        </div>
         <div class="table-responsive-sm">
-            <div class="bungkus-2">
-                <!-- <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2" id="top-bar-wrapper">
-                    <div id="entries-wrapper"></div> 
-
-                    <div class="d-flex align-items-center gap-2" id="right-controls">
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#tambahBidangModal">
-                            <i class="bi bi-plus-circle me-1"></i>
-                        </button>
-                        <div id="search-wrapper"></div>
-                    </div>
-                </div> -->
-                <table id="myTable" class="table table-striped table-bordered table-hover">
+            <div class="datatable-header mb-2"></div>
+            <div class="bungkus-2 datatable-scrollable">
+                <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -132,6 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     </tbody>
                 </table>
             </div>
+            <div class="datatable-footer mt-2"></div>
         </div>
     </div>
 </div>
@@ -148,33 +134,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateTambahBidang()">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_instansi" id="id_instansi" value="<?= $id_instansi ?>">
-                    <div class="mb-3">
-                        <label for="nama_bidang" class="form-label">Nama Bidang</label>
-                        <input type="text" class="form-control" data-error-id="nama_bidang_error" id="nama_bidang" name="nama_bidang" placeholder="Masukkan nama bidang">
-                        <small class="text-danger" id="nama_bidang_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nama_bidang" class="form-label">Nama Bidang</label>
+                            <input type="text" class="form-control" data-error-id="nama_bidang_error" id="nama_bidang" name="nama_bidang" placeholder="Masukkan nama bidang">
+                            <small class="text-danger" id="nama_bidang_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="kuota" class="form-label">Kuota</label>
+                            <input type="number" class="form-control" data-error-id="kuota_error" id="kuota" name="kuota" placeholder="Masukkan kuota bidang">
+                            <small class="text-danger" id="kuota_error"></small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="kriteria" class="form-label">Kriteria</label>
+                            <textarea class="form-control" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang"></textarea>
+                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <small class="text-danger" id="kriteria_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
+                            <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="3" placeholder="Masukkan dokumen prasyarat"></textarea>
+                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <small class="text-danger" id="dokumen_error"></small>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label">Deskripsi Bidang</label>
                         <textarea class="form-control" data-error-id="deskripsi_error" id="deskripsi" name="deskripsi" rows="3" placeholder="Masukkan deskripsi bidang"></textarea>
                         <small class="text-danger" id="deskripsi_error"></small>
                     </div>
-                    <div class="mb-3">
-                        <label for="kriteria" class="form-label">Kriteria</label>
-                        <textarea class="form-control" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang"></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
-                        <small class="text-danger" id="kriteria_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="kuota" class="form-label">Kuota</label>
-                        <input type="number" class="form-control" data-error-id="kuota_error" id="kuota" name="kuota" placeholder="Masukkan kuota bidang">
-                        <small class="text-danger" id="kuota_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
-                        <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="3" placeholder="Masukkan dokumen prasyarat"></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
-                        <small class="text-danger" id="dokumen_error"></small>
-                    </div>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                         <button type="submit" class="btn btn-primary" name="tambah_bidang">Tambah Bidang</button>
@@ -197,32 +188,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditBidang()">
                     <input type="hidden" name="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_bidang" id="edit_id_bidang">
-                    <div class="mb-3">
-                        <label for="nama_bidang" class="form-label fw-bold">Nama Bidang</label>
-                        <input type="text" class="form-control" data-error-id="edit_nama_bidang_error" id="edit_nama_bidang" name="nama_bidang">
-                        <small class="text-danger" id="edit_nama_bidang_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nama_bidang" class="form-label fw-bold">Nama Bidang</label>
+                            <input type="text" class="form-control" data-error-id="edit_nama_bidang_error" id="edit_nama_bidang" name="nama_bidang">
+                            <small class="text-danger" id="edit_nama_bidang_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="kuota" class="form-label fw-bold">Kuota</label>
+                            <input type="number" class="form-control" data-error-id="edit_kuota_error" id="edit_kuota" name="kuota"">
+                            <small class=" text-danger" id="edit_kuota_error"></small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="kriteria" class="form-label fw-bold">Kriteria</label>
+                            <textarea class="form-control" data-error-id="edit_kriteria_error" id="edit_kriteria" name="kriteria" rows="3"></textarea>
+                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <small class="text-danger" id="edit_kriteria_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dokumen" class="form-label fw-bold">Dokumen Prasyarat</label>
+                            <textarea class="form-control" data-error-id="edit_dokumen_error" id="edit_dokumen" name="dokumen" rows="3"></textarea>
+                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <small class="text-danger" id="edit_dokumen_error"></small>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label fw-bold">Deskripsi Bidang</label>
                         <textarea class="form-control" data-error-id="edit_deskripsi_error" id="edit_deskripsi" name="deskripsi" rows="3"></textarea>
                         <small class="text-danger" id="edit_deskripsi_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="kriteria" class="form-label fw-bold">Kriteria</label>
-                        <textarea class="form-control" data-error-id="edit_kriteria_error" id="edit_kriteria" name="kriteria" rows="3"></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
-                        <small class="text-danger" id="edit_kriteria_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="kuota" class="form-label fw-bold">Kuota</label>
-                        <input type="number" class="form-control" data-error-id="edit_kuota_error" id="edit_kuota" name="kuota"">
-                        <small class=" text-danger" id="edit_kuota_error"></small>
-                    </div>
-                    <div class="mb-3">
-                        <label for="dokumen" class="form-label fw-bold">Dokumen Prasyarat</label>
-                        <textarea class="form-control" data-error-id="edit_dokumen_error" id="edit_dokumen" name="dokumen" rows="3"></textarea>
-                        <small class="text-muted">*Pisahkan dengan koma</small> <br>
-                        <small class="text-danger" id="edit_dokumen_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -253,18 +248,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         });
     });
 
-    // $(document).ready(function() {
-    //     const table = $('#myTable').DataTable();
-
-    //     $('#myTable_length').appendTo('#entries-wrapper');
-    //     $('#myTable_filter').appendTo('#search-wrapper');
-    // });
-
     // Inisialisasi tooltip secara global
     document.addEventListener('DOMContentLoaded', function() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
         tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+
+    $(document).ready(function() {
+        var isMobile = window.innerWidth < 768;
+        $('#myTable').DataTable({
+            scrollX: isMobile,
+            responsive: true,
+            dom: '<"datatable-header row mb-2"' +
+                '<"col-md-6 text-md-start text-center"l>' +
+                '<"col-md-6 text-md-end text-center d-flex justify-content-end align-items-center gap-2"f>' +
+                '>t' +
+                '<"datatable-footer row mt-2"' +
+                '<"col-md-6 text-md-start text-center"i>' +
+                '<"col-md-6 text-md-end text-center"p>' +
+                '>',
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                paginate: {
+                    previous: "Sebelumnya",
+                    next: "Berikutnya"
+                }
+            }
+        });
+
+        // Inject tombol ke sebelah kanan search box
+        const tombolTambahBidang = `
+        <button type="button" class="btn btn-primary btn-sm ms-2" 
+            data-bs-toggle="modal" 
+            data-bs-target="#tambahBidangModal" 
+            title="Tambah Bidang">
+            <i class="bi bi-plus-circle-fill"></i>
+        </button>
+    `;
+        $('.dataTables_filter').append(tombolTambahBidang);
+
+        // Aktifkan tooltip jika pakai Bootstrap Tooltip
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function(el) {
+            return new bootstrap.Tooltip(el);
         });
     });
 </script>

@@ -6,29 +6,79 @@
     if(isset($_GET["id_instansi_ini"])) {
         $id_instansi = $_GET["id_instansi_ini"];
         
-        if(hapus_instansi($id_instansi, $id_user)) { 
-            echo "<script>hapus_instansi_super_admin_success()</script>";
-        } else { 
-            echo "<script>hapus_instansi_super_admin_gagal()</script>";
-        }
+        if(hapus_instansi($id_instansi, $id_user)) { ?>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data Instansi Berhasil", "super1_instansi.php"); </script>
+        <?php  } else {  ?>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data Instansi Gagal", "super1_instansi.php"); </script>
+        <?php  }
     }
 
     if(isset($_POST["tambah_instansi"])) {
-        if(tambah_instansi_super_admin($_POST) > 0) { ?>
-            <script>tambah_instansi_super_admin_success()</script>
+        $result = tambah_instansi_super_admin($_POST);
+        if ($result === 404) { ?>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Id Instansi Sudah Tersimpan Didalam Database", "super1_instansi.php"); </script>
+        <?php }
+        else if($result > 0) { ?>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Instansi Berhasil", "super1_instansi.php"); </script>
         <?php } else { ?>
-            <script>tambah_instansi_super_admin_gagal()</script>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Instansi Gagal", "super1_instansi.php"); </script>
         <?php }
     }
 
     if(isset($_POST["edit_instansi"])) {
         if(edit_instansi_super_admin($_POST) > 0) { ?>
-            <script>edit_instansi_super_admin_success()</script>
+            <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data Instansi Berhasil", "super1_instansi.php"); </script>
         <?php } else { ?>
-            <script>edit_instansi_super_admin_gagal()</script>
+            <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data Instansi Gagal", "super1_instansi.php"); </script>
         <?php }
     }
 ?>
+
+
+<!-- Modal Preview Gambar -->
+<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
+    <span class="image-modal-close">&times;</span>
+    <img class="image-modal-content" id="modalPreviewImage">
+</div>
+
+<style>
+    /* style for preview image */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999; /* Lebih tinggi dari modal Bootstrap */
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-modal-content {
+        max-width: 90%;
+        max-height: 90vh;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .image-modal-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 10000;
+    }
+
+    .image-modal-close:hover {
+        color: #ccc;
+    }
+</style>
+
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">Halaman Daftar Instansi</h1>
@@ -65,7 +115,7 @@
                         <td><?= $opd["nama_pendek"] ?></td>
                         <td><?= $opd["nama_panjang"] ?></td>
                         <td><?= $opd["group_instansi"] ?></td>
-                        <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi"></td>
+                        <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi" onclick="openImageModal(this)"></td>
 
                         <td class="d-flex justify-content-center gap-2">
                             <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_instansi_super_admin(<?= $opd['id_instansi'] ?>)">
@@ -108,44 +158,63 @@
             <div class="modal-body">
                 <form id="formTambahInstansi" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
+                    
+                    <!-- ID Instansi -->
                     <div class="mb-3">
                         <label for="id_instansi" class="form-label">ID Instansi</label>
                         <input type="text" inputmode="numeric" maxlength="10" class="form-control" id="id_instansi" name="id_instansi" placeholder="Masukkan ID instansi" required>
+                        <small id="id_instansi_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
                     </div>
+
+                    <!-- Nama Pendek -->
                     <div class="mb-3">
                         <label for="nama_pendek" class="form-label">Nama Pendek Instansi</label>
                         <input type="text" maxlength="100" class="form-control" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama Pendek instansi" required>
+                        <small id="nama_pendek_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
                     </div>
+
+                    <!-- Nama Panjang -->
                     <div class="mb-3">
                         <label for="nama_panjang" class="form-label">Nama Panjang Instansi</label>
                         <input type="text" maxlength="255" class="form-control" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama Panjang instansi" required>
+                        <small id="nama_panjang_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
                     </div>
+
+                    <!-- Group -->
                     <div class="mb-3">
                         <label for="group_instansi" class="form-label">Group Instansi</label>
                         <input type="text" maxlength="100" class="form-control" id="group_instansi" name="group_instansi" placeholder="Masukkan Group instansi">
                     </div>
+
+                    <!-- Alamat -->
                     <div class="mb-3">
                         <label for="alamat_instansi" class="form-label">Alamat Instansi</label>
                         <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" placeholder="Masukkan alamat instansi"></textarea>
                     </div>
+
+                    <!-- Deskripsi -->
                     <div class="mb-3">
                         <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
                         <textarea class="form-control" id="deskripsi_instansi" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"></textarea>
                     </div>
+
+                    <!-- Lokasi -->
                     <div class="mb-3">
                         <label for="lokasi_instansi" class="form-label">Lokasi Instansi</label>
                         <textarea class="form-control" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan Lokasi Instansi"></textarea>
                     </div>
+
+                    <!-- Telepon -->
                     <div class="mb-3">
                         <label for="telepone_instansi" class="form-label">Telepon Instansi</label>
                         <input type="tel" pattern="[0-9]{8,15}" inputmode="numeric" maxlength="15" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon instansi">
                     </div>
 
                     <!-- Upload Foto Profil -->
-                    <div class="input-field ">
+                    <div class="input-field">
                         <label for="image">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
                         <div class="image-preview" id="imagePreview">
-                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="file" class="input" id="image" name="gambar_instansi" accept="image/*" onchange="validateFile()">
                     </div>
@@ -203,7 +272,7 @@
                     <div class="input-field">
                         <label for="gambar_instansi_edit">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
                         <div class="image-preview" id="imagePreviewEdit">
-                            <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+                            <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
                             <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $opd["gambar_instansi"] ?>">
                         </div>
                         <input type="file" class="input" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="validateFileEdit()">
@@ -284,6 +353,21 @@ function validateFile() {
         }
     }
 
+
+    function openImageModal(img) {
+        const modal = document.getElementById("imageModalPreview");
+        const modalImg = document.getElementById("modalPreviewImage");
+
+        modal.style.display = "flex"; // make it center using flex
+        modalImg.src = img.src;
+    }
+
+    function closeImageModal() {
+        document.getElementById("imageModalPreview").style.display = "none";
+    }
+
+
+
     function validateFileEdit() {
     const fileInput = document.getElementById('gambar_instansi_edit');
     const previewContainer = document.getElementById('imagePreviewEdit');
@@ -309,6 +393,7 @@ function validateFile() {
     }
 }
 </script>
+
 
 <script>
     document.getElementById("id_instansi").addEventListener("input", function (e) {
@@ -363,4 +448,41 @@ function validateFile() {
             ]
         });
     });
+</script>
+
+
+<!-- JavaScript Validasi Realtime -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const idInstansiInput = document.getElementById("id_instansi");
+    const namaPendekInput = document.getElementById("nama_pendek");
+    const namaPanjangInput = document.getElementById("nama_panjang");
+
+    idInstansiInput.addEventListener("input", function () {
+        const warning = document.getElementById("id_instansi_warning");
+        if (this.value.length != 9) {
+            warning.textContent = "ID Instansi seharusnya terdiri dari minimal 9 digit. Apakah sudah benar?";
+        } else {
+            warning.textContent = "";
+        }
+    });
+
+    namaPendekInput.addEventListener("input", function () {
+        const warning = document.getElementById("nama_pendek_warning");
+        if (this.value.length > 30) {
+            warning.textContent = "Nama pendek terlalu panjang. Gunakan singkatan jika memungkinkan.";
+        } else {
+            warning.textContent = "";
+        }
+    });
+
+    namaPanjangInput.addEventListener("input", function () {
+        const warning = document.getElementById("nama_panjang_warning");
+        if (this.value.length < 10) {
+            warning.textContent = "Nama panjang terlalu pendek. Hindari penggunaan singkatan.";
+        } else {
+            warning.textContent = "";
+        }
+    });
+});
 </script>

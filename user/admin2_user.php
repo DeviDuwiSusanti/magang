@@ -1,4 +1,4 @@
-<?php 
+<?php
 include '../layout/sidebarUser.php';
 include "update_status.php";
 include "functions.php";
@@ -7,18 +7,9 @@ $id_instansi = $_SESSION['id_instansi'];
 $no = 1;
 
 // Query untuk data utama pengajuan
-$sql = "SELECT
-            pu.nama_user,
+$sql = "SELECT pu.nama_user,
             b.nama_bidang,
-            p.jenis_pengajuan,
-            p.jumlah_pelamar,
-            p.tanggal_mulai,
-            p.tanggal_selesai,
-            p.id_pengajuan,
-            p.id_user,
-            p.status_pengajuan,
-            p.status_active,
-            pembimbing.nama_user AS nama_pembimbing
+            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, pembimbing.nama_user AS nama_pembimbing
         FROM tb_pengajuan AS p
         INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
         INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
@@ -57,9 +48,10 @@ $json_nama_pengaju = json_encode($nama_pengaju);
             <li class="breadcrumb-item active">Daftar Data Pemagang</li>
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
-        <div class="table-responsive-sm">
-            <div class="bungkus-2">
-                <table id="myTable" class="table table-striped table-bordered table-hover">
+        <div class="table-responsive">
+            <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
+            <div class="bungkus-2 datatable-scrollable">
+                <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -125,8 +117,73 @@ $json_nama_pengaju = json_encode($nama_pengaju);
                     </tbody>
                 </table>
             </div>
+            <div class="datatable-footer mt-2"></div> <!-- Tempat info dan pagination -->
         </div>
     </div>
 </div>
 
 <?php include "../layout/footerDashboard.php" ?>
+
+<script>
+    $(document).ready(function() {
+        // Cek apakah sedang di mobile untuk scrollX
+        var isMobile = window.innerWidth < 768;
+
+        // Inisialisasi DataTable hanya sekali
+        var table = $('#myTable').DataTable({
+            scrollX: isMobile,
+            responsive: true,
+            dom: '<"datatable-header row mb-2"' +
+                '<"col-md-6 text-md-start text-center"l>' +
+                '<"col-md-6 text-md-end text-center d-flex justify-content-end align-items-center gap-2"f>' +
+                '>t' +
+                '<"datatable-footer row mt-2"' +
+                '<"col-md-6 text-md-start text-center"i>' +
+                '<"col-md-6 text-md-end text-center"p>' +
+                '>',
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                emptyTable: "Tidak ada data pemagang yang tersedia",
+                zeroRecords: "Tidak ada data pemagang yang cocok",
+                paginate: {
+                    previous: "Sebelumnya",
+                    next: "Berikutnya"
+                }
+            }
+        });
+
+        // Event handler untuk tombol "show-detail"
+        $('#myTable tbody').on('click', 'a.show-detail', function(e) {
+            e.preventDefault();
+
+            var detailData = $(this).data('detail');
+            var detailHtml = '<ul>';
+            $.each(detailData, function(index, name) {
+                detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
+            });
+            detailHtml += '</ul>';
+
+            var tr = $(this).closest('tr');
+            var row = table.row(tr);
+
+            // Sembunyikan detail yang lain sebelum menampilkan yang baru
+            if (!row.child.isShown()) {
+                $('#myTable tbody tr.shown').not(tr).each(function() {
+                    table.row(this).child.hide();
+                    $(this).removeClass('shown');
+                });
+            }
+
+            // Tampilkan atau sembunyikan detail dari baris yang diklik
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                row.child(detailHtml).show();
+                tr.addClass('shown');
+            }
+        });
+    });
+</script>

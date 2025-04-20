@@ -180,7 +180,7 @@ $query = mysqli_query($conn, $sql);
 
 <?php 
 include "persyaratan_daftar.php";
-include "detail_anggota.php";
-include "pengajuan2.php";
+include "anggota.php";
+include "pengajuan.php";
 include "../layout/footerDashboard.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -65,7 +65,6 @@ if (isset($_SESSION['email'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.css">
     <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
@@ -198,7 +197,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 if (isset($status_pengajuan) && $status_pengajuan == '4') { ?>
                     <li class="sidebar-item">
-                        <a href="logbook_daftar.php" class="sidebar-link">
+                        <a href="logbook.php" class="sidebar-link">
                             <i class="bi bi-journal-check"></i>
                             <span>Logbook Harian</span>
                         </a>
@@ -223,6 +222,19 @@ if (isset($_SESSION['email'])) {
                     </li>
                 <?php endif; ?>
 
+
+                <?php if($level == 4): ?>
+                    <!-- Daftar Peserta Magang -->
+                    <li class="sidebar-item">
+                        <a href="pembimbing4.php" class="sidebar-link">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Peserta Magang</span>
+                        </a>
+                    </li>
+                <?php endif; ?>
+
+
+
                 <li class="sidebar-item">
                     <a href="setting.php" class="sidebar-link">
                         <i class="bi bi-gear"></i>
@@ -240,7 +252,7 @@ if (isset($_SESSION['email'])) {
         </aside>
         <div class="main">
             <nav class="navbar navbar-expand px-4 py-3">
-                <button class="btn d-lg-none me-3" id="hamburger-btn" style="font-size: 1.5rem; border: none; background: none;">
+                <button class="d-lg-none me-3" id="hamburger-btn">
                     <i class="bi bi-list"></i>
                 </button>
                 <div class="navbar-greeting d-flex flex-column justify-content-center me-auto">
@@ -271,10 +283,12 @@ if (isset($_SESSION['email'])) {
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
+                                <?php if($level == 3) : ?>
                                 <a href="bantuan.php" class="dropdown-item">
                                     <i class="bi bi-question-circle"></i>
                                     <span>Pusat Bantuan</span>
                                 </a>
+                                <?php endif; ?>
                                 <div class="dropdown-divider"></div>
                                 <a href="../logout.php" class="dropdown-item">
                                     <i class="bi bi-box-arrow-right"></i>
@@ -308,42 +322,28 @@ if (isset($_SESSION['email'])) {
 
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+                <!-- Inisialisasi DataTables -->
+            <!-- <script>
+                $(document).ready(function() {
+                    $('#myTable').DataTable();
+                });
+            </script> -->
+
             <!-- Inisialisasi DataTables -->
             <script>
-                $(document).ready(function() {
-                    var table = $('#myTable').DataTable();
+                // Toggle sidebar tampilan mobile
+                const hamburgerBtn = document.getElementById('hamburger-btn');
+                const sidebar = document.getElementById('sidebar');
 
-                    // Event handler untuk tombol "show-detail"
-                    $('#myTable tbody').on('click', 'a.show-detail', function(e) {
-                        e.preventDefault();
+                hamburgerBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('show-sidebar');
+                });
 
-                        var detailData = $(this).data('detail');
-                        var detailHtml = '<ul>';
-                        $.each(detailData, function(index, name) {
-                            detailHtml += '<li>' + (index + 1) + '. ' + name + '</li>';
-                        });
-                        detailHtml += '</ul>';
-
-                        var tr = $(this).closest('tr');
-                        var row = table.row(tr);
-
-                        // Sembunyikan detail yang lain sebelum menampilkan yang baru
-                        if (!row.child.isShown()) {
-                            $('#myTable tbody tr.shown').not(tr).each(function() {
-                                table.row(this).child.hide();
-                                $(this).removeClass('shown');
-                            });
-                        }
-
-                        // Tampilkan atau sembunyikan detail dari baris yang diklik
-                        if (row.child.isShown()) {
-                            row.child.hide();
-                            tr.removeClass('shown');
-                        } else {
-                            row.child(detailHtml).show();
-                            tr.addClass('shown');
-                        }
-                    });
+                // Optional: klik di luar sidebar untuk nutup
+                document.addEventListener('click', (e) => {
+                    if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                        sidebar.classList.remove('show-sidebar');
+                    }
                 });
 
                 function updateGreetingAndClock() {
@@ -376,20 +376,6 @@ if (isset($_SESSION['email'])) {
                 // Update setiap detik
                 setInterval(updateGreetingAndClock, 1000);
                 updateGreetingAndClock();
-
-                const hamburgerBtn = document.getElementById('hamburger-btn');
-                const sidebar = document.getElementById('sidebar');
-
-                hamburgerBtn.addEventListener('click', () => {
-                    sidebar.classList.toggle('show-sidebar');
-                });
-
-                // Optional: klik di luar sidebar untuk nutup
-                document.addEventListener('click', (e) => {
-                    if (!sidebar.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                        sidebar.classList.remove('show-sidebar');
-                    }
-                });
             </script>
 </body>
 

@@ -1,0 +1,135 @@
+/* ===============  BERANDA ============*/
+
+#hero {
+    padding-top: 100px;
+}
+
+#hero .container {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    flex-wrap: wrap;
+}
+.hero-text {
+    flex: 1; 
+    min-width: 300px; 
+    padding: 20px;
+}
+
+.hero-text h1 {
+    font-size: 2rem; 
+    font-weight: bold;
+}
+
+.hero-text p {
+    font-size: 1rem; 
+    margin-top: 10px; 
+    color: #555;
+}
+
+.hero-image {
+    flex: 1; 
+    min-width: 300px; 
+    display: flex; 
+    justify-content: center;
+}
+
+.hero-image img {
+    max-width: 100%; 
+    height: auto; 
+    border-radius: 10px;
+}
+
+.hero-image {
+    perspective: 1500px; /* Menambahkan perspektif agar gambar terlihat lebih mendalam */
+    transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-image img {
+    width: 100%;
+    height: auto;
+    transform: scale(1) translateZ(0px); /* Gambar awal, dalam posisi normal */
+    transition: transform 1s ease-in-out, box-shadow 0.5s ease-in-out;
+    border-radius: 10px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); /* Bayangan halus untuk efek kedalaman */
+}
+
+.hero-image:hover img {
+    transform: scale(1.1) translateZ(200px); /* Efek gambar yang lebih besar dan menonjol keluar dari layar */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); /* Bayangan lebih besar saat hover */
+}
+
+.hero-image:hover {
+    transform: scale(1.05); /* Memberikan efek zoom lebih pada gambar */
+}
+
+.details-button {
+    display: inline-block; 
+    background: linear-gradient(90deg, #4CAF50, #2D9CDB); 
+    color: #fff; 
+    text-decoration: none; 
+    font-weight: bold; 
+    padding: 10px 20px; 
+    border-radius: 25px; 
+    text-align: center
+}
+
+.lowongan .lowongans {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.dark-theme .modal-content{
+    background-color: var(--container-color);
+    border: 1px solid var(--border-color);
+}
+
+.dark-theme .accordion-item {
+    background-color: var(--container-color);
+    border: 1px solid var(--border-color);
+}
+
+.dark-theme .accordion-button {
+    background-color: var(--container-color);
+    color: var(--title-color);
+}
+
+.dark-theme .accordion-button:not(.collapsed) {
+    background-color: var(--second-color);
+    color: white;
+}
+
+.dark-theme .accordion-body {
+    background-color: var(--body-color);
+    color: var(--text-color);
+}
+
+.dark-theme .accordion-button:focus {
+    box-shadow: none;
+}
+
+
+
+
+/* ========= ABOUT ========== */
+.contact__images img {
+    width: 500px; /* Sesuaikan ukuran */
+    height: 500px; /* Pastikan ukurannya sama untuk bentuk lingkaran */
+    border-radius: 50%; /* Membuat gambar menjadi bulat */
+    object-fit: cover; /* Pastikan gambar terpotong dengan baik */
+    display: block;
+    margin: auto;
+}
+
+/* Mode terang (default) */
+body {
+    background-color: #f4f4f4;
+    color: #121212;
+    margin: 0;
+    padding: 0;
+}
+

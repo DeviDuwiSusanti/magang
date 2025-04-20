@@ -16,14 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jam = mysqli_real_escape_string($conn, $_POST["jam_pelaksanaan"]);
     $link_zoom = mysqli_real_escape_string($conn, $_POST["link_zoom"]);
     $pembimbing = mysqli_real_escape_string($conn, $_POST["pembimbing"]);
-    
+
     // Ambil nama pembimbing berdasarkan ID pembimbing yang dipilih
     $query_pembimbing = "SELECT pu.nama_user, u.email 
                         FROM tb_profile_user pu 
                         JOIN tb_user u ON pu.id_user = u.id_user
                         WHERE pu.id_user = '$pembimbing'";
     $result_pembimbing = mysqli_query($conn, $query_pembimbing);
-    
+
     if ($result_pembimbing && $row_pembimbing = mysqli_fetch_assoc($result_pembimbing)) {
         $nama_pembimbing = $row_pembimbing['nama_user'];
         $email_pembimbing = $row_pembimbing['email'];
@@ -136,6 +136,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mail_pelamar->Body = $message;
 
                 if ($mail_pelamar->send()) {
+                    // Update kolom kirim_zoom menjadi 1
+                    $update_query = "UPDATE tb_pengajuan SET kirim_zoom = 1 WHERE id_pengajuan = '$id_pengajuan'";
+                    mysqli_query($conn, $update_query);
+
                     echo "<script>
                         Swal.fire({
                             title: 'Berhasil!',

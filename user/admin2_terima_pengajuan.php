@@ -11,6 +11,7 @@ include '../assets/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["id_pengajuan"]);
+    $status = $_POST["status"];
 
     // Ambil id_user dan informasi magang dari tb_pengajuan
     $query = "SELECT id_user, nama_bidang, tanggal_mulai, tanggal_selesai, alamat_instansi, nama_panjang 

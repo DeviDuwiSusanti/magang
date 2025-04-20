@@ -13,39 +13,42 @@
     }
 
     function generateUserId($conn) {
-        $date = date("ymd");
-        $hour = date("H");
-        $baseId = $date . $hour;
-        $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
-        
-        if($result && mysqli_num_rows($result) > 0) {
-            $lastId = mysqli_fetch_assoc($result)["id_user"];
-            $lastCounter = intval(substr($lastId, -4, 2));
+        $baseId = date("ymdH");
+        $query = "SELECT id_user FROM tb_user WHERE LEFT(id_user, 8) = '$baseId' ORDER BY id_user DESC LIMIT 1";
+        $result = mysqli_query($conn, $query);
+    
+        if ($result && mysqli_num_rows($result) > 0) {
+            $lastId = mysqli_fetch_assoc($result)['id_user'];
+            // Ambil counter 2 digit setelah baseId (posisi ke-9 dan 10)
+            $lastCounter = intval(substr($lastId, 8, 2));
             $newCounter = str_pad($lastCounter + 1, 2, "0", STR_PAD_LEFT);
         } else {
             $newCounter = "01";
         }
-        $newId = $baseId . $newCounter . "00";
+    
+        $newId = $baseId . $newCounter . "00"; // Tambah 00 di akhir
         return $newId;
     }
+    
 
 
     function generate_user_id_level_1_2($conn) {
-        $date = date("ymd");
-        $hour = date("H");
-        $baseId = $date . $hour;
-        $result = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE id_user LIKE '$baseId%' ORDER BY id_user DESC LIMIT 1");
-        
-        if($result && mysqli_num_rows($result) > 0) {
-            $lastId = mysqli_fetch_assoc($result)["id_user"];
-            $lastCounter = intval(substr($lastId, 2));
+        $baseId = date("ymdH");
+        $query = "SELECT id_user FROM tb_user WHERE LEFT(id_user, 8) = '$baseId' ORDER BY id_user DESC LIMIT 1";
+        $result = mysqli_query($conn, $query);
+    
+        if ($result && mysqli_num_rows($result) > 0) {
+            $lastId = mysqli_fetch_assoc($result)['id_user'];
+            $lastCounter = intval(substr($lastId, 8, 2)); // Ambil 2 digit setelah 8
             $newCounter = str_pad($lastCounter + 1, 2, "0", STR_PAD_LEFT);
         } else {
             $newCounter = "01";
         }
+    
         $newId = $baseId . $newCounter;
         return $newId;
     }
+    
 
 
     function uploadImage($file, $old_img, $directory) {
@@ -158,13 +161,19 @@ function generateIdPendidikan_universitas($nama_pendidikan, $fakultas, $jurusan)
     global $conn;
     
     // 1. Cek apakah kombinasi data sudah ada
-    $query = "SELECT id_pendidikan FROM tb_pendidikan 
+    $query = "SELECT id_pendidikan, status_active FROM tb_pendidikan 
                 WHERE nama_pendidikan = '$nama_pendidikan' 
                 AND fakultas = '$fakultas' 
                 AND jurusan = '$jurusan'";
     $result = mysqli_query($conn, $query);
     if(mysqli_num_rows($result) > 0) {
-        return 0;
+        $row = mysqli_fetch_assoc($result);
+        if($row["status_active"] == 0) {
+            return 0;
+        } 
+        else {
+            return 1;
+        }
     }
     
     // 2. Generate kode nama pendidikan (3 digit pertama)
@@ -228,7 +237,7 @@ function generateIdPendidikan_universitas($nama_pendidikan, $fakultas, $jurusan)
 function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
     global $conn;
 
-    $query_check = "SELECT id_pendidikan FROM tb_pendidikan 
+    $query_check = "SELECT id_pendidikan, status_active FROM tb_pendidikan 
                     WHERE nama_pendidikan = '$nama_pendidikan' 
                     AND jurusan = '$jurusan' 
                     AND fakultas IS NULL 
@@ -236,7 +245,11 @@ function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
     $result_check = mysqli_query($conn, $query_check);
     if (mysqli_num_rows($result_check) > 0) {
         $row = mysqli_fetch_assoc($result_check);
-        return $row["id_pendidikan"];
+        if($row["status_active"] == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     // 2. Cek apakah nama_pendidikan sudah pernah ada
@@ -278,15 +291,19 @@ function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
     function tambah_data_sekolah($POST) {
         global $conn;
         $id_user = $POST["id_user"];
+        $alamat_pendidikan = $POST["alamat_pendidikan"];
         $nama_sekolah = $POST["nama_sekolah_hidden"];
         $jurusan_sekolah = $POST["jurusan_sekolah_hidden"];
-        $alamat_pendidikan = $POST["alamat_pendidikan"];
         $id_pendidikan = generateIdPendidikan_sekolah($nama_sekolah, $jurusan_sekolah);
-        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_sekolah', '$jurusan_sekolah', '$alamat_pendidikan', '$id_user')";
         if($id_pendidikan == 0) {
-            return 0;
+            return 404;
         }
-        if($query) {
+        if($id_pendidikan == 1) {
+            return 405;
+        }
+
+        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_sekolah', '$jurusan_sekolah', '$alamat_pendidikan', '$id_user')";
+        if(mysqli_query($conn, $query)) {
             return mysqli_affected_rows($conn);
         } else {
             return 0;
@@ -303,11 +320,15 @@ function generateIdPendidikan_sekolah($nama_pendidikan, $jurusan) {
         $jurusan_universitas = $POST["jurusan_universitas_hidden"];
         $alamat_pendidikan = $POST["alamat_pendidikan"];
         $id_pendidikan = generateIdPendidikan_universitas($nama_universitas, $fakultas_universitas, $jurusan_universitas);
-        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, fakultas, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_universitas', '$jurusan_universitas', '$alamat_pendidikan', '$id_user')";
         if($id_pendidikan == 0) {
-            return 0;
+            return 404;
         }
-        if($query) {
+        if($id_pendidikan == 1) {
+            return 405;
+        }
+
+        $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, fakultas, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_universitas', '$fakultas_universitas', '$jurusan_universitas', '$alamat_pendidikan', '$id_user')";
+        if(mysqli_query($conn, $query)) {
             return mysqli_affected_rows($conn);
         } else {
             return 0;
@@ -364,8 +385,7 @@ function tambah_instansi_super_admin($POST) {
     $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
     if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
-        header("Location: instansi.php?error=id_instansi_terdaftar");
-        exit;
+        return 404;
     }
 
     $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
@@ -468,7 +488,7 @@ function tambah_instansi_super_admin($POST) {
 
 
 // ============================== START OF CRUD USER IN SUPER ADMIN ==============================================
-    function tambah_admin_instansi($POST) {
+    function tambah_user_by_super_admin($POST) {
         global $conn;
         $create_by = $POST["id_user"];
         $id_user = generate_user_id_level_1_2($conn);
@@ -477,13 +497,24 @@ function tambah_instansi_super_admin($POST) {
         $nip = $POST["nip"];
         $gender = $POST["jenis_kelamin"];
         $email = $POST["email"];
+        $level = $POST["level"];
         $tempat_lahir = $POST["tempat_lahir"];
         $tanggal_lahir = $POST["tanggal_lahir"];
         $telepone_user = $POST["telepone_user"];
         $alamat_user = $POST["alamat_user"];
         $gambar_user = uploadImage($_FILES["gambar_user"], "avatar.png", "../assets/img/user/");
-    
-        $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '2', '$create_by') ");
+        
+        if (checking($conn, 'tb_user', 'email', $email)) {
+            return 404;
+        }
+        if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
+            return 405;
+        }
+        if (checking($conn, 'tb_profile_user', 'nip', $nip)) {
+            return 406;
+        }
+
+        $query_user = mysqli_query($conn, "INSERT INTO tb_user(id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$create_by') ");
         $query_profile= mysqli_query($conn, "INSERT INTO tb_profile_user(id_user, nama_user, nik, nip, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, telepone_user, gambar_user, create_by) 
                             VALUES ('$id_user', '$nama_user', '$nik', '$nip', '$gender', '$tempat_lahir', '$tanggal_lahir', '$alamat_user', '$telepone_user', '$gambar_user', '$create_by')");
         if($query_user && $query_profile) {
@@ -538,19 +569,35 @@ function tambah_instansi_super_admin($POST) {
 
 
 
-// =================================== START SETTING IN SUPER ADMIN =================================
-    function edit_email_super_admin($POST) {
+// =================================== START SETTING  =================================
+    function edit_email_user($POST) {
         global $conn;
         $email_baru = mysqli_real_escape_string($conn, $POST["email_baru"]); // Hindari SQL injection
         $id_user = mysqli_real_escape_string($conn, $POST["id_user"]); // Hindari SQL injection
 
+        if (checking($conn, 'tb_user', 'email', $email_baru)) {
+            return 404;
+        }
         $query = "UPDATE tb_user SET email = '$email_baru', change_by = '$id_user' WHERE id_user = '$id_user'";
         if (mysqli_query($conn, $query)) {
-            return mysqli_affected_rows($conn); // Kembalikan jumlah baris yang terpengaruh
+            return mysqli_affected_rows($conn);
         } else {
-            die("Error: " . mysqli_error($conn)); // Debugging error MySQL
+            return 0;
         }
-    }    
+    }
+    
+    function generate_super_admin($POST) {
+        global $conn;
+        $change_by = $POST["change_by"];
+        $calon = $POST["calon"];
+
+        $query = "UPDATE tb_user SET level = '1', change_by = '$change_by' WHERE id_user = '$calon'";
+        if (mysqli_query($conn, $query)) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
 // ============================ END OF SETTINGS IN SUPER ADMIN =================================
 // ====================================== END OF SUPER ADMIN LEVEL (1) ============================================================
 
@@ -749,7 +796,7 @@ function tambah_instansi_super_admin($POST) {
         $nip                    = $POST["edit_nip"];
         $jabatan                = $POST["edit_jabatan"];
         $telepone_pembimbing    = $POST["edit_telepone_pembimbing"];
-        $id_bidang_baru         = $POST["id_bidang"];
+        $id_bidang_baru         = $POST["id_bidang"] ?? null;
     
         // Cek bidang lama dari database
         $query_bidang_lama = "SELECT id_bidang FROM tb_profile_user WHERE id_user = '$id_pembimbing'";
@@ -757,8 +804,14 @@ function tambah_instansi_super_admin($POST) {
         $row = mysqli_fetch_assoc($result);
         $id_bidang_lama = $row['id_bidang'];
     
+        // Jika input bidang kosong/null, fallback ke bidang lama
+        if ($id_bidang_baru === null || $id_bidang_baru === '') {
+            $id_bidang_baru = $id_bidang_lama;
+        }
+    
         // Jika bidang berubah, buat ID pembimbing baru
         if ($id_bidang_lama != $id_bidang_baru) {
+            // Cek dulu apakah bidang valid
             $query_check_bidang = "SELECT id_bidang FROM tb_bidang WHERE id_bidang = '$id_bidang_baru'";
             mysqli_query($conn, $query_check_bidang);
     
@@ -804,6 +857,7 @@ function tambah_instansi_super_admin($POST) {
     
         return mysqli_affected_rows($conn);
     }
+    
 
     function hapus_pembimbing($id, $id_user) {
         global $conn;
