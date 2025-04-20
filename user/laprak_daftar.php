@@ -12,7 +12,6 @@ if (!isset($_SESSION['id_user'])) {
 }
 
 $id_user = $_SESSION['id_user'];
-$id_pengajuan = isset($_GET['id_pengajuan']) ? mysqli_real_escape_string($conn, $_GET['id_pengajuan']) : '';
 
 if (empty($id_pengajuan)) {
     echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='histori.php';</script>";
