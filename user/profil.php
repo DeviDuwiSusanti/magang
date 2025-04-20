@@ -60,13 +60,8 @@ $row2 = mysqli_fetch_assoc($query2);
         <div class="dropdown-divider"></div>
         <div class="container mt-5 mb-5">
             <div class="card mx-auto" style="max-width: 600px;">
-<<<<<<< HEAD
-                <div class="card-body top-2">
-                    <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;">
-=======
                 <div class="card-body top">
                     <img src="../assets/img/user/<?= !empty($row2['gambar_user']) ? $row2['gambar_user'] : 'avatar.png' ?>" class="rounded-circle mb-3" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover; object-position: top; border: 2px solid #ccc;" onclick="openImageModal(this)">
->>>>>>> 757f9edaee061032d211868d1245831fde982385
                     <h4 class="card-title"><?= $row2['nama_user'] ?></h4>
                     <p class="text-muted"><?= $row2['email'] ?></p>
 
@@ -189,35 +184,42 @@ if (isset($_POST['update_profil'])) {
                         <small class="text-danger" id="nama-error"></small>
                     </div>
 
-                    <!-- Tempat Lahir -->
-                    <div class="mb-3">
-                        <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
-                        <input type="text" class="form-control" data-error-id="tempat_lahir-error" id="tempat_lahir" name="tempat_lahir" value="<?= $dataLama['tempat_lahir'] ?>">
-                        <small class="text-danger" id="tempat_lahir-error"></small>
-                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="tempat_lahir" class="form-label">Tempat Lahir</label>
+                            <input type="text" class="form-control" data-error-id="tempat_lahir-error" id="tempat_lahir" name="tempat_lahir" value="<?= $dataLama['tempat_lahir'] ?>">
+                            <small class="text-danger" id="tempat_lahir-error"></small>
+                        </div>
 
-                    <!-- Tanggal Lahir -->
-                    <div class="mb-3">
-                        <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                        <input type="date" class="form-control" data-error-id="tanggal_lahir-error" id="tanggal_lahir" name="tanggal_lahir" value="<?= $dataLama['tanggal_lahir'] ?>">
-                        <small class="text-danger" id="tanggal_lahir-error"></small>
-                    </div>
+                        <!-- Tanggal Lahir -->
+                        <div class="mb-3 col-6">
+                            <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                            <input type="date" class="form-control" data-error-id="tanggal_lahir-error" id="tanggal_lahir" name="tanggal_lahir" value="<?= $dataLama['tanggal_lahir'] ?>">
+                            <small class="text-danger" id="tanggal_lahir-error"></small>
+                        </div>
 
-                    <!-- Jenis Kelamin -->
-                    <div class="mb-3">
-                        <label class="form-label">Jenis Kelamin</label>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_l" value="1" <?= ($dataLama['jenis_kelamin'] == '1') ? 'checked' : '' ?>>
-                                <label class="form-check-label" for="jenis_kelamin_l">Laki-laki</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_p" value="0" <?= ($dataLama['jenis_kelamin'] == '0') ? 'checked' : '' ?>>
-                                <label class="form-check-label" for="jenis_kelamin_p">Perempuan</label>
+                        <!-- Jenis Kelamin -->
+                        <div class="mb-3 col-6">
+                            <label class="form-label">Jenis Kelamin</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_l" value="1" <?= ($dataLama['jenis_kelamin'] == '1') ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="jenis_kelamin_l">Laki-laki</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="jenis_kelamin" id="jenis_kelamin_p" value="0" <?= ($dataLama['jenis_kelamin'] == '0') ? 'checked' : '' ?>>
+                                    <label class="form-check-label" for="jenis_kelamin_p">Perempuan</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                        <!-- Telepon -->
+                        <div class="mb-3 col-6">
+                            <label for="telepon" class="form-label">Telepon</label>
+                            <input type="text" class="form-control" data-error-id="error-telepon" pattern="[0-9]{8,15}" id="telepon" name="telepon" value="<?= $row2['telepone_user'] ?>">
+                            <small id="error-telepon" class="text-danger"></small>
+                        </div>
+                    </div>
                     <!-- NIK -->
                     <div class="mb-3">
                         <label for="nik" class="form-label">NIK</label>
@@ -273,12 +275,6 @@ if (isset($_POST['update_profil'])) {
                         </div>
                     <?php endif; ?>
 
-                    <!-- Telepon -->
-                    <div class="mb-3">
-                        <label for="telepon" class="form-label">Telepon</label>
-                        <input type="number" class="form-control" data-error-id="error-telepon" id="telepon" name="telepon" value="<?= $row2['telepone_user'] ?>">
-                        <small id="error-telepon" class="text-danger"></small>
-                    </div>
                     <!-- Alamat -->
                     <div class="mb-3">
                         <label for="alamat" class="form-label">Alamat</label>
@@ -290,7 +286,7 @@ if (isset($_POST['update_profil'])) {
                     <div class="mb-3">
                         <label for="image" class="form-label">Foto Profil</label><br>
                         <div class="image-preview mb-3">
-                            <img src="<?= !empty($dataLama['gambar_user']) ? '../assets/img/user/' . $dataLama['gambar_user'] : '../assets/img/user/avatar.png' ?>" id="previewImage" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover;">
+                            <img src="<?= !empty($dataLama['gambar_user']) ? '../assets/img/user/' . $dataLama['gambar_user'] : '../assets/img/user/avatar.png' ?>" id="previewImage" class="rounded-circle" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="file" class="form-control" data-error-id="error-image" id="image" name="image" accept="image/*" onchange="previewFile()">
                         <small class="text-muted">Kosong jika tidak ingin diganti</small> <br>
