@@ -228,7 +228,7 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
                         <h5 class="card-title">Isi Logbook</h5>
                         <h2 class="card-text text-primary"><?= $total_logbook ?></h2>
                         <p class="text-muted">Logbook Terisi</p>
-                        <a href="logbook_daftar.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        <a href="logbook.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>

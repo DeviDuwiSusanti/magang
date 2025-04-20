@@ -197,7 +197,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 if (isset($status_pengajuan) && $status_pengajuan == '4') { ?>
                     <li class="sidebar-item">
-                        <a href="logbook_daftar.php" class="sidebar-link">
+                        <a href="logbook.php" class="sidebar-link">
                             <i class="bi bi-journal-check"></i>
                             <span>Logbook Harian</span>
                         </a>

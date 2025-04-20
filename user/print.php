@@ -21,7 +21,7 @@ $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
 
 if (!$row) {
-    showAlert('Peringatan!', 'Kamu Belum Pernah Mengisi Logbook. Silakan Isi Terlebih Dahulu.', 'warning', "logbook_daftar.php");
+    showAlert('Peringatan!', 'Kamu Belum Pernah Mengisi Logbook. Silakan Isi Terlebih Dahulu.', 'warning', "logbook.php");
     exit();
 }
 
