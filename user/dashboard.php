@@ -236,7 +236,7 @@ endif;
                         <h5 class="card-title">Isi Logbook</h5>
                         <h2 class="card-text text-primary"><?= $total_logbook ?></h2>
                         <p class="text-muted">Logbook Terisi</p>
-                        <a href="logbook.php" class="btn btn-primary mt-3 detail">View Details</a>
+                        <a href="user3_logbook.php" class="btn btn-primary mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -248,7 +248,7 @@ endif;
                         <h5 class="card-title">Laporan Akhir</h5>
                         <h2 class="card-text text-success"><?= $total_laprak ?></h2>
                         <p class="text-muted">Laporan Terunggah</p>
-                        <a href="laprak_daftar.php" class="btn btn-success mt-3 detail">View Details</a>
+                        <a href="user3_laporanAkhir.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
