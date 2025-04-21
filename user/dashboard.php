@@ -225,7 +225,7 @@ endif;
                             <h5 class="card-title">Pengajuan</h5>
                             <h2 class="card-text text-primary"><?= $total_pengajuan?></h2>
                             <p class="text-muted">Permohonan Magang</p>
-                            <a href="status_pengajuan.php" class="btn btn-info mt-3 detail">View Details</a>
+                            <a href="user3_statusPengajuan.php" class="btn btn-info mt-3 detail">View Details</a>
                         </div>
                     </div>
                 </div>

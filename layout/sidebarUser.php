@@ -176,7 +176,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 if ($ketua && $level == '3') { ?>
                     <li class="sidebar-item">
-                        <a href="status_pengajuan.php" class="sidebar-link">
+                        <a href="user3_statusPengajuan.php" class="sidebar-link">
                             <i class="bi bi-file-earmark-text"></i>
                             <span>Pengajuan</span>
                         </a>

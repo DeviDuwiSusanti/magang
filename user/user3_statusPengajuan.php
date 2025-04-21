@@ -181,6 +181,6 @@ $query = mysqli_query($conn, $sql);
 <?php 
 include "user3_persyaratan_daftar.php";
 include "user3_anggota.php";
-include "pengajuan.php";
+include "user3_pengajuan.php";
 include "../layout/footerDashboard.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

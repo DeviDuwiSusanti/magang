@@ -455,7 +455,7 @@ function inputPengajuan($POST, $FILES, $id_user){
     }
     if ($query5) {?>
         <?php
-        showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "status_pengajuan.php");
+        showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "user3_statusPengajuan.php");
         exit();
     } else {
         showAlert('Gagal!', 'Yahh pendaftaran kamu gagal. Silakan coba lagi.', 'error');
@@ -519,7 +519,7 @@ function updatePengajuan($POST, $FILES, $id_user){
     ?>
     <?php
      if ($query_update1){
-        showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "status_pengajuan.php");
+        showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "user3_statusPengajuan.php");
         exit();
     }else{
         showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');
@@ -558,7 +558,7 @@ function hapusPengajuan($POST, $id_user){
             <?php
             unset($_SESSION['id_pengajuan']);
             unset($_SESSION['status_pengajuan']);
-            showAlert('Berhasil!', 'Pengajuan Berhasil Dihapus', 'success', "status_pengajuan.php");
+            showAlert('Berhasil!', 'Pengajuan Berhasil Dihapus', 'success', "user3_statusPengajuan.php");
             exit();
         }
     }
@@ -579,7 +579,7 @@ function updateAnggota($POST, $id_user){
     }
 
     if (mysqli_query($conn, $sqlUpdate2)){
-        showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "status_pengajuan.php");
+        showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "user3_statusPengajuan.php");
         exit();
     }else{
         showAlert('Gagal!', 'Data anggota gagal diupdate. Silakan coba lagi.', 'error');
@@ -601,7 +601,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     if (mysqli_query($conn, $sqlTambah)){
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
-            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "status_pengajuan.php");
+            showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "user3_statusPengajuan.php");
             exit();
         }else{
             showAlert('Gagal!', 'Data anggota gagal di tambah. Silakan coba lagi.', 'error');
@@ -622,7 +622,7 @@ function hapusAnggota($id_user, $id_pengajuan){
             AND tb_profile_user.id_pengajuan = '$id_pengajuan'";
 
     if (mysqli_query($conn, $sql2)){
-        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "status_pengajuan.php");
+        showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "user3_statusPengajuan.php");
         exit();
     }else{
         showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');
