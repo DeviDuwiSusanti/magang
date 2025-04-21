@@ -15,7 +15,7 @@ $id_user = $_SESSION['id_user'];
 
 
 if (empty($id_pengajuan)) {
-    echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='histori.php';</script>";
+    echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='user3_histori.php';</script>";
     exit;
 }
 
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     Swal.fire({
         icon: '$icon',
         title: '$msg',
-    }).then(() => { window.location.href = 'laprak_daftar.php?id_pengajuan=$id_pengajuan'; });
+    }).then(() => { window.location.href = 'user3_laporanAkhir.php?id_pengajuan=$id_pengajuan'; });
     </script>";
     exit;
 
@@ -134,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Laporan berhasil dihapus!',
-                }).then(() => { window.location.href = 'laprak_daftar.php?id_pengajuan=$id_pengajuan'; });
+                }).then(() => { window.location.href = 'user3_laporanAkhir.php?id_pengajuan=$id_pengajuan'; });
             </script>";            
             } else {
                 echo "<script>

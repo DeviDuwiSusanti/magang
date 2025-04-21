@@ -596,7 +596,7 @@ $(document).ready(function() {
 <!-- ====== ajax untuk print ====== -->
 <script>
 function printInline(id_pengajuan) {
-    fetch('print.php?id_pengajuan=' + id_pengajuan)
+    fetch('user3_print.php?id_pengajuan=' + id_pengajuan)
         .then(response => response.text())
         .then(html => {
             const printArea = document.createElement('div');

@@ -176,7 +176,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 if ($ketua && $level == '3') { ?>
                     <li class="sidebar-item">
-                        <a href="status_pengajuan.php" class="sidebar-link">
+                        <a href="user3_statusPengajuan.php" class="sidebar-link">
                             <i class="bi bi-file-earmark-text"></i>
                             <span>Pengajuan</span>
                         </a>
@@ -187,7 +187,7 @@ if (isset($_SESSION['email'])) {
 
                 <?php if (($ketua || $anggota) && $level == '3') : ?>
                     <li class="sidebar-item">
-                        <a href="kegiatan_aktif.php" class="sidebar-link">
+                        <a href="user3_kegiatan_aktif.php" class="sidebar-link">
                             <i class="bi bi-clipboard-check"></i>
                             <span>Kegiatan Aktif</span>
                         </a>
@@ -197,14 +197,14 @@ if (isset($_SESSION['email'])) {
                 <?php
                 if (isset($status_pengajuan) && $status_pengajuan == '4') { ?>
                     <li class="sidebar-item">
-                        <a href="logbook.php" class="sidebar-link">
+                        <a href="user3_logbook.php" class="sidebar-link">
                             <i class="bi bi-journal-check"></i>
                             <span>Logbook Harian</span>
                         </a>
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="laprak_daftar.php" class="sidebar-link">
+                        <a href="user3_laporanAkhir.php" class="sidebar-link">
                             <i class="bi bi-file-earmark-bar-graph"></i>
                             <span>Laporan Akhir</span>
                         </a>
@@ -215,7 +215,7 @@ if (isset($_SESSION['email'])) {
 
                 <?php if (($ketua || $anggota) && $level == '3') : ?>
                     <li class="sidebar-item">
-                        <a href="histori.php" class="sidebar-link">
+                        <a href="user3_histori.php" class="sidebar-link">
                             <i class="bi bi-clock-history"></i>
                             <span>Histori</span>
                         </a>

@@ -404,14 +404,14 @@ let myDropzone = new Dropzone("#myDropzone", {
                 // Menutup modal unggah
                 $('#unggahModal').modal('hide');
                 
-                // Menampilkan halaman status_pengajuan.php
-                window.location.href = "status_pengajuan.php";  // Ganti dengan URL yang sesuai
+                // Menampilkan halaman user3_statusPengajuan.php
+                window.location.href = "user3_statusPengajuan.php";  // Ganti dengan URL yang sesuai
             });
         });
 
         // Kalau modal unggah ditutup, langsung redirect ke halaman status pengajuan
         $('#unggahModal').on('hidden.bs.modal', function () {
-            window.location.href = "status_pengajuan.php";
+            window.location.href = "user3_statusPengajuan.php";
         });
 
         dz.on("error", function (file, message) {
