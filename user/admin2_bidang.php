@@ -149,20 +149,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="kriteria" class="form-label">Kriteria</label>
-                            <textarea class="form-control" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="3" placeholder="Masukkan kriteria bidang"></textarea>
+                            <textarea class="form-control" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="5" placeholder="Masukkan kriteria bidang"></textarea>
                             <small class="text-muted">*Pisahkan dengan koma</small> <br>
                             <small class="text-danger" id="kriteria_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
-                            <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="3" placeholder="Masukkan dokumen prasyarat"></textarea>
+                            <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="5" placeholder="Masukkan dokumen prasyarat"></textarea>
                             <small class="text-muted">*Pisahkan dengan koma</small> <br>
                             <small class="text-danger" id="dokumen_error"></small>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label">Deskripsi Bidang</label>
-                        <textarea class="form-control" data-error-id="deskripsi_error" id="deskripsi" name="deskripsi" rows="3" placeholder="Masukkan deskripsi bidang"></textarea>
+                        <textarea class="form-control" data-error-id="deskripsi_error" id="deskripsi" name="deskripsi" rows="5" placeholder="Masukkan deskripsi bidang"></textarea>
                         <small class="text-danger" id="deskripsi_error"></small>
                     </div>
 
@@ -203,20 +203,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="kriteria" class="form-label fw-bold">Kriteria</label>
-                            <textarea class="form-control" data-error-id="edit_kriteria_error" id="edit_kriteria" name="kriteria" rows="3"></textarea>
+                            <textarea class="form-control" data-error-id="edit_kriteria_error" id="edit_kriteria" name="kriteria" rows="5"></textarea>
                             <small class="text-muted">*Pisahkan dengan koma</small> <br>
                             <small class="text-danger" id="edit_kriteria_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dokumen" class="form-label fw-bold">Dokumen Prasyarat</label>
-                            <textarea class="form-control" data-error-id="edit_dokumen_error" id="edit_dokumen" name="dokumen" rows="3"></textarea>
+                            <textarea class="form-control" data-error-id="edit_dokumen_error" id="edit_dokumen" name="dokumen" rows="5"></textarea>
                             <small class="text-muted">*Pisahkan dengan koma</small> <br>
                             <small class="text-danger" id="edit_dokumen_error"></small>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label fw-bold">Deskripsi Bidang</label>
-                        <textarea class="form-control" data-error-id="edit_deskripsi_error" id="edit_deskripsi" name="deskripsi" rows="3"></textarea>
+                        <textarea class="form-control" data-error-id="edit_deskripsi_error" id="edit_deskripsi" name="deskripsi" rows="5"></textarea>
                         <small class="text-danger" id="edit_deskripsi_error"></small>
                     </div>
                     <div class="modal-footer">

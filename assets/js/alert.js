@@ -589,10 +589,26 @@ function otp_expired() {
       showConfirmButton: false,
       allowOutsideClick: false,
       didClose: () => {
-          window.location.href = 'login.php';
+        // localStorage.removeItem('otp_expired_time');
+        window.location.href = 'login.php';
       }
   });
 }
+
+function showSwalAlert(type, title, message, redirectUrl = null) {
+  Swal.fire({
+      icon: type,
+      title: title,
+      text: message,
+      confirmButtonText: 'OK'
+  }).then(() => {
+      if (redirectUrl) {
+        // localStorage.removeItem('otp_expired_time');
+        window.location.href = redirectUrl;
+      }
+  });
+}
+
 
 
 

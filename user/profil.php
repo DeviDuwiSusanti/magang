@@ -18,7 +18,8 @@ $row2 = mysqli_fetch_assoc($query2);
     .image-modal {
         display: none;
         position: fixed;
-        z-index: 9999; /* Lebih tinggi dari modal Bootstrap */
+        z-index: 9999;
+        /* Lebih tinggi dari modal Bootstrap */
         top: 0;
         left: 0;
         width: 100vw;
@@ -49,6 +50,7 @@ $row2 = mysqli_fetch_assoc($query2);
     .image-modal-close:hover {
         color: #ccc;
     }
+
     #alamat {
         height: 200px;
     }
@@ -83,7 +85,7 @@ $row2 = mysqli_fetch_assoc($query2);
                                 <tr>
                                     <td><i class="bi bi-calendar"></i> <strong>TTL</strong></td>
                                     <td>
-                                        <?php 
+                                        <?php
                                         if (!empty($row['tempat_lahir']) && !empty($row['tanggal_lahir'])) {
                                             echo $row['tempat_lahir'] . ', ' . formatTanggalLengkapIndonesia($row['tanggal_lahir']);
                                         }
@@ -230,68 +232,70 @@ if (isset($_POST['update_profil'])) {
                         <small class="text-danger" id="nik-error"></small>
                     </div>
 
-                    <?php if(($ketua || $anggota) && $level == "3") : ?>
+                    <?php if (($ketua || $anggota) && $level == "3") : ?>
 
-                    <!-- Asal Studi -->
-                    <div class="mb-3">
-                        <label for="asal_studi" class="form-label">Asal Studi</label>
-                        <select class="form-control select2" id="asal_studi" name="asal_studi">
-                            <?php 
-                            // Mengambil hanya nama_pendidikan unik
-                            $uniquePendidikan = [];
-                            foreach ($dataPendidikan as $studi) {
-                                $uniquePendidikan[$studi['nama_pendidikan']] = true;
-                            }
-                            
-                            // Current selected value
-                            $currentValue = $dataLama['nama_pendidikan'] ?? '';
-                            
-                            // Menampilkan opsi tanpa duplikat
-                            foreach (array_keys($uniquePendidikan) as $namaPendidikan) : 
-                                $selected = ($namaPendidikan === $currentValue) ? 'selected' : '';
-                            ?>
-                            <option value="<?= htmlspecialchars($namaPendidikan) ?>" <?= $selected ?>>
-                                <?= htmlspecialchars($namaPendidikan) ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                        <!-- Asal Studi -->
+                        <div class="mb-3">
+                            <label for="asal_studi" class="form-label">Asal Studi</label>
+                            <select class="form-control select2" id="asal_studi" name="asal_studi">
+                                <?php
+                                // Mengambil hanya nama_pendidikan unik
+                                $uniquePendidikan = [];
+                                foreach ($dataPendidikan as $studi) {
+                                    $uniquePendidikan[$studi['nama_pendidikan']] = true;
+                                }
 
-                    <!-- Add this script to initialize select2 -->
-                    <script>
-                    $(document).ready(function() {
-                        $('.select2').select2({
-                            placeholder: "Pilih Asal Studi",
-                            allowClear: true,
-                            width: '100%'
-                        });
-                    });
-                    </script>
-                    
-                    <div class="mb-3" id="fakultasContainer" style="display: none;">
-                        <label for="fakultas" class="form-label">Fakultas</label>
-                        <select class="form-control" id="fakultas" name="fakultas">
-                            <?php foreach($dataPendidikan as $studi) : ?>
-                                <option value="<?= $studi['fakultas'] ?>" <?= ($dataLama['fakultas'] == $studi['fakultas']) ? 'selected' : '' ?>><?= $studi['fakultas'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                                // Current selected value
+                                $currentValue = $dataLama['nama_pendidikan'] ?? '';
 
-                    <div class="d-flex gap-4">
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="jurusan" class="form-label">Jurusan</label>
-                            <select class="form-control" id="jurusan" name="jurusan">
-                                <?php foreach ($dataPendidikan as $studi) : ?>
-                                    <option value="<?= $studi['jurusan'] ?>" <?= ($dataLama['jurusan'] == $studi['jurusan']) ? 'selected' : '' ?>><?= $studi['jurusan'] ?></option>
+                                // Menampilkan opsi tanpa duplikat
+                                foreach (array_keys($uniquePendidikan) as $namaPendidikan) :
+                                    $selected = ($namaPendidikan === $currentValue) ? 'selected' : '';
+                                ?>
+                                    <option value="<?= htmlspecialchars($namaPendidikan) ?>" <?= $selected ?>>
+                                        <?= htmlspecialchars($namaPendidikan) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="nim" class="form-label">NIM/NISN</label>
-                            <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>">
-                            <small id="error-nim" class="text-danger"></small>
+
+                        <!-- Add this script to initialize select2 -->
+                        <script>
+                            $('#editProfileModal').on('shown.bs.modal', function() {
+                                $('#asal_studi').select2({
+                                    dropdownParent: $('#editProfileModal'),
+                                    placeholder: "Pilih Data",
+                                    allowClear: true,
+                                    width: '100%',
+                                    minimumResultsForSearch: 0
+                                });
+                            });
+                        </script>
+
+                        <div class="mb-3" id="fakultasContainer" style="display: none;">
+                            <label for="fakultas" class="form-label">Fakultas</label>
+                            <select class="form-control" id="fakultas" name="fakultas">
+                                <?php foreach ($dataPendidikan as $studi) : ?>
+                                    <option value="<?= $studi['fakultas'] ?>" <?= ($dataLama['fakultas'] == $studi['fakultas']) ? 'selected' : '' ?>><?= $studi['fakultas'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-                    </div>
+
+                        <div class="d-flex gap-4">
+                            <div class="mb-3" style="flex: 1;">
+                                <label for="jurusan" class="form-label">Jurusan</label>
+                                <select class="form-control" id="jurusan" name="jurusan">
+                                    <?php foreach ($dataPendidikan as $studi) : ?>
+                                        <option value="<?= $studi['jurusan'] ?>" <?= ($dataLama['jurusan'] == $studi['jurusan']) ? 'selected' : '' ?>><?= $studi['jurusan'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="mb-3" style="flex: 1;">
+                                <label for="nim" class="form-label">NIM/NISN</label>
+                                <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>">
+                                <small id="error-nim" class="text-danger"></small>
+                            </div>
+                        </div>
                     <?php endif; ?>
 
                     <div class="d-flex gap-4">
@@ -310,9 +314,10 @@ if (isset($_POST['update_profil'])) {
                             <small id="error-image" class="text-danger"></small>
                         </div>
                     </div>
-                    
+
                     <!-- Tombol Submit -->
-                    <div class="text-end">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" name="update_profil" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>

@@ -1,49 +1,63 @@
 <?php
-    session_start();
-    include "koneksi.php";
+session_start();
+include "koneksi.php";
 
-    if (!isset($_SESSION['email'])) {
-        header("Location: login.php");
-        exit();
-    }
+if (!isset($_SESSION['email'])) {
+    header("Location: login.php");
+    exit();
+}
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $otp = $conn->real_escape_string($_POST['otp']);
-        $email = $_SESSION['email'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $otp = $conn->real_escape_string($_POST['otp']);
+    $email = $_SESSION['email'];
 
-        // Cek OTP & waktu kedaluwarsa
-        $query = "SELECT u.id_user, p.id_instansi, u.level 
+    // Cek OTP & waktu kedaluwarsa
+    $query = "SELECT u.id_user, p.id_instansi, u.level 
                 FROM tb_user u
                 LEFT JOIN tb_profile_user p ON u.id_user = p.id_user
                 WHERE u.email = '$email' AND u.status_active = '1' AND u.otp = '$otp' AND u.otp_expired > NOW()";
-        $result = $conn->query($query);
+    $result = $conn->query($query);
 
-        if ($result->num_rows > 0) {
-            $user = $result->fetch_assoc();
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
 
-            $_SESSION["id_user"] = $user["id_user"];
-            $_SESSION["id_instansi"] = $user["id_instansi"];
+        $_SESSION["id_user"] = $user["id_user"];
+        $_SESSION["id_instansi"] = $user["id_instansi"];
 
-            // Reset OTP setelah verifikasi
-            $conn->query("UPDATE tb_user SET otp = NULL, otp_expired = NULL WHERE email = '$email'");
+        // Reset OTP setelah verifikasi
+        $conn->query("UPDATE tb_user SET otp = NULL, otp_expired = NULL WHERE email = '$email'");
 
-            // Redirect sesuai level
-            switch ($user['level']) {
-                case 1: header("Location: user/dashboard.php"); break;
-                case 2: header("Location: user/dashboard.php"); break;
-                case 3: header("Location: user/dashboard.php"); break;
-                case 4: header("Location: user/dashboard.php"); break;
-                default: header("Location: login.php");
-            }
-            exit();
-        } else {
-            echo "<script>alert('Kode OTP salah atau sudah kedaluwarsa!');</script>";
+        // Redirect sesuai level
+        switch ($user['level']) {
+            case 1:
+                header("Location: user/dashboard.php");
+                break;
+            case 2:
+                header("Location: user/dashboard.php");
+                break;
+            case 3:
+                header("Location: user/dashboard.php");
+                break;
+            case 4:
+                header("Location: user/dashboard.php");
+                break;
+            default:
+                header("Location: login.php");
         }
+        exit();
+    } else {
+        echo "<script>
+            window.onload = function() {
+                showSwalAlert('error', 'OTP Salah atau Kedaluwarsa!', 'Silakan coba lagi.');
+            };
+        </script>";
     }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,10 +65,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="icon" href="./assets/img/logo_kab_sidoarjo.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background: #e2ecf4;
         }
+
         .otp-input {
             width: 3rem;
             height: 3rem;
@@ -64,6 +80,7 @@
             border: 1px solid #ced4da;
             border-radius: 0.25rem;
         }
+
         .otp-input:focus {
             border-color: #86b7fe;
             box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
@@ -71,6 +88,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="card p-4 shadow-lg" style="width: 22rem;">
@@ -96,6 +114,8 @@
             </form>
         </div>
     </div>
+
+    <script src="./assets/js/alert.js"></script>
 
     <script>
         const inputs = document.querySelectorAll('.otp-input');
@@ -131,11 +151,11 @@
             timerElement.textContent = `Waktu tersisa: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
             if (timeLeft === 0) {
                 clearInterval(countdown);
-                alert('Waktu habis. Silakan login ulang!');
-                window.location.href = 'login.php';
+                otp_expired();
             }
             timeLeft--;
         }, 1000);
     </script>
 </body>
+
 </html>

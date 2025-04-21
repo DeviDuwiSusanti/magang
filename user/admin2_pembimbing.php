@@ -155,6 +155,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     <tbody>
                         <?php if (!empty($bidang_list)): ?>
                             <?php foreach ($bidang_list as $pembimbing): ?>
+                                <?php
+                                // Ambil semua bidang yang sudah memiliki pembimbing
+                                $bidangSudahAdaPembimbing = array_filter($list_bidang, function ($b) {
+                                    return !empty($b['id_pembimbing']);
+                                });
+
+                                // Ambil id_bidang-nya
+                                $idBidangTerpakai = array_column($bidangSudahAdaPembimbing, 'id_bidang');
+
+                                // Hapus id_bidang milik pembimbing ini sendiri dari daftar yang akan di-disable
+                                // $disabledBidang = array_values(array_diff($idBidangTerpakai, [$pembimbing['id_bidang']]));
+                                $disabledBidang = $idBidangTerpakai;
+                                ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
                                     <td><?= ($pembimbing['nama_pembimbing']) ?></td>
@@ -172,6 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                                             data-jabatan="<?= $pembimbing['jabatan'] ?>"
                                             data-telepon="<?= $pembimbing['telepone_pembimbing'] ?>"
                                             data-id_bidang="<?= $pembimbing['id_bidang'] ?>"
+                                            data-disabled_bidang='<?= json_encode($disabledBidang) ?>'
                                             title="Edit Data Pembimbing">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
@@ -330,14 +344,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     </div>
                     <div class="mb-3">
                         <label for="edit_bidang" class="form-label">Pilih Bidang</label>
-                        <select id="edit_bidang" name="id_bidang" class="form-select select2">
-                            <option value="" disabled selected hidden>Pilih Bidang</option>
+                        <select id="edit_bidang" class="form-control" name="id_bidang">
                             <?php foreach ($list_bidang as $bidang): ?>
-                                <option value="<?= $bidang['id_bidang']; ?>"
-                                    <?= (!empty($bidang['id_pembimbing']) && $bidang['id_pembimbing'] != $pembimbing['id_pembimbing']) ? 'disabled' : ''; ?>
-                                    <?= ($bidang['id_bidang'] == $pembimbing['id_bidang']) ? 'selected' : ''; ?>>
-                                    <?= $bidang['nama_bidang']; ?>
-                                </option>
+                                <option value="<?= $bidang['id_bidang'] ?>"><?= $bidang['nama_bidang'] ?></option>
                             <?php endforeach; ?>
                         </select>
                         <small id="edit_bidang_error" class="text-danger"></small>
@@ -357,11 +366,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
 <script src="../assets/js/validasi.js"></script>
 
 <script>
-    $(document).ready(function() {
-        $('.select2').select2({
+    $('#editPembimbingModal').on('shown.bs.modal', function() {
+        $('#edit_bidang').select2({
+            dropdownParent: $('#editPembimbingModal'),
             placeholder: "Pilih Data",
             allowClear: true,
-            width: '100%', // biar mengikuti lebar parent
+            width: '100%',
+            minimumResultsForSearch: 0
+        });
+    });
+
+    $('#tambahPembimbingModal').on('shown.bs.modal', function() {
+        $('#id_bidang').select2({
+            dropdownParent: $('#tambahPembimbingModal'),
+            placeholder: "Pilih Data",
+            allowClear: true,
+            width: '100%',
             minimumResultsForSearch: 0
         });
     });
@@ -410,7 +430,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
     document.getElementById("telepone_pembimbing").addEventListener("input", function(e) {
         this.value = this.value.replace(/\D/g, "");
 
-        const maxLength = 12;
+        const maxLength = 13;
         if (this.value.length > maxLength) {
             this.value = this.value.slice(0, maxLength);
         }
@@ -420,7 +440,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
     document.getElementById("edit_telepone_pembimbing").addEventListener("input", function(e) {
         this.value = this.value.replace(/\D/g, "");
 
-        const maxLength = 12;
+        const maxLength = 13;
         if (this.value.length > maxLength) {
             this.value = this.value.slice(0, maxLength);
         }
@@ -440,21 +460,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                 document.getElementById("edit_telepone_pembimbing").value = this.getAttribute("data-telepon");
                 document.getElementById("edit_bidang").value = this.getAttribute("data-id_bidang");
 
-                // Atur bidang yang sesuai dengan id_pembimbing
-                let idBidangPembimbing = this.getAttribute("data-id_bidang");
-                let bidangSelect = document.getElementById("edit_bidang");
+                // Reset semua option: enable dulu semua
+                const bidangSelect = document.getElementById("edit_bidang");
+                Array.from(bidangSelect.options).forEach(option => {
+                    option.disabled = false;
+                });
 
-                for (let option of bidangSelect.options) {
-                    if (option.value === idBidangPembimbing) {
-                        option.selected = true; // Pilih bidang yang sesuai
-                        option.disabled = true; // Pastikan bidangnya tidak di-disable
-                    } else if (option.hasAttribute("disabled")) {
-                        option.disabled = true; // Tetap disable bidang lain yang sudah ada pembimbingnya
-                    }
+                // Ambil bidang yang harus di-disable
+                const disabledBidangRaw = this.getAttribute("data-disabled_bidang");
+                let disabledBidang = [];
+
+                try {
+                    disabledBidang = JSON.parse(disabledBidangRaw);
+                } catch (e) {
+                    console.error("Gagal parse disabled_bidang:", e);
                 }
+
+                // Disable bidang yang tidak boleh dipilih
+                Array.from(bidangSelect.options).forEach(option => {
+                    if (disabledBidang.includes(option.value)) {
+                        option.disabled = true;
+                    }
+                });
+
+                // Set selected option
+                bidangSelect.value = this.getAttribute("data-id_bidang");
             });
         });
     });
+
 
     document.addEventListener('DOMContentLoaded', function() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
