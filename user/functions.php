@@ -736,6 +736,44 @@ function cetakSertifikat($conn, $id_pengajuan_cetak) {
     }
 }
 
-?>
 
+
+
+
+
+
+
+
+
+// =========================== pembimbing ========================
+
+function pembimbing_upload_nilai($POST, $FILE) {
+    global $conn;
+    $id_pengajuan   = $POST["id_pengajuan"];
+    $id_dokumen     = generateIdDokumen($conn, $id_pengajuan);
+    $nama_dokumen   = $POST["nama_dokumen"];
+    $jenis_dokumen  = $POST["jenis_dokumen"];
+    $create_by      = $POST["create_by"];
+    $id_user        = $POST["id_user"];
+
+    $file_info = uploadFileUser($FILE["file_sertifikat"], $id_pengajuan);
+    if (!$file_info) {
+        return 0;
+    }
+
+    $file_path = $file_info['path']; // ambil path dari array uploadFileUser()
+
+    $query = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by)
+                VALUES 
+            ('$id_dokumen', '$nama_dokumen', '$jenis_dokumen', '$file_path', '$id_pengajuan', '$id_user', '$create_by')";
+
+    if (mysqli_query($conn, $query)) {
+        return mysqli_affected_rows($conn);
+    } else {
+        return 0;
+    }
+}
+
+
+?>
 
