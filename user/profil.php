@@ -50,10 +50,11 @@ $row2 = mysqli_fetch_assoc($query2);
         color: #ccc;
     }
     #alamat {
-        height: 200px;
+        height: 130px;
     }
 </style>
 
+<!-- Detail Profil -->
 <div class="main-content p-4">
     <div class="container-fluid">
         <h1 class="mb-4">Profile Saya</h1>
@@ -103,10 +104,12 @@ $row2 = mysqli_fetch_assoc($query2);
 
                                 <?php if (($ketua || $anggota) && $level == "3") : ?>
                                     <tr>
-                                    <tr>
-                                        <td><i class="bi bi-mortarboard"></i> <strong> <?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></strong></td>
-                                        <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
+                                        <td><i class="bi bi-mortarboard"></i> <strong>NISN</strong></td>
+                                        <td><?= $row['nisn'] ?></td>
                                     </tr>
+                                    <tr>
+                                        <td><i class="bi bi-mortarboard"></i> <strong> NIM</strong></td>
+                                        <td><?= !empty($row['nim']) ? $row['nim'] : '-' ?></td>
                                     </tr>
                                     <tr>
                                         <td><i class="bi bi-building"></i> <strong>Asal Studi</strong></td>
@@ -287,15 +290,20 @@ if (isset($_POST['update_profil'])) {
                             </select>
                         </div>
                         <div class="mb-3" style="flex: 1;">
-                            <label for="nim" class="form-label">NIM/NISN</label>
-                            <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>">
-                            <small id="error-nim" class="text-danger"></small>
+                            <label for="nisn" class="form-label">NISN</label>
+                            <input type="text" class="form-control" id="nisn" name="nisn" value="<?= $row['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
+                            <small id="error-nisn" class="text-danger"></small>
                         </div>
                     </div>
                     <?php endif; ?>
 
                     <div class="d-flex gap-4">
                         <div class="mb-3" style="flex: 1;">
+                            <label for="nim" class="form-label">NIM</label>
+                            <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : '' ?>" placeholder = '-' oninput="this.value=this.value.slice(0,12)">
+                            <small class="text-muted">Kosong jika tidak ada</small> <br>
+                            <small id="error-nim" class="text-danger"></small><br>
+
                             <label for="alamat" class="form-label">Alamat</label>
                             <textarea class="form-control" id="alamat" name="alamat" rows="3"><?= $row2['alamat_user'] ?></textarea>
                             <small id="error-alamat" class="text-danger"></small>
@@ -587,21 +595,35 @@ if (isset($_POST['update_profil'])) {
             }
 
             // Validasi NIM/NISN (opsional, hanya jika elemen ada)
+            const NisnInput = document.getElementById("nisn");
+            if (NisnInput) {
+                const nisn = NisnInput.value.trim();
+
+                if (nisn === "") {
+                    showError("nisn", "error-nisn", "NISN tidak boleh kosong.");
+                    isValid = false;
+                } else if (!/^\d{10}$/.test(nisn)) {
+                    showError(
+                        "nisn",
+                        "error-nisn",
+                        "NISN harus terdiri dari 10 digit"
+                    );
+                    isValid = false;
+                }
+            }
+
+            // Validasi NIM (opsional, boleh kosong)
             const NimInput = document.getElementById("nim");
             if (NimInput) {
                 const Nim = NimInput.value.trim();
 
-                if (Nim === "") {
-                    showError("nim", "error-nim", "NIM/NISN tidak boleh kosong.");
-                    isValid = false;
-                } else if (!/^(?:\d{10}|\d{12})$/.test(Nim)) {
-                    showError(
-                        "nim",
-                        "error-nim",
-                        "NIM/NISN harus terdiri dari 10 digit untuk NISN atau 12 digit untuk NIM."
-                    );
-                    isValid = false;
+                if (Nim !== "") { // Hanya validasi jika diisi
+                    if (!/^\d{12}$/.test(Nim)) {
+                        showError("nim", "error-nim", "NIM harus terdiri dari 12 digit angka.");
+                        isValid = false;
+                    }
                 }
+                // Jika kosong, tidak melakukan validasi (diizinkan)
             }
 
             // Validasi Alamat

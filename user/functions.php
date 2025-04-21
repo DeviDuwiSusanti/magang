@@ -601,7 +601,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     $result = mysqli_query($conn, $pendidikan);
     $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
 
-    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
     if (mysqli_query($conn, $sqlTambah)){
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
@@ -649,13 +649,13 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         $fakultas = $POST['fakultas'];
         $jurusan = $POST['jurusan'];
         $nim = $POST['nim'];
-        $nisn = NULL;
+        $nisn = $POST['nisn'];
         echo "fakultas";
     }else{
         $fakultas = NULL;
         $jurusan = $POST['jurusan'];
-        $nisn = $POST['nim'];
-        $nim = NULL;
+        $nisn = $POST['nisn'];
+        $nim = $POST['nim'];
         echo "$fakultas";
     }
 
