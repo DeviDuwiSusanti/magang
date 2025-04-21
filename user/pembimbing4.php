@@ -1,5 +1,6 @@
 <?php 
     include '../layout/sidebarUser.php'; 
+    include "functions.php";
 
     // Cek apakah ada pengajuan yang ditangani pembimbing
     $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
@@ -76,9 +77,10 @@
                                 <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                 <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
 
-                                <!-- Tombol Logbook -->
                                 <td>
-                                    <button class="btn btn-info btn-sm openModal" 
+                                    <button class="btn btn-info btn-sm openLogbook"
+                                            data-id_pengajuan="<?= $pengajuan_user ?>"
+                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
                                             data-bs-toggle="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? 'modal' : '' ?>"
                                             data-bs-target="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? '#logbookModal' : '' ?>"
                                             <?= ($status_pengajuan != '4' && $status_pengajuan != '5') ? 'disabled' : '' ?>>
@@ -88,7 +90,9 @@
 
                                 <!-- Tombol Nilai & Sertifikat -->
                                 <td>
-                                    <button class="btn btn-success btn-sm openModal" 
+                                    <button class="btn btn-success btn-sm openNilai"
+                                            data-id_pengajuan="<?= $pengajuan_user ?>"
+                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
                                             data-bs-toggle="<?= ($status_pengajuan == '5') ? 'modal' : '' ?>"
                                             data-bs-target="<?= ($status_pengajuan == '5') ? '#nilaiModal' : '' ?>"
                                             <?= ($status_pengajuan != '5') ? 'disabled' : '' ?>>
@@ -96,6 +100,7 @@
                                         <i class="bi bi-file-earmark-pdf"></i>
                                     </button>
                                 </td>
+
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -257,3 +262,25 @@
   });
 </script>
 
+
+<script>
+    // Untuk Logbook Modal
+    document.querySelectorAll('.openLogbook').forEach(button => {
+        button.addEventListener('click', function () {
+            const idPengajuan = this.getAttribute('data-id_pengajuan');
+            const idUser = this.getAttribute('data-id_user');
+            document.getElementById('logbook_id_pengajuan').value = idPengajuan;
+            document.getElementById('logbook_id_user').value = idUser;
+        });
+    });
+
+    // Untuk Nilai & Sertifikat Modal
+    document.querySelectorAll('.openNilai').forEach(button => {
+        button.addEventListener('click', function () {
+            const idPengajuan = this.getAttribute('data-id_pengajuan');
+            const idUser = this.getAttribute('data-id_user');
+            document.getElementById('nilai_id_pengajuan').value = idPengajuan;
+            document.getElementById('nilai_id_user').value = idUser;
+        });
+    });
+</script>
