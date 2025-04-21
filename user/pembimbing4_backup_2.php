@@ -1,4 +1,25 @@
 <?php
+
+if (isset($_GET['id_user']) && isset($_GET['id_pengajuan'])) {
+    include '../koneksi.php';
+
+    $id_user = $_GET['id_user'];
+    $id_pengajuan = $_GET['id_pengajuan'];
+
+    $query = "SELECT * FROM tb_logbook WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
+    $result = mysqli_query($koneksi, $query);
+
+    $logbook = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $logbook[] = $row;
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode($logbook);
+    exit; // <-- ini penting agar PHP tidak lanjut render HTML
+}
+
+
 include '../layout/sidebarUser.php';
 include "functions.php";
 
@@ -7,8 +28,7 @@ $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_penga
 $daftar_anggota = [];
 $pendidikan_user = null;
 
-$logbook_all = query("SELECT * FROM tb_logbook WHERE id_pengajuan IN (SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user')");
-print_r($logbook_all);
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
@@ -216,10 +236,6 @@ $no = 1;
 <!-- Script untuk DataTable -->
 
 <script>
-    const logbookData = <?= json_encode($logbook_all); ?>;
-</script>
-
-<script>
     $(document).ready(function() {
         $('#table_anggota').DataTable({
             paging: true,
@@ -337,39 +353,49 @@ $no = 1;
         const tbody = document.querySelector('#logbookTable tbody');
         tbody.innerHTML = '';
 
-        const filtered = logbookData.filter(log => log.id_user === idUser && log.id_pengajuan === idPengajuan);
+        fetch(`pembimbing4.php?id_user=${idUser}&id_pengajuan=${idPengajuan}`)
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach((row, index) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${row.tanggal_logbook}</td>
+                            <td>${row.kegiatan_logbook}</td>
+                            <td>${row.keterangan_logbook}</td>
+                            <td>${row.jam_mulai}</td>
+                            <td>${row.jam_selesai}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center">Belum ada data logbook</td></tr>`;
+                }
 
-        if (filtered.length > 0) {
-            filtered.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.tanggal_logbook}</td>
-                    <td>${row.kegiatan_logbook}</td>
-                    <td>${row.keterangan_logbook}</td>
-                    <td>${row.jam_mulai}</td>
-                    <td>${row.jam_selesai}</td>
-                `;
-                tbody.appendChild(tr);
+                // Destroy and reinitialize DataTable
+                if ($.fn.DataTable.isDataTable('#logbookTable')) {
+                    $('#logbookTable').DataTable().destroy();
+                }
+
+                $('#logbookTable').DataTable({
+                    searching: false,
+                    ordering: false,
+                    paging: false,
+                    info: false,
+                    language: {
+                        emptyTable: "Belum ada data logbook",
+                        zeroRecords: "Tidak ditemukan",
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Gagal mengambil data logbook</td></tr>`;
             });
-
-        } else {
-            tbody.innerHTML = <tr><td colspan="5" class="text-center">Belum ada data logbook</td></tr>;
-        }
-
-        // Destroy and reinitialize DataTable
-        if ($.fn.DataTable.isDataTable('#logbookTable')) {
-            $('#logbookTable').DataTable().destroy();
-        }
-
-        $('#logbookTable').DataTable({
-            searching: false,
-            ordering: false,
-            paging: false,
-            info: false,
-            language: {
-                emptyTable: "Belum ada data logbook",
-                zeroRecords: "Tidak ditemukan",
-            }
-        });
     });
 });
+
+
+
+</script>

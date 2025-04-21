@@ -8,54 +8,18 @@ $row2 = mysqli_fetch_assoc($query2);
 
 
 <!-- Modal Preview Gambar -->
-<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
+<!-- <div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
     <span class="image-modal-close">&times;</span>
     <img class="image-modal-content" id="modalPreviewImage">
-</div>
+</div> -->
 
 <style>
-    /* style for preview image */
-    .image-modal {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        /* Lebih tinggi dari modal Bootstrap */
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.85);
-        justify-content: center;
-        align-items: center;
-    }
-
-    .image-modal-content {
-        max-width: 90%;
-        max-height: 90vh;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .image-modal-close {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        color: white;
-        font-size: 40px;
-        font-weight: bold;
-        cursor: pointer;
-        z-index: 10000;
-    }
-
-    .image-modal-close:hover {
-        color: #ccc;
-    }
-
     #alamat {
         height: 200px;
     }
 </style>
 
+<!-- Detail Profil -->
 <div class="main-content p-4">
     <div class="container-fluid">
         <h1 class="mb-4">Profile Saya</h1>
@@ -85,7 +49,7 @@ $row2 = mysqli_fetch_assoc($query2);
                                 <tr>
                                     <td><i class="bi bi-calendar"></i> <strong>TTL</strong></td>
                                     <td>
-                                        <?php
+                                        <?php 
                                         if (!empty($row['tempat_lahir']) && !empty($row['tanggal_lahir'])) {
                                             echo $row['tempat_lahir'] . ', ' . formatTanggalLengkapIndonesia($row['tanggal_lahir']);
                                         }
@@ -105,11 +69,15 @@ $row2 = mysqli_fetch_assoc($query2);
 
                                 <?php if (($ketua || $anggota) && $level == "3") : ?>
                                     <tr>
+                                        <td><i class="bi bi-mortarboard"></i> <strong>NISN</strong></td>
+                                        <td><?= $row['nisn'] ?></td>
+                                    </tr>
+                                    <?php if (!empty($row['nim'])): ?>
                                     <tr>
-                                        <td><i class="bi bi-mortarboard"></i> <strong> <?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></strong></td>
-                                        <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
+                                        <td><i class="bi bi-mortarboard"></i> <strong> NIM</strong></td>
+                                        <td><?= !empty($row['nim']) ? $row['nim'] : '-' ?></td>
                                     </tr>
-                                    </tr>
+                                    <?php endif ; ?>
                                     <tr>
                                         <td><i class="bi bi-building"></i> <strong>Asal Studi</strong></td>
                                         <td><?= $row2['nama_pendidikan'] ?></td>
@@ -232,70 +200,83 @@ if (isset($_POST['update_profil'])) {
                         <small class="text-danger" id="nik-error"></small>
                     </div>
 
-                    <?php if (($ketua || $anggota) && $level == "3") : ?>
+                    <?php if(($ketua || $anggota) && $level == "3") : ?>
 
-                        <!-- Asal Studi -->
-                        <div class="mb-3">
-                            <label for="asal_studi" class="form-label">Asal Studi</label>
-                            <select class="form-control select2" id="asal_studi" name="asal_studi">
-                                <?php
-                                // Mengambil hanya nama_pendidikan unik
-                                $uniquePendidikan = [];
-                                foreach ($dataPendidikan as $studi) {
-                                    $uniquePendidikan[$studi['nama_pendidikan']] = true;
+                    <!-- Asal Studi -->
+                    <div class="mb-3">
+                        <label for="asal_studi" class="form-label">Asal Studi</label>
+                        <select class="form-control" id="asal_studi" name="asal_studi" required>
+                            <option value="">Pilih Asal Studi</option>
+                            <?php 
+                            // Current selected value - ambil id_pendidikan dari data lama
+                            $currentIdPendidikan = $dataLama['id_pendidikan'] ?? '';
+                            
+                            // Cari nama_pendidikan yang sesuai dengan id_pendidikan yang disimpan
+                            $currentNamaPendidikan = '';
+                            foreach ($dataPendidikan as $studi) {
+                                if ($studi['id_pendidikan'] == $currentIdPendidikan) {
+                                    $currentNamaPendidikan = $studi['nama_pendidikan'];
+                                    break;
                                 }
+                            }
+                            
+                            // Group by nama_pendidikan
+                            $groupedPendidikan = [];
+                            foreach ($dataPendidikan as $studi) {
+                                $groupedPendidikan[$studi['nama_pendidikan']][] = $studi;
+                            }
+                            
+                            foreach ($groupedPendidikan as $namaPendidikan => $items) {
+                                // Cek apakah ini adalah pilihan yang sedang aktif
+                                $isSelected = ($namaPendidikan === $currentNamaPendidikan);
+                                
+                                // Gunakan id_pendidikan yang sesuai dengan data lama jika ada
+                                $selectedId = $currentIdPendidikan;
+                                if (!$isSelected) {
+                                    $selectedId = $items[0]['id_pendidikan'];
+                                }
+                                
+                                echo '<option value="'.htmlspecialchars($selectedId).'" '
+                                    .($isSelected ? 'selected' : '').'>'
+                                    .htmlspecialchars($namaPendidikan).'</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
 
-                                // Current selected value
-                                $currentValue = $dataLama['nama_pendidikan'] ?? '';
+                    <div class="mb-3" id="fakultasContainer" style="display: none;">
+                        <label for="fakultas" class="form-label">Fakultas</label>
+                        <select class="form-control" id="fakultas" name="fakultas">
+                            <?php if (!empty($dataLama['fakultas'])): ?>
+                                <option value="<?= $dataLama['fakultas'] ?>" selected><?= $dataLama['fakultas'] ?></option>
+                            <?php endif; ?>
+                        </select>
+                        <small id="error-fakultas" class="text-danger"></small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="jurusan" class="form-label">Jurusan</label>
+                        <select class="form-control" id="jurusan" name="jurusan" data-current="<?= htmlspecialchars($dataLama['jurusan'] ?? '') ?>" data-current-id="<?= htmlspecialchars($dataLama['id_pendidikan'] ?? '') ?>">
+                            <?php if (!empty($dataLama['jurusan'])): ?>
+                                <option value="<?= htmlspecialchars($dataLama['jurusan']) ?>" selected><?= htmlspecialchars($dataLama['jurusan']) ?></option>
+                            <?php endif; ?>
+                        </select>
+                        <small id="error-jurusan" class="text-danger"></small>
+                    </div>
 
-                                // Menampilkan opsi tanpa duplikat
-                                foreach (array_keys($uniquePendidikan) as $namaPendidikan) :
-                                    $selected = ($namaPendidikan === $currentValue) ? 'selected' : '';
-                                ?>
-                                    <option value="<?= htmlspecialchars($namaPendidikan) ?>" <?= $selected ?>>
-                                        <?= htmlspecialchars($namaPendidikan) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                    <div class="d-flex gap-4">
+                        <div class="mb-3" style="flex: 1;">
+                            <label for="nisn" class="form-label">NISN</label>
+                            <input type="text" class="form-control" id="nisn" name="nisn" value="<?= $row['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
+                            <small id="error-nisn" class="text-danger"></small>
                         </div>
-
-                        <!-- Add this script to initialize select2 -->
-                        <script>
-                            $('#editProfileModal').on('shown.bs.modal', function() {
-                                $('#asal_studi').select2({
-                                    dropdownParent: $('#editProfileModal'),
-                                    placeholder: "Pilih Data",
-                                    allowClear: true,
-                                    width: '100%',
-                                    minimumResultsForSearch: 0
-                                });
-                            });
-                        </script>
-
-                        <div class="mb-3" id="fakultasContainer" style="display: none;">
-                            <label for="fakultas" class="form-label">Fakultas</label>
-                            <select class="form-control" id="fakultas" name="fakultas">
-                                <?php foreach ($dataPendidikan as $studi) : ?>
-                                    <option value="<?= $studi['fakultas'] ?>" <?= ($dataLama['fakultas'] == $studi['fakultas']) ? 'selected' : '' ?>><?= $studi['fakultas'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                        <div class="mb-3" style="flex: 1;">
+                            <label for="nim" class="form-label">NIM</label>
+                            <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : '' ?>" placeholder = '-' oninput="this.value=this.value.slice(0,12)">
+                            <small class="text-muted">Kosong jika tidak ada</small> <br>
+                            <small id="error-nim" class="text-danger"></small><br>
                         </div>
-
-                        <div class="d-flex gap-4">
-                            <div class="mb-3" style="flex: 1;">
-                                <label for="jurusan" class="form-label">Jurusan</label>
-                                <select class="form-control" id="jurusan" name="jurusan">
-                                    <?php foreach ($dataPendidikan as $studi) : ?>
-                                        <option value="<?= $studi['jurusan'] ?>" <?= ($dataLama['jurusan'] == $studi['jurusan']) ? 'selected' : '' ?>><?= $studi['jurusan'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="mb-3" style="flex: 1;">
-                                <label for="nim" class="form-label">NIM/NISN</label>
-                                <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?>">
-                                <small id="error-nim" class="text-danger"></small>
-                            </div>
-                        </div>
+                    </div>
                     <?php endif; ?>
 
                     <div class="d-flex gap-4">
@@ -314,10 +295,9 @@ if (isset($_POST['update_profil'])) {
                             <small id="error-image" class="text-danger"></small>
                         </div>
                     </div>
-
+                    
                     <!-- Tombol Submit -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <div class="text-end">
                         <button type="submit" name="update_profil" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
@@ -325,6 +305,7 @@ if (isset($_POST['update_profil'])) {
         </div>
     </div>
 </div>
+
 
 <script>
     function openImageModal(img) {
@@ -375,104 +356,185 @@ if (isset($_POST['update_profil'])) {
     })
 </script>
 
-<!-- SCRIPT AKSES FAKULTAS DAN PRODI SESUAI UNIV -->
+
+
+
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const asalStudiInput = document.getElementById('asal_studi');
-        const fakultasContainer = document.getElementById('fakultasContainer');
-        const fakultasSelect = document.getElementById('fakultas');
-        const jurusanSelect = document.getElementById('jurusan');
+document.addEventListener('DOMContentLoaded', function() {
+    const asalStudiSelect = document.getElementById('asal_studi');
+    const fakultasContainer = document.getElementById('fakultasContainer');
+    const fakultasSelect = document.getElementById('fakultas');
+    const jurusanSelect = document.getElementById('jurusan');
 
-        // Data Pendidikan dari PHP ke JavaScript
-        const dataPendidikan = <?= json_encode($dataPendidikan) ?>;
+    // Ambil data pendidikan dari PHP
+    const dataPendidikan = <?= json_encode($dataPendidikan) ?>;
+    const currentFakultas = "<?= $dataLama['fakultas'] ?? '' ?>";
+    const currentJurusan = "<?= $dataLama['jurusan'] ?? '' ?>";
+    const currentIdPendidikan = "<?= $dataLama['id_pendidikan'] ?? '' ?>";
 
-        function updateFakultasJurusan() {
-            const selectedAsalStudi = asalStudiInput.value.toLowerCase();
+    const pendidikanData = {};
+    const pendidikanGroups = {};
 
-            // Cek apakah Asal Studi diawali dengan "universitas" atau "smk"
-            const isUniversitas = selectedAsalStudi.startsWith("universitas");
-            const isSMK = selectedAsalStudi.startsWith("smk");
+    dataPendidikan.forEach(item => {
+        const id = item.id_pendidikan;
+        const nama = item.nama_pendidikan;
+        const fakultas = item.fakultas || null;
+        const jurusan = item.jurusan;
 
-            // Tampilkan atau sembunyikan Fakultas
-            fakultasContainer.style.display = isUniversitas ? "block" : "none";
+        // Simpan data berdasarkan id
+        pendidikanData[id] = { nama, fakultas, jurusan };
 
-            // Kosongkan fakultas & jurusan
-            fakultasSelect.innerHTML = "";
-            jurusanSelect.innerHTML = "";
-
-            // Filter data pendidikan berdasarkan asal studi
-            const filteredData = dataPendidikan.filter(item => item.nama_pendidikan.toLowerCase() === selectedAsalStudi);
-
-            if (filteredData.length > 0) {
-                if (isUniversitas) {
-                    // Tambahkan Fakultas ke dalam Select
-                    const fakultasList = [...new Set(filteredData.map(item => item.fakultas))]; // Hapus duplikat
-                    fakultasList.forEach(fakultas => {
-                        const optionFakultas = document.createElement("option");
-                        optionFakultas.value = fakultas;
-                        optionFakultas.textContent = fakultas;
-                        fakultasSelect.appendChild(optionFakultas);
-                    });
-
-                    // Jika ada fakultas yang dipilih, update jurusan
-                    if (fakultasSelect.value) {
-                        updateJurusan(fakultasSelect.value, filteredData);
-                    }
-                } else if (isSMK) {
-                    // Jika SMK, langsung tampilkan jurusan yang sesuai dengan Asal Studi
-                    filteredData.forEach(item => {
-                        if (item.jurusan) {
-                            const optionJurusan = document.createElement("option");
-                            optionJurusan.value = item.jurusan;
-                            optionJurusan.textContent = item.jurusan;
-                            jurusanSelect.appendChild(optionJurusan);
-                        }
-                    });
-
-                    // Jika tidak ada jurusan
-                    if (jurusanSelect.options.length === 0) {
-                        jurusanSelect.innerHTML = "<option value=''>Tidak ada jurusan</option>";
-                    }
-                }
-            } else {
-                // Jika tidak ada data, beri opsi kosong
-                jurusanSelect.innerHTML = "<option value=''>Tidak ada jurusan</option>";
-            }
+        // Kelompokkan berdasarkan nama dan fakultas
+        if (!pendidikanGroups[nama]) {
+            pendidikanGroups[nama] = [];
         }
 
-        function updateJurusan(selectedFakultas, filteredData) {
-            // Kosongkan jurusan
-            jurusanSelect.innerHTML = "";
-
-            // Filter jurusan berdasarkan fakultas yang dipilih
-            const jurusanList = filteredData.filter(item => item.fakultas === selectedFakultas).map(item => item.jurusan);
-
-            if (jurusanList.length > 0) {
-                jurusanList.forEach(jurusan => {
-                    const optionJurusan = document.createElement("option");
-                    optionJurusan.value = jurusan;
-                    optionJurusan.textContent = jurusan;
-                    jurusanSelect.appendChild(optionJurusan);
-                });
-            } else {
-                jurusanSelect.innerHTML = "<option value=''>Tidak ada jurusan</option>";
-            }
+        const index = pendidikanGroups[nama].findIndex(f => f.fakultas === fakultas);
+        if (index === -1) {
+            pendidikanGroups[nama].push({ fakultas, jurusan: [{ id, jurusan }] });
+        } else {
+            pendidikanGroups[nama][index].jurusan.push({ id, jurusan });
         }
-
-        // Event listener untuk perubahan pada input Asal Studi
-        asalStudiInput.addEventListener("input", updateFakultasJurusan);
-
-        // Event listener untuk perubahan pada Fakultas (jika Universitas)
-        fakultasSelect.addEventListener("change", function() {
-            const selectedAsalStudi = asalStudiInput.value.toLowerCase();
-            const filteredData = dataPendidikan.filter(item => item.nama_pendidikan.toLowerCase() === selectedAsalStudi);
-            updateJurusan(fakultasSelect.value, filteredData);
-        });
-
-        // Panggil saat halaman dimuat
-        updateFakultasJurusan();
     });
+
+    // Fungsi untuk memuat fakultas berdasarkan id pendidikan
+    function loadFaculties(pendidikanId) {
+        fakultasSelect.innerHTML = '<option value="">Pilih Fakultas</option>';
+        
+        if (!pendidikanId) return;
+        
+        const selected = pendidikanData[pendidikanId];
+        if (!selected) return;
+
+        const pendidikanName = selected.nama;
+        const fakultasList = pendidikanGroups[pendidikanName] || [];
+        
+        fakultasList.forEach(group => {
+            if (group.fakultas) {
+                const option = document.createElement('option');
+                option.value = group.fakultas;
+                option.textContent = group.fakultas;
+                fakultasSelect.appendChild(option);
+                
+                // Set current fakultas jika ada
+                if (group.fakultas === currentFakultas) {
+                    option.selected = true;
+                }
+            }
+        });
+    }
+
+    // Fungsi untuk memuat jurusan berdasarkan id pendidikan dan fakultas
+    function loadMajors(pendidikanId, faculty = null) {
+        jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
+        
+        if (!pendidikanId) return;
+        
+        const selected = pendidikanData[pendidikanId];
+        if (!selected) return;
+
+        const pendidikanName = selected.nama;
+        let jurusanList = [];
+        
+        if (faculty) {
+            // Untuk universitas (dengan fakultas)
+            const fakultasGroup = pendidikanGroups[pendidikanName].find(f => f.fakultas === faculty);
+            if (fakultasGroup) {
+                jurusanList = fakultasGroup.jurusan;
+            }
+        } else {
+            // Untuk non-universitas (tanpa fakultas)
+            const groups = pendidikanGroups[pendidikanName] || [];
+            groups.forEach(group => {
+                jurusanList = jurusanList.concat(group.jurusan);
+            });
+        }
+        
+        jurusanList.forEach(jur => {
+            const option = document.createElement('option');
+            option.value = jur.jurusan;
+            option.textContent = jur.jurusan;
+            option.dataset.id = jur.id;
+            jurusanSelect.appendChild(option);
+            
+            // Set current jurusan jika ada
+            if (jur.jurusan === currentJurusan || jur.id === currentIdPendidikan) {
+                option.selected = true;
+            }
+        });
+    }
+
+    // Handle perubahan asal studi
+    asalStudiSelect.addEventListener('change', function() {
+        const selectedId = this.value;
+
+        if (!selectedId) {
+            fakultasContainer.style.display = 'none';
+            jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
+            return;
+        }
+
+        const selected = pendidikanData[selectedId];
+        if (!selected) return;
+
+        if (selectedId.length === 7) {
+            // Universitas
+            fakultasContainer.style.display = 'block';
+            loadFaculties(selectedId);
+            
+            // Jika ada current fakultas, load jurusannya
+            if (currentFakultas) {
+                loadMajors(selectedId, currentFakultas);
+            } else {
+                jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
+            }
+        } else {
+            // SMK/Non-universitas
+            fakultasContainer.style.display = 'none';
+            loadMajors(selectedId);
+        }
+    });
+
+    // Handle perubahan fakultas
+    fakultasSelect.addEventListener('change', function() {
+        const selectedFakultas = this.value;
+        const selectedId = asalStudiSelect.value;
+        
+        if (selectedFakultas && selectedId) {
+            loadMajors(selectedId, selectedFakultas);
+        }
+    });
+
+    // Inisialisasi nilai saat modal dibuka
+    function initializeValues() {
+        if (currentIdPendidikan) {
+            // Set nilai asal studi
+            asalStudiSelect.value = currentIdPendidikan;
+            
+            // Trigger change event
+            const event = new Event('change');
+            asalStudiSelect.dispatchEvent(event);
+            
+            // Untuk universitas, set fakultas jika ada
+            if (currentFakultas && currentIdPendidikan.length === 7) {
+                // Tunggu sebentar untuk memastikan options sudah dimuat
+                setTimeout(() => {
+                    fakultasSelect.value = currentFakultas;
+                    const facultyEvent = new Event('change');
+                    fakultasSelect.dispatchEvent(facultyEvent);
+                }, 100);
+            }
+        }
+    }
+
+    // Panggil inisialisasi saat modal ditampilkan
+    $('#editProfileModal').on('shown.bs.modal', function() {
+        initializeValues();
+    });
+});
 </script>
+
 
 <!-- ==== VALIDASI ======= -->
 <script>
@@ -592,19 +654,53 @@ if (isset($_POST['update_profil'])) {
             }
 
             // Validasi NIM/NISN (opsional, hanya jika elemen ada)
+            const NisnInput = document.getElementById("nisn");
+            if (NisnInput) {
+                const nisn = NisnInput.value.trim();
+
+                if (nisn === "") {
+                    showError("nisn", "error-nisn", "NISN tidak boleh kosong.");
+                    isValid = false;
+                } else if (!/^\d{10}$/.test(nisn)) {
+                    showError(
+                        "nisn",
+                        "error-nisn",
+                        "NISN harus terdiri dari 10 digit"
+                    );
+                    isValid = false;
+                }
+            }
+
+            // Validasi NIM (opsional, boleh kosong)
             const NimInput = document.getElementById("nim");
             if (NimInput) {
                 const Nim = NimInput.value.trim();
 
-                if (Nim === "") {
-                    showError("nim", "error-nim", "NIM/NISN tidak boleh kosong.");
+                if (Nim !== "") { // Hanya validasi jika diisi
+                    if (!/^\d{12}$/.test(Nim)) {
+                        showError("nim", "error-nim", "NIM harus terdiri dari 12 digit angka.");
+                        isValid = false;
+                    }
+                }
+                // Jika kosong, tidak melakukan validasi (diizinkan)
+            }
+
+            // Validasi Fakultas (jika elemen ada)
+            const fakultasInput = document.getElementById("fakultas");
+            if (fakultasInput) {
+                const fakultas = fakultasInput.value.trim();
+                if (fakultas === "") {
+                    showError("fakultas", "error-fakultas", "Fakultas wajib diisi.");
                     isValid = false;
-                } else if (!/^(?:\d{10}|\d{12})$/.test(Nim)) {
-                    showError(
-                        "nim",
-                        "error-nim",
-                        "NIM/NISN harus terdiri dari 10 digit untuk NISN atau 12 digit untuk NIM."
-                    );
+                }
+            }
+
+            // Validasi Jurusan (selalu required jika elemen ada)
+            const jurusanInput = document.getElementById("jurusan");
+            if (jurusanInput) {
+                const jurusan = jurusanInput.value.trim();
+                if (jurusan === "") {
+                    showError("jurusan", "error-jurusan", "Jurusan wajib diisi.");
                     isValid = false;
                 }
             }

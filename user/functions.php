@@ -1,5 +1,8 @@
 
 <?php
+
+use Dom\Mysql;
+
 function generateIdDokumen($conn, $id_pengajuan) {
     $query = "SELECT MAX(CAST(SUBSTRING(id_dokumen, -2) AS UNSIGNED)) AS max_nomor 
                FROM tb_dokumen 
@@ -327,10 +330,10 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
     global $conn;
     // Inisialisasi foto_kegiatan (default: data lama)
     $foto_kegiatan = $row['foto_kegiatan'];
-    deleteGambarLogbook($id_logbook);
-
+    
     // Jika ada file baru diunggah
     if (!empty($FILES['gambar_kegiatan']['name'])) {
+        deleteGambarLogbook($id_logbook);
         $uploadResult = uploadFoto($FILES['gambar_kegiatan'], '../assets/img/logbook/' . $id_user . '/');
         if ($uploadResult) {
             $foto_kegiatan = $uploadResult['path'];
@@ -601,7 +604,7 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     $result = mysqli_query($conn, $pendidikan);
     $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
 
-    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
     if (mysqli_query($conn, $sqlTambah)){
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
@@ -649,18 +652,22 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         $fakultas = $POST['fakultas'];
         $jurusan = $POST['jurusan'];
         $nim = $POST['nim'];
-        $nisn = NULL;
+        $nisn = $POST['nisn'];
         echo "fakultas";
     }else{
         $fakultas = NULL;
         $jurusan = $POST['jurusan'];
-        $nisn = $POST['nim'];
-        $nim = NULL;
+        $nisn = $POST['nisn'];
+        $nim = $POST['nim'];
         echo "$fakultas";
     }
 
+    // ambil nama pendidikan
+    $query_namaPendidikan = "SELECT nama_pendidikan FROM tb_pendidikan WHERE id_pendidikan = '$asal_studi'";
+    $nama_pendidikan = mysqli_fetch_assoc(mysqli_query($conn, $query_namaPendidikan))['nama_pendidikan'];
+
     // Update data pendidikan (ambil id_pendidikan dari nama_pendidikan)
-    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$asal_studi' AND fakultas = '$fakultas' AND jurusan = '$jurusan'";
+    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$nama_pendidikan' AND fakultas = '$fakultas' AND jurusan = '$jurusan'";
     $result_pendidikan = mysqli_query($conn, $query_pendidikan);
     $row_pendidikan = mysqli_fetch_assoc($result_pendidikan);
     $id_pendidikan = $row_pendidikan['id_pendidikan'] ?? $dataLama['id_pendidikan']; // Pakai data lama jika tidak ditemukan
@@ -729,6 +736,44 @@ function cetakSertifikat($conn, $id_pengajuan_cetak) {
     }
 }
 
-?>
 
+
+
+
+
+
+
+
+
+// =========================== pembimbing ========================
+
+function pembimbing_upload_nilai($POST, $FILE) {
+    global $conn;
+    $id_pengajuan   = $POST["id_pengajuan"];
+    $id_dokumen     = generateIdDokumen($conn, $id_pengajuan);
+    $nama_dokumen   = $POST["nama_dokumen"];
+    $jenis_dokumen  = $POST["jenis_dokumen"];
+    $create_by      = $POST["create_by"];
+    $id_user        = $POST["id_user"];
+
+    $file_info = uploadFileUser($FILE["file_sertifikat"], $id_pengajuan);
+    if (!$file_info) {
+        return 0;
+    }
+
+    $file_path = $file_info['path']; // ambil path dari array uploadFileUser()
+
+    $query = "INSERT INTO tb_dokumen (id_dokumen, nama_dokumen, jenis_dokumen, file_path, id_pengajuan, id_user, create_by)
+                VALUES 
+            ('$id_dokumen', '$nama_dokumen', '$jenis_dokumen', '$file_path', '$id_pengajuan', '$id_user', '$create_by')";
+
+    if (mysqli_query($conn, $query)) {
+        return mysqli_affected_rows($conn);
+    } else {
+        return 0;
+    }
+}
+
+
+?>
 

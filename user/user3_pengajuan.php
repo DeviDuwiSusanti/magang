@@ -40,8 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-       <!-- Tambahkan stylesheet Select2 -->
-       <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <!-- Tambahkan stylesheet Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <!-- Tambahkan script Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
@@ -154,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <h4>Step 1: Daftar Pengajuan</h4>
                                             <div class="mb-3">
                                                 <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                                                <select class="form-control select2" name="id_instansi" id="instansi">
+                                                <select class="form-control" name="id_instansi" id="instansi">
                                                     <option value="" disabled selected>-- Pilih Instansi --</option>
                                                     <?php
                                                     if (mysqli_num_rows($result_instansi) > 0) {
@@ -355,7 +355,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <h4>Informasi Pengajuan</h4>
                                         <div class="mb-3">           
                                             <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                                            <select class="form-control select2" name="id_instansi" id="instansi">
+                                            <select class="form-control" name="id_instansi" id="instansi">
                                                 <option value="<?= $pengajuan['id_instansi'] ?>"><?= $pengajuan['nama_panjang'] ?></option>
                                                 <?php
                                                 if (mysqli_num_rows($result_instansi) > 0) {
@@ -421,7 +421,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </button>
                                             
                                             <input type="hidden" name="hapus_pengajuan"> <!-- Tanda penghapusan -->
-                                            <button type="submit" class="btn btn-danger btn-sm" id="hapusPengajuan"><i class="bi bi-trash me-1"></i> Hapus</button>      
+                                            <button type="submit" class="btn btn-danger" id="hapusPengajuan"><i class="bi bi-trash me-1"></i> Hapus</button>      
                                     </div>
                                 </form>
                             </div>
@@ -491,13 +491,24 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
 
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
 <script>
-    $(document).ready(function() {
-        $('#instansi').select2({
-            placeholder: "-- Pilih Instansi --",
-            allowClear: true
+    function initSelect2InModal(modalId) {
+        $(`#${modalId}`).on('shown.bs.modal', function () {
+            $('#instansi').select2({
+                dropdownParent: $(`#${modalId}`),
+                placeholder: "Pilih Instansi",
+                allowClear: true,
+                width: '100%',
+                minimumResultsForSearch: 0
+            });
         });
-    });
+    }
+
+    // Inisialisasi hanya untuk modal pengajuan
+    initSelect2InModal('editPengajuanModal');
+    initSelect2InModal('pengajuanModal');
 </script>
+
+
 
 <script>
     $(document).ready(function() {

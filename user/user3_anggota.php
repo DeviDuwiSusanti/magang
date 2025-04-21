@@ -139,17 +139,17 @@ if (ISSET($_POST['tambah_anggota'])){
                     
                     <div class="mb-3">
                         <label for="nik" class="form-label">NIK</label>
-                        <input type="number" class="form-control" id="nik" name="nik">
+                        <input type="number" class="form-control" id="nik" name="nik" oninput="this.value=this.value.slice(0,16)">
                     </div>
                     
                     <div class="mb-3">
                         <label for="nisn" class="form-label">Nisn</label>
-                        <input type="number" class="form-control" id="nisn" name="nisn" maxlength="10">
+                        <input type="number" class="form-control" id="nisn" name="nisn" oninput="this.value=this.value.slice(0,10)">
                     </div>
 
                     <div class="mb-3">
                         <label for="nim" class="form-label">Nim</label>
-                        <input type="number" class="form-control" id="nim" name="nim" maxlength="12">
+                        <input type="number" class="form-control" id="nim" name="nim" oninput="this.value=this.value.slice(0,12)">
                         <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
                     </div>
                     
@@ -188,17 +188,17 @@ if (ISSET($_POST['tambah_anggota'])){
 
                     <div class="mb-3">
                         <label for="edit_nik" class="form-label">NIK</label>
-                        <input type="number" class="form-control" id="edit_nik" name="nik" value="<?= $editRow['nik'] ?>">
+                        <input type="number" class="form-control" id="edit_nik" name="nik" value="<?= $editRow['nik'] ?>" oninput="this.value=this.value.slice(0,16)">
                     </div>
 
                     <div class="mb-3">
                         <label for="edit_nisn" class="form-label">Nisn</label>
-                        <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>">
+                        <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
                     </div>
 
                     <div class="mb-3">
                         <label for="edit_nim" class="form-label">Nim</label>
-                        <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>">
+                        <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>" oninput="this.value=this.value.slice(0,12)">
                         <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
                     </div>
 
