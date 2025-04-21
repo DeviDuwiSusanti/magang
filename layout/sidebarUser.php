@@ -332,11 +332,11 @@ if (isset($_SESSION['email'])) {
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
                 <!-- Inisialisasi DataTables -->
-            <script>
+            <!-- <script>
                 $(document).ready(function() {
                     $('#myTable').DataTable();
                 });
-            </script>
+            </script> -->
 
             <!-- Inisialisasi DataTables -->
             <script>
