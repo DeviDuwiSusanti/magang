@@ -34,7 +34,7 @@
                             <a href="tentang.php" class="footer__link text-gray-400 hover:text-white">Tentang Kami</a>
                             </li>
                             <li>
-                            <a href="../user/detail_histori.php" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
+                            <a href="../user/detail_user3_histori.php" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
                             </li>
                         </ul>
                     </div>

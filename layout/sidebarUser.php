@@ -215,7 +215,7 @@ if (isset($_SESSION['email'])) {
 
                 <?php if (($ketua || $anggota) && $level == '3') : ?>
                     <li class="sidebar-item">
-                        <a href="histori.php" class="sidebar-link">
+                        <a href="user3_histori.php" class="sidebar-link">
                             <i class="bi bi-clock-history"></i>
                             <span>Histori</span>
                         </a>

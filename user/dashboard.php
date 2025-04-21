@@ -265,7 +265,7 @@ endif;
                         <h5 class="card-title">Cek Sertifikat dan Nilai</h5>
                         <h2 class="card-text text-warning"><?= $total_nilai ?></h2>
                         <p class="text-muted">Tersedia</p>
-                        <a href="histori.php" class="btn btn-warning mt-3 detail">View Details</a>
+                        <a href="user3_histori.php" class="btn btn-warning mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>
@@ -281,7 +281,7 @@ endif;
                         <h5 class="card-title">Histori</h5>
                         <h2 class="card-text text-danger"><?= $total_histori ?: 0 ?></h2>
                         <p class="text-muted">Jumlah Kegiatan</p>
-                        <a href="histori.php" class="btn btn-danger mt-3 detail">View Details</a>
+                        <a href="user3_histori.php" class="btn btn-danger mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>

@@ -15,7 +15,7 @@ $id_user = $_SESSION['id_user'];
 
 
 if (empty($id_pengajuan)) {
-    echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='histori.php';</script>";
+    echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='user3_histori.php';</script>";
     exit;
 }
 
