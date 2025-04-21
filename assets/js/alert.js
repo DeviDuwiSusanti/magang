@@ -578,6 +578,23 @@ function confirm_edit_email_user() {
   });
 }
 
+// ============================ alert otp ============================
+function otp_expired() {
+  Swal.fire({
+      title: 'Waktu Habis!',
+      text: 'Anda akan dialihkan ke halaman login dalam 5 detik...',
+      icon: 'info',
+      timer: 5000,
+      timerProgressBar: true,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      didClose: () => {
+          window.location.href = 'login.php';
+      }
+  });
+}
+
+
 
 
 

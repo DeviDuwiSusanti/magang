@@ -360,6 +360,11 @@ $result = mysqli_query($conn, $query);
         zoomForm.addEventListener("submit", function(event) {
             event.preventDefault();
 
+            // ⛔ Cek validasi form dulu
+            if (!validateZoomForm()) {
+                return; // Stop proses kalau form tidak valid
+            }
+
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Informasi Zoom akan dikirim!",

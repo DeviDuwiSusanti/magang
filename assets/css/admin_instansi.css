@@ -7,6 +7,49 @@
     margin: 0;
 }
 
+.mode-toggle {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+h1 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+.wrapper {
+    display: flex;
+    flex: 1;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    transition: all 0.35s ease-in-out;
+    background-color: var(--bg-color);
+}
+
+/* Custom dark mode */
 :root {
     --bg-color: #fafbfe;
     --text-color: #000000;
@@ -25,7 +68,6 @@
     --navbar-bg: #212529;
     --text-mute: #ffffff;
     --td-tabel: #ffffff;
-    /* --form-bg: #343a40; */
     --form-bg: #121212;
     --card: #212529;
     --box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.3);
@@ -74,48 +116,6 @@
 .dark-mode select:focus {
     background-color: #212529;
     color: var(--text-color);
-}
-
-.mode-toggle {
-    cursor: pointer;
-    border: none;
-    background: none;
-    font-size: 1.2rem;
-    color: var(--text-color);
-}
-
-a {
-    text-decoration: none;
-}
-
-li {
-    list-style: none;
-}
-
-h1 {
-    font-weight: 600;
-    font-size: 1.5rem;
-    color: var(--text-color);
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    display: flex;
-    flex-direction: column;
-}
-
-.wrapper {
-    display: flex;
-    flex: 1;
-}
-
-.main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    transition: all 0.35s ease-in-out;
-    background-color: var(--bg-color);
 }
 
 /* CSS Default untuk Sidebar */
@@ -229,12 +229,10 @@ a.sidebar-link:hover {
 #sidebar:not(.expand) a.sidebar-link.active {
     background-color: rgba(255, 255, 255, 0.075);
     border-left: 3px solid #3b7ddd;
-    /* border-left: 3px solid #ffcc00; */
 }
 
 #sidebar.expand a.sidebar-link.active {
     background-color: rgba(255, 255, 255, 0.075);
-    /* border-left: 3px solid #ffcc00; */
     border-left: 3px solid #3b7ddd;
     font-weight: bold;
 }
@@ -274,6 +272,7 @@ a.sidebar-link:hover {
     color: #4e73df;
 }
 
+/* CSS Default untuk Card */
 .card {
     border-radius: 10px;
     border: none;
@@ -317,6 +316,7 @@ a.sidebar-link:hover {
     margin-bottom: 0.5rem;
 }
 
+/* CSS Default untuk Text */
 .text-primary {
     color: #4e73df !important;
 }
@@ -431,50 +431,9 @@ a.sidebar-link:hover {
     margin-top: 1rem;
 }
 
-/* Profile */
-.form-profile {
-    border-top: 3px solid #4e73df;
-    max-width: 750px;
-    margin: 0 auto;
-    background-color: var(--form-bg);
-    color: var(--text-color);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: var(--box-shadow);
-    font-size: 14px;
-}
-
-.form-profile input,
-.form-profile textarea,
-.form-profile select {
-    font-size: 14px;
-    background-color: var(--form-bg);
-    color: var(--text-color);
-}
-
 .select2 {
     display: block;
     width: 100% !important;
-    background-color: var(--form-bg);
-    color: var(--text-color);
-}
-
-.form-instansi {
-    border-top: 3px solid #1cc88a;
-    max-width: 750px;
-    margin: 0 auto;
-    background-color: var(--form-bg);
-    color: var(--text-color);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: var(--box-shadow);
-    font-size: 14px;
-}
-
-.form-instansi input,
-.form-instansi textarea,
-.form-instansi select {
-    font-size: 14px;
     background-color: var(--form-bg);
     color: var(--text-color);
 }
@@ -497,7 +456,6 @@ table th {
 td {
     font-size: 14px;
     color: var(--td-tabel);
-    /* border: 3px solid #4e73df; */
 }
 
 p {
@@ -698,7 +656,6 @@ p {
 
 
 /* Label modal */
-
 .select2-container--open .select2-dropdown {
     z-index: 9999 !important;
 }
@@ -719,7 +676,6 @@ p {
     color: #6c757d;
     font-family: 'Courier New', Courier, monospace;
     letter-spacing: 0.5px;
-    /* animation: blink 1s step-start infinite; */
 }
 
 /* Dark Mode */
@@ -834,12 +790,6 @@ body.dark-mode .datatable-footer {
     color: #f1f1f1;
 }
 
-/* body.dark-mode .datatable-header select {
-    background-color: #212529;
-    color: #ffffff;
-    border: 1px solid #444;
-} */
-
 body.dark-mode select {
     appearance: none; /* hilangkan default arrow */
     -webkit-appearance: none;
@@ -856,19 +806,67 @@ body.dark-mode select {
     padding-right: 2rem;
 }
 
-/* body.dark-mode .dataTables_wrapper .dataTables_paginate,
-body.dark-mode .dataTables_wrapper .dataTables_info {
-    color: #ffffff;
-}
-
-body.dark-mode .dataTables_wrapper .paginate_button {
-    background-color: #2a2a3d !important;
-    color: #fff !important;
-    border: 1px solid #555 !important;
-} */
-
 body.dark-mode .dataTables_wrapper .paginate_button.current {
     background-color: #007bff !important;
     color: #fff !important;
 }
 
+/* Radio Button */
+#aksiModal .form-check {
+    padding: 0.5rem 1rem;
+    background-color: white;
+    border-radius: 0.375rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease-in-out;
+}
+
+#aksiModal .form-check:hover {
+    background-color: #e9ecef;
+    cursor: pointer;
+}
+
+#aksiModal .form-check-input:checked + .form-check-label {
+    font-weight: bold;
+    color: #1d4ed8;
+}
+
+/* Alasan Tolak */
+#aksiModal #alasanTolakContainer {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#aksiModal #alasan_tolak {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    resize: vertical;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+}
+
+/* === Dark Mode Styles === */
+body.dark-mode #aksiModal .form-check {
+    background-color: #1f2937;
+    border-color: #374151; 
+    color: #e5e7eb;
+}
+
+body.dark-mode #aksiModal .form-check:hover {
+    background-color: #374151;
+    cursor: pointer;
+}
+
+body.dark-mode #aksiModal .form-check-input:checked + .form-check-label {
+    font-weight: bold;
+    color: #60a5fa; /* biru terang */
+}
+
+body.dark-mode #aksiModal #alasanTolakContainer {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+body.dark-mode #aksiModal #alasan_tolak {
+    background-color: #1f2937;
+    border-color: #4b5563;
+    color: #f1f5f9;
+}
