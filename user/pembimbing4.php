@@ -76,7 +76,7 @@
                                 <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
                                 <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                 <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
-                                
+
                                 <td>
                                     <button class="btn btn-info btn-sm openLogbook"
                                             data-id_pengajuan="<?= $pengajuan_user ?>"
@@ -262,3 +262,25 @@
   });
 </script>
 
+
+<script>
+    // Untuk Logbook Modal
+    document.querySelectorAll('.openLogbook').forEach(button => {
+        button.addEventListener('click', function () {
+            const idPengajuan = this.getAttribute('data-id_pengajuan');
+            const idUser = this.getAttribute('data-id_user');
+            document.getElementById('logbook_id_pengajuan').value = idPengajuan;
+            document.getElementById('logbook_id_user').value = idUser;
+        });
+    });
+
+    // Untuk Nilai & Sertifikat Modal
+    document.querySelectorAll('.openNilai').forEach(button => {
+        button.addEventListener('click', function () {
+            const idPengajuan = this.getAttribute('data-id_pengajuan');
+            const idUser = this.getAttribute('data-id_user');
+            document.getElementById('nilai_id_pengajuan').value = idPengajuan;
+            document.getElementById('nilai_id_user').value = idUser;
+        });
+    });
+</script>
