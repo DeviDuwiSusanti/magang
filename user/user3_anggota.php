@@ -330,32 +330,24 @@ $(document).ready(function() {
             showError(form.find("[name='nik']"), "NIK harus 16 digit angka!");
         }
 
-        // Validasi NIM/NISN
+        // Validasi NISN
         const nisn = form.find("[name='nisn']").val().trim();
-        if (nim === "") {
+        if (nisn === "") {
             isValid = false;
             showError(form.find("[name='nisn']"), "NISN tidak boleh kosong!");
-        } else if (nim.length !== 10 || isNaN(nim)) {
+        } else if (nisn.length !== 10 || isNaN(nisn)) {
             isValid = false;
             showError(form.find("[name='nisn']"), "NISN harus 10 digit angka!");
         }
 
-        // // Validasi NIM
-        // const nimInput = form.find("[name='nim']");
-        // const nim = nimInput.val().trim();
-        // if (nim !== "") {
-        //     if (nim.length !== 12 || isNaN(nim)) {
-        //         isValid = false;
-        //         showError(nimInput, "NIM harus terdiri dari 12 digit angka!");
-        //     } else {
-        //         clearError(nimInput);
-        //     }
-        // } else {
-        //     clearError(nimInput); // kosong = tidak masalah
-        // }
-
-
-
+        // Validasi NIM
+        const nim = form.find("[name='nim']").val().trim();
+        if (nim !== "") { // NIM boleh kosong
+            if (nim.length !== 12 || isNaN(nim)) {
+                isValid = false;
+                showError(form.find("[name='nim']"), "NIM harus 12 digit angka jika diisi!");
+            }
+        }
         // Cegah submit jika ada error
         if (!isValid) {
             e.preventDefault();
