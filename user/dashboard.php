@@ -36,6 +36,7 @@ $total_pengajuan_2 = query("SELECT COUNT(*) AS total
     JOIN tb_instansi 
         ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
     WHERE tb_instansi.id_instansi = '$id_instansi'
+    AND tb_pengajuan.status_active = '1'
     AND tb_pengajuan.status_pengajuan IN ('1', '2')")[0];
 
 // Query untuk menghitung total pemagang
@@ -49,8 +50,8 @@ $pemagang_2 = query("SELECT SUM(
         JOIN tb_instansi 
             ON tb_pengajuan.id_instansi = tb_instansi.id_instansi
         WHERE tb_instansi.id_instansi = '$id_instansi'
-        AND tb_pengajuan.status_pengajuan NOT IN ('1', '3')
-    ")[0];
+        AND tb_pengajuan.status_active = '1'
+        AND tb_pengajuan.status_pengajuan IN ('2', '4', '5')")[0];
 // ========================== end of admin insatansi level 2 ===============================
 
 
@@ -95,6 +96,11 @@ $pengajuan_user = $pengajuan["id_pengajuan"];
 $daftar_anggota = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = tb_user.id_user AND tb_profile_user.id_pengajuan = '$pengajuan_user' AND tb_profile_user.status_active = '1'");
 
 $daftar_peserta_magang = count($daftar_anggota);
+// $pendidikan_1 = query("SELECT COUNT(*) AS total FROM tb_pendidikan WHERE status_active = 1")[0];
+// $pengajuan_1 = query("SELECT COUNT(*) AS total FROM tb_pengajuan WHERE status_active = 1")[0];
+// $user_1 = query("SELECT COUNT(*) AS total FROM tb_user WHERE status_active = 1")[0];
+// ============================== end of pembimbing =========================
+
 endif;
 ?>
 

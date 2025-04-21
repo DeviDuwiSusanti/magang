@@ -776,7 +776,7 @@ function tambah_instansi_super_admin($POST) {
         $telepone_pembimbing = $POST["telepone_pembimbing"];
         $id_bidang = $POST["id_bidang"];
 
-        $query_pembimbing_1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_pembimbing', '$email', '5', '$id_user')";
+        $query_pembimbing_1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_pembimbing', '$email', '4', '$id_user')";
         $query_pembimbing_2 = "INSERT INTO tb_profile_user
                 (id_user, nama_user, nik, nip, jabatan, jenis_kelamin, telepone_user, id_bidang, create_by)
                 VALUES ('$id_pembimbing', '$nama_pembimbing', '$nik_pembimbing', '$nip', '$jabatan', '$jenis_kelamin', '$telepone_pembimbing', '$id_bidang', '$id_user')";

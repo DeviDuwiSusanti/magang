@@ -563,11 +563,11 @@ if (isset($_POST['update_profil'])) {
                     "Nomor telepon tidak boleh kosong."
                 );
                 isValid = false;
-            } else if (!/^\d{12,15}$/.test(telepon)) {
+            } else if (!/^\d{11,12}$/.test(telepon)) {
                 showError(
                     "telepon",
                     "error-telepon",
-                    "Telepon harus berisi angka (12-15 digit)."
+                    "Telepon harus berisi angka (11-12 digit)."
                 );
                 isValid = false;
             }
