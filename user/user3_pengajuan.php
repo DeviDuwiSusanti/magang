@@ -40,8 +40,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-       <!-- Tambahkan stylesheet Select2 -->
-       <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <!-- Tambahkan stylesheet Select2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <!-- Tambahkan script Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
@@ -154,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <h4>Step 1: Daftar Pengajuan</h4>
                                             <div class="mb-3">
                                                 <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                                                <select class="form-control select2" name="id_instansi" id="instansi">
+                                                <select class="form-control" name="id_instansi" id="instansi">
                                                     <option value="" disabled selected>-- Pilih Instansi --</option>
                                                     <?php
                                                     if (mysqli_num_rows($result_instansi) > 0) {
@@ -355,7 +355,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <h4>Informasi Pengajuan</h4>
                                         <div class="mb-3">           
                                             <label for="instansi" class="form-label">Instansi yang Dituju</label>
-                                            <select class="form-control select2" name="id_instansi" id="instansi">
+                                            <select class="form-control" name="id_instansi" id="instansi">
                                                 <option value="<?= $pengajuan['id_instansi'] ?>"><?= $pengajuan['nama_panjang'] ?></option>
                                                 <?php
                                                 if (mysqli_num_rows($result_instansi) > 0) {

@@ -132,13 +132,7 @@ if (isset($_GET['id_logbook_hapus'])) {
                     </thead>
                     <tbody>
                         <?php
-                        if ($level == '4' AND ISSET($_GET['id_user']) AND ISSET($_GET['id_pengajuan'])){
-                            $id_user = $_GET['id_user'];
-                            $id_pengajuan = $_GET['id_pengajuan'];
-                            $logbook = getLogbook($conn, $id_pengajuan, $id_user);
-                        }else{
-                            $logbook = getLogbook($conn, $id_pengajuan, $id_user_anggota);
-                        }    
+                        $logbook = getLogbook($conn, $id_pengajuan, $id_user_anggota); 
                         while ($row = mysqli_fetch_assoc($logbook)){?>
                             <tr>
                                 <td><?= $no ?></td>
