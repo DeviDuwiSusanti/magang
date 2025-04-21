@@ -340,19 +340,19 @@ $(document).ready(function() {
             showError(form.find("[name='nisn']"), "NISN harus 10 digit angka!");
         }
 
-        // Validasi NIM
-        const nimInput = form.find("[name='nim']");
-        const nim = nimInput.val().trim();
-        if (nim !== "") {
-            if (nim.length !== 12 || isNaN(nim)) {
-                isValid = false;
-                showError(nimInput, "NIM harus terdiri dari 12 digit angka!");
-            } else {
-                clearError(nimInput);
-            }
-        } else {
-            clearError(nimInput); // kosong = tidak masalah
-}
+        // // Validasi NIM
+        // const nimInput = form.find("[name='nim']");
+        // const nim = nimInput.val().trim();
+        // if (nim !== "") {
+        //     if (nim.length !== 12 || isNaN(nim)) {
+        //         isValid = false;
+        //         showError(nimInput, "NIM harus terdiri dari 12 digit angka!");
+        //     } else {
+        //         clearError(nimInput);
+        //     }
+        // } else {
+        //     clearError(nimInput); // kosong = tidak masalah
+        // }
 
 
 
