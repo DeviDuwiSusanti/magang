@@ -330,10 +330,10 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
     global $conn;
     // Inisialisasi foto_kegiatan (default: data lama)
     $foto_kegiatan = $row['foto_kegiatan'];
-    deleteGambarLogbook($id_logbook);
-
+    
     // Jika ada file baru diunggah
     if (!empty($FILES['gambar_kegiatan']['name'])) {
+        deleteGambarLogbook($id_logbook);
         $uploadResult = uploadFoto($FILES['gambar_kegiatan'], '../assets/img/logbook/' . $id_user . '/');
         if ($uploadResult) {
             $foto_kegiatan = $uploadResult['path'];
