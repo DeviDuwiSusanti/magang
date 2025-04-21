@@ -169,40 +169,7 @@
 
 
 <?php include "../layout/footerDashboard.php"; ?>
-<!-- Script untuk DataTable -->
-<script>
-    $(document).ready(function() {
-        $('#table_anggota').DataTable({
-            paging: true,
-            searching: true,
-            ordering: true,
-            info: true,
-            lengthMenu: [5, 10],
-            columnDefs: [{ orderable: false, targets: [3] }],
-            language: {
-                search: "Cari : ",
-                lengthMenu: "Tampilkan _MENU_ data per halaman",
-                info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-                paginate: {
-                    first: "Awal",
-                    last: "Akhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya"
-                }
-            }
-        });
 
-        // Event listener untuk membuka modal dengan JavaScript
-        $(".openModal").on("click", function() {
-            var type = $(this).data("type");
-            var id = $(this).data("id");
-            var modalId = "#" + type + "Modal" + id;
-
-            // Membuka modal sesuai dengan ID yang ditentukan
-            $(modalId).modal('show');
-        });
-    });
-</script>
 
 
 <script>
@@ -257,3 +224,39 @@
   });
 </script>
 
+
+
+<!-- Script untuk DataTable -->
+<script>
+    $(document).ready(function() {
+        $('#table_anggota').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            lengthMenu: [5, 10],
+            columnDefs: [{ orderable: false, targets: [3] }],
+            language: {
+                search: "Cari : ",
+                lengthMenu: "Tampilkan _MENU_ data per halaman",
+                info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Awal",
+                    last: "Akhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                }
+            }
+        });
+
+        // Event listener untuk membuka modal dengan JavaScript
+        $(".openModal").on("click", function() {
+            var type = $(this).data("type");
+            var id = $(this).data("id");
+            var modalId = "#" + type + "Modal" + id;
+
+            // Membuka modal sesuai dengan ID yang ditentukan
+            $(modalId).modal('show');
+        });
+    });
+</script>

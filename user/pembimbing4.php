@@ -1,5 +1,6 @@
 <?php 
     include '../layout/sidebarUser.php'; 
+    include "functions.php";
 
     // Cek apakah ada pengajuan yang ditangani pembimbing
     $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
@@ -75,10 +76,11 @@
                                 <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
                                 <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                 <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
-
-                                <!-- Tombol Logbook -->
+                                
                                 <td>
-                                    <button class="btn btn-info btn-sm openModal" 
+                                    <button class="btn btn-info btn-sm openLogbook"
+                                            data-id_pengajuan="<?= $pengajuan_user ?>"
+                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
                                             data-bs-toggle="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? 'modal' : '' ?>"
                                             data-bs-target="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? '#logbookModal' : '' ?>"
                                             <?= ($status_pengajuan != '4' && $status_pengajuan != '5') ? 'disabled' : '' ?>>
@@ -88,7 +90,9 @@
 
                                 <!-- Tombol Nilai & Sertifikat -->
                                 <td>
-                                    <button class="btn btn-success btn-sm openModal" 
+                                    <button class="btn btn-success btn-sm openNilai"
+                                            data-id_pengajuan="<?= $pengajuan_user ?>"
+                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
                                             data-bs-toggle="<?= ($status_pengajuan == '5') ? 'modal' : '' ?>"
                                             data-bs-target="<?= ($status_pengajuan == '5') ? '#nilaiModal' : '' ?>"
                                             <?= ($status_pengajuan != '5') ? 'disabled' : '' ?>>
@@ -96,6 +100,7 @@
                                         <i class="bi bi-file-earmark-pdf"></i>
                                     </button>
                                 </td>
+
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
