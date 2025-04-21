@@ -418,7 +418,11 @@ function validateTambahPembimbing() {
   // Validasi Nama
   const nama = document.getElementById("nama_pembimbing").value.trim();
   if (nama === "") {
-    showError("nama_pembimbing", "nama_pembimbing_error", "Nama tidak boleh kosong.");
+    showError(
+      "nama_pembimbing",
+      "nama_pembimbing_error",
+      "Nama tidak boleh kosong."
+    );
     isValid = false;
   } else if (!/^[a-zA-Z\s.,'-]+$/.test(nama)) {
     showError(
@@ -440,7 +444,11 @@ function validateTambahPembimbing() {
 
   const nik = document.getElementById("nik_pembimbing").value.trim();
   if (nik === "") {
-    showError("nik_pembimbing", "nik_pembimbing_error", "NIK tidak boleh kosong.");
+    showError(
+      "nik_pembimbing",
+      "nik_pembimbing_error",
+      "NIK tidak boleh kosong."
+    );
     isValid = false;
   } else if (!/^[0-9]{16}$/.test(nik)) {
     showError(
@@ -456,11 +464,7 @@ function validateTambahPembimbing() {
     showError("nip", "nip_error", "NIP tidak boleh kosong.");
     isValid = false;
   } else if (!/^[0-9]{18}$/.test(nip)) {
-    showError(
-      "nip",
-      "nip_error",
-      "NIP harus terdiri dari 18 digit angka."
-    );
+    showError("nip", "nip_error", "NIP harus terdiri dari 18 digit angka.");
     isValid = false;
   }
 
@@ -479,10 +483,18 @@ function validateTambahPembimbing() {
 
   const telepon = document.getElementById("telepone_pembimbing").value.trim();
   if (telepon === "") {
-    showError("telepone_pembimbing", "telepone_error", "Nomor telepon tidak boleh kosong.");
+    showError(
+      "telepone_pembimbing",
+      "telepone_error",
+      "Nomor telepon tidak boleh kosong."
+    );
     isValid = false;
   } else if (!/^[0-9]{11,12}$/.test(telepon)) {
-    showError("edit_telepone_pembimbing", "telepone_error", "Nomor telepon harus terdiri dari 11-12 digit angka.");
+    showError(
+      "edit_telepone_pembimbing",
+      "telepone_error",
+      "Nomor telepon harus terdiri dari 11-12 digit angka."
+    );
     isValid = false;
   }
 
@@ -507,19 +519,35 @@ function validateEditPembimbing() {
   // Validasi Nama
   const nama = document.getElementById("edit_nama_pembimbing").value.trim();
   if (nama === "") {
-    showError("edit_nama_pembimbing", "edit_nama_pembimbing_error", "Nama tidak boleh kosong.");
+    showError(
+      "edit_nama_pembimbing",
+      "edit_nama_pembimbing_error",
+      "Nama tidak boleh kosong."
+    );
     isValid = false;
   } else if (!/^[a-zA-Z\s.,'-]+$/.test(nama)) {
-    showError("edit_nama_pembimbing", "edit_nama_pembimbing_error", "Nama hanya boleh berisi huruf, spasi, dan simbol ('-).");
+    showError(
+      "edit_nama_pembimbing",
+      "edit_nama_pembimbing_error",
+      "Nama hanya boleh berisi huruf, spasi, dan simbol ('-)."
+    );
     isValid = false;
   }
 
   const nik = document.getElementById("edit_nik_pembimbing").value.trim();
   if (nik === "") {
-    showError("edit_nik_pembimbing", "edit_nik_pembimbing_error", "NIK tidak boleh kosong.");
+    showError(
+      "edit_nik_pembimbing",
+      "edit_nik_pembimbing_error",
+      "NIK tidak boleh kosong."
+    );
     isValid = false;
   } else if (!/^[0-9]{16}$/.test(nik)) {
-    showError("edit_nik_pembimbing", "edit_nik_pembimbing_error", "NIK harus terdiri dari 16 digit angka.");
+    showError(
+      "edit_nik_pembimbing",
+      "edit_nik_pembimbing_error",
+      "NIK harus terdiri dari 16 digit angka."
+    );
     isValid = false;
   }
 
@@ -528,22 +556,40 @@ function validateEditPembimbing() {
     showError("edit_nip", "edit_nip_error", "NIP tidak boleh kosong.");
     isValid = false;
   } else if (!/^[0-9]{18}$/.test(nip)) {
-    showError("edit_nip", "edit_nip_error", "NIP harus terdiri dari 18 digit angka.");
+    showError(
+      "edit_nip",
+      "edit_nip_error",
+      "NIP harus terdiri dari 18 digit angka."
+    );
     isValid = false;
   }
 
   const jabatan = document.getElementById("edit_jabatan").value.trim();
   if (jabatan === "") {
-    showError("edit_jabatan", "edit_jabatan_error", "Jabatan tidak boleh kosong.");
+    showError(
+      "edit_jabatan",
+      "edit_jabatan_error",
+      "Jabatan tidak boleh kosong."
+    );
     isValid = false;
   }
 
-  const telepon = document.getElementById("edit_telepone_pembimbing").value.trim();
+  const telepon = document
+    .getElementById("edit_telepone_pembimbing")
+    .value.trim();
   if (telepon === "") {
-    showError("edit_telepone_pembimbing", "edit_telepone_error", "Nomor telepon tidak boleh kosong.");
+    showError(
+      "edit_telepone_pembimbing",
+      "edit_telepone_error",
+      "Nomor telepon tidak boleh kosong."
+    );
     isValid = false;
   } else if (!/^[0-9]{11,12}$/.test(telepon)) {
-    showError("edit_telepone_pembimbing", "edit_telepone_error", "Nomor telepon harus terdiri dari 11-12 digit angka.");
+    showError(
+      "edit_telepone_pembimbing",
+      "edit_telepone_error",
+      "Nomor telepon harus terdiri dari 11-12 digit angka."
+    );
     isValid = false;
   }
 
@@ -561,7 +607,9 @@ function validateZoomForm() {
   let isValid = true;
 
   // Reset pesan error
-  document.querySelectorAll(".text-danger").forEach((el) => (el.textContent = ""));
+  document
+    .querySelectorAll(".text-danger")
+    .forEach((el) => (el.textContent = ""));
 
   // Ambil nilai
   const tanggal = document.getElementById("tanggal_pelaksanaan").value.trim();
@@ -571,19 +619,31 @@ function validateZoomForm() {
 
   // Validasi Tanggal
   if (tanggal === "") {
-    showError("tanggal_pelaksanaan", "tanggal_pelaksanaan_error", "Tanggal pelaksanaan tidak boleh kosong.");
+    showError(
+      "tanggal_pelaksanaan",
+      "tanggal_pelaksanaan_error",
+      "Tanggal pelaksanaan tidak boleh kosong."
+    );
     isValid = false;
   }
 
   // Validasi Jam
   if (jam === "") {
-    showError("jam_pelaksanaan", "jam_pelaksanaan_error", "Jam pelaksanaan tidak boleh kosong.");
+    showError(
+      "jam_pelaksanaan",
+      "jam_pelaksanaan_error",
+      "Jam pelaksanaan tidak boleh kosong."
+    );
     isValid = false;
   }
 
   // Validasi Pembimbing
   if (pembimbing === "") {
-    showError("pembimbing", "pembimbing_error", "Pilih pembimbing terlebih dahulu.");
+    showError(
+      "pembimbing",
+      "pembimbing_error",
+      "Pilih pembimbing terlebih dahulu."
+    );
     isValid = false;
   }
 
@@ -591,8 +651,12 @@ function validateZoomForm() {
   if (linkZoom === "") {
     showError("link_zoom", "link_zoom_error", "Link Zoom tidak boleh kosong.");
     isValid = false;
-  } else if (!/^https?:\/\/.+/.test(linkZoom)) {
-    showError("link_zoom", "link_zoom_error", "Format link Zoom tidak valid.");
+  } else if (!/^https?:\/\/(www\.)?zoom\.us\/.+/.test(linkZoom)) {
+    showError(
+      "link_zoom",
+      "link_zoom_error",
+      "Link Zoom harus berasal dari zoom.us."
+    );
     isValid = false;
   }
 
