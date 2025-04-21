@@ -91,17 +91,19 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 
 // ===================== pembimbing ======================
 if ($level == 4) :
-$pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user'")[0];
-$pengajuan_user = $pengajuan["id_pengajuan"];
-$daftar_anggota = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = tb_user.id_user AND tb_profile_user.id_pengajuan = '$pengajuan_user' AND tb_profile_user.status_active = '1'");
+    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
+    if (!empty($pengajuan)) {
+        $pengajuan_user = $pengajuan[0]["id_pengajuan"];
 
-$daftar_peserta_magang = count($daftar_anggota);
-// $pendidikan_1 = query("SELECT COUNT(*) AS total FROM tb_pendidikan WHERE status_active = 1")[0];
-// $pengajuan_1 = query("SELECT COUNT(*) AS total FROM tb_pengajuan WHERE status_active = 1")[0];
-// $user_1 = query("SELECT COUNT(*) AS total FROM tb_user WHERE status_active = 1")[0];
-// ============================== end of pembimbing =========================
-
+        // Pindahkan ini ke dalam if agar tidak error saat kosong
+        $daftar_anggota = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = tb_user.id_user AND tb_profile_user.id_pengajuan = '$pengajuan_user' AND tb_profile_user.status_active = '1'");
+        $daftar_peserta_magang = count($daftar_anggota);
+    } else {
+        // Bisa di-set ke 0 jika ingin tetap aman
+        $daftar_peserta_magang = 0;
+    }
 endif;
+
 ?>
 
 <div class="main-content p-4">

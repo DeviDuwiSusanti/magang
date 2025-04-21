@@ -197,6 +197,7 @@ if (isset($_POST["register"])) {
                         <div class="mt-3">
                             <input type="hidden" id="idPendidikanInput" name="id_pendidikan">
                         </div>
+
                     </div>
 
 
@@ -374,6 +375,29 @@ if (isset($_POST["register"])) {
                 jurusanSelect.classList.add("d-none");
             }
         });
+
+        function updateSelectedId() {
+            let selectedId = null;
+            let educationType = document.getElementById("educationSelect").value;
+            
+            if (educationType === "sekolah") {
+                selectedId = document.getElementById("jurusanSelect").value;
+            } else if (educationType === "universitas") {
+                selectedId = document.getElementById("prodiSelect").value;
+            }
+
+            document.getElementById("idPendidikanInput").value = selectedId ?? "";
+        }
+
+
+
+        // Tambahkan event listener ke semua select yang relevan
+        document.getElementById("educationSelect").addEventListener("change", updateSelectedId);
+        document.getElementById("schoolSelect").addEventListener("change", updateSelectedId);
+        document.getElementById("jurusanSelect").addEventListener("change", updateSelectedId);
+        document.getElementById("universitySelect").addEventListener("change", updateSelectedId);
+        document.getElementById("facultySelect").addEventListener("change", updateSelectedId);
+        document.getElementById("prodiSelect").addEventListener("change", updateSelectedId);
 
         // Event listener untuk pilihan universitas
         document.getElementById("universitySelect").addEventListener("change", function() {
