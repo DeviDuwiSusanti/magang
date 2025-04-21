@@ -421,7 +421,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </button>
                                             
                                             <input type="hidden" name="hapus_pengajuan"> <!-- Tanda penghapusan -->
-                                            <button type="submit" class="btn btn-danger btn-sm" id="hapusPengajuan"><i class="bi bi-trash me-1"></i> Hapus</button>      
+                                            <button type="submit" class="btn btn-danger" id="hapusPengajuan"><i class="bi bi-trash me-1"></i> Hapus</button>      
                                     </div>
                                 </form>
                             </div>
@@ -491,13 +491,24 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
 
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
 <script>
-    $(document).ready(function() {
-        $('#instansi').select2({
-            placeholder: "-- Pilih Instansi --",
-            allowClear: true
+    function initSelect2InModal(modalId) {
+        $(`#${modalId}`).on('shown.bs.modal', function () {
+            $('#instansi').select2({
+                dropdownParent: $(`#${modalId}`),
+                placeholder: "Pilih Instansi",
+                allowClear: true,
+                width: '100%',
+                minimumResultsForSearch: 0
+            });
         });
-    });
+    }
+
+    // Inisialisasi hanya untuk modal pengajuan
+    initSelect2InModal('editPengajuanModal');
+    initSelect2InModal('pengajuanModal');
 </script>
+
+
 
 <script>
     $(document).ready(function() {

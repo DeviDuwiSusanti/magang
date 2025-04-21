@@ -1,5 +1,8 @@
 
 <?php
+
+use Dom\Mysql;
+
 function generateIdDokumen($conn, $id_pengajuan) {
     $query = "SELECT MAX(CAST(SUBSTRING(id_dokumen, -2) AS UNSIGNED)) AS max_nomor 
                FROM tb_dokumen 
@@ -659,8 +662,12 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         echo "$fakultas";
     }
 
+    // ambil nama pendidikan
+    $query_namaPendidikan = "SELECT nama_pendidikan FROM tb_pendidikan WHERE id_pendidikan = '$asal_studi'";
+    $nama_pendidikan = mysqli_fetch_assoc(mysqli_query($conn, $query_namaPendidikan))['nama_pendidikan'];
+
     // Update data pendidikan (ambil id_pendidikan dari nama_pendidikan)
-    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$asal_studi' AND fakultas = '$fakultas' AND jurusan = '$jurusan'";
+    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$nama_pendidikan' AND fakultas = '$fakultas' AND jurusan = '$jurusan'";
     $result_pendidikan = mysqli_query($conn, $query_pendidikan);
     $row_pendidikan = mysqli_fetch_assoc($result_pendidikan);
     $id_pendidikan = $row_pendidikan['id_pendidikan'] ?? $dataLama['id_pendidikan']; // Pakai data lama jika tidak ditemukan

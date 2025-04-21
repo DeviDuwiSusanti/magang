@@ -64,4 +64,49 @@ if (isset($_POST["id_bidang"])) {
         echo json_encode(["error" => "Data bidang tidak ditemukan."]);
     }
 }
+
+
+// ambil jurusan berdasarkan asal studi
+if (isset($_POST['asal_studi'])) {
+    $id_pendidikan = $_POST['asal_studi'];
+    
+    $query = "SELECT DISTINCT jurusan FROM tb_pendidikan WHERE id_pendidikan LIKE ?";
+    $stmt = mysqli_prepare($conn, $query);
+    $pattern = substr($id_pendidikan, 0, 5) . '%';
+    mysqli_stmt_bind_param($stmt, "s", $pattern);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    $jurusan = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        if (!empty($row['jurusan'])) {
+            $jurusan[] = $row['jurusan'];
+        }
+    }
+    
+    echo json_encode(['jurusan' => $jurusan]);
+}
+
+// ambil fakultas berdasarkan asal studi
+
+if (isset($_POST['asal_studi'])) {
+    $id_pendidikan = $_POST['asal_studi'];
+    
+    $query = "SELECT DISTINCT fakultas FROM tb_pendidikan WHERE id_pendidikan LIKE ? AND fakultas IS NOT NULL";
+    $stmt = mysqli_prepare($conn, $query);
+    $pattern = substr($id_pendidikan, 0, 5) . '%';
+    mysqli_stmt_bind_param($stmt, "s", $pattern);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    
+    $fakultas = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        if (!empty($row['fakultas'])) {
+            $fakultas[] = $row['fakultas'];
+        }
+    }
+    
+    echo json_encode(['fakultas' => $fakultas]);
+}
+
 ?>
