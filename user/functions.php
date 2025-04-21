@@ -416,11 +416,13 @@ function inputPengajuan($POST, $FILES, $id_user){
         $anggota_nama = $POST['anggota_nama'];
         $anggota_email = $POST['anggota_email'];
         $anggota_nik = $POST['anggota_nik'];
+        $anggota_nisn = $POST['anggota_nisn'];
         $anggota_nim = $POST['anggota_nim'];
 
         foreach ($anggota_nama as $index => $nama) {
             $email = $anggota_email[$index];
             $nik = $anggota_nik[$index];
+            $nisn = $anggota_nisn[$index];
             $nim = $anggota_nim[$index];
             $id_user4 = generateIdAnggota($conn, $id_user);
 
@@ -428,7 +430,7 @@ function inputPengajuan($POST, $FILES, $id_user){
             $result = mysqli_query($conn, $pendidikan);
             $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
         
-            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
             $query_anggota1 = mysqli_query($conn, $sql_anggota1);
             
             $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
@@ -571,9 +573,10 @@ function updateAnggota($POST, $id_user){
     $nama_anggota = $POST['nama_user'];
     $email = $POST['email'];
     $nik = $POST['nik'];
+    $nisn = $POST['nisn'];
     $nim = $POST['nim'];
 
-    $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nim = '$nim', nisn = '$nim', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
+    $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nisn = '$nisn', nim = '$nim', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
     if (mysqli_query($conn, $sqlUpdate)){
         $sqlUpdate2 = "UPDATE tb_user SET email = '$email', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
     }
@@ -591,13 +594,14 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     $nama_anggota = $POST['nama_user'];
     $email = $POST['email'];
     $nik = $POST['nik'];
+    $nisn = $POST['nisn'];
     $nim = $POST['nim'];
     $id_user4  = generateIdAnggota($conn, $id_user);
     $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
     $result = mysqli_query($conn, $pendidikan);
     $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
 
-    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nim', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nim, nisn, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
     if (mysqli_query($conn, $sqlTambah)){
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){

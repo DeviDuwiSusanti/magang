@@ -247,13 +247,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                         <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
                                                     </div>
                                                     <div class="col">
-                                                        <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : $pendaftar['nisn'] ?>"  readonly>
+                                                        <input type="text" class="form-control" value="<?= $pendaftar['nisn'] ?>" readonly>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : '-' ?>"  readonly>
                                                     </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- Placeholder untuk anggota tambahan -->
                                             <div id="anggotaContainer"></div>
+                                            <div>
+                                                <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
+                                            </div><br><br>
 
                                             <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
                                             <button type="submit" name="pengajuan_kelompok" onclick="validateForm(event)" class="btn btn-success btn-sm">Kirim</button>
@@ -767,6 +773,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const nama = anggota.querySelector("input[name='anggota_nama[]']");
             const email = anggota.querySelector("input[name='anggota_email[]']");
             const nik = anggota.querySelector("input[name='anggota_nik[]']");
+            const nisn = anggota.querySelector("input[name='anggota_nisn[]']");
             const nim = anggota.querySelector("input[name='anggota_nim[]']");
 
             if (!nama.value.trim()) {
@@ -800,13 +807,25 @@ document.addEventListener("DOMContentLoaded", function() {
                 clearError(nik);
             }
 
-            if (!nim.value.trim()) {
-                showError(nim, "NIM/NISN wajib diisi!");
+            if (!nisn.value.trim()) {
+                showError(nisn, `NISN anggota wajib diisi!`);
                 isValid = false;
-            } else if (!(nim.value.length === 10 || nim.value.length === 12) || !/^\d+$/.test(nim.value)) {
-                showError(nim, "NIM harus 12 digit dan NISN harus 10 digit!");
+            } else if (!/^\d{10}$/.test(nisn.value)) {
+                showError(nisn, `NISN anggota harus 10 digit angka!`);
                 isValid = false;
             } else {
+                clearError(nisn);
+            }
+
+            if (nim.value.trim()) {
+                if (!/^\d{12}$/.test(nim.value)) {
+                    showError(nim, `NIM anggota harus 12 digit angka jika diisi!`);
+                    isValid = false;
+                } else {
+                    clearError(nim);
+                }
+            } else {
+                // Boleh kosong
                 clearError(nim);
             }
         });
@@ -836,8 +855,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     <div class="row flex-grow-1 gx-2">
                         <div class="col"><input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama"></div>
                         <div class="col"><input type="email" class="form-control anggota-email" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
-                        <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK"></div>
-                        <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM/NISN"></div>
+                        <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK" oninput="this.value=this.value.slice(0,16)"></div>
+                        <div class="col"><input type="number" class="form-control" name="anggota_nisn[]" placeholder="NISN" oninput="this.value=this.value.slice(0,10)"></div>
+                        <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM" oninput="this.value=this.value.slice(0,12)"></div>
                     </div>
                 </div>`;
                 anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);
