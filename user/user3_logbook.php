@@ -47,6 +47,7 @@ if (isset($_GET['id_logbook_hapus'])) {
     hapusLogbook($id_user);
 }
 
+
 ?>
 <!-- ================= TABEL DAFTAR LOGBOOK ============== -->
 <div class="main-content p-3">
@@ -131,7 +132,13 @@ if (isset($_GET['id_logbook_hapus'])) {
                     </thead>
                     <tbody>
                         <?php
-                        $logbook = getLogbook($conn, $id_pengajuan, $id_user_anggota);
+                        if ($level == '4' AND ISSET($_GET['id_user']) AND ISSET($_GET['id_pengajuan'])){
+                            $id_user = $_GET['id_user'];
+                            $id_pengajuan = $_GET['id_pengajuan'];
+                            $logbook = getLogbook($conn, $id_pengajuan, $id_user);
+                        }else{
+                            $logbook = getLogbook($conn, $id_pengajuan, $id_user_anggota);
+                        }    
                         while ($row = mysqli_fetch_assoc($logbook)){?>
                             <tr>
                                 <td><?= $no ?></td>
@@ -616,7 +623,7 @@ function printInline(id_pengajuan) {
                 // Hapus elemen sementara
                 document.getElementById('print-area')?.remove();
                 // Redirect ke halaman daftar logbook
-                window.location.href = 'logbook_daftar.php';
+                window.location.href = 'user3_logbook.php';
             };
 
             window.onafterprint = redirectAfterPrint;
