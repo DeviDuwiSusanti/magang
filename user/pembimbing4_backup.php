@@ -1,6 +1,5 @@
 <?php 
     include '../layout/sidebarUser.php'; 
-    include "functions.php";
 
     // Cek apakah ada pengajuan yang ditangani pembimbing
     $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
@@ -77,10 +76,9 @@
                                 <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                 <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
 
+                                <!-- Tombol Logbook -->
                                 <td>
-                                    <button class="btn btn-info btn-sm openLogbook"
-                                            data-id_pengajuan="<?= $pengajuan_user ?>"
-                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
+                                    <button class="btn btn-info btn-sm openModal" 
                                             data-bs-toggle="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? 'modal' : '' ?>"
                                             data-bs-target="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? '#logbookModal' : '' ?>"
                                             <?= ($status_pengajuan != '4' && $status_pengajuan != '5') ? 'disabled' : '' ?>>
@@ -90,9 +88,7 @@
 
                                 <!-- Tombol Nilai & Sertifikat -->
                                 <td>
-                                    <button class="btn btn-success btn-sm openNilai"
-                                            data-id_pengajuan="<?= $pengajuan_user ?>"
-                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
+                                    <button class="btn btn-success btn-sm openModal" 
                                             data-bs-toggle="<?= ($status_pengajuan == '5') ? 'modal' : '' ?>"
                                             data-bs-target="<?= ($status_pengajuan == '5') ? '#nilaiModal' : '' ?>"
                                             <?= ($status_pengajuan != '5') ? 'disabled' : '' ?>>
@@ -100,7 +96,6 @@
                                         <i class="bi bi-file-earmark-pdf"></i>
                                     </button>
                                 </td>
-
                             </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -174,40 +169,7 @@
 
 
 <?php include "../layout/footerDashboard.php"; ?>
-<!-- Script untuk DataTable -->
-<script>
-    $(document).ready(function() {
-        $('#table_anggota').DataTable({
-            paging: true,
-            searching: true,
-            ordering: true,
-            info: true,
-            lengthMenu: [5, 10],
-            columnDefs: [{ orderable: false, targets: [3] }],
-            language: {
-                search: "Cari : ",
-                lengthMenu: "Tampilkan _MENU_ data per halaman",
-                info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
-                paginate: {
-                    first: "Awal",
-                    last: "Akhir",
-                    next: "Selanjutnya",
-                    previous: "Sebelumnya"
-                }
-            }
-        });
 
-        // Event listener untuk membuka modal dengan JavaScript
-        $(".openModal").on("click", function() {
-            var type = $(this).data("type");
-            var id = $(this).data("id");
-            var modalId = "#" + type + "Modal" + id;
-
-            // Membuka modal sesuai dengan ID yang ditentukan
-            $(modalId).modal('show');
-        });
-    });
-</script>
 
 
 <script>
@@ -263,24 +225,38 @@
 </script>
 
 
-<script>
-    // Untuk Logbook Modal
-    document.querySelectorAll('.openLogbook').forEach(button => {
-        button.addEventListener('click', function () {
-            const idPengajuan = this.getAttribute('data-id_pengajuan');
-            const idUser = this.getAttribute('data-id_user');
-            document.getElementById('logbook_id_pengajuan').value = idPengajuan;
-            document.getElementById('logbook_id_user').value = idUser;
-        });
-    });
 
-    // Untuk Nilai & Sertifikat Modal
-    document.querySelectorAll('.openNilai').forEach(button => {
-        button.addEventListener('click', function () {
-            const idPengajuan = this.getAttribute('data-id_pengajuan');
-            const idUser = this.getAttribute('data-id_user');
-            document.getElementById('nilai_id_pengajuan').value = idPengajuan;
-            document.getElementById('nilai_id_user').value = idUser;
+<!-- Script untuk DataTable -->
+<script>
+    $(document).ready(function() {
+        $('#table_anggota').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            lengthMenu: [5, 10],
+            columnDefs: [{ orderable: false, targets: [3] }],
+            language: {
+                search: "Cari : ",
+                lengthMenu: "Tampilkan _MENU_ data per halaman",
+                info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                paginate: {
+                    first: "Awal",
+                    last: "Akhir",
+                    next: "Selanjutnya",
+                    previous: "Sebelumnya"
+                }
+            }
+        });
+
+        // Event listener untuk membuka modal dengan JavaScript
+        $(".openModal").on("click", function() {
+            var type = $(this).data("type");
+            var id = $(this).data("id");
+            var modalId = "#" + type + "Modal" + id;
+
+            // Membuka modal sesuai dengan ID yang ditentukan
+            $(modalId).modal('show');
         });
     });
 </script>

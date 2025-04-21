@@ -52,7 +52,8 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>NIK</th>
-                                <th>Nim/Nisn</th>
+                                <th>Nisn</th>
+                                <th>Nim</th>
                                 <?php if ($row3['status_pengajuan'] == '1') { ?>
                                     <th>Aksi</th>
                                 <?php } ?>
@@ -67,7 +68,8 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                     <td><?= $row['nama_user'] ?></td>
                                     <td><?= $row['email'] ?></td>
                                     <td><?= $row['nik'] ?></td>
-                                    <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
+                                    <td><?= $row['nisn'] ?></td>
+                                    <td><?= empty($row['nim']) ? '-' : $row['nim'] ?></td>
                                     <?php if ($row3['status_pengajuan'] == '1'): ?>
                                         <td>
                                             <?php $isKetua = cekStatusUser($row['id_user']) === 'Ketua'; ?>
@@ -141,8 +143,14 @@ if (ISSET($_POST['tambah_anggota'])){
                     </div>
                     
                     <div class="mb-3">
-                        <label for="nim" class="form-label">Nim/Nisn</label>
-                        <input type="number" class="form-control" id="nim" name="nim">
+                        <label for="nisn" class="form-label">Nisn</label>
+                        <input type="number" class="form-control" id="nisn" name="nisn" maxlength="10">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nim" class="form-label">Nim</label>
+                        <input type="number" class="form-control" id="nim" name="nim" maxlength="12">
+                        <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
                     </div>
                     
                     <div class="modal-footer">
@@ -184,8 +192,14 @@ if (ISSET($_POST['tambah_anggota'])){
                     </div>
 
                     <div class="mb-3">
-                        <label for="edit_nim" class="form-label">Nim/Nisn</label>
+                        <label for="edit_nisn" class="form-label">Nisn</label>
+                        <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_nim" class="form-label">Nim</label>
                         <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>">
+                        <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
                     </div>
 
                     <button type="submit" name="update_anggota" class="btn btn-primary">
@@ -317,14 +331,30 @@ $(document).ready(function() {
         }
 
         // Validasi NIM/NISN
-        const nim = form.find("[name='nim']").val().trim();
+        const nisn = form.find("[name='nisn']").val().trim();
         if (nim === "") {
             isValid = false;
-            showError(form.find("[name='nim']"), "NIM/NISN tidak boleh kosong!");
-        } else if (nim.length < 10 || nim.length > 12 || isNaN(nim)) {
+            showError(form.find("[name='nisn']"), "NISN tidak boleh kosong!");
+        } else if (nim.length !== 10 || isNaN(nim)) {
             isValid = false;
-            showError(form.find("[name='nim']"), "NIM/NISN harus 10-12 digit angka!");
+            showError(form.find("[name='nisn']"), "NISN harus 10 digit angka!");
         }
+
+        // Validasi NIM
+        const nimInput = form.find("[name='nim']");
+        const nim = nimInput.val().trim();
+        if (nim !== "") {
+            if (nim.length !== 12 || isNaN(nim)) {
+                isValid = false;
+                showError(nimInput, "NIM harus terdiri dari 12 digit angka!");
+            } else {
+                clearError(nimInput);
+            }
+        } else {
+            clearError(nimInput); // kosong = tidak masalah
+}
+
+
 
         // Cegah submit jika ada error
         if (!isValid) {
