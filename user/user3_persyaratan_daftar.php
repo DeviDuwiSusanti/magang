@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_laporan'])) {
             unlink($data['file_path']);
         }
 
-        // Update status_active jadi 0 (soft delete)
-        $stmt = $conn->prepare("UPDATE tb_dokumen SET status_active = 0, change_date = NOW() WHERE id_dokumen = ?");
-        $stmt->bind_param("s", $id_dokumen);
+       // Update status_active jadi 0 (soft delete) dan isi kolom change_by
+        $stmt = $conn->prepare("UPDATE tb_dokumen SET status_active = 0, change_date = NOW(), change_by = ? WHERE id_dokumen = ?");
+        $stmt->bind_param("ss", $id_user, $id_dokumen);
         $stmt->execute();
 
         $status = 'success';

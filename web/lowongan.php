@@ -1,6 +1,7 @@
 <?php
-include "../koneksi.php"; 
+include "../koneksi.php";
 include "functions.php";
+
 ?>
 
 <!DOCTYPE html>
@@ -23,9 +24,8 @@ include "functions.php";
     <!--=============== CSS ===============-->
     <link rel="stylesheet" href="../assets/css/style2.css" />
     <link rel="stylesheet" href="../assets/css/low.css" />
-    <link rel="stylesheet" href="../assets/css/detail.css" />
     <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
-    <title>Lowongan Magang</title>
+    <title>Home</title>
 </head>
 
 <body>
@@ -34,187 +34,138 @@ include "functions.php";
 
     <!--==================== MAIN ====================-->
     <main class="main">
-        <!--==================== HOME ====================-->
-        <div class="wrapper">
-            <div class="container main">
-                <div class="row">
-                    <div class="col-md-6 side-image">
-                        <div class="text">
-                            <h1 class="hero-title">Temukan Karir Impianmu</h1>
-                        </div>
-                    </div>
+    <!--==================== HOME ====================-->
+    <div class="wrapper">
+    <div class="container main">
+        <div class="row">
+            <div class="col-md-6 side-image">
+                <div class="text">
+                    <h1 class="hero-title">Temukan Karir Impianmu</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!--==================== POPULAR ====================-->
+      <section class="section" id="popular">
+        <div class="container" data-aos="fade-up">
+            <h2 class="section__title" style="text-align: center">
+            Dengan Pengalaman Kami </br> Kami Hadir untuk Melayani Anda
+            </h2></br>
+    <!---========== Text and image layout=======-->
+    <div class="custom-container" data-aos="fade-up">
+            <!-- Center Text -->
+            <div class="center-text">
+                <div class="text-block">
+                    <p class="large-text">44</p>
+                    <p class="small-text">Instansi</p>
+                </div>
+                <div class="text-block">
+                    <p class="large-text">+100</p>
+                    <p class="small-text">Lowongan</p>
+                </div>
+                <div class="text-block">
+                    <p class="large-text">+100</p>
+                    <p class="small-text">Selesai</p>
+                </div>
+            </div>
+    <!-- Image Row -->
+        <div class="image-row">
+                <!-- Kiri Gambar -->
+                <div class="left-column" data-aos="fade-left">
+                    <img src="../assets/img/pw2.jpg" alt="Left Portrait Image" class="custom-image">
+                </div>
+                <!-- Kanan Gambar-->
+                <div class="right-column" data-aos="fade-right">
+                    <img src="../assets/img/pw1.jpg" alt="Right Portrait Image" class="custom-image">
+                    <img src="../assets/img/pw3.jpg" alt="Bottom Portrait Image" class="custom-image image-spacing">
                 </div>
             </div>
         </div>
         
-        <!--==================== POPULAR ====================-->
-        <section class="section" id="popular">
-            <div class="container" data-aos="fade-up">
-                <h2 class="section__title" style="text-align: center">
-                    Dengan Pengalaman Kami </br> Kami Hadir untuk Melayani Anda
-                </h2></br>
-                
-                <!---========== Text and image layout=======-->
-                <div class="custom-container" data-aos="fade-up">
-                    <!-- Center Text -->
-                    <div class="center-text">
-                        <div class="text-block">
-                            <p class="large-text">44</p>
-                            <p class="small-text">Instansi</p>
-                        </div>
-                        <div class="text-block">
-                            <p class="large-text">+100</p>
-                            <p class="small-text">Lowongan</p>
-                        </div>
-                        <div class="text-block">
-                            <p class="large-text">+100</p>
-                            <p class="small-text">Selesai</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Image Row -->
-                    <div class="image-row">
-                        <!-- Kiri Gambar -->
-                        <div class="left-column" data-aos="fade-left">
-                            <img src="../assets/img/pw2.jpg" alt="Left Portrait Image" class="custom-image">
-                        </div>
-                        <!-- Kanan Gambar-->
-                        <div class="right-column" data-aos="fade-right">
-                            <img src="../assets/img/pw1.jpg" alt="Right Portrait Image" class="custom-image">
-                            <img src="../assets/img/pw3.jpg" alt="Bottom Portrait Image" class="custom-image image-spacing">
-                        </div>
-                    </div>
-                </div>
-                
-                <!--==================== Career ====================-->
-                <h6 class="section__title" style="text-align: center">Temukan Kesempatan Magang Terbaikmu🚀</h6>
-                <!-- Search Section -->
-                <div class="search-container" style="text-align: center; margin-top: 10px">
-                    <div class="search-wrapper">
-                        <input type="text" id="searchInput" class="search-input" placeholder="Cari Instansi atau Bidang..." />
-                        <i id="searchIcon" class="fas fa-search search-icon"></i>
-                    </div>
-                </div>
-
-                <div class="lowongan">
-                    <div class="lowongans" data-aos="fade-down">
-                    <?php
-                    $query = getBidangInstansi($conn);
-                    while ($row = mysqli_fetch_assoc($query)){  
-                        $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
-                        ?>
-                        <!-- Buat satu kartu lowongan -->
-                        <article class="popular__card swiper-slide">
-                            <!-- Logo instansi -->
-                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                            <!-- Nama instansi -->
-                            <p class="instansi"><?= $row['nama_panjang'] ?></p>
-                            <div class="popular__data">
-                                <!-- Nama bidang magang -->
-                                <h3 class="popular__title">Internship - <?= $row['nama_bidang'] ?></h3>
-                                <!-- Alamat instansi -->
-                                <p class="popular__description"><?= $row['alamat_instansi'] ?></p>
-                                <hr style="border: 1px solid #ddd; margin: 10px 0;">
-                                <!-- Info jumlah pemagang aktif & tanggal dibuatnya lowongan -->
-                                <p class="popular__details">
-                                    <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: 
-                                    <span class="total-pendaftar"><?= $pemagang_aktif ?></span><br>
-                                    <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: 
-                                    <span class="creation-date"><?= $row['create_date'] ?></span>
-                                </p>
-                                <!-- Tombol buat liat detail lowongan -->
-                                <button class="details-button" data-bs-toggle="modal" data-bs-target="#detailModal<?= $row['id_bidang'] ?>">
-                                    Lihat Detail →
-                                </button>
-                            </div>
-                        </article>
-
-                        <!-- Modal Detail Lowongan -->
-                        <div class="modal fade" id="detailModal<?= $row['id_bidang'] ?>" tabindex="-1" aria-labelledby="detailModalLabel<?= $row['id_bidang'] ?>" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-md">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Detail Lowongan</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="blog__detail">
-          <h3>Internship - <?= $row['nama_bidang'] ?></h3>
-          <table class="detail-table">
-            <tr><td><b>Instansi</b></td><td>:</td><td><?= $row['nama_panjang'] ?></td></tr>
-            <tr><td><b>Alamat</b></td><td>:</td><td><?= $row['alamat_instansi'] ?></td></tr>
-            <tr><td><b>Pemagang Aktif</b></td><td>:</td><td><?= $pemagang_aktif ?></td></tr>
-            <tr><td><b>Kuota Lowongan</b></td><td>:</td><td><?= $row['kuota_bidang'] ?></td></tr>
-            <tr><td><b>Dibuat pada</b></td><td>:</td><td><?= $row['bidang_change_date'] ?></td></tr>
-          </table>
-
-          <h3>Deskripsi Lowongan</h3>
-          <p><?= $row['deskripsi_bidang'] ?></p>
-
-          <h3>Kriteria</h3>
-          <ul class="list">
-            <?php foreach (explode(',', $row['kriteria_bidang']) as $item): ?>
-              <li><?= $item ?></li>
-            <?php endforeach; ?>
-          </ul>
-
-          <h3>Persyaratan Dokumen</h3>
-          <ul class="list">
-            <?php foreach (explode(',', $row['dokumen_prasyarat']) as $item): ?>
-              <li><?= $item ?></li>
-            <?php endforeach; ?>
-          </ul>
-
-          <h3>Lokasi Instansi</h3>
-          <div class="maps-container">
-            <?= $row['lokasi_instansi'] ?>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <a href="../user/user3_statusPengajuan.php" class="btn btn-primary">Daftar Sekarang</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-      </div>
-</div>
+    <!--==================== Carieer ====================-->
+            <h6 class="section__title" style="text-align: center">Temukan Kesempatan Magang Terbaikmu🚀</h4>
+            <!-- Search Section -->
+            <div class="search-container" style="text-align: center; margin-top: 10px">
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari Instansi atau Bidang..." />
+                    <i id="searchIcon" class="fas fa-search search-icon"></i>
                 </div>
             </div>
-<?php } ?> <!-- tutup while di sini -->
-        </section>
+
+            <div class="lowongan">
+                <div class="lowongans" data-aos="fade-down">
+                <?php
+                $query = getBidangInstansi($conn);
+                while ($row = mysqli_fetch_assoc($query)){  
+                    $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
+                    ?>
+                    <!-- Buat satu kartu lowongan -->
+                    <article class="popular__card swiper-slide">
+                        <!-- Logo instansi (sementara pake gambar default) -->
+                        <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                        <!-- Nama instansi -->
+                        <p class="instansi"> <?= $row['nama_panjang'] ?> </p>
+                        <div class="popular__data">
+                            <!-- Nama bidang magang -->
+                            <h3 class="popular__title">Internship - <?= $row['nama_bidang'] ?></h3>
+                            <!-- Alamat instansi -->
+                            <p class="popular__description"> <?= $row['alamat_instansi'] ?> </p>
+                            <hr style="border: 1px solid #ddd; margin: 10px 0;">
+                            <!-- Info jumlah pemagang aktif & tanggal dibuatnya lowongan -->
+                            <p class="popular__details">
+                                <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: 
+                                <span class="total-pendaftar"><?= $pemagang_aktif ?></span><br>
+                                <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: 
+                                <span class="creation-date"> <?= $row['create_date'] ?> </span>
+                            </p>
+                            <!-- Tombol buat liat detail lowongan -->
+                            <a href="detaillow.php?id_bidang=<?= $row['id_bidang'] ?>">
+                                <button class="details-button">Lihat Detail →</button>
+                            </a>
+                        </div>
+                    </article>
+                <?php
+                }
+                ?>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php include "../layout/footerUser.php" ?>
     </main>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Ambil input pencarian sama semua kotak lowongan
+        const searchInput = document.getElementById("searchInput");
+        const cards = document.querySelectorAll(".popular__card");
 
-    <?php include "../layout/footerUser.php" ?>
+        // Fungsi buat nyari kotak yang sesuai sama teks yang diketik
+        function filterCards() {
+            const query = searchInput.value.toLowerCase(); // Ambil teks pencarian, terus ubah jadi huruf kecil
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Inisialisasi AOS
-            AOS.init();
-            
-            // Fungsi pencarian
-            const searchInput = document.getElementById("searchInput");
-            const cards = document.querySelectorAll(".popular__card");
+            cards.forEach((card) => {
+                // Ambil teks dari judul, deskripsi, sama instansi di tiap kotak
+                const title = card.querySelector(".popular__title").textContent.toLowerCase();
+                const description = card.querySelector(".popular__description").textContent.toLowerCase();
+                const instansi = card.querySelector(".instansi").textContent.toLowerCase();
 
-            function filterCards() {
-                const query = searchInput.value.toLowerCase();
+                // Kalau inputnya kosong atau ada yang cocok, tampilin kotaknya
+                if (query === "" || title.includes(query) || description.includes(query) || instansi.includes(query)) {
+                    card.style.display = "block"; // Munculin kotak
+                } else {
+                    card.style.display = "none"; // Sembunyiin kalau nggak cocok
+                }
+            });
+        }
+        // Setiap kali user ngetik, langsung filter kotaknya
+        searchInput.addEventListener("input", filterCards);
 
-                cards.forEach((card) => {
-                    const title = card.querySelector(".popular__title").textContent.toLowerCase();
-                    const description = card.querySelector(".popular__description").textContent.toLowerCase();
-                    const instansi = card.querySelector(".instansi").textContent.toLowerCase();
-
-                    if (query === "" || title.includes(query) || description.includes(query) || instansi.includes(query)) {
-                        card.style.display = "block";
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-            }
-            
-            searchInput.addEventListener("input", filterCards);
-            filterCards();
-        });
-    </script>
-
+        // Biar pas pertama buka halaman, semua kotak langsung muncul
+        filterCards();
+    });
+</script>
 
 </body>
 </html>
