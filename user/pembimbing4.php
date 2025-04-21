@@ -1,27 +1,43 @@
 <?php 
     include '../layout/sidebarUser.php'; 
 
-    // Ambil id_pengajuan yang ditangani oleh pembimbing ini
-    $pengajuan = query("SELECT id_pengajuan, id_user FROM tb_pengajuan WHERE id_pembimbing = '$id_user'")[0];
-    $pengajuan_user = $pengajuan["id_pengajuan"];
+    // Cek apakah ada pengajuan yang ditangani pembimbing
+    $pengajuan = query("SELECT id_pengajuan, id_user FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
 
-    $user_id = $pengajuan["id_user"];
+    $daftar_anggota = [];
+    $pendidikan_user = null;
 
-    // Ambil ID pendidikan dari user pertama (karena semua sama)
-    $id_pendidikan_data = query("SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$user_id'")[0];
-    $id_pendidikan = $id_pendidikan_data["id_pendidikan"];
+    if (!empty($pengajuan)) {
+        $pengajuan_user = $pengajuan[0]["id_pengajuan"];
+        $user_id = $pengajuan[0]["id_user"];
 
-    // Ambil detail pendidikan
-    $pendidikan_user = query("SELECT * FROM tb_pendidikan WHERE id_pendidikan = '$id_pendidikan'")[0];
+        // Ambil ID pendidikan
+        $id_pendidikan_data = query("SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$user_id'");
+        if (!empty($id_pendidikan_data)) {
+            $id_pendidikan = $id_pendidikan_data[0]["id_pendidikan"];
 
-    // Ambil daftar anggota dari pengajuan
-    $daftar_anggota = query("SELECT pu.nama_user, pu.gambar_user, u.email
-                            FROM tb_profile_user pu 
-                            JOIN tb_user u ON pu.id_user = u.id_user 
-                            WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
+            // Ambil detail pendidikan
+            $pendidikan_result = query("SELECT * FROM tb_pendidikan WHERE id_pendidikan = '$id_pendidikan'");
+            if (!empty($pendidikan_result)) {
+                $pendidikan_user = $pendidikan_result[0];
+            }
+        }
+
+        // Ambil daftar anggota
+        $daftar_anggota = query("SELECT pu.nama_user, pu.gambar_user, u.email
+                                FROM tb_profile_user pu 
+                                JOIN tb_user u ON pu.id_user = u.id_user 
+                                WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
+    }
 
     $no = 1;
 ?>
+
+<!-- Dropzone CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
+
+<!-- Dropzone JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
 <main>
     <div class="container-fluid px-4">
@@ -30,55 +46,58 @@
             <li class="breadcrumb-item active">Berikut adalah anggota peserta magang dari pengajuan Anda</li>
         </ol>
     </div>
-    <div class="container mt-5">                         
-        <div class="card shadow-lg">
-            <div class="card-body">
-                <table id="table_anggota" class="table table-striped table-bordered align-middle text-center">
-                    <thead class="table-light small">
-                        <tr>
-                            <th>No.</th>
-                            <th>Nama Lengkap</th>
-                            <th>Email</th>
-                            <th>Foto</th>
-                            <th>Pendidikan</th>
-                            <th>Jurusan</th>
-                            <th>Logbook Peserta</th>
-                            <th>Unggah Nilai</th>
-                            <th>Unggah Sertifikat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($daftar_anggota as $anggota) : ?>
-                        <tr>
-                            <td><?= $no++ ?></td>
-                            <td><?= $anggota["nama_user"] ?></td>
-                            <td><?= $anggota["email"] ?></td>
-                            <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
-                            <td>Pendidikan</td>
-                            <td>Jurusan</td>
-                            <!-- Tombol dengan Bootstrap Icons untuk Logbook, Nilai, Sertifikat -->
-                            <td>
-                                <button class="btn btn-info btn-sm openModal" data-bs-toggle="modal" data-bs-target="#logbookModal">
-                                    <i class="bi bi-book"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-warning btn-sm openModal" data-bs-toggle="modal" data-bs-target="#nilaiModal">
-                                    <i class="bi bi-bar-chart"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <button class="btn btn-success btn-sm openModal" data-bs-toggle="modal" data-bs-target="#sertifikatModal">
-                                    <i class="bi bi-file-earmark-pdf"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+
+    <?php if (!empty($daftar_anggota)) : ?>
+        <div class="container mt-5">                         
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <table id="table_anggota" class="table table-striped table-bordered align-middle text-center">
+                        <thead class="table-light small">
+                            <tr>
+                                <th>No.</th>
+                                <th>Nama Lengkap</th>
+                                <th>Email</th>
+                                <th>Foto</th>
+                                <th>Pendidikan</th>
+                                <th>Jurusan</th>
+                                <th>Logbook Peserta</th>
+                                <th>Nilai Dan Sertifikat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($daftar_anggota as $anggota) : ?>
+                            <tr>
+                                <td><?= $no++ ?></td>
+                                <td><?= $anggota["nama_user"] ?></td>
+                                <td><?= $anggota["email"] ?></td>
+                                <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
+                                <td><?= $pendidikan_user['jenjang'] ?? '-' ?></td>
+                                <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
+                                <td>
+                                    <button class="btn btn-info btn-sm openModal" data-bs-toggle="modal" data-bs-target="#logbookModal">
+                                        <i class="bi bi-book"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success btn-sm openModal" data-bs-toggle="modal" data-bs-target="#nilaiModal">
+                                        <i class="bi bi-bar-chart"></i>
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
+    <?php else : ?>
+        <div class="container mt-5">
+            <div class="alert alert-warning text-center">
+                Belum ada Daftar Anak anggota magang yang aktif Atau Berlangsung.
+            </div>
+        </div>
+    <?php endif; ?>
 </main>
 
 
@@ -101,41 +120,41 @@
     </div>
 </div>
 
-<!-- Modal untuk Nilai -->
+
+<!-- Modal untuk Nilai dan Sertifikat -->
 <div class="modal fade" id="nilaiModal" tabindex="-1" aria-labelledby="nilaiModalLabel" aria-hidden="true">
     <div class="modal-dialog">
+        <form id="nilaiForm" method="POST">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="nilaiModalLabel">Unggah Nilai</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="nilaiModalLabel">Upload Sertifikat dan Nilai</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
-                <p>Nilai</p>
+            <div class="mb-3">
+                <label class="form-label">Upload File (PDF)</label>
+                <div class="dropzone" id="fileDropzone"></div>
             </div>
+
+            <!-- Tempat input rename file muncul -->
+            <div id="renameContainer" class="mb-3" style="display: none;">
+                <label class="form-label">Ganti Nama File</label>
+                <input type="text" class="form-control" id="renameInput" placeholder="contoh: sertifikat_john_doe.pdf">
+            </div>
+            </div>
+
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="button" id="uploadBtn" class="btn btn-primary">Upload</button>
             </div>
         </div>
+        </form>
     </div>
 </div>
 
-<!-- Modal untuk Sertifikat -->
-<div class="modal fade" id="sertifikatModal" tabindex="-1" aria-labelledby="sertifikatModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sertifikatModalLabel">Unggah Sertifikat</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Sertifikat.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 <?php include "../layout/footerDashboard.php"; ?>
 <!-- Script untuk DataTable -->
 <script>
@@ -170,5 +189,58 @@
             $(modalId).modal('show');
         });
     });
+</script>
+
+
+<script>
+  Dropzone.autoDiscover = false;
+
+  const myDropzone = new Dropzone("#fileDropzone", {
+    url: "/simpan-nilai-sertifikat", // Ganti sesuai backend kamu
+    maxFiles: 1,
+    acceptedFiles: ".pdf",
+    addRemoveLinks: true,
+    autoProcessQueue: false,
+    paramName: "file_sertifikat", // Nama parameter file di server
+    init: function () {
+      this.on("addedfile", function (file) {
+        // Tampilkan input rename saat file ditambahkan
+        document.getElementById("renameContainer").style.display = "block";
+        document.getElementById("renameInput").value = file.name;
+      });
+
+      this.on("removedfile", function () {
+        // Sembunyikan rename input kalau file dihapus
+        document.getElementById("renameContainer").style.display = "none";
+        document.getElementById("renameInput").value = "";
+      });
+
+      this.on("sending", function (file, xhr, formData) {
+        // Kirim nama file baru sebagai bagian dari data
+        const newName = document.getElementById("renameInput").value;
+        formData.append("new_filename", newName);
+      });
+
+      this.on("success", function (file, response) {
+        alert("File berhasil diupload!");
+        this.removeAllFiles();
+        document.getElementById("renameContainer").style.display = "none";
+        const modal = bootstrap.Modal.getInstance(document.getElementById("nilaiModal"));
+        modal.hide();
+      });
+
+      this.on("error", function (file, errorMessage) {
+        alert("Terjadi kesalahan saat mengupload file.");
+      });
+    }
+  });
+
+  document.getElementById("uploadBtn").addEventListener("click", function () {
+    if (myDropzone.getAcceptedFiles().length === 0) {
+      alert("Silakan upload file terlebih dahulu.");
+      return;
+    }
+    myDropzone.processQueue();
+  });
 </script>
 
