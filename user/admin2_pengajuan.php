@@ -90,7 +90,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                             <?php
-                            // $id_pengajuan = $row['id_pengajuan'];
+                            $id_pengajuan = $row['id_pengajuan'];
                             $status_pengajuan = $row['status_pengajuan'];
                             ?>
                             <tr>
@@ -285,7 +285,7 @@ $result = mysqli_query($conn, $query);
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
-                            <input type="date" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
+                            <input type="text" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
                             <small class="text-danger" id="tanggal_pelaksanaan_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
@@ -426,6 +426,10 @@ $result = mysqli_query($conn, $query);
         $('.clockpicker').clockpicker({
             autoclose: true,
             donetext: 'Pilih'
+        });
+        $("#tanggal_pelaksanaan").datepicker({
+            dateFormat: "dd/mm/yy",
+            minDate: 0
         });
     });
 
