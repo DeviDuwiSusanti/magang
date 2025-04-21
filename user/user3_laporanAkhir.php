@@ -95,7 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
                 $icon = "error";
             }
     }
-
     echo "<script>
     Swal.fire({
         icon: '$icon',
@@ -128,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
             }
 
             // Update status di database
-            $sql_update = "UPDATE tb_dokumen SET status_active = 0 WHERE id_dokumen = '$id_dokumen'";
+            $sql_update = "UPDATE tb_dokumen SET status_active = 0, change_date = NOW(), change_by = '$id_user' WHERE id_dokumen = '$id_dokumen'";
             if (mysqli_query($conn, $sql_update)) {
                 echo "<script>
                 Swal.fire({
