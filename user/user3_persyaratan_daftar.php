@@ -320,6 +320,9 @@ document.querySelectorAll('.hapus-btn').forEach(button => {
 .remove-button:hover {
     background: darkred;
 }
+.modal-backdrop.fade.show {
+    display: none !important;
+}
 </style>
 
 <script>
@@ -401,11 +404,14 @@ let myDropzone = new Dropzone("#myDropzone", {
                 text: "Semua file berhasil diunggah!",
                 confirmButtonText: "OK"
             }).then(() => {
-                // Menutup modal unggah
+                // Tutup modal secara manual
                 $('#unggahModal').modal('hide');
                 
-                // Menampilkan halaman user3_statusPengajuan.php
-                window.location.href = "user3_statusPengajuan.php";  // Ganti dengan URL yang sesuai
+                // Hapus backdrop yang mungkin tertinggal
+                $('.modal-backdrop').remove();
+                
+                // Refresh daftar dokumen (opsional)
+                $('#daftarDokumenModal').modal('show');
             });
         });
 
