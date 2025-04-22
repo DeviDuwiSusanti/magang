@@ -13,13 +13,16 @@ if (!isset($_SESSION['id_user'])) {
 
 $id_user = $_SESSION['id_user'];
 
-
 if (empty($id_pengajuan)) {
     echo "<script>alert('ID Pengajuan tidak valid.'); window.location.href='user3_histori.php';</script>";
     exit;
 }
 
-
+// Ambil status pengajuan
+$sql_status = "SELECT status_pengajuan FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan'";
+$query_status = mysqli_query($conn, $sql_status);
+$status_data = mysqli_fetch_assoc($query_status);
+$status_pengajuan = $status_data['status_pengajuan'] ?? null;
 
 // Ambil level user
 $sql_user = "SELECT level FROM tb_user WHERE id_user = '$id_user'";
@@ -102,12 +105,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     }).then(() => { window.location.href = 'user3_laporanAkhir.php?id_pengajuan=$id_pengajuan'; });
     </script>";
     exit;
-
 }
-
 
 // Tambahkan skrip hapus file
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
+    // Cek jika status pengajuan = 5 (tidak boleh hapus)
+    if ($status_pengajuan == 5) {
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Laporan tidak dapat dihapus karena pengajuan sudah disetujui!',
+            });
+        </script>";
+        exit;
+    }
+
     $id_dokumen = $_POST['id_dokumen'];
 
     // Ambil data file berdasarkan id_dokumen
@@ -168,7 +180,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
         <div class="mb-4 dropdown-divider"></div>
 
         <div class="mb-4 text-end">
-        <?php if (!$laporan_terunggah): ?>
+        <?php if (!$laporan_terunggah && $status_pengajuan != 5): ?>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
                 <i class="bi bi-plus-circle me-1"></i>
                 Tambah Laporan Akhir
@@ -202,35 +214,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
                                 </td>
                                 <td class="text-center"><?= htmlspecialchars($row2['nama_user'] ?? 'Tidak diketahui') ?></td>
                                 <td class="text-center">
-                                    <?php if ($row2['id_user'] == $id_user): ?>
+                                    <?php if ($row2['id_user'] == $id_user && $status_pengajuan != 5): ?>
                                         <form method="POST" action="" onsubmit="return konfirmasiHapus(event, this);">
                                             <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
-                                            <input type="hidden" name="hapus_laporan" value="1"> <!-- Tambahkan input hidden -->
+                                            <input type="hidden" name="hapus_laporan" value="1">
                                             <button type="submit" class="btn btn-danger btn-sm">
                                                 <i class="bi bi-trash"></i> Hapus
                                             </button>
                                         </form>
-                                    <!-- Tambahkan SweetAlert -->
-                                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-                                    <script>
-                                        function konfirmasiHapus(event, form) {
-                                            event.preventDefault(); // Mencegah submit langsung
-                                            Swal.fire({
-                                                title: "Apakah Anda yakin?",
-                                                text: "Laporan yang dihapus tidak dapat dikembalikan!",
-                                                icon: "warning",
-                                                showCancelButton: true,
-                                                confirmButtonColor: "#d33",
-                                                cancelButtonColor: "#3085d6",
-                                                confirmButtonText: "Ya, hapus!",
-                                                cancelButtonText: "Batal"
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    form.submit(); // Submit form setelah konfirmasi
-                                                }
-                                            });
-                                        }
-                                    </script>
                                     <?php else: ?>
                                         <button class="btn btn-secondary btn-sm" disabled>
                                             <i class="bi bi-trash"></i> Hapus
@@ -282,6 +273,24 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+function konfirmasiHapus(event, form) {
+    event.preventDefault();
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Laporan yang dihapus tidak dapat dikembalikan!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.submit();
+        }
+    });
+}
 </script>
 
 <?php include "../layout/footerDashboard.php"; ?>
