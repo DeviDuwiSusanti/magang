@@ -6,11 +6,7 @@ $query2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($query2);
 ?>
 
-<!-- Modal Preview Gambar -->
-<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
-    <span class="image-modal-close">&times;</span>
-    <img class="image-modal-content" id="modalPreviewImage">
-</div>
+
 
 <style>
     #alamat {
