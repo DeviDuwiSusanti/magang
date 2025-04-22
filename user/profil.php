@@ -6,16 +6,26 @@ $query2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($query2);
 ?>
 
-
 <!-- Modal Preview Gambar -->
-<!-- <div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
+<div id="imageModalPreview" class="image-modal" onclick="closeImageModal()">
     <span class="image-modal-close">&times;</span>
     <img class="image-modal-content" id="modalPreviewImage">
-</div> -->
+</div>
 
 <style>
     #alamat {
         height: 200px;
+    }
+    
+    /* Style untuk Select2 */
+    .select2-container--default .select2-selection--single {
+        height: 38px;
+        padding: 5px;
+        border: 1px solid #ced4da;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px;
     }
 </style>
 
@@ -205,7 +215,7 @@ if (isset($_POST['update_profil'])) {
                     <!-- Asal Studi -->
                     <div class="mb-3">
                         <label for="asal_studi" class="form-label">Asal Studi</label>
-                        <select class="form-control" id="asal_studi" name="asal_studi" required>
+                        <select class="form-control select2" id="asal_studi" name="asal_studi" required>
                             <option value="">Pilih Asal Studi</option>
                             <?php 
                             // Current selected value - ambil id_pendidikan dari data lama
@@ -356,10 +366,6 @@ if (isset($_POST['update_profil'])) {
     })
 </script>
 
-
-
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const asalStudiSelect = document.getElementById('asal_studi');
@@ -465,10 +471,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle perubahan asal studi
-    asalStudiSelect.addEventListener('change', function() {
-        const selectedId = this.value;
-
+    // Fungsi untuk menangani perubahan asal studi
+    function handleAsalStudiChange(selectedId) {
         if (!selectedId) {
             fakultasContainer.style.display = 'none';
             jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
@@ -478,63 +482,58 @@ document.addEventListener('DOMContentLoaded', function() {
         const selected = pendidikanData[selectedId];
         if (!selected) return;
 
-        if (selectedId.length === 7) {
-            // Universitas
+        if (selectedId.length === 7) { // Universitas (ID 7 digit)
             fakultasContainer.style.display = 'block';
             loadFaculties(selectedId);
             
             // Jika ada current fakultas, load jurusannya
             if (currentFakultas) {
                 loadMajors(selectedId, currentFakultas);
-            } else {
-                jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
             }
-        } else {
-            // SMK/Non-universitas
+        } else { // Non-universitas
             fakultasContainer.style.display = 'none';
             loadMajors(selectedId);
         }
+    }
+
+    // Inisialisasi modal dengan Select2
+    $('#editProfileModal').on('shown.bs.modal', function() {
+        // Inisialisasi Select2 untuk asal studi
+        $('#asal_studi').select2({
+            dropdownParent: $('#editProfileModal'),
+            placeholder: "Pilih Asal Studi",
+            allowClear: true,
+            width: '100%'
+        }).on('change', function() {
+            handleAsalStudiChange(this.value);
+        });
+
+        // Inisialisasi nilai setelah Select2 siap
+        setTimeout(() => {
+            if (currentIdPendidikan) {
+                $('#asal_studi').val(currentIdPendidikan).trigger('change');
+                
+                // Untuk universitas, set fakultas jika ada
+                if (currentFakultas && currentIdPendidikan.length === 7) {
+                    setTimeout(() => {
+                        $('#fakultas').val(currentFakultas).trigger('change');
+                    }, 200);
+                }
+            }
+        }, 100);
     });
 
     // Handle perubahan fakultas
     fakultasSelect.addEventListener('change', function() {
         const selectedFakultas = this.value;
-        const selectedId = asalStudiSelect.value;
+        const selectedId = $('#asal_studi').val();
         
         if (selectedFakultas && selectedId) {
             loadMajors(selectedId, selectedFakultas);
         }
     });
-
-    // Inisialisasi nilai saat modal dibuka
-    function initializeValues() {
-        if (currentIdPendidikan) {
-            // Set nilai asal studi
-            asalStudiSelect.value = currentIdPendidikan;
-            
-            // Trigger change event
-            const event = new Event('change');
-            asalStudiSelect.dispatchEvent(event);
-            
-            // Untuk universitas, set fakultas jika ada
-            if (currentFakultas && currentIdPendidikan.length === 7) {
-                // Tunggu sebentar untuk memastikan options sudah dimuat
-                setTimeout(() => {
-                    fakultasSelect.value = currentFakultas;
-                    const facultyEvent = new Event('change');
-                    fakultasSelect.dispatchEvent(facultyEvent);
-                }, 100);
-            }
-        }
-    }
-
-    // Panggil inisialisasi saat modal ditampilkan
-    $('#editProfileModal').on('shown.bs.modal', function() {
-        initializeValues();
-    });
 });
 </script>
-
 
 <!-- ==== VALIDASI ======= -->
 <script>
@@ -689,7 +688,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const fakultasInput = document.getElementById("fakultas");
             if (fakultasInput) {
                 const fakultas = fakultasInput.value.trim();
-                if (fakultas === "") {
+                if (fakultas === "" && fakultasContainer.style.display !== 'none') {
                     showError("fakultas", "error-fakultas", "Fakultas wajib diisi.");
                     isValid = false;
                 }
