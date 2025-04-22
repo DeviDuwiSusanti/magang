@@ -9,10 +9,13 @@ $no = 1;
 $sql = "SELECT  
             pu.nama_user,
             b.nama_bidang,
-            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.kirim_zoom
+            -- tambahan email
+            u.email,
+            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.kirim_zoom, p.pengingat_dokumen
         FROM tb_pengajuan AS p
             INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
             INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+            INNER JOIN tb_user AS u ON p.id_user = u.id_user
         WHERE p.id_instansi = '$id_instansi'
             AND p.status_active = '1'
             AND p.status_pengajuan IN ('1', '2')
@@ -80,9 +83,9 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                             <th>Nama Bidang</th>
                             <th>Jenis Pengajuan</th>
                             <th>Calon Pelamar</th>
-                            <th>Dokumen</th>
                             <th>Periode</th>
                             <th>Durasi</th>
+                            <th>Dokumen</th>
                             <th>Zoom</th>
                             <th style="width: 150px;">Aksi</th>
                         </tr>
@@ -104,29 +107,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         <?= isset($nama_pengaju[$row['id_pengajuan']]) ? count(explode(', ', $nama_pengaju[$row['id_pengajuan']])) : 0 ?>
                                     </a>
                                 </td>
-                                <!-- <td class="text-center align-middle">
-                                    <a href="#" class="show-doc btn btn-sm btn-primary" title="Lihat Dokumen"
-                                        data-bs-toggle="modal" data-bs-target="#dokumenModal"
-                                        data-doc='<?= !empty($daftar_dokumen[$row['id_user']][$row['id_pengajuan']])
-                                                        ? htmlspecialchars(json_encode($daftar_dokumen[$row['id_user']][$row['id_pengajuan']], JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8')
-                                                        : '[]' ?>'>
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-                                </td> -->
-                                <td class="text-center align-middle">
-                                    <a href="#"
-                                        class="show-doc btn btn-sm btn-primary"
-                                        title="Lihat Dokumen"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#dokumenModal"
-                                        data-doc='<?= htmlspecialchars(json_encode(
-                                                        $daftar_dokumen[$row['id_user']][$row['id_pengajuan']] ?? [],
-                                                        JSON_UNESCAPED_SLASHES
-                                                    ), ENT_QUOTES, "UTF-8") ?>'>
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-                                </td>
-
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
@@ -146,6 +126,19 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     ?>
                                 </td>
                                 <td class="text-center align-middle">
+                                    <a href="#"
+                                        class="show-doc btn btn-sm btn-primary"
+                                        title="Lihat Dokumen"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#dokumenModal"
+                                        data-doc='<?= htmlspecialchars(json_encode(
+                                                        $daftar_dokumen[$row['id_user']][$row['id_pengajuan']] ?? [],
+                                                        JSON_UNESCAPED_SLASHES
+                                                    ), ENT_QUOTES, "UTF-8") ?>'>
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center align-middle">
                                     <?php
                                     $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : '';
                                     $btn_class = ($row['kirim_zoom'] == 1) ? 'btn-secondary' : 'btn-warning';  // Tentukan warna tombol
@@ -161,7 +154,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                 $isDisabled = ($row['kirim_zoom'] == 0);
                                 $btnClass = $isDisabled ? 'btn-secondary' : 'btn-primary';
                                 ?>
-
                                 <td class="text-center align-middle">
                                     <button
                                         class="btn <?= $btnClass ?> btn-sm aksi-btn"
@@ -169,10 +161,26 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         data-bs-target="#aksiModal"
                                         data-id="<?= $id_pengajuan ?>"
                                         data-status="<?= $status_pengajuan ?>"
-                                        <?= $isDisabled ? 'disabled' : '' ?>>
+                                        <?= $isDisabled ? 'disabled' : '' ?>
+                                        title="Proses Pengajuan">
                                         <i class="bi bi-ui-checks"></i>
-                                        Proses
                                     </button>
+                                    <!-- tambah tombol kirim pengingat -->
+                                    <?php if ($row['status_pengajuan'] == 2): ?>
+                                        <?php
+                                        $sudahTerkirim = $row['pengingat_dokumen'] == 1;
+                                        $btnClass = $sudahTerkirim ? 'btn-secondary' : 'btn-info';
+                                        $btnDisabled = $sudahTerkirim ? 'disabled' : '';
+                                        ?>
+                                        <button
+                                            class="btn <?= $btnClass ?> btn-sm kirimPengingatBtn"
+                                            data-id="<?= $row['id_pengajuan'] ?>"
+                                            data-email="<?= $row['email'] ?>"
+                                            <?= $btnDisabled ?>
+                                            title="Kirim Pengingat">
+                                            <i class="bi bi-envelope-fill"></i>
+                                        </button>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -205,7 +213,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
     </div>
 </div>
 
-<!-- Modal tunggal -->
+<!-- Modal untuk Proses Pengajuan -->
 <div class="modal fade" id="aksiModal" tabindex="-1" aria-labelledby="aksiModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -233,29 +241,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     <button type="submit" class="btn btn-primary">Kirim</button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-
-<!-- Modal untuk Menolak Pengajuan -->
-<div class="modal fade" id="tolakModal" tabindex="-1" aria-labelledby="tolakModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tolakModalLabel">Tolak Pengajuan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-            </div>
-            <div class="modal-body">
-                <form id="tolakForm">
-                    <p>Apakah Anda yakin ingin menolak pengajuan ini?</p>
-                    <input type="hidden" name="id_pengajuan" id="id_pengajuan_tolak">
-                    <div class="mb-3">
-                        <label for="alasan_tolak" class="form-label tolak-label">Alasan Penolakan</label>
-                        <textarea class="form-control" name="alasan_tolak" id="alasan_tolak" rows="3" required></textarea>
-                    </div>
-                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Kirim Penolakan</button>
-                </form>
-            </div>
         </div>
     </div>
 </div>
@@ -300,7 +285,7 @@ $result = mysqli_query($conn, $query);
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
-                            <select class="form-control" id="pembimbing" name="pembimbing">
+                            <select class="form-control select2" id="pembimbing" name="pembimbing">
                                 <option value="">-- Pilih Pembimbing --</option>
                                 <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                                     <option value="<?= $row['id_user']; ?>">
@@ -330,6 +315,68 @@ $result = mysqli_query($conn, $query);
 <script src="../assets/js/validasi.js"></script>
 
 <script>
+    $('#zoomModal').on('shown.bs.modal', function() {
+        $('#pembimbing').select2({
+            dropdownParent: $('#zoomModal'),
+            placeholder: "Pilih Data",
+            allowClear: true,
+            width: '100%',
+            minimumResultsForSearch: 0
+        });
+    });
+
+    // Fungsi untuk mengirim pengingat
+    document.addEventListener("DOMContentLoaded", function() {
+        const pengingatButtons = document.querySelectorAll(".kirimPengingatBtn");
+
+        pengingatButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const id = this.getAttribute("data-id");
+                const email = this.getAttribute("data-email");
+
+                Swal.fire({
+                    title: 'Kirim Pengingat?',
+                    text: `Kirim pengingat lengkapi dokumen ke email ini: ${email}`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, kirim',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('admin2_kirim_pengingat.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: `id=${id}&email=${email}`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: data.message
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal!',
+                                    text: 'Gagal mengirim pengingat.'
+                                });
+                                console.error(error);
+                            });
+                    }
+                });
+            });
+        });
+    });
+
+
+
     // Fungsi untuk menampilkan modal Zoom
     document.addEventListener("DOMContentLoaded", function() {
         let zoomModal = document.getElementById("zoomModal");
@@ -434,17 +481,10 @@ $result = mysqli_query($conn, $query);
     });
 
     // Inisialisasi tooltip secara global
-    document.addEventListener("DOMContentLoaded", function() {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            var tooltip = new bootstrap.Tooltip(tooltipTriggerEl);
-
-            // Event listener untuk menghilangkan tooltip setelah diklik
-            tooltipTriggerEl.addEventListener("click", function() {
-                tooltip.hide();
-            });
-
-            return tooltip;
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
 
@@ -659,6 +699,8 @@ $result = mysqli_query($conn, $query);
                 text: `Anda yakin ingin ${status === 'terima' ? 'menerima' : 'menolak'} pengajuan ini?`,
                 icon: "question",
                 showCancelButton: true,
+                // confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
                 confirmButtonText: "Ya, Lanjutkan",
                 cancelButtonText: "Batal"
             }).then((result) => {

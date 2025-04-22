@@ -96,12 +96,12 @@ include "functions.php";
 
                     <h3>Lokasi Instansi</h3>
                     <div class="maps-container">
-                        <?php echo $row['lokasi_instansi']; ?>
-                        <!-- <?php
-                                if (!empty($row['lokasi_instansi'])) {
-                                    $embed_url = $row['lokasi_instansi'];
+                        <!-- <?php echo $row['lokasi_instansi']; ?> -->
+                        <?php
+                        if (!empty($row['lokasi_instansi'])) {
+                            $embed_url = $row['lokasi_instansi'];
 
-                                    echo "<iframe 
+                            echo "<iframe 
                                      src='$embed_url' 
                                      width='600' 
                                      height='450' 
@@ -110,10 +110,10 @@ include "functions.php";
                                      loading='lazy' 
                                      referrerpolicy='no-referrer-when-downgrade'>
                                  </iframe>";
-                                } else {
-                                    echo "<p>Lokasi instansi tidak tersedia.</p>";
-                                }
-                                ?> -->
+                        } else {
+                            echo "<p>Lokasi instansi tidak tersedia.</p>";
+                        }
+                        ?>
                     </div>
 
                     <div class="d-flex justify-content-left mt-4">
