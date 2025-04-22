@@ -270,13 +270,13 @@ $result = mysqli_query($conn, $query);
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
-                            <input type="text" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan">
+                            <input type="text" class="form-control" id="tanggal_pelaksanaan" name="tanggal_pelaksanaan" autocomplete="off">
                             <small class="text-danger" id="tanggal_pelaksanaan_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
                             <div class="input-group clockpicker">
-                                <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan">
+                                <input type="text" class="form-control" id="jam_pelaksanaan" name="jam_pelaksanaan" autocomplete="off">
                                 <span class="input-group-text"><i class="bi bi-clock"></i></span>
                             </div>
                             <small class="text-danger" id="jam_pelaksanaan_error"></small>
@@ -315,17 +315,19 @@ $result = mysqli_query($conn, $query);
 <script src="../assets/js/validasi.js"></script>
 
 <script>
+    // ==========Inisialisasi Select2 pada Modal Zoom ==========
     $('#zoomModal').on('shown.bs.modal', function() {
         $('#pembimbing').select2({
             dropdownParent: $('#zoomModal'),
-            placeholder: "Pilih Data",
+            placeholder: "Pilih Pembimbing",
             allowClear: true,
             width: '100%',
             minimumResultsForSearch: 0
         });
     });
 
-    // Fungsi untuk mengirim pengingat
+
+    // ========== Fungsi untuk mengirim pengingat lengkapi dokumen ==========
     document.addEventListener("DOMContentLoaded", function() {
         const pengingatButtons = document.querySelectorAll(".kirimPengingatBtn");
 
@@ -375,9 +377,7 @@ $result = mysqli_query($conn, $query);
         });
     });
 
-
-
-    // Fungsi untuk menampilkan modal Zoom
+    // ========== Fungsi untuk menampilkan modal Zoom ==========
     document.addEventListener("DOMContentLoaded", function() {
         let zoomModal = document.getElementById("zoomModal");
         let zoomForm = document.getElementById("zoomForm");
@@ -394,7 +394,6 @@ $result = mysqli_query($conn, $query);
             });
         });
 
-        // Pastikan aria-hidden dikelola dengan benar saat modal dibuka & ditutup
         zoomModal.addEventListener("show.bs.modal", function() {
             zoomModal.removeAttribute("aria-hidden");
         });
@@ -403,13 +402,12 @@ $result = mysqli_query($conn, $query);
             zoomModal.setAttribute("aria-hidden", "true");
         });
 
-        // Form submit dengan SweetAlert dan AJAX
         zoomForm.addEventListener("submit", function(event) {
             event.preventDefault();
 
-            // ⛔ Cek validasi form dulu
+            // Cek validasi form dulu
             if (!validateZoomForm()) {
-                return; // Stop proses kalau form tidak valid
+                return;
             }
 
             Swal.fire({
@@ -417,7 +415,6 @@ $result = mysqli_query($conn, $query);
                 text: "Informasi Zoom akan dikirim!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ya, Kirim!',
                 cancelButtonText: 'Batal'
@@ -469,18 +466,8 @@ $result = mysqli_query($conn, $query);
         });
     });
 
-    $(document).ready(function() {
-        $('.clockpicker').clockpicker({
-            autoclose: true,
-            donetext: 'Pilih'
-        });
-        $("#tanggal_pelaksanaan").datepicker({
-            dateFormat: "dd/mm/yy",
-            minDate: 0
-        });
-    });
 
-    // Inisialisasi tooltip secara global
+    // ========== Inisialisasi tooltip secara global ==========
     document.addEventListener('DOMContentLoaded', function() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
         tooltipTriggerList.map(function(tooltipTriggerEl) {
@@ -488,11 +475,11 @@ $result = mysqli_query($conn, $query);
         });
     });
 
+    //  ========== Inisialisasi DataTable secara global ==========
     $(document).ready(function() {
         // Cek apakah sedang di mobile untuk scrollX
         var isMobile = window.innerWidth < 768;
 
-        // Inisialisasi DataTable hanya sekali
         var table = $('#myTable').DataTable({
             scrollX: isMobile,
             responsive: true,
@@ -517,7 +504,17 @@ $result = mysqli_query($conn, $query);
             }
         });
 
-        // Event handler untuk tombol "show-detail"
+        // ========== Inisialisasi Clockpicker & datepicker ==========
+        $('.clockpicker').clockpicker({
+            autoclose: true,
+            donetext: 'Pilih'
+        });
+        $("#tanggal_pelaksanaan").datepicker({
+            dateFormat: "dd/mm/yy",
+            minDate: 0
+        });
+
+        // Event handler untuk tombol "show-detail" pelamar
         $('#myTable tbody').on('click', 'a.show-detail', function(e) {
             e.preventDefault();
 
@@ -537,7 +534,7 @@ $result = mysqli_query($conn, $query);
                 row.child.hide();
                 tr.removeClass('shown');
             } else {
-                // Generate HTML tab structure
+                // Generate HTML tab struktur
                 let tabNav = '<ul class="nav nav-tabs mb-2" id="detailTab" role="tablist">';
                 let tabContent = '<div class="tab-content">';
 
@@ -567,6 +564,7 @@ $result = mysqli_query($conn, $query);
         });
     });
 
+    // ========== Event handler untuk tombol "show-doc" ==========
     document.addEventListener('DOMContentLoaded', function() {
         const docLinks = document.querySelectorAll('.show-doc');
 
@@ -647,7 +645,7 @@ $result = mysqli_query($conn, $query);
     });
 
 
-    // Modal aksi
+    // ========== Event handler untuk tombol proses pengajuan ==========
     document.addEventListener("DOMContentLoaded", function() {
         const modal = document.getElementById("aksiModal");
         const form = document.getElementById("formAksiPengajuan");
@@ -699,7 +697,6 @@ $result = mysqli_query($conn, $query);
                 text: `Anda yakin ingin ${status === 'terima' ? 'menerima' : 'menolak'} pengajuan ini?`,
                 icon: "question",
                 showCancelButton: true,
-                // confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Ya, Lanjutkan",
                 cancelButtonText: "Batal"

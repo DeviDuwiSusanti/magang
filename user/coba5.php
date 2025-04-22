@@ -2,11 +2,24 @@
 include '../layout/sidebarUser.php';
 include "functions.php";
 
-// Cek apakah ada pengajuan yang ditangani pembimbing
 $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
 $daftar_anggota = [];
 $pendidikan_user = null;
 
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
+    if (pembimbing_upload_nilai($_POST, $_FILES)) { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Unggah Nilai Dan Sertifikat Berhasil", "pembimbing4.php");
+        </script>
+    <?php } else { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Unggah Nilai Dan Sertifikat Gagal", "pembimbing4.php");
+        </script>
+<?php }
+}
 
 if (!empty($pengajuan)) {
     $pengajuan_user = $pengajuan[0]["id_pengajuan"];
@@ -35,10 +48,8 @@ if (!empty($pengajuan)) {
 $no = 1;
 ?>
 
-<!-- Dropzone CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 
-<!-- Dropzone JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
 <main>
@@ -88,7 +99,6 @@ $no = 1;
                                         </button>
                                     </td>
 
-
                                     <!-- Tombol Nilai & Sertifikat -->
                                     <td>
                                         <button class="btn btn-success btn-sm openNilai"
@@ -101,11 +111,9 @@ $no = 1;
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </button>
                                     </td>
-
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -121,39 +129,37 @@ $no = 1;
 
 
 
-<!-- Modal -->
+<!-- Modal untuk Logbook -->
 <div class="modal fade" id="logbookModal" tabindex="-1" aria-labelledby="logbookModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Logbook</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p>User ID: <span id="modal_id_user"></span></p>
-        <p>Pengajuan ID: <span id="modal_id_pengajuan"></span></p>
+    <div class="modal-dialog modal-xl"> 
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="logbookModalLabel">Logbook Peserta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="logbookContent">
+                <table id="logbookTable" class="table table-striped table-bordered small" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Kegiatan</th>
+                        <th>Keterangan</th>
+                        <th>Jam Mulai</th>
+                        <th>Jam Selesai</th>
+                    </tr>
+                </thead>
 
-        <table class="table" id="logbookTable">
-          <thead>
-            <tr>
-              <th>No</th>
-              <th>Tanggal</th>
-              <th>Kegiatan</th>
-              <th>Keterangan</th>
-              <th>Status</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Data dari fetch akan dimasukkan di sini -->
-          </tbody>
-        </table>
-      </div>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-
-
 
 
 
@@ -185,7 +191,7 @@ $no = 1;
 
                     <div id="renameContainer" style="display: none;">
                         <label class="form-label">Nama File</label><br>
-                        <input type="text" class="form-control" id="renameInput" placeholder="Ubah nama dokumen">
+                        <input type="text" class="form-control" id="renameInput" name="nama_dokumen" placeholder="Ubah nama dokumen">
                     </div>
                 </div>
 
@@ -240,8 +246,6 @@ $no = 1;
     });
 </script>
 
-
-
 <script>
     Dropzone.autoDiscover = false;
 
@@ -289,17 +293,24 @@ $no = 1;
     });
 </script>
 
-<script>
-    // Untuk Logbook Modal
-    document.querySelectorAll('.openLogbook').forEach(button => {
-        button.addEventListener('click', function() {
-            const idPengajuan = this.getAttribute('data-id_pengajuan');
-            const idUser = this.getAttribute('data-id_user');
-            document.getElementById('modal_id_user').textContent = idUser;
-            document.getElementById('modal_id_pengajuan').textContent = idPengajuan;
 
+<?php 
+if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = new bootstrap.Modal(document.getElementById('logbookModal'));
+        modal.show();
+
+        document.getElementById('anggotaModal').addEventListener('hidden.bs.modal', function () {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('id_pengajuan');
+            window.location.href = url.toString();
         });
     });
+    </script>
+<?php endif; ?>
+
+<script>
 
     // Untuk Nilai & Sertifikat Modal
     document.querySelectorAll('.openNilai').forEach(button => {
@@ -311,4 +322,3 @@ $no = 1;
         });
     });
 </script>
-

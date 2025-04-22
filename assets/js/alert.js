@@ -123,6 +123,28 @@ function alert_berhasil_gagal_super_admin(icon, title, text, link) {
   })
 }
 
+// Fungsi konfirmasi SweetAlert
+function confirm_hapus_unggahan_pembimbing(event, id_dokumen) {
+  event.preventDefault(); // Menghentikan aksi default
+  
+  Swal.fire({
+    title: "Apakah Anda Yakin Ingin Hapus Data Ini?",
+    icon: "warning",
+    text: "Data yang Anda hapus tidak bisa dikembalikan lagi.",
+    showCancelButton: true,
+    confirmButtonText: "YA! Hapus",
+    cancelButtonText: "Batal",
+    cancelButtonColor: "#d33",
+    confirmButtonColor: "#3085d6"
+  }).then((result) => {
+    if(result.isConfirmed) {
+      window.location.href = "pembimbing4.php?id_dokumenHapus=" + id_dokumen;
+    }
+  });
+  
+  return false;
+}
+
 
 
 function confirm_hapus_instansi_super_admin(id_instansi) {
