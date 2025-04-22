@@ -366,6 +366,7 @@ if (isset($_POST['update_profil'])) {
     })
 </script>
 
+<!-- akses fakultas dan jurusan sesuai asal studi -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const asalStudiSelect = document.getElementById('asal_studi');
