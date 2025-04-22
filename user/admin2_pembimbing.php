@@ -172,8 +172,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                                     <td><?= $no++ ?></td>
                                     <td><?= ($pembimbing['nama_pembimbing']) ?></td>
                                     <td><?= ($pembimbing['nama_bidang']) ?></td>
-                                    <td><?= ($pembimbing['jabatan']) ?></td>
-                                    <td><?= ($pembimbing['telepone_pembimbing']) ?></td>
+                                    <td><?= ($pembimbing['jabatan'] ?: 'Jabatan belum diisi') ?></td>
+                                    <td><?= ($pembimbing['telepone_pembimbing'] ?: 'Telepon belum diisi') ?></td>
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm editPembimbingBtn"
                                             data-bs-toggle="modal" data-bs-target="#editPembimbingModal"

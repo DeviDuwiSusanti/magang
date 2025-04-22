@@ -12,7 +12,8 @@ include '../assets/phpmailer/src/SMTP.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["pengajuan_id"]);
     $tanggal = mysqli_real_escape_string($conn, $_POST["tanggal_pelaksanaan"]);
-    $tanggal = date("Y-m-d", strtotime($tanggal));
+    // $tanggal = date("Y-m-d", strtotime($tanggal));
+    $tanggal = DateTime::createFromFormat('d/m/Y', $tanggal)->format('Y-m-d');
     $jam = mysqli_real_escape_string($conn, $_POST["jam_pelaksanaan"]);
     $link_zoom = mysqli_real_escape_string($conn, $_POST["link_zoom"]);
     $pembimbing = mysqli_real_escape_string($conn, $_POST["pembimbing"]);
@@ -137,7 +138,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 if ($mail_pelamar->send()) {
                     // Update kolom kirim_zoom menjadi 1
-                    $update_query = "UPDATE tb_pengajuan SET kirim_zoom = 1 WHERE id_pengajuan = '$id_pengajuan'";
+                    $update_query = "UPDATE tb_pengajuan SET kirim_zoom = 1, id_pembimbing = '$pembimbing' WHERE id_pengajuan = '$id_pengajuan'";
                     mysqli_query($conn, $update_query);
 
                     echo "<script>
