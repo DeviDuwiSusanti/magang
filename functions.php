@@ -827,11 +827,11 @@ function tambah_instansi_super_admin($POST) {
         $id_user = $POST["id_user"];
         $nama_pembimbing = $POST["nama_pembimbing"];
         $email = $POST["email"];
-        $nik_pembimbing = $POST["nik_pembimbing"];
-        $nip = $POST["nip"];
-        $jabatan = $POST["jabatan"];
+        $nik_pembimbing = $POST["nik_pembimbing"] ?? null;
+        $nip = $POST["nip"] ?? null;
+        $jabatan = $POST["jabatan"] ?? null;
         $jenis_kelamin = $POST["jenis_kelamin"];
-        $telepone_pembimbing = $POST["telepone_pembimbing"];
+        $telepone_pembimbing = $POST["telepone_pembimbing"] ?? null;
         $id_bidang = $POST["id_bidang"];
 
         $query_pembimbing_1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_pembimbing', '$email', '4', '$id_user')";

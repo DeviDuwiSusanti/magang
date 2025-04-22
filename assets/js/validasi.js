@@ -443,36 +443,32 @@ function validateTambahPembimbing() {
   }
 
   const nik = document.getElementById("nik_pembimbing").value.trim();
-  if (nik === "") {
-    showError(
-      "nik_pembimbing",
-      "nik_pembimbing_error",
-      "NIK tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!/^[0-9]{16}$/.test(nik)) {
+  if (nik !== "" && !/^[0-9]{16}$/.test(nik)) {
     showError(
       "nik_pembimbing",
       "nik_pembimbing_error",
       "NIK harus terdiri dari 16 digit angka."
     );
     isValid = false;
+    // showError(
+    //   "nik_pembimbing",
+    //   "nik_pembimbing_error",
+    //   "NIK tidak boleh kosong."
+    // );
+    // isValid = false;
   }
 
   const nip = document.getElementById("nip").value.trim();
-  if (nip === "") {
-    showError("nip", "nip_error", "NIP tidak boleh kosong.");
-    isValid = false;
-  } else if (!/^[0-9]{18}$/.test(nip)) {
+  if (nip !== "" && !/^[0-9]{18}$/.test(nip)) {
     showError("nip", "nip_error", "NIP harus terdiri dari 18 digit angka.");
     isValid = false;
   }
 
-  const jabatan = document.getElementById("jabatan").value.trim();
-  if (jabatan === "") {
-    showError("jabatan", "jabatan_error", "Jabatan tidak boleh kosong.");
-    isValid = false;
-  }
+  // const jabatan = document.getElementById("jabatan").value.trim();
+  // if (jabatan === "") {
+  //   showError("jabatan", "jabatan_error", "Jabatan tidak boleh kosong.");
+  //   isValid = false;
+  // }
 
   const genderL = document.getElementById("gender_l").checked;
   const genderP = document.getElementById("gender_p").checked;
@@ -482,14 +478,7 @@ function validateTambahPembimbing() {
   }
 
   const telepon = document.getElementById("telepone_pembimbing").value.trim();
-  if (telepon === "") {
-    showError(
-      "telepone_pembimbing",
-      "telepone_error",
-      "Nomor telepon tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!/^[0-9]{11,12}$/.test(telepon)) {
+  if (telepon !== "" && !/^[0-9]{11,12}$/.test(telepon)) {
     showError(
       "edit_telepone_pembimbing",
       "telepone_error",
@@ -535,14 +524,7 @@ function validateEditPembimbing() {
   }
 
   const nik = document.getElementById("edit_nik_pembimbing").value.trim();
-  if (nik === "") {
-    showError(
-      "edit_nik_pembimbing",
-      "edit_nik_pembimbing_error",
-      "NIK tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!/^[0-9]{16}$/.test(nik)) {
+  if (nik !== "" && !/^[0-9]{16}$/.test(nik)) {
     showError(
       "edit_nik_pembimbing",
       "edit_nik_pembimbing_error",
@@ -552,10 +534,7 @@ function validateEditPembimbing() {
   }
 
   const nip = document.getElementById("edit_nip").value.trim();
-  if (nip === "") {
-    showError("edit_nip", "edit_nip_error", "NIP tidak boleh kosong.");
-    isValid = false;
-  } else if (!/^[0-9]{18}$/.test(nip)) {
+  if (nip !== "" && !/^[0-9]{18}$/.test(nip)) {
     showError(
       "edit_nip",
       "edit_nip_error",
@@ -564,27 +543,20 @@ function validateEditPembimbing() {
     isValid = false;
   }
 
-  const jabatan = document.getElementById("edit_jabatan").value.trim();
-  if (jabatan === "") {
-    showError(
-      "edit_jabatan",
-      "edit_jabatan_error",
-      "Jabatan tidak boleh kosong."
-    );
-    isValid = false;
-  }
+  // const jabatan = document.getElementById("edit_jabatan").value.trim();
+  // if (jabatan === "") {
+  //   showError(
+  //     "edit_jabatan",
+  //     "edit_jabatan_error",
+  //     "Jabatan tidak boleh kosong."
+  //   );
+  //   isValid = false;
+  // }
 
   const telepon = document
     .getElementById("edit_telepone_pembimbing")
     .value.trim();
-  if (telepon === "") {
-    showError(
-      "edit_telepone_pembimbing",
-      "edit_telepone_error",
-      "Nomor telepon tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!/^[0-9]{11,12}$/.test(telepon)) {
+  if (telepon !== "" && !/^[0-9]{11,12}$/.test(telepon)) {
     showError(
       "edit_telepone_pembimbing",
       "edit_telepone_error",
