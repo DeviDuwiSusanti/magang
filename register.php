@@ -25,23 +25,26 @@ foreach ($perguruan_tinggi as $kampus) {
 
 
 
-if(isset($_GET['confirm']) && $_GET['confirm'] == "gunakan_data_lama") {
+if (isset($_GET['confirm']) && $_GET['confirm'] === "gunakan_data_lama") {
     $id_user_lama = $_GET['id_user_lama'];
-    echo "<p>Email sudah terdaftar, tetapi dapat menggunakan data lama.</p>";
-    echo "<a href='register.php?use_old_data=true&id_user_lama=$id_user_lama'>Gunakan Data Lama</a>";
+    echo "<div class='alert alert-warning'>";
+    echo "<p><strong>Info:</strong> Email sudah terdaftar sebagai anggota kelompok. Ingin daftar ulang sebagai ketua?</p>";
+    echo "<a class='btn btn-primary' href='register.php?use_old_data=true&id_user_lama=$id_user_lama'>Gunakan Data Lama</a>";
+    echo "</div>";
 }
 
-if(isset($_GET['use_old_data']) && $_GET['use_old_data'] == "true") {
+if (isset($_GET['use_old_data']) && $_GET['use_old_data'] === "true") {
     $id_user_lama = $_GET['id_user_lama'];
     $id_user_baru = generateUserId($conn);
 
-    // Update ID user lama dengan ID baru
+    // Salin data dengan ID baru
     mysqli_query($conn, "UPDATE tb_user SET id_user = '$id_user_baru' WHERE id_user = '$id_user_lama'");
     mysqli_query($conn, "UPDATE tb_profile_user SET id_user = '$id_user_baru' WHERE id_user = '$id_user_lama'");
 
     header("Location: register.php?success=update_id");
     exit;
 }
+
 
 
 // Status register
@@ -133,11 +136,8 @@ if (isset($_POST["register"])) {
                             <label for="nik_user">NIK</label>
                             <span id="nik_error" class="error-message" style="color: red; display: none; font-size: 12px;">NIK harus 16 digit!</span>
                         </div>
-                        <div class="input-field">
-                            <input type="text" maxlength="10" id="nisn" inputmode="numeric" class="input" name="nisn" required>
-                            <label for="nisn">NISN</label>
-                            <span id="nisn_error" class="error-message" style="color: red; display: none; font-size: 12px;">NISN harus 10 digit!</span>
-                        </div>
+
+                        
 
                         <div class="mb-3">
                             <label class="form-label">Pilih Pendidikan</label>
@@ -164,6 +164,11 @@ if (isset($_POST["register"])) {
                                     <option value="">Pilih Jurusan</option>
                                 </select>
                             </div>
+                                <div class="input-field">
+                                    <input type="text" maxlength="10" id="nisn" inputmode="numeric" class="input mt-4" name="nisn">
+                                    <label class="mt-4" for="nisn">NISN</label>
+                                    <span id="nisn_error" class="error-message" style="color: red; display: none; font-size: 12px;">NISN harus 10 digit!</span>
+                                </div>
                         </div>
 
                         <!-- Opsi untuk Universitas -->
@@ -219,7 +224,7 @@ if (isset($_POST["register"])) {
                         </div>
 
                         <div class="input-field">
-                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir" required>
+                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir" >
                             <label for="tempat_lahir">Tempat Lahir</label>
                         </div>
 
@@ -234,7 +239,7 @@ if (isset($_POST["register"])) {
                             <textarea name="alamat_user" id="alamat_user" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="tel" pattern="[0-9]{8,15}" class="input" name="telepone_user" id="telepone_user" inputmode="numeric"  maxlength="15" required>
+                            <input type="tel" pattern="[0-9]{8,15}" class="input" name="telepone_user" id="telepone_user" inputmode="numeric"  maxlength="15">
                             <label for="telepone_user">No. Telepone</label>
                         </div>
 
@@ -310,6 +315,7 @@ if (isset($_POST["register"])) {
                 let nikError = $('#nik_error');
                 let nisn = $('#nisn').val().trim();
                 let nisnError = $('#nisn_error');
+                let userType = $('#educationSelect').val()
 
                 // Validasi NIK
                 if (nik.length === 0) {
@@ -322,16 +328,20 @@ if (isset($_POST["register"])) {
                     nikError.hide();
                 }
 
-                // Validasi NISN
-                if (nisn.length === 0) {
-                    nisnError.text('NISN tidak boleh kosong!').show();
-                    isValid = false;
-                } else if (nisn.length !== 10 || !/^\d+$/.test(nisn)) {
-                    nisnError.text('NISN harus terdiri dari 10 digit angka!').show();
-                    isValid = false;
+                if(userType === 'sekolah') {
+                    if (nisn.length === 0) {
+                        nisnError.text('NISN tidak boleh kosong!').show();
+                        isValid = false;
+                    } else if (nisn.length !== 10 || !/^\d+$/.test(nisn)) {
+                        nisnError.text('NISN harus terdiri dari 10 digit angka!').show();
+                        isValid = false;
+                    } else {
+                        nisnError.hide();
+                    }
                 } else {
                     nisnError.hide();
                 }
+                
 
                 // Jika tidak valid, hentikan submit
                 if (!isValid) {
