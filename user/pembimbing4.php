@@ -2,25 +2,37 @@
 include '../layout/sidebarUser.php';
 include "functions.php";
 
-// Cek apakah ada pengajuan yang ditangani pembimbing
 $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
 $daftar_anggota = [];
 $pendidikan_user = null;
 
-$logbook_all = query("SELECT * FROM tb_logbook WHERE id_pengajuan IN (SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user')");
-print_r($logbook_all);
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
     if (pembimbing_upload_nilai($_POST, $_FILES)) { ?>
         <script>
             alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Unggah Nilai Dan Sertifikat Berhasil", "pembimbing4.php");
-        </script>
+            </script>
     <?php } else { ?>
         <script>
             alert_berhasil_gagal_super_admin("error", "Gagal !!", "Unggah Nilai Dan Sertifikat Gagal", "pembimbing4.php");
-        </script>
+            </script>
 <?php }
+}
+
+if (isset($_GET['id_dokumenHapus'])){
+    $id_dokumen = $_GET['id_dokumenHapus'];
+    $sqlHapus = "UPDATE tb_dokumen SET status_active = '0', change_by = '$id_user' WHERE id_dokumen = '$id_dokumen'";
+    if (mysqli_query($conn, $sqlHapus)) { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Dokumen berhasil dihapus", "pembimbing4.php");
+        </script>
+    <?php } else { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menghapus dokumen", "pembimbing4.php");
+        </script>
+    <?php }
 }
 
 if (!empty($pengajuan)) {
@@ -50,10 +62,8 @@ if (!empty($pengajuan)) {
 $no = 1;
 ?>
 
-<!-- Dropzone CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 
-<!-- Dropzone JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
 <main>
@@ -77,7 +87,7 @@ $no = 1;
                                 <th>Foto</th>
                                 <th>Pendidikan</th>
                                 <th>Jurusan</th>
-                                <th>Logbook Peserta</th>
+                                <!-- <th>Logbook Peserta</th> -->
                                 <th>Nilai Dan Sertifikat</th>
                             </tr>
                         </thead>
@@ -92,7 +102,7 @@ $no = 1;
                                     <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                     <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
 
-                                    <td>
+                                    <!-- <td>
                                         <button class="btn btn-info btn-sm openLogbook"
                                             data-id_pengajuan="<?= $pengajuan_user ?>"
                                             data-id_user="<?= $anggota['id_user'] ?? '' ?>"
@@ -101,25 +111,52 @@ $no = 1;
                                             <?= ($status_pengajuan != '4' && $status_pengajuan != '5') ? 'disabled' : '' ?>>
                                             <i class="bi bi-book"></i>
                                         </button>
-                                    </td>
+                                    </td> -->
 
                                     <!-- Tombol Nilai & Sertifikat -->
-                                    <td>
+                                   <td>
+                                        `<?php
+                                        // Query untuk mengecek apakah file sudah diupload
+                                        $check_query = "SELECT file_path FROM tb_dokumen 
+                                                    WHERE id_user = '".mysqli_real_escape_string($conn, $anggota['id_user'])."' 
+                                                    AND id_pengajuan = '".mysqli_real_escape_string($conn, $pengajuan_user)."'
+                                                    AND jenis_dokumen = '4' AND status_active = '1'"; // 4 untuk jenis dokumen nilai/sertifikat
+                                        
+                                        $check_result = mysqli_query($conn, $check_query);
+                                        $file_exists = ($check_result && mysqli_num_rows($check_result) > 0);
+                                        ?>
+                                        
                                         <button class="btn btn-success btn-sm openNilai"
                                             data-id_pengajuan="<?= $pengajuan_user ?>"
                                             data-id_user="<?= $anggota['id_user'] ?? '' ?>"
-                                            data-bs-toggle="<?= ($status_pengajuan == '5') ? 'modal' : '' ?>"
-                                            data-bs-target="<?= ($status_pengajuan == '5') ? '#nilaiModal' : '' ?>"
-                                            <?= ($status_pengajuan != '5') ? 'disabled' : '' ?>>
+                                            data-bs-toggle="<?= ($status_pengajuan == '5' && !$file_exists) ? 'modal' : '' ?>"
+                                            data-bs-target="<?= ($status_pengajuan == '5' && !$file_exists) ? '#nilaiModal' : '' ?>"
+                                            <?= ($status_pengajuan != '5' || $file_exists) ? 'disabled' : '' ?>
+                                            title="<?= $file_exists ? 'File sudah diupload' : 'Upload nilai/sertifikat' ?>">
                                             <i class="bi bi-bar-chart"></i>
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </button>
-                                    </td>
 
+                                        <?php
+                                        $doc = "SELECT * FROM tb_dokumen WHERE id_user = '$anggota[id_user]' AND status_active  ='1'";
+                                        $nilaiSertif = mysqli_fetch_assoc(mysqli_query($conn, $doc));
+                                        
+                                        if (!empty($nilaiSertif['file_path'])){?>
+                                            <a href="<?= $nilaiSertif['file_path'] ?>" class="btn btn-sm btn-primary" title="Lihat Dokumen" target="_blank">  <i class="bi bi-eye"></i></a>
+                                            <a href="pembimbing4.php?id_dokumenHapus=<?= $nilaiSertif['id_dokumen'] ?>" 
+                                                class="btn btn-sm btn-danger" 
+                                                title="Hapus" 
+                                                onclick="return confirm_hapus_unggahan_pembimbing(event, <?= $nilaiSertif['id_dokumen'] ?>)">
+                                                <i class="bi bi-trash"></i>
+                                                </a>
+                                        <?php
+                                        }
+                                        ?>
+                                    </td>`
+                                    
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -197,7 +234,7 @@ $no = 1;
 
                     <div id="renameContainer" style="display: none;">
                         <label class="form-label">Nama File</label><br>
-                        <input type="text" class="form-control" id="renameInput" placeholder="Ubah nama dokumen">
+                        <input type="text" class="form-control" id="renameInput" name="nama_dokumen" placeholder="Ubah nama dokumen">
                     </div>
                 </div>
 
@@ -214,10 +251,6 @@ $no = 1;
 
 <?php include "../layout/footerDashboard.php"; ?>
 <!-- Script untuk DataTable -->
-
-<script>
-    const logbookData = <?= json_encode($logbook_all); ?>;
-</script>
 
 <script>
     $(document).ready(function() {
@@ -303,6 +336,8 @@ $no = 1;
     });
 </script>
 
+
+
 <script>
     // Untuk Logbook Modal
     document.querySelectorAll('.openLogbook').forEach(button => {
@@ -326,50 +361,3 @@ $no = 1;
 </script>
 
 
-
-
-<script>
-   document.querySelectorAll('.openLogbook').forEach(button => {
-    button.addEventListener('click', function () {
-        const idPengajuan = this.getAttribute('data-id_pengajuan');
-        const idUser = this.getAttribute('data-id_user');
-
-        const tbody = document.querySelector('#logbookTable tbody');
-        tbody.innerHTML = '';
-
-        const filtered = logbookData.filter(log => log.id_user === idUser && log.id_pengajuan === idPengajuan);
-
-        if (filtered.length > 0) {
-            filtered.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.tanggal_logbook}</td>
-                    <td>${row.kegiatan_logbook}</td>
-                    <td>${row.keterangan_logbook}</td>
-                    <td>${row.jam_mulai}</td>
-                    <td>${row.jam_selesai}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-        } else {
-            tbody.innerHTML = <tr><td colspan="5" class="text-center">Belum ada data logbook</td></tr>;
-        }
-
-        // Destroy and reinitialize DataTable
-        if ($.fn.DataTable.isDataTable('#logbookTable')) {
-            $('#logbookTable').DataTable().destroy();
-        }
-
-        $('#logbookTable').DataTable({
-            searching: false,
-            ordering: false,
-            paging: false,
-            info: false,
-            language: {
-                emptyTable: "Belum ada data logbook",
-                zeroRecords: "Tidak ditemukan",
-            }
-        });
-    });
-});

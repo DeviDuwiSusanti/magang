@@ -1,29 +1,7 @@
 <?php
-
-if (isset($_GET['id_user']) && isset($_GET['id_pengajuan'])) {
-    include '../koneksi.php';
-
-    $id_user = $_GET['id_user'];
-    $id_pengajuan = $_GET['id_pengajuan'];
-
-    $query = "SELECT * FROM tb_logbook WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
-    $result = mysqli_query($koneksi, $query);
-
-    $logbook = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $logbook[] = $row;
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode($logbook);
-    exit; // <-- ini penting agar PHP tidak lanjut render HTML
-}
-
-
 include '../layout/sidebarUser.php';
 include "functions.php";
 
-// Cek apakah ada pengajuan yang ditangani pembimbing
 $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
 $daftar_anggota = [];
 $pendidikan_user = null;
@@ -70,10 +48,8 @@ if (!empty($pengajuan)) {
 $no = 1;
 ?>
 
-<!-- Dropzone CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 
-<!-- Dropzone JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
 <main>
@@ -135,11 +111,9 @@ $no = 1;
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </button>
                                     </td>
-
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -217,7 +191,7 @@ $no = 1;
 
                     <div id="renameContainer" style="display: none;">
                         <label class="form-label">Nama File</label><br>
-                        <input type="text" class="form-control" id="renameInput" placeholder="Ubah nama dokumen">
+                        <input type="text" class="form-control" id="renameInput" name="nama_dokumen" placeholder="Ubah nama dokumen">
                     </div>
                 </div>
 
@@ -319,16 +293,24 @@ $no = 1;
     });
 </script>
 
-<script>
-    // Untuk Logbook Modal
-    document.querySelectorAll('.openLogbook').forEach(button => {
-        button.addEventListener('click', function() {
-            const idPengajuan = this.getAttribute('data-id_pengajuan');
-            const idUser = this.getAttribute('data-id_user');
-            document.getElementById('logbook_id_pengajuan').value = idPengajuan;
-            document.getElementById('logbook_id_user').value = idUser;
+
+<?php 
+if (isset($_GET['id_pengajuan']) && isset($_GET['id_user'])): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var modal = new bootstrap.Modal(document.getElementById('logbookModal'));
+        modal.show();
+
+        document.getElementById('anggotaModal').addEventListener('hidden.bs.modal', function () {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('id_pengajuan');
+            window.location.href = url.toString();
         });
     });
+    </script>
+<?php endif; ?>
+
+<script>
 
     // Untuk Nilai & Sertifikat Modal
     document.querySelectorAll('.openNilai').forEach(button => {
@@ -339,63 +321,4 @@ $no = 1;
             document.getElementById('nilai_id_user').value = idUser;
         });
     });
-</script>
-
-
-
-
-<script>
-   document.querySelectorAll('.openLogbook').forEach(button => {
-    button.addEventListener('click', function () {
-        const idPengajuan = this.getAttribute('data-id_pengajuan');
-        const idUser = this.getAttribute('data-id_user');
-
-        const tbody = document.querySelector('#logbookTable tbody');
-        tbody.innerHTML = '';
-
-        fetch(`pembimbing4.php?id_user=${idUser}&id_pengajuan=${idPengajuan}`)
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data) && data.length > 0) {
-                    data.forEach((row, index) => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${row.tanggal_logbook}</td>
-                            <td>${row.kegiatan_logbook}</td>
-                            <td>${row.keterangan_logbook}</td>
-                            <td>${row.jam_mulai}</td>
-                            <td>${row.jam_selesai}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center">Belum ada data logbook</td></tr>`;
-                }
-
-                // Destroy and reinitialize DataTable
-                if ($.fn.DataTable.isDataTable('#logbookTable')) {
-                    $('#logbookTable').DataTable().destroy();
-                }
-
-                $('#logbookTable').DataTable({
-                    searching: false,
-                    ordering: false,
-                    paging: false,
-                    info: false,
-                    language: {
-                        emptyTable: "Belum ada data logbook",
-                        zeroRecords: "Tidak ditemukan",
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Gagal mengambil data logbook</td></tr>`;
-            });
-    });
-});
-
-
-
 </script>
