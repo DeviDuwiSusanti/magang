@@ -2,13 +2,11 @@
 include '../layout/sidebarUser.php';
 include "functions.php";
 
-// Cek apakah ada pengajuan yang ditangani pembimbing
 $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
 $daftar_anggota = [];
 $pendidikan_user = null;
 
-$logbook_all = query("SELECT * FROM tb_logbook WHERE id_pengajuan IN (SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user')");
-print_r($logbook_all);
+
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
@@ -50,10 +48,8 @@ if (!empty($pengajuan)) {
 $no = 1;
 ?>
 
-<!-- Dropzone CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 
-<!-- Dropzone JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
 <main>
@@ -115,11 +111,9 @@ $no = 1;
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </button>
                                     </td>
-
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -197,7 +191,7 @@ $no = 1;
 
                     <div id="renameContainer" style="display: none;">
                         <label class="form-label">Nama File</label><br>
-                        <input type="text" class="form-control" id="renameInput" placeholder="Ubah nama dokumen">
+                        <input type="text" class="form-control" id="renameInput" name="nama_dokumen" placeholder="Ubah nama dokumen">
                     </div>
                 </div>
 
@@ -214,10 +208,6 @@ $no = 1;
 
 <?php include "../layout/footerDashboard.php"; ?>
 <!-- Script untuk DataTable -->
-
-<script>
-    const logbookData = <?= json_encode($logbook_all); ?>;
-</script>
 
 <script>
     $(document).ready(function() {
@@ -303,6 +293,8 @@ $no = 1;
     });
 </script>
 
+
+
 <script>
     // Untuk Logbook Modal
     document.querySelectorAll('.openLogbook').forEach(button => {
@@ -324,52 +316,3 @@ $no = 1;
         });
     });
 </script>
-
-
-
-
-<script>
-   document.querySelectorAll('.openLogbook').forEach(button => {
-    button.addEventListener('click', function () {
-        const idPengajuan = this.getAttribute('data-id_pengajuan');
-        const idUser = this.getAttribute('data-id_user');
-
-        const tbody = document.querySelector('#logbookTable tbody');
-        tbody.innerHTML = '';
-
-        const filtered = logbookData.filter(log => log.id_user === idUser && log.id_pengajuan === idPengajuan);
-
-        if (filtered.length > 0) {
-            filtered.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${row.tanggal_logbook}</td>
-                    <td>${row.kegiatan_logbook}</td>
-                    <td>${row.keterangan_logbook}</td>
-                    <td>${row.jam_mulai}</td>
-                    <td>${row.jam_selesai}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-        } else {
-            tbody.innerHTML = <tr><td colspan="5" class="text-center">Belum ada data logbook</td></tr>;
-        }
-
-        // Destroy and reinitialize DataTable
-        if ($.fn.DataTable.isDataTable('#logbookTable')) {
-            $('#logbookTable').DataTable().destroy();
-        }
-
-        $('#logbookTable').DataTable({
-            searching: false,
-            ordering: false,
-            paging: false,
-            info: false,
-            language: {
-                emptyTable: "Belum ada data logbook",
-                zeroRecords: "Tidak ditemukan",
-            }
-        });
-    });
-});

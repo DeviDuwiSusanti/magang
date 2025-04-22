@@ -1,25 +1,4 @@
 <?php
-
-if (isset($_GET['id_user']) && isset($_GET['id_pengajuan'])) {
-    include '../koneksi.php';
-
-    $id_user = $_GET['id_user'];
-    $id_pengajuan = $_GET['id_pengajuan'];
-
-    $query = "SELECT * FROM tb_logbook WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan'";
-    $result = mysqli_query($koneksi, $query);
-
-    $logbook = [];
-    while ($row = mysqli_fetch_assoc($result)) {
-        $logbook[] = $row;
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode($logbook);
-    exit; // <-- ini penting agar PHP tidak lanjut render HTML
-}
-
-
 include '../layout/sidebarUser.php';
 include "functions.php";
 
@@ -28,20 +7,6 @@ $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_penga
 $daftar_anggota = [];
 $pendidikan_user = null;
 
-
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
-    if (pembimbing_upload_nilai($_POST, $_FILES)) { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Unggah Nilai Dan Sertifikat Berhasil", "pembimbing4.php");
-        </script>
-    <?php } else { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Unggah Nilai Dan Sertifikat Gagal", "pembimbing4.php");
-        </script>
-<?php }
-}
 
 if (!empty($pengajuan)) {
     $pengajuan_user = $pengajuan[0]["id_pengajuan"];
@@ -123,6 +88,7 @@ $no = 1;
                                         </button>
                                     </td>
 
+
                                     <!-- Tombol Nilai & Sertifikat -->
                                     <td>
                                         <button class="btn btn-success btn-sm openNilai"
@@ -155,37 +121,39 @@ $no = 1;
 
 
 
-<!-- Modal untuk Logbook -->
+<!-- Modal -->
 <div class="modal fade" id="logbookModal" tabindex="-1" aria-labelledby="logbookModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl"> 
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="logbookModalLabel">Logbook Peserta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div id="logbookContent">
-                <table id="logbookTable" class="table table-striped table-bordered small" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Tanggal</th>
-                        <th>Kegiatan</th>
-                        <th>Keterangan</th>
-                        <th>Jam Mulai</th>
-                        <th>Jam Selesai</th>
-                    </tr>
-                </thead>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Logbook</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p>User ID: <span id="modal_id_user"></span></p>
+        <p>Pengajuan ID: <span id="modal_id_pengajuan"></span></p>
 
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
+        <table class="table" id="logbookTable">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Tanggal</th>
+              <th>Kegiatan</th>
+              <th>Keterangan</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data dari fetch akan dimasukkan di sini -->
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
+
+
 
 
 
@@ -272,6 +240,8 @@ $no = 1;
     });
 </script>
 
+
+
 <script>
     Dropzone.autoDiscover = false;
 
@@ -325,8 +295,9 @@ $no = 1;
         button.addEventListener('click', function() {
             const idPengajuan = this.getAttribute('data-id_pengajuan');
             const idUser = this.getAttribute('data-id_user');
-            document.getElementById('logbook_id_pengajuan').value = idPengajuan;
-            document.getElementById('logbook_id_user').value = idUser;
+            document.getElementById('modal_id_user').textContent = idUser;
+            document.getElementById('modal_id_pengajuan').textContent = idPengajuan;
+
         });
     });
 
@@ -341,61 +312,3 @@ $no = 1;
     });
 </script>
 
-
-
-
-<script>
-   document.querySelectorAll('.openLogbook').forEach(button => {
-    button.addEventListener('click', function () {
-        const idPengajuan = this.getAttribute('data-id_pengajuan');
-        const idUser = this.getAttribute('data-id_user');
-
-        const tbody = document.querySelector('#logbookTable tbody');
-        tbody.innerHTML = '';
-
-        fetch(`pembimbing4.php?id_user=${idUser}&id_pengajuan=${idPengajuan}`)
-            .then(response => response.json())
-            .then(data => {
-                if (Array.isArray(data) && data.length > 0) {
-                    data.forEach((row, index) => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${index + 1}</td>
-                            <td>${row.tanggal_logbook}</td>
-                            <td>${row.kegiatan_logbook}</td>
-                            <td>${row.keterangan_logbook}</td>
-                            <td>${row.jam_mulai}</td>
-                            <td>${row.jam_selesai}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center">Belum ada data logbook</td></tr>`;
-                }
-
-                // Destroy and reinitialize DataTable
-                if ($.fn.DataTable.isDataTable('#logbookTable')) {
-                    $('#logbookTable').DataTable().destroy();
-                }
-
-                $('#logbookTable').DataTable({
-                    searching: false,
-                    ordering: false,
-                    paging: false,
-                    info: false,
-                    language: {
-                        emptyTable: "Belum ada data logbook",
-                        zeroRecords: "Tidak ditemukan",
-                    }
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Gagal mengambil data logbook</td></tr>`;
-            });
-    });
-});
-
-
-
-</script>
