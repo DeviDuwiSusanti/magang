@@ -273,9 +273,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="col-lg-4">
                             <div class="detail-lowongan sticky-top" id="detailBidangContainer">
                                 <div class="card" id="detailBidangCard">
-                                    <div class="card-header bg-primary">
-                                        <h5 class="card-title text-white mb-0">Detail Bidang</h5>
-                                    </div>
+                                <div class="card-header bg-primary">
+                                <h5 class="card-title text-white mb-0" id="judulInstansi">
+                                    Silakan pilih instansi
+                                </h5>
+                                </div>
                                     <div class="card-body">
                                         <div id="defaultBidangMessage">
                                             <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
@@ -438,10 +440,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     
                     <!-- Kolom Detail (4 bagian dari 12) -->
                     <div class="col-lg-4">
-                        <div class="detail-lowongan sticky-top" id="detailBidangContainer">
-                            <div class="card" id="detailBidangCard">
-                                <div class="card-header bg-primary">
-                                    <h5 class="card-title text-white mb-0">Detail Bidang</h5>
+                    <div class="card-body">
+                                <div id="defaultBidangMessage">
+                                    <p class="text-muted text-center">Silahkan pilih instansi terlebih dahulu</p>
                                 </div>
                                 <div class="card-body">
                                     <div id="defaultBidangMessage">
@@ -472,6 +473,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 </body>
 </html>
+
 
 <!-- hapus pengajuan -->
 <script>
@@ -596,6 +598,7 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
                         $("#defaultBidangMessage").hide();
                         $("#bidangDetailContent").show();
                         
+                        $("#judulInstansi").text(response.nama_panjang || "Tidak Diketahui");
                         $("#bidangNama").text(response.nama_bidang);
                         $("#bidangDeskripsi").text(response.deskripsi_bidang);
                         $("#bidangKriteria").text(response.kriteria_bidang);
