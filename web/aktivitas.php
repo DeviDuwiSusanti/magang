@@ -44,7 +44,7 @@ $no = 1;
 
 <main class="main">
     <div class="container mt-5"><br><br>
-        <h1 class="text-center mb-4">Tabel Kegiatan Aktif</h1>
+        <h1 class="text-center mb-4">Daftar Magang Aktif</h1>
         
         <!-- Tabel buat menampilkan data -->
         <table id="myTable" class="table table-bordered">
@@ -53,7 +53,7 @@ $no = 1;
                     <th class="text-center">No</th>
                     <th class="text-center">Nama</th>
                     <th class="text-center">Pendidikan</th>
-                    <th class="text-center">Perusahaan</th>
+                    <th class="text-center">Instansi</th>
                     <th class="text-center">Posisi</th>
                     <th class="text-center">Durasi</th>
                     <th class="text-center">Periode Magang</th>
@@ -91,7 +91,7 @@ $no = 1;
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" class="text-center">Tidak ada data pengajuan aktif</td>
+                        <td colspan="7" class="text-center">Belum tercatat pengajuan magang yang sedang aktif</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

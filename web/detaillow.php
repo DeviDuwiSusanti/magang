@@ -76,14 +76,18 @@ include "functions.php";
                     <p><?= $row['deskripsi_bidang'] ?></p>
 
                     <h3>Kriteria</h3>
-                    <ul class="list">
+                    <!-- <ul class="list">
                         <?php
-                        // perulangan untuk data list di database 
                         $kriteria = isset($row['kriteria_bidang']) ? explode(',', $row['kriteria_bidang']) : [];
                         foreach ($kriteria as $item) : ?>
                             <li><?= $item ?></li>
                         <?php endforeach; ?>
-                    </ul>
+                    </ul> -->
+                    <!-- pakai summerote -->
+                    <div class="summernote-output">
+                        <?= $row['kriteria_bidang'] ?>
+                    </div>
+
 
                     <h3>Persyaratan Dokumen</h3>
                     <ul class="list">
@@ -96,22 +100,15 @@ include "functions.php";
 
                     <h3>Lokasi Instansi</h3>
                     <div class="maps-container">
-                        <!-- <?php echo $row['lokasi_instansi']; ?> -->
                         <?php
                         if (!empty($row['lokasi_instansi'])) {
-                            $embed_url = $row['lokasi_instansi'];
+                            $map = $row['lokasi_instansi'];
 
-                            echo "<iframe 
-                                     src='$embed_url' 
-                                     width='600' 
-                                     height='450' 
-                                     style='border:0;' 
-                                     allowfullscreen='' 
-                                     loading='lazy' 
-                                     referrerpolicy='no-referrer-when-downgrade'>
-                                 </iframe>";
+                            echo "<a href='$map' target='_blank' rel='noopener noreferrer'>
+                                    Lihat Lokasi di Google Maps
+                                </a>";
                         } else {
-                            echo "<p>Lokasi instansi tidak tersedia.</p>";
+                            echo "Lokasi Instansi Tidak Diketahui";
                         }
                         ?>
                     </div>

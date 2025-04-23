@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                 <td><?= $bd["kuota_bidang"] ?></td>
                                 <td><?= $bd["dokumen_prasyarat"] ?></td>
                                 <td style="width: 85px;">
-                                    <button type="button" class="btn btn-warning btn-sm editBidangBtn"
+                                    <button type="button" class="btn btn-warning btn-sm editBidangBtn me-2"
                                         data-bs-toggle="modal" data-bs-target="#editBidangModal"
                                         data-id_bidang="<?= $bd['id_bidang'] ?>"
                                         data-nama_bidang="<?= $bd['nama_bidang'] ?>"
@@ -150,13 +150,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                         <div class="col-md-6 mb-3">
                             <label for="kriteria" class="form-label">Kriteria</label>
                             <textarea class="form-control" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="5" placeholder="Masukkan kriteria bidang"></textarea>
-                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
                             <small class="text-danger" id="kriteria_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
                             <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="5" placeholder="Masukkan dokumen prasyarat"></textarea>
-                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
                             <small class="text-danger" id="dokumen_error"></small>
                         </div>
                     </div>
@@ -204,13 +204,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                         <div class="col-md-6 mb-3">
                             <label for="kriteria" class="form-label fw-bold">Kriteria</label>
                             <textarea class="form-control" data-error-id="edit_kriteria_error" id="edit_kriteria" name="kriteria" rows="5"></textarea>
-                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
                             <small class="text-danger" id="edit_kriteria_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dokumen" class="form-label fw-bold">Dokumen Prasyarat</label>
                             <textarea class="form-control" data-error-id="edit_dokumen_error" id="edit_dokumen" name="dokumen" rows="5"></textarea>
-                            <small class="text-muted">*Pisahkan dengan koma</small> <br>
+                            <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
                             <small class="text-danger" id="edit_dokumen_error"></small>
                         </div>
                     </div>
@@ -241,9 +241,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 document.getElementById("edit_id_bidang").value = this.getAttribute("data-id_bidang");
                 document.getElementById("edit_nama_bidang").value = this.getAttribute("data-nama_bidang");
                 document.getElementById("edit_deskripsi").value = this.getAttribute("data-deskripsi");
-                document.getElementById("edit_kriteria").value = this.getAttribute("data-kriteria");
                 document.getElementById("edit_kuota").value = this.getAttribute("data-kuota");
-                document.getElementById("edit_dokumen").value = this.getAttribute("data-dokumen");
+                // document.getElementById("edit_kriteria").value = this.getAttribute("data-kriteria");
+                // document.getElementById("edit_dokumen").value = this.getAttribute("data-dokumen");
+
+                // Gunakan Summernote API untuk set konten
+                $('#edit_kriteria').summernote('code', this.getAttribute("data-kriteria"));
+                $('#edit_dokumen').summernote('code', this.getAttribute("data-dokumen"));
             });
         });
     });
@@ -278,6 +282,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     next: "Berikutnya"
                 }
             }
+        });
+
+        $('#kriteria').summernote({
+            placeholder: 'Tulis di sini...',
+            height: 175
+        });
+        $('#dokumen').summernote({
+            placeholder: 'Tulis di sini...',
+            height: 175
+        });
+        $('#edit_kriteria').summernote({
+            placeholder: 'Tulis di sini...',
+            height: 175
+        });
+        $('#edit_dokumen').summernote({
+            placeholder: 'Tulis di sini...',
+            height: 175
         });
 
         // Inject tombol ke sebelah kanan search box

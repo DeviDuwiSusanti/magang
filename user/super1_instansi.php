@@ -214,7 +214,7 @@
                     <div class="input-field">
                         <label for="image">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
                         <div class="image-preview" id="imagePreview">
-                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
+                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="file" class="input" id="image" name="gambar_instansi" accept="image/*" onchange="validateFile()">
                     </div>
@@ -272,7 +272,7 @@
                     <div class="input-field">
                         <label for="gambar_instansi_edit">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
                         <div class="image-preview" id="imagePreviewEdit">
-                            <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 100px; height: 100px; cursor: pointer;" onclick="openImageModal(this)">
+                            <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
                             <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $opd["gambar_instansi"] ?>">
                         </div>
                         <input type="file" class="input" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="validateFileEdit()">

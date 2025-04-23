@@ -44,23 +44,27 @@ $json_nama_pengaju = json_encode($nama_pengaju);
 // Query untuk mendapatkan daftar dokumen
 $sql3 = "SELECT 
             d.id_pengajuan, 
-            d.id_user, GROUP_CONCAT(d.file_path SEPARATOR ', ') AS daftar_dokumen
+            d.id_user, 
+            GROUP_CONCAT(CONCAT(d.nama_dokumen, '|', d.file_path) SEPARATOR '||') AS daftar_dokumen
         FROM tb_dokumen AS d
             JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
         WHERE p.id_instansi = '$id_instansi'
-        GROUP BY d.id_pengajuan, d.id_user
-";
-// Simpan daftar dokumen dalam array
-$daftar_dokumen = [];
+        GROUP BY d.id_pengajuan, d.id_user";
 $result3 = mysqli_query($conn, $sql3);
 
+// Simpan daftar dokumen dalam array
 while ($row3 = mysqli_fetch_assoc($result3)) {
     $id_user = $row3['id_user'];
     $id_pengajuan = $row3['id_pengajuan'];
-    $dokumen_list = explode(', ', $row3['daftar_dokumen']);
-    $full_paths = $dokumen_list;
+    $dokumen_raw = explode('||', $row3['daftar_dokumen']);
 
-    $daftar_dokumen[$id_user][$id_pengajuan] = $full_paths;
+    $dokumen_list = [];
+
+    foreach ($dokumen_raw as $item) {
+        list($nama, $path) = explode('|', $item);
+        $dokumen_list[] = ['nama' => $nama, 'path' => $path];
+    }
+    $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
 }
 $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 ?>
@@ -85,9 +89,9 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                             <th>Calon Pelamar</th>
                             <th>Periode</th>
                             <th>Durasi</th>
-                            <th>Dokumen</th>
-                            <th>Zoom</th>
-                            <th style="width: 150px;">Aksi</th>
+                            <!-- <th>Dokumen</th>
+                            <th>Zoom</th> -->
+                            <th style="width: 200px; text-align: center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -125,7 +129,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     }
                                     ?>
                                 </td>
-                                <td class="text-center align-middle">
+                                <!-- <td class="text-center align-middle">
                                     <a href="#"
                                         class="show-doc btn btn-sm btn-primary"
                                         title="Lihat Dokumen"
@@ -137,8 +141,8 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                                     ), ENT_QUOTES, "UTF-8") ?>'>
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
-                                </td>
-                                <td class="text-center align-middle">
+                                </td> -->
+                                <!-- <td class="text-center align-middle">
                                     <?php
                                     $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : '';
                                     $btn_class = ($row['kirim_zoom'] == 1) ? 'btn-secondary' : 'btn-warning';  // Tentukan warna tombol
@@ -149,14 +153,33 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         data-bs-target="#zoomModal" data-id="<?= $row['id_pengajuan'] ?>" <?= $disabled ?>>
                                         <i class="bi bi-zoom-in"></i>
                                     </button>
-                                </td>
+                                </td> -->
                                 <?php
+                                $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : '';
+                                $btn_class = ($row['kirim_zoom'] == 1) ? 'btn-secondary' : 'btn-warning';
                                 $isDisabled = ($row['kirim_zoom'] == 0);
                                 $btnClass = $isDisabled ? 'btn-secondary' : 'btn-primary';
                                 ?>
                                 <td class="text-center align-middle">
+                                    <a href="#"
+                                        class="show-doc btn btn-sm btn-primary me-2"
+                                        title="Lihat Dokumen"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#dokumenModal"
+                                        data-doc='<?= htmlspecialchars(json_encode(
+                                                        $daftar_dokumen[$row['id_user']][$row['id_pengajuan']] ?? [],
+                                                        JSON_UNESCAPED_SLASHES
+                                                    ), ENT_QUOTES, "UTF-8") ?>'>
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <button type="button" class="btn <?= $btn_class ?> btn-sm zoom-btn me-2"
+                                        data-bs-toggle="tooltip" data-bs-placement="top"
+                                        title="<?= ($row['kirim_zoom'] == 1) ? 'Informasi Zoom sudah dikirim' : 'Tambah Informasi Zoom' ?>"
+                                        data-bs-target="#zoomModal" data-id="<?= $row['id_pengajuan'] ?>" <?= $disabled ?>>
+                                        <i class="bi bi-zoom-in"></i>
+                                    </button>
                                     <button
-                                        class="btn <?= $btnClass ?> btn-sm aksi-btn"
+                                        class="btn <?= $btnClass ?> btn-sm aksi-btn me-2"
                                         data-bs-toggle="modal"
                                         data-bs-target="#aksiModal"
                                         data-id="<?= $id_pengajuan ?>"
@@ -173,7 +196,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         $btnDisabled = $sudahTerkirim ? 'disabled' : '';
                                         ?>
                                         <button
-                                            class="btn <?= $btnClass ?> btn-sm kirimPengingatBtn"
+                                            class="btn <?= $btnClass ?> btn-sm kirimPengingatBtn me-2"
                                             data-id="<?= $row['id_pengajuan'] ?>"
                                             data-email="<?= $row['email'] ?>"
                                             <?= $btnDisabled ?>
@@ -338,7 +361,8 @@ $result = mysqli_query($conn, $query);
 
                 Swal.fire({
                     title: 'Kirim Pengingat?',
-                    text: `Kirim pengingat lengkapi dokumen ke email ini: ${email}`,
+                    // text: `Kirim pengingat lengkapi dokumen ke email ini: ${email}`,
+                    text: `Kirim pengingat lengkapi dokumen ke pengajuan ini?`,
                     icon: 'question',
                     showCancelButton: true,
                     cancelButtonColor: '#d33',
@@ -599,22 +623,23 @@ $result = mysqli_query($conn, $query);
 
                 data.forEach((doc, index) => {
                     const tabId = `doc-tab-${index}`;
-                    const filename = doc.split('/').pop();
+                    const filename = doc.path.split('/').pop();
+                    const displayName = doc.nama || `Dokumen ${index + 1}`;
 
                     // Tab header
                     const tab = document.createElement('li');
                     tab.classList.add('nav-item');
                     tab.innerHTML = `
-                    <button class="nav-link ${index === 0 ? 'active' : ''}" 
-                            id="${tabId}-tab" 
-                            data-bs-toggle="tab" 
-                            data-bs-target="#${tabId}" 
-                            type="button" 
-                            role="tab" 
-                            aria-controls="${tabId}" 
-                            aria-selected="${index === 0 ? 'true' : 'false'}">
-                        Dokumen ${index + 1}
-                    </button>`;
+                        <button class="nav-link ${index === 0 ? 'active' : ''}" 
+                                id="${tabId}-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#${tabId}" 
+                                type="button" 
+                                role="tab" 
+                                aria-controls="${tabId}" 
+                                aria-selected="${index === 0 ? 'true' : 'false'}">
+                            ${displayName}
+                        </button>`;
                     tabList.appendChild(tab);
 
                     // Tab content
@@ -625,21 +650,21 @@ $result = mysqli_query($conn, $query);
                     tabPane.setAttribute('role', 'tabpanel');
                     tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
 
-                    const isPdf = doc.toLowerCase().endsWith('.pdf');
-                    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc);
+                    const isPdf = doc.path.toLowerCase().endsWith('.pdf');
+                    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc.path);
 
                     if (isPdf) {
-                        tabPane.innerHTML = `<iframe src="${doc}" width="100%" height="500px" style="border: none;"></iframe>`;
+                        tabPane.innerHTML = `<iframe src="${doc.path}" width="100%" height="500px" style="border: none;"></iframe>`;
                     } else if (isImage) {
-                        tabPane.innerHTML = `<img src="${doc}" alt="${filename}" class="img-fluid rounded shadow">`;
+                        tabPane.innerHTML = `<img src="${doc.path}" alt="${filename}" class="img-fluid rounded shadow">`;
                     } else {
-                        tabPane.innerHTML = `<a href="${doc}" target="_blank" class="btn btn-outline-primary">
+                        tabPane.innerHTML = `<a href="${doc.path}" target="_blank" class="btn btn-outline-primary">
                         Lihat atau Unduh ${filename}
                     </a>`;
                     }
-
                     tabContent.appendChild(tabPane);
                 });
+
             });
         });
     });

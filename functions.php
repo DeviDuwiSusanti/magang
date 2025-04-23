@@ -86,8 +86,74 @@
     }
 
 
-    function register($POST){
+//     function register($POST){
+//     global $conn;
+//     $id_user = generateUserId($conn);
+//     $nama = $POST["nama_user"];
+//     $email = $POST["email"];
+//     $nik = $POST["nik"];
+//     $nisn = $POST["nisn"];
+//     $pendidikan = $POST["id_pendidikan"];
+//     $jenis_kelamin = $POST["jenis_kelamin"];
+//     $tempat_lahir = $POST["tempat_lahir"];
+//     $tanggal_lahir = $POST["tanggal_lahir"];
+//     $alamat = $POST["alamat_user"];
+//     $telepone = $POST["telepone_user"];
+//     $level = $POST["level"];
+//     $nim = $POST["nim"];
+//     $gambar = uploadImage($_FILES["gambar_user"], "avatar.png", "assets/img/user/");
+
+//     // Cek apakah email sudah ada di database
+//     $query_check_email = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE email = '$email'");
+    
+//     if(mysqli_num_rows($query_check_email) > 0) {
+//         $row = mysqli_fetch_assoc($query_check_email);
+//         $existing_id_user = $row['id_user'];
+//         $penanda = substr($existing_id_user, -2); // Ambil 2 digit terakhir (PP)
+
+//         if($penanda == "00") {
+//             header("Location: register.php?error=email_terdaftar");
+//             exit;
+//         } else {
+//             header("Location: register.php?confirm=gunakan_data_lama&id_user_lama=$existing_id_user");
+//             exit;
+//         }
+//     }
+
+//     // Validasi NIK dan NISN kemungkinan di hapus
+//     if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
+//         header("Location: register.php?error=nik_terdaftar");
+//         exit;
+//     }
+//     if (checking($conn, 'tb_profile_user', 'nisn', $nisn)) {
+//         header("Location: register.php?error=nisn_terdaftar");
+//         exit;
+//     }
+//     // if (empty($nik) || strlen($nik) !== 16 || !ctype_digit($nik)) {
+//     //     header("Location: register.php?error=nik_tidak_sesuai");
+//     //     exit;
+//     // }
+//     // if (empty($nisn) || strlen($nisn) !== 10 || !ctype_digit($nisn)) {
+//     //     header("Location: register.php?error=nisn_tidak_sesuai");
+//     //     exit;
+//     // }
+
+//     // Insert data baru
+//     $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
+//     $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
+//                             VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
+//     $query_user = mysqli_query($conn, $query1);
+//     $query_profile = mysqli_query($conn, $query2);
+//     if($query_user && $query_profile) {
+//         return mysqli_affected_rows($conn);
+//     } else {
+//         return 0;
+//     }
+// }
+
+function register($POST){
     global $conn;
+
     $id_user = generateUserId($conn);
     $nama = $POST["nama_user"];
     $email = $POST["email"];
@@ -103,53 +169,45 @@
     $nim = $POST["nim"];
     $gambar = uploadImage($_FILES["gambar_user"], "avatar.png", "assets/img/user/");
 
-    // Cek apakah email sudah ada di database
-    $query_check_email = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE email = '$email'");
+    // Cek email
+    $check_email = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE email = '$email'");
     
-    if(mysqli_num_rows($query_check_email) > 0) {
-        $row = mysqli_fetch_assoc($query_check_email);
-        $existing_id_user = $row['id_user'];
-        $penanda = substr($existing_id_user, -2); // Ambil 2 digit terakhir (PP)
+    if (mysqli_num_rows($check_email) > 0) {
+        $existing = mysqli_fetch_assoc($check_email);
+        $existing_id_user = $existing['id_user'];
 
-        if($penanda == "00") {
-            header("Location: register.php?error=email_terdaftar");
+        // Jika anggota ingin mendaftar ulang
+        if (!isKetua($existing_id_user)) {
+            header("Location: register.php?confirm=gunakan_data_lama&id_user_lama=$existing_id_user");
             exit;
         } else {
-            header("Location: register.php?confirm=gunakan_data_lama&id_user_lama=$existing_id_user");
+            header("Location: register.php?error=email_terdaftar");
             exit;
         }
     }
 
-    // Validasi NIK dan NISN kemungkinan di hapus
+    // Validasi duplikat NIK dan NISN
     if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
         header("Location: register.php?error=nik_terdaftar");
         exit;
     }
-    if (checking($conn, 'tb_profile_user', 'nisn', $nisn)) {
+    if (!empty($nisn) && checking($conn, 'tb_profile_user', 'nisn', $nisn)) {
         header("Location: register.php?error=nisn_terdaftar");
         exit;
     }
-    if (empty($nik) || strlen($nik) !== 16 || !ctype_digit($nik)) {
-        header("Location: register.php?error=nik_tidak_sesuai");
-        exit;
-    }
-    if (empty($nisn) || strlen($nisn) !== 10 || !ctype_digit($nisn)) {
-        header("Location: register.php?error=nisn_tidak_sesuai");
-        exit;
-    }
 
-    // Insert data baru
-    $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
-    $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
-                            VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
-    $query_user = mysqli_query($conn, $query1);
-    $query_profile = mysqli_query($conn, $query2);
-    if($query_user && $query_profile) {
-        return mysqli_affected_rows($conn);
-    } else {
-        return 0;
-    }
+    // Simpan data user baru
+    $query_user = mysqli_query($conn, "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')");
+    $query_profile = mysqli_query($conn, "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
+        VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')");
+
+    return ($query_user && $query_profile) ? mysqli_affected_rows($conn) : 0;
 }
+
+function isKetua($id_user) {
+    return substr($id_user, -2) === "00";
+}
+
 
 
 
