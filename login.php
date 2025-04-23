@@ -82,7 +82,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/sign_in.css">
     <link rel="icon" href="./assets/img/logo_kab_sidoarjo.png" type="image/png">
     <style>
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.75s ease, visibility 0.75s ease;
+        }
 
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader .spinner {
+            width: 80px;
+            height: 80px;
+            border: 10px solid #e3e3e3;
+            border-top: 10px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .loader p {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+            animation: fadeIn 1s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0turn);
+            }
+
+            100% {
+                transform: rotate(1turn);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
     </style>
     <title>Login</title>
 </head>
@@ -99,7 +152,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                 <div class="col-md-6 right">
                     <div class="input-box">
                         <header>Log In</header>
-                        <form action="" method="POST">
+                        <form action="" method="POST" id="login-form">
                             <div class="input-field">
                                 <input type="email" class="input" name="email" required>
                                 <label for="email">Email</label>
@@ -114,6 +167,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             </div>
         </div>
     </div>
+    <div class="loader hidden">
+        <div class="spinner"></div>
+        <p>Mohon tunggu sebentar...</p>
+    </div>
+
 </body>
 
 </html>
+
+<script>
+    // Saat halaman selesai dimuat
+    // window.addEventListener('load', () => {
+    //     const loader = document.querySelector('.loader');
+    //     if (loader) {
+    //         loader.classList.add("hidden");
+
+    //         loader.addEventListener('transitionend', () => {
+    //             loader.remove(); // Hilangkan loader dari DOM setelah animasi selesai
+    //         });
+    //     }
+    // });
+
+    // Saat form dikirim
+    document.getElementById('login-form')?.addEventListener('submit', function() {
+        let loader = document.querySelector('.loader');
+
+        // Kalau loader sudah dihapus, buat ulang dari awal
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.className = 'loader';
+            loader.innerHTML = `
+            <div class="spinner"></div>
+            <p>Mohon tunggu sebentar...</p>
+        `;
+            document.body.appendChild(loader);
+        } else {
+            loader.classList.remove("hidden");
+        }
+    });
+</script>

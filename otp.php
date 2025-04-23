@@ -86,6 +86,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
             outline: none;
         }
+
+        /* loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.75s ease, visibility 0.75s ease;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader .spinner {
+            width: 80px;
+            height: 80px;
+            border: 10px solid #e3e3e3;
+            border-top: 10px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .loader p {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #333;
+            animation: fadeIn 1s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0turn);
+            }
+
+            100% {
+                transform: rotate(1turn);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -113,6 +169,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit" class="btn btn-primary w-100 mt-2">Verifikasi</button>
             </form>
         </div>
+    </div>
+
+    <div class="loader">
+        <div class="spinner"></div>
+        <p>Mohon tunggu sebentar...</p>
     </div>
 
     <script src="./assets/js/alert.js"></script>
@@ -155,6 +216,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             timeLeft--;
         }, 1000);
+
+        window.addEventListener('load', () => {
+            const loader = document.querySelector('.loader');
+            if (loader) {
+                loader.classList.add("hidden");
+
+                loader.addEventListener('transitionend', () => {
+                    loader.remove();
+                });
+            }
+        });
+
+        document.getElementById('otp-form')?.addEventListener('submit', function(e) {
+            e.preventDefault(); // Cegah submit form langsung
+
+            let loader = document.querySelector('.loader');
+
+            // Kalau loader sudah dihapus, buat ulang dari awal
+            if (!loader) {
+                loader = document.createElement('div');
+                loader.className = 'loader';
+                loader.innerHTML = `
+            <div class="spinner"></div>
+            <p>Mohon tunggu sebentar...</p>
+        `;
+                document.body.appendChild(loader);
+            } else {
+                loader.classList.remove("hidden");
+            }
+
+            // Delay 2 detik sebelum submit form
+            setTimeout(() => {
+                e.target.submit(); // Submit form secara manual setelah delay
+            }, 2000); // 2000 ms = 2 detik
+        });
     </script>
 </body>
 
