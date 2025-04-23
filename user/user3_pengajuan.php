@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         inputPengajuan($_POST, $_FILES, $id_user);
     } else if (isset($_POST['update_pengajuan'])) {
     updatePengajuan($_POST, $_FILES, $id_user);
-    } else if (isset($_POST['hapus_pengajuan'])) {
+    } else if (isset($_POST['hapus_pengajuan']) && $_POST['hapus_pengajuan'] == '1') {
     hapusPengajuan($_POST, $id_user);
     }
 }
@@ -476,26 +476,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!-- hapus pengajuan -->
 <script>
 document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
-    event.preventDefault(); // Mencegah form langsung terkirim
-
+    event.preventDefault();
+    
+    // Buat div container untuk textarea
+    const container = document.createElement('div');
+    container.innerHTML = `
+        <textarea id="reasonTextarea" 
+                  class="swal2-textarea-custom" 
+                  style="width:100%; min-height:100px; padding:10px;"
+                  placeholder="Masukkan alasan Anda (minimal 10 karakter)..."></textarea>
+    `;
+    
     Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
-        icon: 'warning',
+        title: 'Alasan Penghapusan',
+        html: container,
+        focusConfirm: false,
         showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, hapus!',
-        cancelButtonText: 'Batal'
+        confirmButtonText: 'Lanjutkan',
+        cancelButtonText: 'Batal',
+        didOpen: () => {
+            const textarea = document.getElementById('reasonTextarea');
+            textarea.focus();
+            
+            // Pastikan textarea bisa menerima input
+            textarea.addEventListener('keydown', function(e) {
+                e.stopPropagation(); // Mencegah event bubbling
+            });
+        },
+        preConfirm: () => {
+            const textarea = document.getElementById('reasonTextarea');
+            const value = textarea.value.trim();
+            
+            if (!value) {
+                Swal.showValidationMessage('Anda harus memberikan alasan!');
+                return false;
+            }
+            if (value.length < 10) {
+                Swal.showValidationMessage('Alasan terlalu pendek (minimal 10 karakter)');
+                return false;
+            }
+            return value;
+        }
     }).then((result) => {
         if (result.isConfirmed) {
-            // Kirim form secara manual
-            document.getElementById('editPengajuanForm').submit();
+            confirmDelete(result.value);
         }
     });
 });
 </script>
-
 
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
 <script>
