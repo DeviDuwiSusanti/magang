@@ -52,8 +52,10 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>NIK</th>
-                                <th>Nisn</th>
-                                <th>Nim</th>
+                                <?php
+                                $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                                $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan']; ?>
+                                <th><?= strlen($id_studi) == 7 ? 'NIM' : 'NISN' ?></th>
                                 <?php if ($row3['status_pengajuan'] == '1') { ?>
                                     <th>Aksi</th>
                                 <?php } ?>
@@ -68,8 +70,7 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                     <td><?= $row['nama_user'] ?></td>
                                     <td><?= $row['email'] ?></td>
                                     <td><?= $row['nik'] ?></td>
-                                    <td><?= $row['nisn'] ?></td>
-                                    <td><?= empty($row['nim']) ? '-' : $row['nim'] ?></td>
+                                    <td><?= strlen($row['id_pendidikan']) == 7 ? $row['nim'] : $row['nisn'] ?></td>
                                     <?php if ($row3['status_pengajuan'] == '1'): ?>
                                         <td>
                                             <?php $isKetua = cekStatusUser($row['id_user']) === 'Ketua'; ?>
@@ -142,17 +143,22 @@ if (ISSET($_POST['tambah_anggota'])){
                         <input type="number" class="form-control" id="nik" name="nik" oninput="this.value=this.value.slice(0,16)">
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="nisn" class="form-label">Nisn</label>
-                        <input type="number" class="form-control" id="nisn" name="nisn" oninput="this.value=this.value.slice(0,10)">
-                    </div>
+                    <?php
+                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                    $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
+                    if (strlen($id_studi) == 7) : ?>
+                        <div class="mb-3">
+                            <label for="nim" class="form-label">Nim</label>
+                            <input type="number" class="form-control" id="nim" name="nim" oninput="this.value=this.value.slice(0,12)">
+                        </div>
+                    <?php else : ?>
+                        <div class="mb-3">
+                            <label for="nisn" class="form-label">Nisn</label>
+                            <input type="number" class="form-control" id="nisn" name="nisn" oninput="this.value=this.value.slice(0,10)">
+                        </div>
+                    <?php endif; ?>
 
-                    <div class="mb-3">
-                        <label for="nim" class="form-label">Nim</label>
-                        <input type="number" class="form-control" id="nim" name="nim" oninput="this.value=this.value.slice(0,12)">
-                        <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
-                    </div>
-                    
+                                        
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" name="tambah_anggota" class="btn btn-primary">Tambah Anggota</button>
@@ -191,16 +197,21 @@ if (ISSET($_POST['tambah_anggota'])){
                         <input type="number" class="form-control" id="edit_nik" name="nik" value="<?= $editRow['nik'] ?>" oninput="this.value=this.value.slice(0,16)">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="edit_nisn" class="form-label">Nisn</label>
-                        <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="edit_nim" class="form-label">Nim</label>
-                        <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>" oninput="this.value=this.value.slice(0,12)">
-                        <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
-                    </div>
+                     
+                    <?php
+                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                    $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
+                    if (strlen($id_studi) == 7) : ?>
+                        <div class="mb-3">
+                            <label for="edit_nim" class="form-label">Nim</label>
+                            <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>" oninput="this.value=this.value.slice(0,12)">
+                        </div>
+                    <?php else : ?>
+                        <div class="mb-3">
+                            <label for="edit_nisn" class="form-label">Nisn</label>
+                            <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
+                        </div>
+                    <?php endif; ?>
 
                     <button type="submit" name="update_anggota" class="btn btn-primary">
                         <i class="bi bi-floppy me-1"></i>Simpan Perubahan
@@ -269,89 +280,119 @@ if (isset($_GET['id_pengajuan'])): ?>
 <!-- ==========  VALIDASIIII ===============-->
 <script>
 $(document).ready(function() {
-    $(".form_tambahAnggota, .form_editAnggota").on("submit", function(e) {
+    // Initialize form validation for both forms
+    initFormValidation('form_tambahAnggota', true);
+    initFormValidation('form_editAnggota', false);
+    
+    function initFormValidation(formClass, isNewForm) {
+        $(`form.${formClass}`).off('submit').on('submit', function(e) {
+            e.preventDefault();
+            const form = $(this);
+            clearErrors(form);
+            
+            if (validateForm(form, isNewForm)) {
+                checkEmailUniqueness(form, isNewForm);
+            }
+        });
+    }
+    
+    function clearErrors(form) {
+        form.find('.error-message').remove();
+        form.find('.is-invalid').removeClass('is-invalid');
+    }
+    
+    function showError(input, message) {
+        input.addClass('is-invalid');
+        input.after(`<div class="error-message text-danger mt-1 small">${message}</div>`);
+    }
+    
+    function validateForm(form, isNewForm) {
         let isValid = true;
-        $(this).find(".error-message").remove(); // Hapus pesan error lama
-
-        // Fungsi tambah pesan error
-        function showError(input, message) {
-            $(input).after(`<div class="error-message text-danger mt-1">${message}</div>`);
-        }
-
-        // Cari elemen input dalam form yang dikirimkan (tambah atau edit)
-        const form = $(this);
-        const id_userEdit = form.find("input[name='id_user']").val() || ""; // kosong kalau tambah anggota
-
-        // Validasi Nama
-        const nama = form.find("[name='nama_user']").val().trim();
-        const namaRegex = /^[a-zA-Z\s]+$/;
-        if (nama === "") {
-            isValid = false;
-            showError(form.find("[name='nama_user']"), "Nama tidak boleh kosong!");
-        } else if (!namaRegex.test(nama)) {
-            isValid = false;
-            showError(form.find("[name='nama_user']"), "Nama hanya boleh berisi huruf!");
-        }
-
-        // Validasi Email
-        const email = form.find("[name='email']").val().trim();
-        const originalEmail = form.find("input[name='original_email']").val(); // email awal (sebelum edit)
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
-        // Validasi Email
-        if (email === "") {
+        // Nama validation
+        const namaInput = form.find('[name="nama_user"]');
+        const nama = namaInput.val().trim();
+        if (!nama) {
+            showError(namaInput, 'Nama lengkap wajib diisi');
             isValid = false;
-            showError(form.find("[name='email']"), "Email tidak boleh kosong!");
-        } else if (!emailRegex.test(email)) {
+        } else if (!/^[a-zA-Z\s.'-]+$/.test(nama)) {
+            showError(namaInput, 'Nama hanya boleh mengandung huruf dan spasi');
             isValid = false;
-            showError(form.find("[name='email']"), "Masukkan email yang valid!");
-        } else if (email !== originalEmail) { // Cek ke DB hanya jika email diubah
-            $.ajax({
-                url: 'cek.php',
-                type: 'POST',
-                data: { email: email, id_userEdit: id_userEdit },
-                async: false,
-                success: function(response) {
-                    if (response === "exists") {
-                        isValid = false;
-                        showError(form.find("[name='email']"), "Email sudah digunakan!");
-                    }
-                }
-            });
         }
-
-        // Validasi NIK
-        const nik = form.find("[name='nik']").val().trim();
-        if (nik === "") {
+        
+        // Email validation
+        const emailInput = form.find('[name="email"]');
+        const email = emailInput.val().trim();
+        if (!email) {
+            showError(emailInput, 'Email wajib diisi');
             isValid = false;
-            showError(form.find("[name='nik']"), "NIK tidak boleh kosong!");
-        } else if (nik.length !== 16 || isNaN(nik)) {
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showError(emailInput, 'Format email tidak valid');
             isValid = false;
-            showError(form.find("[name='nik']"), "NIK harus 16 digit angka!");
         }
-
-        // Validasi NISN
-        const nisn = form.find("[name='nisn']").val().trim();
-        if (nisn === "") {
+        
+        // NIK validation
+        const nikInput = form.find('[name="nik"]');
+        const nik = nikInput.val().trim();
+        if (!nik) {
+            showError(nikInput, 'NIK wajib diisi');
             isValid = false;
-            showError(form.find("[name='nisn']"), "NISN tidak boleh kosong!");
-        } else if (nisn.length !== 10 || isNaN(nisn)) {
+        } else if (!/^\d{16}$/.test(nik)) {
+            showError(nikInput, 'NIK harus 16 digit angka');
             isValid = false;
-            showError(form.find("[name='nisn']"), "NISN harus 10 digit angka!");
         }
-
-        // Validasi NIM
-        const nim = form.find("[name='nim']").val().trim();
-        if (nim !== "") { // NIM boleh kosong
-            if (nim.length !== 12 || isNaN(nim)) {
+        
+        // Education validation
+        const nimInput = form.find('[name="nim"]');
+        const nisnInput = form.find('[name="nisn"]');
+        
+        if (nimInput.length > 0) {
+            const nim = nimInput.val().trim();
+            if (!nim) {
+                showError(nimInput, 'NIM wajib diisi');
                 isValid = false;
-                showError(form.find("[name='nim']"), "NIM harus 12 digit angka jika diisi!");
+            } else if (!/^\d{10,12}$/.test(nim)) {
+                showError(nimInput, 'NIM harus 10-12 digit angka');
+                isValid = false;
             }
         }
-        // Cegah submit jika ada error
-        if (!isValid) {
-            e.preventDefault();
+        
+        if (nisnInput.length > 0) {
+            const nisn = nisnInput.val().trim();
+            if (!nisn) {
+                showError(nisnInput, 'NISN wajib diisi');
+                isValid = false;
+            } else if (!/^\d{10}$/.test(nisn)) {
+                showError(nisnInput, 'NISN harus 10 digit angka');
+                isValid = false;
+            }
         }
-    });
+        
+        return isValid;
+    }
+    
+    function checkEmailUniqueness(form, isNewForm) {
+        const emailInput = form.find('[name="email"]');
+        const email = emailInput.val().trim();
+        
+        $.ajax({
+            url: 'cek.php',
+            type: 'POST',
+            data: {
+                email: email,
+                id_userEdit: isNewForm ? '' : form.find('[name="id_user"]').val()
+            },
+            success: function(response) {
+                if (response === "exists") {
+                    showError(emailInput, 'Email ini sudah terdaftar');
+                } else {
+                    form.off('submit').submit();
+                }
+            },
+            error: function() {
+                showError(emailInput, 'Gagal memverifikasi email. Silakan coba lagi.');
+            }
+        });
+    }
 });
 </script>

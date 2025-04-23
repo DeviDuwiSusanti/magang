@@ -285,18 +285,18 @@ function validateTambahBidang() {
     isValid = false;
   }
 
-  const kriteria = document.getElementById("kriteria").value.trim();
-  if (kriteria === "") {
-    showError("kriteria", "kriteria_error", "Kriteria tidak boleh kosong.");
-    isValid = false;
-  } else if (!kriteria.includes(",")) {
-    showError(
-      "kriteria",
-      "kriteria_error",
-      "Minimal harus ada satu koma untuk memisahkan kriteria."
-    );
-    isValid = false;
-  }
+  // const kriteria = document.getElementById("kriteria").value.trim();
+  // if (kriteria === "") {
+  //   showError("kriteria", "kriteria_error", "Kriteria tidak boleh kosong.");
+  //   isValid = false;
+  // } else if (!kriteria.includes(",")) {
+  //   showError(
+  //     "kriteria",
+  //     "kriteria_error",
+  //     "Minimal harus ada satu koma untuk memisahkan kriteria."
+  //   );
+  //   isValid = false;
+  // }
 
   const kuota = document.getElementById("kuota").value.trim();
   if (kuota === "") {
@@ -356,22 +356,22 @@ function validateEditBidang() {
     isValid = false;
   }
 
-  const kriteria = document.getElementById("edit_kriteria").value.trim();
-  if (kriteria === "") {
-    showError(
-      "edit_kriteria",
-      "edit_kriteria_error",
-      "Kriteria tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!kriteria.includes(",")) {
-    showError(
-      "edit_kriteria",
-      "edit_kriteria_error",
-      "Minimal harus ada satu koma untuk memisahkan kriteria."
-    );
-    isValid = false;
-  }
+  // const kriteria = document.getElementById("edit_kriteria").value.trim();
+  // if (kriteria === "") {
+  //   showError(
+  //     "edit_kriteria",
+  //     "edit_kriteria_error",
+  //     "Kriteria tidak boleh kosong."
+  //   );
+  //   isValid = false;
+  // } else if (!kriteria.includes(",")) {
+  //   showError(
+  //     "edit_kriteria",
+  //     "edit_kriteria_error",
+  //     "Minimal harus ada satu koma untuk memisahkan kriteria."
+  //   );
+  //   isValid = false;
+  // }
 
   const kuota = document.getElementById("edit_kuota").value.trim();
   if (kuota === "") {
@@ -520,6 +520,15 @@ function validateEditPembimbing() {
       "edit_nama_pembimbing_error",
       "Nama hanya boleh berisi huruf, spasi, dan simbol ('-)."
     );
+    isValid = false;
+  }
+
+  const email = document.getElementById("edit_email").value.trim();
+  if (email === "") {
+    showError("edit_email", "edit_email_error", "Email tidak boleh kosong.");
+    isValid = false;
+  } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+    showError("edit_email", "edit_email_error", "Format email tidak valid.");
     isValid = false;
   }
 

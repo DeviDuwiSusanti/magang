@@ -919,3 +919,26 @@ body.dark-mode .select2-container--default .select2-search--dropdown .select2-se
     border: 1px solid #4b5563;
     color: #f1f5f9;
 }
+
+body.dark-mode .note-editor.note-frame {
+    background-color: #212529;
+    color: #f1f1f1;
+    border-color: #444;
+}
+
+body.dark-mode .note-editable {
+    background-color: #212529;
+    color: #f1f1f1;
+}
+
+body.dark-mode .note-toolbar {
+    background-color: #212529;
+    border-color: #444;
+}
+
+body.dark-mode .note-btn {
+    background-color: #333;
+    color: #fff;
+    border-color: #555;
+}
+
