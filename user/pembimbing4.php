@@ -147,7 +147,7 @@ $no = 1;
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             
-                                            <a href="pembimbing4_cetak_nilai_sertif.php?id_user=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
+                                            <a href="pembimbing4_cetak_nilai_sertif.php?id_user_ini=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
                                                 class="btn btn-sm btn-secondary" 
                                                 title="Cetak Nilai" 
                                                 target="_blank">

@@ -2,22 +2,17 @@
 include "../layout/sidebarUser.php";
 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_approve'])) {
-    $id_nilai = $_POST['id_nilai'];
-    $tanda_tangan_admin = $_POST['tanda_tangan_admin'];
-    $id_admin = $id_user; 
 
-    if (!empty($tanda_tangan_admin)) {
-            if (approve_nilai($id_nilai, $tanda_tangan_admin, $id_admin)) { ?>
-                <script>alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")</script>
+if(isset($_POST["submit_approve"])) {
+    $result = approve_nilai($_POST) ;
+    if($result === 404) { ?>
+        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak Boleh Kosong", "admin2_tanda_tangan.php")</script>
+    <?php } else if ($result > 0) { ?>
+        <script>alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")</script>
     <?php } else { ?>
-                <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")</script>
-            <?php } ?>
-<?php } else { ?>
-        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak ", "admin2_tanda_tangan.php")</script>
-    <?php } 
+        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")</script>
+    <?php }
 }
-
 
 
 // Get all nilai that need approval (where tanda_tangan_admin is null)
@@ -101,6 +96,7 @@ $no = 1;
                                     </td>
                                     <td>
                                     <form method="POST">
+                                        <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
                                         <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
                                         <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
                                         <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
@@ -209,39 +205,6 @@ $no = 1;
                 }
             });
         });
-
-        // // Approve Nilai
-        // $('.approveNilai').click(function() {
-        //     const idNilai = $(this).data('id_nilai');
-        //     const signaturePad = signaturePads[idNilai];
-            
-        //     if (signaturePad.isEmpty()) {
-        //         alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak Boleh kosong", "admin2_tanda_tangan.php")
-        //         return false;
-        //     }
-            
-        //     const signatureData = signaturePad.toDataURL();
-            
-        //     $.ajax({
-        //         url: 'ajax2_approve_nilai.php',
-        //         type: 'POST',
-        //         data: {
-        //             id_nilai: idNilai,
-        //             tanda_tangan_admin: signatureData,
-        //             id_admin: <?= $id_user ?>
-        //         },
-        //         success: function(response) {
-        //             if (response.success) {
-        //                 alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Nilai berhasil disetujui", "admin2_tanda_tangan.php");
-        //             } else {
-        //                 alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menyetujui nilai", "admin2_tanda_tangan.php");
-        //             }
-        //         },
-        //         error: function() {
-        //             alert_berhasil_gagal_super_admin("error", "Gagal !!", "Terjadi kesalahan", "admin2_tanda_tangan.php");
-        //         }
-        //     });
-        // });
 
         window.handleSubmit = function(id) {
             const pad = signaturePads[id];
