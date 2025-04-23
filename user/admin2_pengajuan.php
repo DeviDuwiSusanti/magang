@@ -11,7 +11,7 @@ $sql = "SELECT
             b.nama_bidang,
             -- tambahan email
             u.email,
-            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.kirim_zoom, p.pengingat_dokumen
+            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.tanggal_zoom, p.pengingat_dokumen
         FROM tb_pengajuan AS p
             INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
             INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
@@ -129,37 +129,6 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     }
                                     ?>
                                 </td>
-                                <!-- <td class="text-center align-middle">
-                                    <a href="#"
-                                        class="show-doc btn btn-sm btn-primary"
-                                        title="Lihat Dokumen"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#dokumenModal"
-                                        data-doc='<?= htmlspecialchars(json_encode(
-                                                        $daftar_dokumen[$row['id_user']][$row['id_pengajuan']] ?? [],
-                                                        JSON_UNESCAPED_SLASHES
-                                                    ), ENT_QUOTES, "UTF-8") ?>'>
-                                        <i class="bi bi-eye-fill"></i>
-                                    </a>
-                                </td> -->
-                                <!-- <td class="text-center align-middle">
-                                    <?php
-                                    $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : '';
-                                    $btn_class = ($row['kirim_zoom'] == 1) ? 'btn-secondary' : 'btn-warning';  // Tentukan warna tombol
-                                    ?>
-                                    <button type="button" class="btn <?= $btn_class ?> btn-sm zoom-btn"
-                                        data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="<?= ($row['kirim_zoom'] == 1) ? 'Informasi Zoom sudah dikirim' : 'Tambah Informasi Zoom' ?>"
-                                        data-bs-target="#zoomModal" data-id="<?= $row['id_pengajuan'] ?>" <?= $disabled ?>>
-                                        <i class="bi bi-zoom-in"></i>
-                                    </button>
-                                </td> -->
-                                <?php
-                                $disabled = ($row['kirim_zoom'] == 1) ? 'disabled' : '';
-                                $btn_class = ($row['kirim_zoom'] == 1) ? 'btn-secondary' : 'btn-warning';
-                                $isDisabled = ($row['kirim_zoom'] == 0);
-                                $btnClass = $isDisabled ? 'btn-secondary' : 'btn-primary';
-                                ?>
                                 <td class="text-center align-middle">
                                     <a href="#"
                                         class="show-doc btn btn-sm btn-primary me-2"
@@ -172,27 +141,47 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                                     ), ENT_QUOTES, "UTF-8") ?>'>
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
+                                    <?php
+                                    $tanggal_zoom = $row['tanggal_zoom'];
+                                    $today = date('Y-m-d');
+                                    $harusDisable = (!empty($tanggal_zoom) && $tanggal_zoom !== '0000-00-00' && $tanggal_zoom < $today);
+                                    $btn_class = $harusDisable ? 'btn-secondary' : 'btn-info';
+                                    $disabled = $harusDisable ? 'disabled' : '';
+
+                                    $title = (!empty($tanggal_zoom) && $tanggal_zoom !== '0000-00-00')
+                                        ? 'Informasi Zoom sudah dikirim'
+                                        : 'Tambah Informasi Zoom';
+                                    ?>
                                     <button type="button" class="btn <?= $btn_class ?> btn-sm zoom-btn me-2"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
-                                        title="<?= ($row['kirim_zoom'] == 1) ? 'Informasi Zoom sudah dikirim' : 'Tambah Informasi Zoom' ?>"
+                                        title="<?= $title ?>"
                                         data-bs-target="#zoomModal" data-id="<?= $row['id_pengajuan'] ?>" <?= $disabled ?>>
                                         <i class="bi bi-zoom-in"></i>
                                     </button>
+                                    <?php
+                                    $tanggal_zoom = $row['tanggal_zoom'];
+                                    $today = date('Y-m-d');
+
+                                    // Tombol aktif hanya jika tanggal_zoom valid dan sudah lewat dari hari ini
+                                    $bisaProses = (!empty($tanggal_zoom) && $tanggal_zoom !== '0000-00-00' && $tanggal_zoom < $today);
+                                    $btnClass = $bisaProses ? 'btn-success' : 'btn-secondary';
+                                    $disabled = $bisaProses ? '' : 'disabled';
+                                    ?>
                                     <button
                                         class="btn <?= $btnClass ?> btn-sm aksi-btn me-2"
                                         data-bs-toggle="modal"
                                         data-bs-target="#aksiModal"
                                         data-id="<?= $id_pengajuan ?>"
                                         data-status="<?= $status_pengajuan ?>"
-                                        <?= $isDisabled ? 'disabled' : '' ?>
+                                        <?= $disabled ?>
                                         title="Proses Pengajuan">
                                         <i class="bi bi-ui-checks"></i>
                                     </button>
                                     <!-- tambah tombol kirim pengingat -->
-                                    <?php if ($row['status_pengajuan'] == 2): ?>
+                                    <!-- <?php if ($row['status_pengajuan'] == 2): ?>
                                         <?php
                                         $sudahTerkirim = $row['pengingat_dokumen'] == 1;
-                                        $btnClass = $sudahTerkirim ? 'btn-secondary' : 'btn-info';
+                                        $btnClass = $sudahTerkirim ? 'btn-secondary' : 'btn-danger';
                                         $btnDisabled = $sudahTerkirim ? 'disabled' : '';
                                         ?>
                                         <button
@@ -203,7 +192,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                             title="Kirim Pengingat">
                                             <i class="bi bi-envelope-fill"></i>
                                         </button>
-                                    <?php endif; ?>
+                                    <?php endif; ?> -->
                                 </td>
                             </tr>
                         <?php } ?>
@@ -534,9 +523,10 @@ $result = mysqli_query($conn, $query);
             donetext: 'Pilih'
         });
         $("#tanggal_pelaksanaan").datepicker({
-            dateFormat: "dd/mm/yy",
+            dateFormat: "yy-mm-dd",
             minDate: 0
         });
+
 
         // Event handler untuk tombol "show-detail" pelamar
         $('#myTable tbody').on('click', 'a.show-detail', function(e) {
@@ -624,7 +614,8 @@ $result = mysqli_query($conn, $query);
                 data.forEach((doc, index) => {
                     const tabId = `doc-tab-${index}`;
                     const filename = doc.path.split('/').pop();
-                    const displayName = doc.nama || `Dokumen ${index + 1}`;
+                    const displayName = (doc.nama || `Dokumen ${index + 1}`).toUpperCase();
+                    // displayName = displayName.toUpperCase();
 
                     // Tab header
                     const tab = document.createElement('li');
