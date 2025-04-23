@@ -1021,3 +1021,27 @@ function tambah_instansi_super_admin($POST) {
     }
     
 
+
+    // ================================= APPROVE PENILAIAN =================================
+    function approve_nilai($POST) {
+        global $conn;
+        $id_nilai = $POST["id_nilai"];
+        $tanda_tangan_admin = $POST["tanda_tangan_admin"];
+        $id_admin = $POST["id_admin_approve"];
+        
+        if($tanda_tangan_admin === "") {
+            return 404;
+        }
+        $query = "UPDATE tb_nilai SET 
+                    tanda_tangan_admin = '$tanda_tangan_admin',
+                    id_admin_approve = '$id_admin',
+                    tanggal_approve = NOW(),
+                    status_approve = '1'
+                    WHERE id_nilai = '$id_nilai'";
+        if(mysqli_query($conn, $query)) {
+            return mysqli_affected_rows($conn);
+        } else {
+            return 0;
+        }
+    }
+    
