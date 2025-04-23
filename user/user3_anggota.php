@@ -52,8 +52,10 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>NIK</th>
-                                <th>Nisn</th>
-                                <th>Nim</th>
+                                <?php
+                                $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                                $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan']; ?>
+                                <th><?= strlen($id_studi) == 7 ? 'NIM' : 'NISN' ?></th>
                                 <?php if ($row3['status_pengajuan'] == '1') { ?>
                                     <th>Aksi</th>
                                 <?php } ?>
@@ -68,8 +70,7 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                     <td><?= $row['nama_user'] ?></td>
                                     <td><?= $row['email'] ?></td>
                                     <td><?= $row['nik'] ?></td>
-                                    <td><?= $row['nisn'] ?></td>
-                                    <td><?= empty($row['nim']) ? '-' : $row['nim'] ?></td>
+                                    <td><?= strlen($row['id_pendidikan']) == 7 ? $row['nim'] : $row['nisn'] ?></td>
                                     <?php if ($row3['status_pengajuan'] == '1'): ?>
                                         <td>
                                             <?php $isKetua = cekStatusUser($row['id_user']) === 'Ketua'; ?>
@@ -142,16 +143,20 @@ if (ISSET($_POST['tambah_anggota'])){
                         <input type="number" class="form-control" id="nik" name="nik" oninput="this.value=this.value.slice(0,16)">
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="nisn" class="form-label">Nisn</label>
-                        <input type="number" class="form-control" id="nisn" name="nisn" oninput="this.value=this.value.slice(0,10)">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="nim" class="form-label">Nim</label>
-                        <input type="number" class="form-control" id="nim" name="nim" oninput="this.value=this.value.slice(0,12)">
-                        <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
-                    </div>
+                    <?php
+                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                    $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
+                    if (strlen($id_studi) == 7) : ?>
+                        <div class="mb-3">
+                            <label for="nim" class="form-label">Nim</label>
+                            <input type="number" class="form-control" id="nim" name="nim" oninput="this.value=this.value.slice(0,12)">
+                        </div>
+                    <?php else : ?>
+                        <div class="mb-3">
+                            <label for="nisn" class="form-label">Nisn</label>
+                            <input type="number" class="form-control" id="nisn" name="nisn" oninput="this.value=this.value.slice(0,10)">
+                        </div>
+                    <?php endif; ?>
                     
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
@@ -191,16 +196,21 @@ if (ISSET($_POST['tambah_anggota'])){
                         <input type="number" class="form-control" id="edit_nik" name="nik" value="<?= $editRow['nik'] ?>" oninput="this.value=this.value.slice(0,16)">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="edit_nisn" class="form-label">Nisn</label>
-                        <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="edit_nim" class="form-label">Nim</label>
-                        <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>" oninput="this.value=this.value.slice(0,12)">
-                        <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
-                    </div>
+                     
+                    <?php
+                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                    $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
+                    if (strlen($id_studi) == 7) : ?>
+                        <div class="mb-3">
+                            <label for="edit_nim" class="form-label">Nim</label>
+                            <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>" oninput="this.value=this.value.slice(0,12)">
+                        </div>
+                    <?php else : ?>
+                        <div class="mb-3">
+                            <label for="edit_nisn" class="form-label">Nisn</label>
+                            <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
+                        </div>
+                    <?php endif; ?>
 
                     <button type="submit" name="update_anggota" class="btn btn-primary">
                         <i class="bi bi-floppy me-1"></i>Simpan Perubahan
@@ -275,7 +285,7 @@ $(document).ready(function() {
 
         // Fungsi tambah pesan error
         function showError(input, message) {
-            $(input).after(`<div class="error-message text-danger mt-1">${message}</div>`);
+            $(input).after(<div class="error-message text-danger mt-1">${message}</div>);
         }
 
         // Cari elemen input dalam form yang dikirimkan (tambah atau edit)

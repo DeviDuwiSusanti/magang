@@ -75,15 +75,9 @@ $row2 = mysqli_fetch_assoc($query2);
 
                                 <?php if (($ketua || $anggota) && $level == "3") : ?>
                                     <tr>
-                                        <td><i class="bi bi-mortarboard"></i> <strong>NISN</strong></td>
-                                        <td><?= $row['nisn'] ?></td>
+                                        <td><i class="bi bi-mortarboard"></i> <strong> <?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></strong></td>
+                                        <td><?= !empty($row['nim']) ? $row['nim'] : $row['nisn'] ?></td>
                                     </tr>
-                                    <?php if (!empty($row['nim'])): ?>
-                                    <tr>
-                                        <td><i class="bi bi-mortarboard"></i> <strong> NIM</strong></td>
-                                        <td><?= !empty($row['nim']) ? $row['nim'] : '-' ?></td>
-                                    </tr>
-                                    <?php endif ; ?>
                                     <tr>
                                         <td><i class="bi bi-building"></i> <strong>Asal Studi</strong></td>
                                         <td><?= $row2['nama_pendidikan'] ?></td>
@@ -271,16 +265,18 @@ if (isset($_POST['update_profil'])) {
                     </div>
 
                     <div class="d-flex gap-4">
-                        <div class="mb-3" style="flex: 1;">
+                        <!-- Input NISN (akan ditampilkan jika bukan universitas) -->
+                        <div class="mb-3" id="nisnContainer" style="flex: 1; <?php echo (isset($dataLama['id_pendidikan']) && strlen($dataLama['id_pendidikan']) === 7 ? 'display:none;' : ''); ?>">
                             <label for="nisn" class="form-label">NISN</label>
                             <input type="text" class="form-control" id="nisn" name="nisn" value="<?= $row['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
                             <small id="error-nisn" class="text-danger"></small>
                         </div>
-                        <div class="mb-3" style="flex: 1;">
+                        
+                        <!-- Input NIM (akan ditampilkan jika universitas) -->
+                        <div class="mb-3" id="nimContainer" style="flex: 1; <?= (strlen($dataLama['id_pendidikan'] ?? '') === 7 ? '' : 'display:none;') ?>">
                             <label for="nim" class="form-label">NIM</label>
-                            <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : '' ?>" placeholder = '-' oninput="this.value=this.value.slice(0,12)">
-                            <small class="text-muted">Kosong jika tidak ada</small> <br>
-                            <small id="error-nim" class="text-danger"></small><br>
+                            <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : '' ?>" oninput="this.value=this.value.slice(0,12)">
+                            <small id="error-nim" class="text-danger"></small>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -362,13 +358,14 @@ if (isset($_POST['update_profil'])) {
     })
 </script>
 
-<!-- akses fakultas dan jurusan sesuai asal studi -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const asalStudiSelect = document.getElementById('asal_studi');
     const fakultasContainer = document.getElementById('fakultasContainer');
     const fakultasSelect = document.getElementById('fakultas');
     const jurusanSelect = document.getElementById('jurusan');
+    const nisnContainer = document.getElementById('nisnContainer');
+    const nimContainer = document.getElementById('nimContainer');
 
     // Ambil data pendidikan dari PHP
     const dataPendidikan = <?= json_encode($dataPendidikan) ?>;
@@ -385,10 +382,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const fakultas = item.fakultas || null;
         const jurusan = item.jurusan;
 
-        // Simpan data berdasarkan id
         pendidikanData[id] = { nama, fakultas, jurusan };
 
-        // Kelompokkan berdasarkan nama dan fakultas
         if (!pendidikanGroups[nama]) {
             pendidikanGroups[nama] = [];
         }
@@ -401,7 +396,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Fungsi untuk memuat fakultas berdasarkan id pendidikan
+    function handleAsalStudiChange(selectedId) {
+        if (!selectedId) {
+            fakultasContainer.style.display = 'none';
+            jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
+            nisnContainer.style.display = 'block';
+            nimContainer.style.display = 'none';
+            return;
+        }
+
+        const selected = pendidikanData[selectedId];
+        if (!selected) return;
+
+        // Universitas (ID 7 digit)
+        if (selectedId.length === 7) {
+            fakultasContainer.style.display = 'block';
+            nisnContainer.style.display = 'none';
+            nimContainer.style.display = 'block';
+            loadFaculties(selectedId);
+            
+            if (currentFakultas) {
+                loadMajors(selectedId, currentFakultas);
+            }
+        } else { // Non-universitas (sekolah)
+            fakultasContainer.style.display = 'none';
+            nisnContainer.style.display = 'block';
+            nimContainer.style.display = 'none';
+            loadMajors(selectedId);
+        }
+    }
+
     function loadFaculties(pendidikanId) {
         fakultasSelect.innerHTML = '<option value="">Pilih Fakultas</option>';
         
@@ -420,7 +444,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 option.textContent = group.fakultas;
                 fakultasSelect.appendChild(option);
                 
-                // Set current fakultas jika ada
                 if (group.fakultas === currentFakultas) {
                     option.selected = true;
                 }
@@ -428,7 +451,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Fungsi untuk memuat jurusan berdasarkan id pendidikan dan fakultas
     function loadMajors(pendidikanId, faculty = null) {
         jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
         
@@ -441,13 +463,11 @@ document.addEventListener('DOMContentLoaded', function() {
         let jurusanList = [];
         
         if (faculty) {
-            // Untuk universitas (dengan fakultas)
             const fakultasGroup = pendidikanGroups[pendidikanName].find(f => f.fakultas === faculty);
             if (fakultasGroup) {
                 jurusanList = fakultasGroup.jurusan;
             }
         } else {
-            // Untuk non-universitas (tanpa fakultas)
             const groups = pendidikanGroups[pendidikanName] || [];
             groups.forEach(group => {
                 jurusanList = jurusanList.concat(group.jurusan);
@@ -461,41 +481,14 @@ document.addEventListener('DOMContentLoaded', function() {
             option.dataset.id = jur.id;
             jurusanSelect.appendChild(option);
             
-            // Set current jurusan jika ada
             if (jur.jurusan === currentJurusan || jur.id === currentIdPendidikan) {
                 option.selected = true;
             }
         });
     }
 
-    // Fungsi untuk menangani perubahan asal studi
-    function handleAsalStudiChange(selectedId) {
-        if (!selectedId) {
-            fakultasContainer.style.display = 'none';
-            jurusanSelect.innerHTML = '<option value="">Pilih Jurusan</option>';
-            return;
-        }
-
-        const selected = pendidikanData[selectedId];
-        if (!selected) return;
-
-        if (selectedId.length === 7) { // Universitas (ID 7 digit)
-            fakultasContainer.style.display = 'block';
-            loadFaculties(selectedId);
-            
-            // Jika ada current fakultas, load jurusannya
-            if (currentFakultas) {
-                loadMajors(selectedId, currentFakultas);
-            }
-        } else { // Non-universitas
-            fakultasContainer.style.display = 'none';
-            loadMajors(selectedId);
-        }
-    }
-
     // Inisialisasi modal dengan Select2
     $('#editProfileModal').on('shown.bs.modal', function() {
-        // Inisialisasi Select2 untuk asal studi
         $('#asal_studi').select2({
             dropdownParent: $('#editProfileModal'),
             placeholder: "Pilih Asal Studi",
@@ -505,19 +498,10 @@ document.addEventListener('DOMContentLoaded', function() {
             handleAsalStudiChange(this.value);
         });
 
-        // Inisialisasi nilai setelah Select2 siap
-        setTimeout(() => {
-            if (currentIdPendidikan) {
-                $('#asal_studi').val(currentIdPendidikan).trigger('change');
-                
-                // Untuk universitas, set fakultas jika ada
-                if (currentFakultas && currentIdPendidikan.length === 7) {
-                    setTimeout(() => {
-                        $('#fakultas').val(currentFakultas).trigger('change');
-                    }, 200);
-                }
-            }
-        }, 100);
+        // Inisialisasi nilai awal
+        if (currentIdPendidikan) {
+            $('#asal_studi').val(currentIdPendidikan).trigger('change');
+        }
     });
 
     // Handle perubahan fakultas
@@ -531,6 +515,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
 
 <!-- ==== VALIDASI ======= -->
 <script>
@@ -649,36 +634,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 isValid = false;
             }
 
-            // Validasi NIM/NISN (opsional, hanya jika elemen ada)
-            const NisnInput = document.getElementById("nisn");
-            if (NisnInput) {
-                const nisn = NisnInput.value.trim();
-
-                if (nisn === "") {
-                    showError("nisn", "error-nisn", "NISN tidak boleh kosong.");
-                    isValid = false;
-                } else if (!/^\d{10}$/.test(nisn)) {
-                    showError(
-                        "nisn",
-                        "error-nisn",
-                        "NISN harus terdiri dari 10 digit"
-                    );
-                    isValid = false;
-                }
-            }
-
-            // Validasi NIM (opsional, boleh kosong)
-            const NimInput = document.getElementById("nim");
-            if (NimInput) {
-                const Nim = NimInput.value.trim();
-
-                if (Nim !== "") { // Hanya validasi jika diisi
-                    if (!/^\d{12}$/.test(Nim)) {
+            // Validasi NIM/NISN berdasarkan jenis pendidikan
+            const asalStudiId = $('#asal_studi').val();
+            if (asalStudiId) {
+                if (asalStudiId.length === 7) { // Universitas
+                    const Nim = document.getElementById("nim").value.trim();
+                    if (Nim === "") {
+                        showError("nim", "error-nim", "NIM wajib diisi untuk universitas.");
+                        isValid = false;
+                    } else if (!/^\d{12}$/.test(Nim)) {
                         showError("nim", "error-nim", "NIM harus terdiri dari 12 digit angka.");
                         isValid = false;
                     }
+                } else { // Sekolah
+                    const nisn = document.getElementById("nisn").value.trim();
+                    if (nisn === "") {
+                        showError("nisn", "error-nisn", "NISN wajib diisi untuk sekolah.");
+                        isValid = false;
+                    } else if (!/^\d{10}$/.test(nisn)) {
+                        showError("nisn", "error-nisn", "NISN harus terdiri dari 10 digit angka.");
+                        isValid = false;
+                    }
                 }
-                // Jika kosong, tidak melakukan validasi (diizinkan)
             }
 
             // Validasi Fakultas (jika elemen ada)

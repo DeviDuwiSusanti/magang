@@ -101,6 +101,20 @@ function deleteGambarLogbook($id_logbook){
         unlink($file_path); // Hapus file fisik
     }
 }
+
+function deleteGambarUser($id_user){
+    global $conn;
+    // Ambil file lama dari database
+    $query = "SELECT gambar_user FROM tb_profile_user 
+               WHERE id_user = '$id_user'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+    $file_path = "../assets/img/user/" . $row['gambar_user'];
+    if (file_exists($file_path)) {
+        unlink($file_path); // Hapus file fisik
+    }
+}
+
 function hapusFolderPengajuan($id_pengajuan) {
     $folder = "../assets/doc/$id_pengajuan/";
 
@@ -636,6 +650,8 @@ function hapusAnggota($id_user, $id_pengajuan){
     }   
 }
 
+
+
 // ================= PROFILE ==============
 function updateProfile($POST, $FILES, $id_user, $dataLama){
     global $conn;
@@ -648,32 +664,44 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
     $alamat_user = $POST['alamat'];
     $asal_studi = $POST['asal_studi'];
 
-    if (ISSET($POST['fakultas'])){
+    // ambil nama pendidikan
+    $query_Pendidikan = "SELECT * FROM tb_pendidikan WHERE id_pendidikan = '$asal_studi'";
+    $pendidikan = mysqli_fetch_assoc(mysqli_query($conn, $query_Pendidikan));
+
+    // Check if education ID length is 7 (university) or 5 (school)
+    if (strlen($asal_studi) === 7) {
+        // University - has faculty
         $fakultas = $POST['fakultas'];
         $jurusan = $POST['jurusan'];
         $nim = $POST['nim'];
-        $nisn = $POST['nisn'];
-        echo "fakultas";
-    }else{
+        $nisn = NULL; // NISN not needed for universities
+        
+        // Get education ID with faculty
+        $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan 
+                            WHERE nama_pendidikan = '$pendidikan[nama_pendidikan]' 
+                            AND fakultas = '$fakultas' 
+                            AND jurusan = '$jurusan'";
+    } else {
+        // School - no faculty
         $fakultas = NULL;
         $jurusan = $POST['jurusan'];
         $nisn = $POST['nisn'];
-        $nim = $POST['nim'];
-        echo "$fakultas";
+        $nim = NULL; // NIM not needed for schools
+        
+        // Get education ID without faculty
+        $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan 
+                            WHERE nama_pendidikan = '$pendidikan[nama_pendidikan]' 
+                            AND jurusan = '$jurusan'";
     }
 
-    // ambil nama pendidikan
-    $query_namaPendidikan = "SELECT nama_pendidikan FROM tb_pendidikan WHERE id_pendidikan = '$asal_studi'";
-    $nama_pendidikan = mysqli_fetch_assoc(mysqli_query($conn, $query_namaPendidikan))['nama_pendidikan'];
 
-    // Update data pendidikan (ambil id_pendidikan dari nama_pendidikan)
-    $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan WHERE nama_pendidikan = '$nama_pendidikan' AND fakultas = '$fakultas' AND jurusan = '$jurusan'";
     $result_pendidikan = mysqli_query($conn, $query_pendidikan);
     $row_pendidikan = mysqli_fetch_assoc($result_pendidikan);
-    $id_pendidikan = $row_pendidikan['id_pendidikan'] ?? $dataLama['id_pendidikan']; // Pakai data lama jika tidak ditemukan
+    $id_pendidikan = $row_pendidikan['id_pendidikan']; // Pakai data lama jika tidak ditemukan
 
     // Cek apakah ada file gambar yang diunggah
     if (!empty($FILES['image']['name'])) {
+        deleteGambarUser($id_user);
         $image_name = time() . "_" . $FILES['image']['name'];
         $target_dir = "../assets/img/user/";
         $target_file = $target_dir . basename($image_name);
