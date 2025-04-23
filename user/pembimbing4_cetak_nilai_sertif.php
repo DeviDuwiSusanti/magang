@@ -2,6 +2,7 @@
 include "../functions.php";
 
 $id_user_ini = $_GET["id_user_ini"];
+$id_pengajuan = $_GET["id_pengajuan"];
 $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.* 
                     FROM tb_profile_user pu
                     JOIN tb_pengajuan p ON pu.id_pengajuan = p.id_pengajuan
@@ -11,6 +12,12 @@ $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.*
                     
                     WHERE pu.id_user = $id_user_ini")[0];
 
+$id_pendidikan = $sertifikat["id_pendidikan"];
+$pendidikan = query("SELECT * FROM tb_pendidikan WHERE id_pendidikan = '$id_pendidikan'")[0];
+
+$id_instansi = query("SELECT id_instansi FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan' ")[0];
+$id_instansi_ini = $id_instansi["id_instansi"];
+$admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_instansi_ini'")[0];
 
 ?>
 
@@ -123,40 +130,40 @@ $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.*
       <tr>
         <td>3.</td>
         <td>Tanggung jawab Terhadap Tugas</td>
-        <td></td>
+        <td><?= $sertifikat["tanggung_jawab"] ?></td>
         <td></td>
       </tr>
       <tr>
         <td>4.</td>
         <td>Kreativitas</td>
-        <td>90</td>
+        <td><?= $sertifikat["kreativitas"] ?></td>
         <td></td>
       </tr>
       <tr>
         <td>5.</td>
         <td>Kerjasama Tim</td>
-        <td>90</td>
+        <td><?= $sertifikat["kerjasama"] ?></td>
         <td></td>
       </tr>
       <tr>
         <td>6.</td>
         <td>Penggunaan Teknologi Informasi</td>
-        <td>90</td>
+        <td><?= $sertifikat["teknologi_informasi"] ?></td>
         <td></td>
       </tr>
       <tr>
         <th colspan="2">Rata-rata</th>
-        <th>88</th>
+        <th><?= $sertifikat["rata_rata"] ?></th>
         <td></td>
       </tr>
     </table>
 
     <div class="signature">
       <p>Kepala Bidang</p>
-      <p>Pengelolaan Informasi dan Komunikasi Publik</p>
+      <p><?= $sertifikat["nama_panjang"] ?></p>
       <br><br>
-      <strong>MUHAMMAD WILDAN, S.S</strong><br>
-      NIP. 197110202005011008
+      <strong><?= $admin_instansi["nama_user"] ?></strong><br>
+      NIP. <?= $admin_instansi["nip"] ?>
     </div>
   </div>
 
@@ -167,37 +174,57 @@ $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.*
     <p class="center">Nomor: 500.5.7.10/239/438.5.14/2025</p>
 
     <p>Diberikan kepada:</p>
-    <h2>AKHMAD FARDAN JONTANO</h2>
+    <h2><?= $sertifikat["nama_user"] ?></h2>
 
     <table class="no-border">
       <tr>
         <td>Tempat, Tanggal Lahir</td>
-        <td>: Sidoarjo, 10 Januari 2004</td>
+        <td><?= $sertifikat["tempat_lahir"] ?>, <?= $sertifikat["tanggal_lahir"] ?></td>
       </tr>
       <tr>
-        <td>Universitas</td>
-        <td>: Universitas Negeri Surabaya</td>
+        <?php if($pendidikan["fakultas"] == "") { ?>
+          <td>Sekolah</td>
+        <?php } else { ?>
+          <td>Universitas</td>
+        <?php } ?>
+        <td><?= $pendidikan["nama_pendidikan"] ?></td>
       </tr>
       <tr>
-        <td>Nomor Induk Mahasiswa</td>
-        <td>: 22020144097</td>
+      <?php if($pendidikan["fakultas"] == "") { ?>
+          <td>Nomor Induk Sekolah Nasional</td>
+          <td><?= $sertifikat["nisn"] ?></td>
+        <?php } else { ?>
+          <td>Nomor Induk Mahasiswa</td>
+          <td><?= $sertifikat["nim"] ?></td>
+        <?php } ?>
       </tr>
       <tr>
-        <td>Kompetensi Keahlian</td>
-        <td>: Kehumasan, Sosial Media Spesialis, Konten Kreator</td>
+        <td>Bidang Keahlian</td>
+        <td><?= $sertifikat["nama_bidang"] ?></td>
       </tr>
     </table>
 
-    <p>Telah melaksanakan Praktik Kerja Lapangan pada Dinas Komunikasi dan Informatika Kabupaten Sidoarjo selama 4 bulan, dari tanggal 17 September 2024 sampai 31 Januari 2025.</p>
+    <p>Telah melaksanakan <?= $sertifikat["jenis_pengajuan"] ?> pada <?= $sertifikat["nama_panjang"] ?> Selama 1 Periode, dari tanggal <?= $sertifikat["tanggal_mulai"] ?> sampai <?= $sertifikat["tanggal_selesai"] ?>.</p>
 
-    <p class="center"><strong>Dengan predikat:<br>SANGAT BAIK</strong></p>
+    <?php 
+      if($sertifikat["rata_rata"] >= 88) {
+        $prefikat = "SANGAT BAIK";
+      } else if($sertifikat["rata_rata"] >= 74) {
+        $predikat = "BAIK";
+      } else if ($sertifikat["rata_rata"] >= 60 ) {
+        $predikat = "CUKUP";
+      } else {
+        $predikat = "KURANG";
+      }
+    ?>
+    <p class="center"><strong>Dengan predikat:<br><?= $predikat ?></strong></p>
 
     <div class="signature">
       <p>Kepala Bidang</p>
-      <p>Pengelolaan Informasi dan Komunikasi Publik</p>
+      <p><?= $sertifikat["nama_panjang"] ?></p>
       <br><br>
-      <strong>MUHAMMAD WILDAN, S.S</strong><br>
-      NIP. 197110202005011008
+      <strong><?= $admin_instansi["nama_user"] ?></strong><br>
+      NIP. <?= $admin_instansi["nip"] ?>
     </div>
   </div>
 
