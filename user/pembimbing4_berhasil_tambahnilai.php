@@ -18,18 +18,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
     <?php }
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
-    if (pembimbing_update_nilai($_POST)) { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Update Nilai Berhasil", "pembimbing4.php");
-        </script>
-    <?php } else { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Update Nilai Gagal", "pembimbing4.php");
-        </script>
-    <?php }
-}
-
 if (!empty($pengajuan)) {
     $pengajuan_user = $pengajuan[0]["id_pengajuan"];
     $user_id = $pengajuan[0]["id_user"];
@@ -57,6 +45,19 @@ if (!empty($pengajuan)) {
 $no = 1;
 ?>
 
+<!-- <style>
+    .signature-pad {
+        background-color: #f8f9fa;
+        width: 100%;
+    }
+    
+    .signature-pad canvas {
+        width: 100%;
+        height: 200px;
+        touch-action: none;
+    }
+</style> -->
+
 <main>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Daftar Anggota Magang</h1>
@@ -78,7 +79,6 @@ $no = 1;
                                 <th>Foto</th>
                                 <th>Pendidikan</th>
                                 <th>Jurusan</th>
-                                <th>Logbook</th>
                                 <th>Nilai Peserta</th>
                             </tr>
                         </thead>
@@ -86,16 +86,8 @@ $no = 1;
                         <tbody>
                             <?php foreach ($daftar_anggota as $anggota) : 
                                 // Cek apakah nilai sudah diinput
-                                $check_nilai = query("SELECT * FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user'");
+                                $check_nilai = query("SELECT id_nilai FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user'");
                                 $nilai_exists = !empty($check_nilai);
-                                $nilai_data = $nilai_exists ? $check_nilai[0] : null;
-                                
-                                // Cek logbook yang belum dilihat pembimbing
-                                $logbook_unseen = query("SELECT COUNT(*) as total FROM tb_logbook 
-                                                        WHERE id_user = '".$anggota['id_user']."' 
-                                                        AND id_pengajuan = '$pengajuan_user'
-                                                        AND status_active = '1'");
-                                $unseen_count = $logbook_unseen[0]['total'];
                             ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
@@ -104,54 +96,24 @@ $no = 1;
                                     <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
                                     <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                     <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
-                                    
-                                    <td>
-                                        <button class="btn btn-info btn-sm openLogbook"
-                                            data-id_pengajuan="<?= $pengajuan_user ?>"
-                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#logbookModal"
-                                            title="Lihat Logbook">
-                                            <i class="bi bi-book"></i>
-                                            <?php if ($unseen_count > 0) : ?>
-                                                <span class="badge bg-danger"><?= $unseen_count ?></span>
-                                            <?php endif; ?>
-                                        </button>
-                                    </td>
 
                                     <td>
-                                        <?php if (!$nilai_exists) : ?>
-                                            <button class="btn btn-success btn-sm openNilai"
-                                                data-id_pengajuan="<?= $pengajuan_user ?>"
-                                                data-id_user="<?= $anggota['id_user'] ?? '' ?>"
-                                                data-bs-toggle="<?= ($status_pengajuan == '5') ? 'modal' : '' ?>"
-                                                data-bs-target="<?= ($status_pengajuan == '5') ? '#nilaiModal' : '' ?>"
-                                                <?= ($status_pengajuan != '5') ? 'disabled' : '' ?>
-                                                title="Input nilai peserta">
-                                                <i class="bi bi-bar-chart"></i>
-                                            </button>
-                                        <?php else : ?>
-                                            <button class="btn btn-primary btn-sm viewNilai"
-                                                data-id_nilai="<?= $nilai_data['id_nilai'] ?>"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#viewNilaiModal"
-                                                title="Lihat Nilai">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            
-                                            <button class="btn btn-warning btn-sm editNilai"
-                                                data-id_nilai="<?= $nilai_data['id_nilai'] ?>"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editNilaiModal"
-                                                title="Edit Nilai">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            
+                                        <button class="btn btn-success btn-sm openNilai"
+                                            data-id_pengajuan="<?= $pengajuan_user ?>"
+                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
+                                            data-bs-toggle="<?= ($status_pengajuan == '5' && !$nilai_exists) ? 'modal' : '' ?>"
+                                            data-bs-target="<?= ($status_pengajuan == '5' && !$nilai_exists) ? '#nilaiModal' : '' ?>"
+                                            <?= ($status_pengajuan != '5' || $nilai_exists) ? 'disabled' : '' ?>
+                                            title="<?= $nilai_exists ? 'Nilai sudah diinput' : 'Input nilai peserta' ?>">
+                                            <i class="bi bi-bar-chart"></i> Input Nilai
+                                        </button>
+
+                                        <?php if ($nilai_exists) : ?>
                                             <a href="pembimbing4_cetak_nilai_sertif.php?id_user=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
-                                                class="btn btn-sm btn-secondary" 
-                                                title="Cetak Nilai" 
+                                                class="btn btn-sm btn-primary" 
+                                                title="Lihat Nilai" 
                                                 target="_blank">
-                                                <i class="bi bi-printer"></i>
+                                                <i class="bi bi-eye"></i> Lihat
                                             </a>
                                         <?php endif; ?>
                                     </td>
@@ -179,6 +141,7 @@ $no = 1;
             <input type="hidden" id="nilai_id_user" name="id_user">
             <input type="hidden" name="upload" value="1">
             <input type="hidden" name="create_by" value="<?= $id_user ?>">
+            <input type="hidden" id="signatureData" name="signature">
 
             <div class="modal-content">
                 <div class="modal-header">
@@ -224,6 +187,16 @@ $no = 1;
                         <label class="form-label">Catatan/Komentar</label>
                         <textarea class="form-control" name="catatan" rows="3"></textarea>
                     </div>
+
+                    <!-- <div class="mb-3">
+                        <label class="form-label">Tanda Tangan Pembimbing</label>
+                        <div id="signature-pad" class="signature-pad border rounded">
+                            <canvas width="100%" height="200"></canvas>
+                        </div>
+                        <div class="mt-2">
+                            <button type="button" id="clearSignature" class="btn btn-sm btn-danger">Hapus Tanda Tangan</button>
+                        </div>
+                    </div> -->
                 </div>
 
                 <div class="modal-footer">
@@ -235,68 +208,10 @@ $no = 1;
     </div>
 </div>
 
-<!-- Modal untuk View Nilai -->
-<div class="modal fade" id="viewNilaiModal" tabindex="-1" aria-labelledby="viewNilaiModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewNilaiModalLabel">Detail Nilai Peserta Magang</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="viewNilaiContent">
-                <!-- Content will be loaded via AJAX -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal untuk Edit Nilai -->
-<div class="modal fade" id="editNilaiModal" tabindex="-1" aria-labelledby="editNilaiModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <form id="editNilaiForm" method="POST">
-            <input type="hidden" id="edit_id_nilai" name="id_nilai">
-            <input type="hidden" name="update" value="1">
-            
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editNilaiModalLabel">Edit Nilai Peserta Magang</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="editNilaiContent">
-                    <!-- Content will be loaded via AJAX -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Update Nilai</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Modal untuk Logbook -->
-<div class="modal fade" id="logbookModal" tabindex="-1" aria-labelledby="logbookModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="logbookModalLabel">Logbook Peserta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="logbookContent">
-                <!-- Content will be loaded via AJAX -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <?php include "../layout/footerDashboard.php"; ?>
 
+<!-- Script untuk Signature Pad -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script> -->
 <script>
     $(document).ready(function() {
         $('#table_anggota').DataTable({
@@ -307,7 +222,7 @@ $no = 1;
             lengthMenu: [5, 10],
             columnDefs: [{
                 orderable: false,
-                targets: [3, 6, 7]
+                targets: [3]
             }],
             language: {
                 search: "Cari : ",
@@ -321,59 +236,80 @@ $no = 1;
                 }
             }
         });
+    });
+</script>
 
+<script>
+    $(document).ready(function() {
         // Untuk Nilai Modal
-        $('.openNilai').click(function() {
-            const idPengajuan = $(this).data('id_pengajuan');
-            const idUser = $(this).data('id_user');
-            $('#nilai_id_pengajuan').val(idPengajuan);
-            $('#nilai_id_user').val(idUser);
-        });
-
-        // View Nilai Modal
-        $('.viewNilai').click(function() {
-            const idNilai = $(this).data('id_nilai');
-            $.ajax({
-                url: 'ajax_view_nilai.php',
-                type: 'GET',
-                data: {id_nilai: idNilai},
-                success: function(response) {
-                    $('#viewNilaiContent').html(response);
-                }
-            });
-        });
-
-        // Edit Nilai Modal
-        $('.editNilai').click(function() {
-            const idNilai = $(this).data('id_nilai');
-            $.ajax({
-                url: 'ajax_edit_nilai.php',
-                type: 'GET',
-                data: {id_nilai: idNilai},
-                success: function(response) {
-                    $('#editNilaiContent').html(response);
-                    $('#edit_id_nilai').val(idNilai);
-                }
-            });
-        });
-
-        // Logbook Modal
-        $('.openLogbook').click(function() {
-            const idPengajuan = $(this).data('id_pengajuan');
-            const idUser = $(this).data('id_user');
-            
-            $.ajax({
-                url: 'ajax_logbook.php',
-                type: 'GET',
-                data: {
-                    id_pengajuan: idPengajuan,
-                    id_user: idUser,
-                    id_pembimbing: <?= $id_user ?>
-                },
-                success: function(response) {
-                    $('#logbookContent').html(response);
-                }
+        document.querySelectorAll('.openNilai').forEach(button => {
+            button.addEventListener('click', function() {
+                const idPengajuan = this.getAttribute('data-id_pengajuan');
+                const idUser = this.getAttribute('data-id_user');
+                document.getElementById('nilai_id_pengajuan').value = idPengajuan;
+                document.getElementById('nilai_id_user').value = idUser;
             });
         });
     });
 </script>
+
+<!-- 
+<script>
+    // Inisialisasi signature pad
+    let signaturePad = null;
+    
+    $(document).ready(function() {
+        // Inisialisasi signature pad saat modal ditampilkan
+        $('#nilaiModal').on('shown.bs.modal', function () {
+            const canvas = document.querySelector("canvas");
+            signaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(248, 249, 250)',
+                penColor: 'rgb(0, 0, 0)'
+            });
+            
+            // Handle resize
+            function resizeCanvas() {
+                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext("2d").scale(ratio, ratio);
+                signaturePad.clear();
+            }
+            
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+        });
+        
+        // Clear signature
+        $('#clearSignature').click(function() {
+            signaturePad.clear();
+        });
+        
+        // Handle form submission
+        $('#nilaiForm').submit(function(e) {
+            e.preventDefault();
+            
+            // Validasi tanda tangan
+            if (signaturePad.isEmpty()) {
+                alert('Harap berikan tanda tangan terlebih dahulu');
+                return false;
+            }
+            
+            // Simpan tanda tangan sebagai data URL
+            $('#signatureData').val(signaturePad.toDataURL());
+            
+            // Submit form
+            this.submit();
+        });
+    });
+    
+    // Untuk Nilai Modal
+    document.querySelectorAll('.openNilai').forEach(button => {
+        button.addEventListener('click', function() {
+            const idPengajuan = this.getAttribute('data-id_pengajuan');
+            const idUser = this.getAttribute('data-id_user');
+            document.getElementById('nilai_id_pengajuan').value = idPengajuan;
+            document.getElementById('nilai_id_user').value = idUser;
+        });
+    });
+</script> -->
