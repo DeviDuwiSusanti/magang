@@ -296,7 +296,7 @@ function generateLogbookId($conn, $id_pengajuan) {
 
 function getLogbook($conn, $id_pengajuan, $id_user) {
     // Query untuk mengambil logbook
-    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1' OR status_active = '2'";
+    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND (status_active = '1' OR status_active = '2')";
     $query = mysqli_query($conn, $sql);
 
     // Periksa apakah query berhasil

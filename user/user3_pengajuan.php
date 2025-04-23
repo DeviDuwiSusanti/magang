@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         inputPengajuan($_POST, $_FILES, $id_user);
     } else if (isset($_POST['update_pengajuan'])) {
     updatePengajuan($_POST, $_FILES, $id_user);
-    } else if (isset($_POST['hapus_pengajuan']) && $_POST['hapus_pengajuan'] == '1') {
+    } else if (isset($_POST['hapus_pengajuan'])) {
     hapusPengajuan($_POST, $id_user);
     }
 }
@@ -179,8 +179,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
                                                         <option value="" disabled selected> -- Pilih Pengajuan --</option>
                                                         <option value="magang">Magang</option>
-                                                        <option value="kerja praktek">Kerja Praktek</option>
-                                                        <option value="pkl">PKL</option>
+                                                        <option value="pkl">Praktek Kerja Lapangan</option>
                                                         <option value="penelitian">Penelitian</option>
                                                     </select>
                                                 </div>
@@ -194,9 +193,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 </div>
                                             </div>
 
-                                            <div class="mb-3">
-                                                <label for="jumlah_anggota" class="form-label">Jumlah Anggota</label>
-                                                <input type="number" class="form-control" id="jumlah_anggota" name="jumlah_anggota">
+                                            <div class="d-flex gap-4">
+                                                <div class="mb-3" style="flex: 1;">
+                                                    <div class="mb-3" id="jenisMagangContainer">
+                                                            <label for="jenis_magang" class="form-label">Jenis Magang</label>
+                                                            <input type="number" class="form-control" id="jenis_magang" name="jenis_magang">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3" style="flex: 1;">
+                                                    <div class="mb-3">
+                                                        <label for="jumlah_anggota" class="form-label">Jumlah Anggota</label>
+                                                        <input type="number" class="form-control" id="jumlah_anggota" name="jumlah_anggota">
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="d-flex gap-4">
@@ -246,20 +255,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <div class="col">
                                                         <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
                                                     </div>
-                                                    <div class="col">
-                                                        <input type="text" class="form-control" value="<?= $pendaftar['nisn'] ?>" readonly>
-                                                    </div>
-                                                    <div class="col">
-                                                        <input type="number" class="form-control" value="<?= !empty($pendaftar['nim']) ? $pendaftar['nim'] : '-' ?>"  readonly>
-                                                    </div>
+                                                    <?php
+                                                     $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                                                     $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
+                                                     if (strlen($id_studi) == 7) : ?>
+                                                        <div class="col">
+                                                            <input type="number" class="form-control" value="<?= $pendaftar['nim'] ?>"  readonly>
+                                                        </div>
+                                                        <?php else : ?>
+                                                        <div class="col">
+                                                            <input type="text" class="form-control" value="<?= $pendaftar['nisn'] ?>" readonly>
+                                                        </div>
+                                                    <?php endif; ?>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- Placeholder untuk anggota tambahan -->
                                             <div id="anggotaContainer"></div>
-                                            <div>
-                                                <small class="form-text text-muted" style="font-size: 0.7rem;">Untuk NIM kosongkan jika belum memiliki NIM</small>
-                                            </div><br><br>
 
                                             <button type="button" class="btn btn-secondary btn-sm" onclick="prevStep()">Back</button>
                                             <button type="submit" name="pengajuan_kelompok" onclick="validateForm(event)" class="btn btn-success btn-sm">Kirim</button>
@@ -273,19 +285,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="col-lg-4">
                             <div class="detail-lowongan sticky-top" id="detailBidangContainer">
                                 <div class="card" id="detailBidangCard">
-                                <div class="card-header bg-primary">
-                                <h5 class="card-title text-white mb-0" id="judulInstansi">
-                                    Silakan pilih instansi
-                                </h5>
-                                </div>
+                                    
                                     <div class="card-body">
                                         <div id="defaultBidangMessage">
                                             <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
                                         </div>
                                         <div id="bidangDetailContent" style="display: none;">
+                                            <div class="card-header bg-primary">
+                                                <h1 class="card-subtitle text-white" id="instansiNama" style="color: white !important;"></h1>
+                                            </div><hr>
                                             <h1 class="card-subtitle mb-2 text-muted" id="bidangNama"></h1><hr>
                                             <p class="text-start"><strong><i class="bi bi-text-paragraph me-2"></i>Deskripsi:</strong></p>
-                                            <p class="text-start"id="bidangDeskripsi"></p><hr>
+                                            <p class="text-start" id="bidangDeskripsi"></p><hr>
                                             <p class="text-start"><strong><i class="bi bi-list-check me-2"></i>Kriteria:</strong></p>
                                             <p class="text-start" id="bidangKriteria"></p><hr>
                                             <p class="text-start"><strong><i class="bi bi-file-earmark-text me-2"></i>Dokumen Prasyarat:</strong></p>
@@ -389,6 +400,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </select>
                                         </div>
 
+                                        <div class="mb-3" id="jenisMagangContainer">
+                                            <label for="jenis_magang" class="form-label">Jenis Magang</label>
+                                            <input type="number" class="form-control" id="jenis_magang" name="jenis_magang" value="<?=  $pengajuan['jenis_magang']  ?>">
+                                        </div>
+
                                         <div class="d-flex gap-4">
                                             <div class="mb-3" style="flex: 1;">
                                                 <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
@@ -416,14 +432,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 <small id="cv-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('cv')"></small>
                                                 <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
                                             </div>
-
-                                            <!-- PROPOSAL -->
-                                            <div class="mb-3 position-relative" style="flex: 1;">
-                                                <label for="proposal" class="form-label">Unggah Proposal</label>
-                                                <input type="file" class="form-control pe-5" id="proposal" name="proposal" accept=".pdf" onchange="handleFileLabel('proposal')">
-                                                <small id="proposal-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('proposal')"></small>
-                                                <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[2]['file_path']) ?>" target="_blank">Lihat Proposal</a></p>
-                                                </div>
                                         </div>
 
                                             <button type="submit" name="update_pengajuan" class="btn btn-success">
@@ -440,16 +448,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     
                     <!-- Kolom Detail (4 bagian dari 12) -->
                     <div class="col-lg-4">
-                    <div class="card-body">
-                                <div id="defaultBidangMessage">
-                                    <p class="text-muted text-center">Silahkan pilih instansi terlebih dahulu</p>
-                                </div>
+                        <div class="detail-lowongan sticky-top" id="detailBidangContainer">
+                            <div class="card" id="detailBidangCard">
                                 <div class="card-body">
                                     <div id="defaultBidangMessage">
                                         <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
                                     </div>
                                     <div id="bidangDetailContent" style="display: none;">
-                                        <h1 class="card-subtitle mb-2 text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h1>
+                                        <div class="card-header bg-primary">
+                                                <h1 class="card-subtitle text-white" id="instansiNama" style="color: white !important;"><?= $pengajuan['nama_panjang'] ?></h1>
+                                            </div><hr>
+                                        <h1 class="card-subtitle mb-4 text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h1>
                                         <hr>
                                         <p class="text-start"><strong><i class="bi bi-text-paragraph me-2"></i></strong></p>
                                         <p class="text-start"id="bidangDeskripsi"><?= $pengajuan['deskripsi_bidang'] ?></p><hr>
@@ -474,58 +483,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 </html>
 
-
 <!-- hapus pengajuan -->
 <script>
 document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
-    event.preventDefault();
-    
-    // Buat div container untuk textarea
-    const container = document.createElement('div');
-    container.innerHTML = `
-        <textarea id="reasonTextarea" 
-                  class="swal2-textarea-custom" 
-                  style="width:100%; min-height:100px; padding:10px;"
-                  placeholder="Masukkan alasan Anda (minimal 10 karakter)..."></textarea>
-    `;
-    
+    event.preventDefault(); // Mencegah form langsung terkirim
+
     Swal.fire({
-        title: 'Alasan Penghapusan',
-        html: container,
-        focusConfirm: false,
+        title: 'Apakah Anda yakin?',
+        text: "Anda tidak dapat mengembalikan data yang telah dihapus!",
+        icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Lanjutkan',
-        cancelButtonText: 'Batal',
-        didOpen: () => {
-            const textarea = document.getElementById('reasonTextarea');
-            textarea.focus();
-            
-            // Pastikan textarea bisa menerima input
-            textarea.addEventListener('keydown', function(e) {
-                e.stopPropagation(); // Mencegah event bubbling
-            });
-        },
-        preConfirm: () => {
-            const textarea = document.getElementById('reasonTextarea');
-            const value = textarea.value.trim();
-            
-            if (!value) {
-                Swal.showValidationMessage('Anda harus memberikan alasan!');
-                return false;
-            }
-            if (value.length < 10) {
-                Swal.showValidationMessage('Alasan terlalu pendek (minimal 10 karakter)');
-                return false;
-            }
-            return value;
-        }
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.isConfirmed) {
-            confirmDelete(result.value);
+            // Kirim form secara manual
+            document.getElementById('editPengajuanForm').submit();
         }
     });
 });
 </script>
+
 
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
 <script>
@@ -598,7 +578,7 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
                         $("#defaultBidangMessage").hide();
                         $("#bidangDetailContent").show();
                         
-                        $("#judulInstansi").text(response.nama_panjang || "Tidak Diketahui");
+                        $("#instansiNama").text(response.nama_panjang);
                         $("#bidangNama").text(response.nama_bidang);
                         $("#bidangDeskripsi").text(response.deskripsi_bidang);
                         $("#bidangKriteria").text(response.kriteria_bidang);
@@ -653,6 +633,8 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
 <!-- SCRIPT UNTUK VALIDASI FORM -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    const jenisPengajuan = document.getElementById("jenis_pengajuan");
+    const jenisMagangContainer = document.getElementById("jenisMagangContainer");
     const kelompokPribadi = document.getElementById("kelompok_pribadi");
     const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
     const jumlahAnggotaContainer = jumlahAnggotaInput ? jumlahAnggotaInput.closest(".mb-3") : null;
@@ -680,6 +662,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (submitButton) submitButton.style.display = "inline-block";
             }
         });
+    }
+
+    if (jenisPengajuan && jenisMagangContainer) {
+        jenisPengajuan.addEventListener("change", function() {
+            if (this.value === "magang") {
+                jenisMagangContainer.style.display = "block";
+            } else {
+                jenisMagangContainer.style.display = "none";
+                // Reset nilai jenis magang jika bukan magang
+                document.getElementById("jenis_magang").value = "";
+            }
+        });
+        
+        // Jalankan sekali saat load untuk set initial state
+        if (jenisPengajuan.value === "" || jenisPengajuan.value !== "magang") {
+            jenisMagangContainer.style.display = "none";
+        }
     }
 
     if (bidang) {
@@ -754,12 +753,25 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
+        // Di dalam fungsi validateStep1(), ubah bagian validasi jenis magang menjadi:
+        if ((formId === "pengajuanForm" || formId === "editPengajuanForm") && 
+            jenisPengajuan && 
+            jenisPengajuan.value === "magang" && 
+            document.getElementById("jenis_magang")) {
+            
+            const jenisMagang = document.getElementById("jenis_magang");
+            if (!jenisMagang.value.trim()) {
+                showError(jenisMagang, "Jenis magang harus diisi!");
+                isValid = false;
+            } else {
+                clearError(jenisMagang);
+            }
+        }
+
         // Validasi file upload
         const otherFields = [
             { id: "ktp", message: "Upload KTP dalam format PDF!" },
             { id: "cv", message: "Upload CV dalam format PDF!" }
-            { id: "proposal", message: "Upload PROPOSAL dalam format PDF!" }
-
         ];
 
         const maxFileSize = 1 * 1024 * 1024; // 1 MB
@@ -825,8 +837,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const nama = anggota.querySelector("input[name='anggota_nama[]']");
             const email = anggota.querySelector("input[name='anggota_email[]']");
             const nik = anggota.querySelector("input[name='anggota_nik[]']");
-            const nisn = anggota.querySelector("input[name='anggota_nisn[]']");
-            const nim = anggota.querySelector("input[name='anggota_nim[]']");
+           
 
             if (!nama.value.trim()) {
                 showError(nama, "Nama harus diisi!");
@@ -859,27 +870,34 @@ document.addEventListener("DOMContentLoaded", function() {
                 clearError(nik);
             }
 
-            if (!nisn.value.trim()) {
-                showError(nisn, `NISN anggota wajib diisi!`);
-                isValid = false;
-            } else if (!/^\d{10}$/.test(nisn.value)) {
-                showError(nisn, `NISN anggota harus 10 digit angka!`);
-                isValid = false;
-            } else {
-                clearError(nisn);
-            }
+             // Validasi Pendidikan (NIM/NISN)
+            const isUniversity = <?= strlen($id_studi) == 7 ? 'true' : 'false' ?>;
 
-            if (nim.value.trim()) {
-                if (!/^\d{12}$/.test(nim.value)) {
-                    showError(nim, `NIM anggota harus 12 digit angka jika diisi!`);
-                    isValid = false;
-                } else {
-                    clearError(nim);
-                }
+            if (isUniversity) {
+                const nim = anggota.querySelector("input[name='anggota_nim[]']");
+                // University validation - NIM
+                if (!nim.value.trim()) {
+                            showError(nim, `NIM anggota wajib diisi!`);
+                            isValid = false;
+                        } else if (!/^\d{12}$/.test(nim.value)) {
+                            showError(nim, `NIM anggota harus 12 digit angka!`);
+                            isValid = false;
+                        } else {
+                            clearError(nim);
+                        }
+
             } else {
-                // Boleh kosong
-                clearError(nim);
-            }
+                const nisn = anggota.querySelector("input[name='anggota_nisn[]']");
+                if (!nisn.value.trim()) {
+                            showError(nisn, `NISN anggota wajib diisi!`);
+                            isValid = false;
+                        } else if (!/^\d{10}$/.test(nisn.value)) {
+                            showError(nisn, `NISN anggota harus 10 digit angka!`);
+                            isValid = false;
+                        } else {
+                            clearError(nisn);
+                        }
+            }     
         });
 
         return isValid;
@@ -908,8 +926,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         <div class="col"><input type="text" class="form-control" name="anggota_nama[]" placeholder="Nama"></div>
                         <div class="col"><input type="email" class="form-control anggota-email" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
                         <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK" oninput="this.value=this.value.slice(0,16)"></div>
-                        <div class="col"><input type="number" class="form-control" name="anggota_nisn[]" placeholder="NISN" oninput="this.value=this.value.slice(0,10)"></div>
-                        <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM" oninput="this.value=this.value.slice(0,12)"></div>
+                        <?php
+                         $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                         $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
+                         if (strlen($id_studi) == 7) : ?>
+                            <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM" oninput="this.value=this.value.slice(0,12)"></div>
+                        <?php else : ?>
+                            <div class="col"><input type="number" class="form-control" name="anggota_nisn[]" placeholder="NISN" oninput="this.value=this.value.slice(0,10)"></div>
+                        <?php endif ?>
                     </div>
                 </div>`;
                 anggotaContainer.insertAdjacentHTML("beforeend", anggotaHTML);

@@ -153,7 +153,7 @@ if (isset($_GET['id_logbook_hapus'])) {
                                         </span>
                                     <?php endif; ?>
                                 </td>
-                                <?php if ($status_pengajuan != '5' && $id_user_anggota == $id_user) { ?> 
+                                <?php if ($id_user_anggota == $id_user) { ?> 
                                 <td class="text-center">
                                     <?php if ($row['status_active'] != 2): ?>
                                         <a href="?id_logbook_edit=<?= $row['id_logbook'] ?>" class="btn btn-warning btn-sm">
