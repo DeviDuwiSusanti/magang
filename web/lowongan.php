@@ -88,7 +88,7 @@ include "functions.php";
             <!-- Search Section -->
             <div class="search-container" style="text-align: center; margin-top: 10px">
                 <div class="search-wrapper">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Cari Instansi atau Bidang..." />
+                    <input type="text" id="searchInput" class="search-input" placeholder="Cari Instansi atau Jurusan..." />
                     <i id="searchIcon" class="fas fa-search search-icon"></i>
                 </div>
             </div>
