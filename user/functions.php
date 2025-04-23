@@ -296,7 +296,7 @@ function generateLogbookId($conn, $id_pengajuan) {
 
 function getLogbook($conn, $id_pengajuan, $id_user) {
     // Query untuk mengambil logbook
-    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'";
+    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1' OR status_active = '2'";
     $query = mysqli_query($conn, $sql);
 
     // Periksa apakah query berhasil
@@ -590,8 +590,13 @@ function updateAnggota($POST, $id_user){
     $nama_anggota = $POST['nama_user'];
     $email = $POST['email'];
     $nik = $POST['nik'];
-    $nisn = $POST['nisn'];
-    $nim = $POST['nim'];
+    if (isset($_POST['nisn'])){
+        $nisn = $POST['nisn'];
+        $nim = NULL;
+    }else{
+        $nim = $POST['nim'];
+        $nisn = NULL;
+    }
 
     $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nisn = '$nisn', nim = '$nim', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
     if (mysqli_query($conn, $sqlUpdate)){
@@ -611,8 +616,14 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     $nama_anggota = $POST['nama_user'];
     $email = $POST['email'];
     $nik = $POST['nik'];
-    $nisn = $POST['nisn'];
-    $nim = $POST['nim'];
+    if (isset($_POST['nisn'])){
+        $nisn = $POST['nisn'];
+        $nim = NULL;
+    }else{
+        $nim = $POST['nim'];
+        $nisn = NULL;
+    }
+
     $id_user4  = generateIdAnggota($conn, $id_user);
     $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
     $result = mysqli_query($conn, $pendidikan);
