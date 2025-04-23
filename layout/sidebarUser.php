@@ -70,6 +70,8 @@ if (isset($_SESSION['email'])) {
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote/dist/summernote-lite.min.js"></script>
 </head>
 
 <body>
@@ -228,7 +230,7 @@ if (isset($_SESSION['email'])) {
                 <?php endif; ?>
 
 
-                <?php if($level == 4): ?>
+                <?php if ($level == 4): ?>
                     <!-- Daftar Peserta Magang -->
                     <li class="sidebar-item">
                         <a href="pembimbing4.php" class="sidebar-link">
@@ -292,11 +294,11 @@ if (isset($_SESSION['email'])) {
                                     <i class="bi bi-gear"></i>
                                     <span>Pengaturan</span>
                                 </a>
-                                <?php if($level == 3) : ?>
-                                <a href="bantuan.php" class="dropdown-item">
-                                    <i class="bi bi-question-circle"></i>
-                                    <span>Pusat Bantuan</span>
-                                </a>
+                                <?php if ($level == 3) : ?>
+                                    <a href="bantuan.php" class="dropdown-item">
+                                        <i class="bi bi-question-circle"></i>
+                                        <span>Pusat Bantuan</span>
+                                    </a>
                                 <?php endif; ?>
                                 <div class="dropdown-divider"></div>
                                 <a href="../logout.php" class="dropdown-item">
@@ -331,7 +333,7 @@ if (isset($_SESSION['email'])) {
 
             <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-                <!-- Inisialisasi DataTables -->
+            <!-- Inisialisasi DataTables -->
             <!-- <script>
                 $(document).ready(function() {
                     $('#myTable').DataTable();

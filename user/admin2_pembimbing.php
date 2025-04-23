@@ -49,15 +49,6 @@ $list_bidang = query("SELECT tb_bidang.*,
 
 $no = 1;
 
-$jumlahBidang = count($list_bidang);
-
-// Hitung berapa bidang yang belum punya pembimbing
-$bidangBelumAdaPembimbing = array_filter($list_bidang, function ($bidang) {
-    return empty($bidang['id_pembimbing']);
-});
-
-$jumlahBidangBelumAdaPembimbing = count($bidangBelumAdaPembimbing);
-
 // Handle tambah pembimbing
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_pembimbing'])) {
     if (tambah_pembimbing($_POST) > 0) {
@@ -119,6 +110,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
         <div class="mb-4 text-end">
+            <?php
+            $jumlahBidang = count($list_bidang);
+
+            // Hitung berapa bidang yang belum punya pembimbing
+            $bidangBelumAdaPembimbing = array_filter($list_bidang, function ($bidang) {
+                return empty($bidang['id_pembimbing']);
+            });
+
+            $jumlahBidangBelumAdaPembimbing = count($bidangBelumAdaPembimbing);
+            ?>
             <?php if ($jumlahBidang === 0): ?>
                 <!-- Tidak ada bidang, maka tombol tidak ditampilkan -->
             <?php else: ?>
@@ -175,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                                     <td><?= ($pembimbing['jabatan'] ?: 'Jabatan belum diisi') ?></td>
                                     <td><?= ($pembimbing['telepone_pembimbing'] ?: 'Telepon belum diisi') ?></td>
                                     <td>
-                                        <button type="button" class="btn btn-warning btn-sm editPembimbingBtn"
+                                        <button type="button" class="btn btn-warning btn-sm editPembimbingBtn me-2"
                                             data-bs-toggle="modal" data-bs-target="#editPembimbingModal"
                                             data-id_pembimbing="<?= $pembimbing['id_pembimbing'] ?>"
                                             data-nama_pembimbing="<?= $pembimbing['nama_pembimbing'] ?>"
