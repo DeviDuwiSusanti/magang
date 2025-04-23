@@ -414,6 +414,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 <small id="cv-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('cv')"></small>
                                                 <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[1]['file_path']) ?>" target="_blank">Lihat CV</a></p>
                                             </div>
+
+                                            <!-- PROPOSAL -->
+                                            <div class="mb-3 position-relative" style="flex: 1;">
+                                                <label for="proposal" class="form-label">Unggah Proposal</label>
+                                                <input type="file" class="form-control pe-5" id="proposal" name="proposal" accept=".pdf" onchange="handleFileLabel('proposal')">
+                                                <small id="proposal-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('proposal')"></small>
+                                                <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[2]['file_path']) ?>" target="_blank">Lihat Proposal</a></p>
+                                                </div>
                                         </div>
 
                                             <button type="submit" name="update_pengajuan" class="btn btn-success">
@@ -719,6 +727,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const otherFields = [
             { id: "ktp", message: "Upload KTP dalam format PDF!" },
             { id: "cv", message: "Upload CV dalam format PDF!" }
+            { id: "proposal", message: "Upload PROPOSAL dalam format PDF!" }
+
         ];
 
         const maxFileSize = 1 * 1024 * 1024; // 1 MB

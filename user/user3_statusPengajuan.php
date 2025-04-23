@@ -143,14 +143,13 @@ $query = mysqli_query($conn, $sql);
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <img src="../assets/img/user/<?= !empty($detail['gambar_user']) ? $detail['gambar_user'] : 'avatar.png' ?>" 
-                                         class="rounded-circle mb-3" 
-                                         alt="Profile Picture" 
-                                         style="width: 100px; height: 100px;">
-                                    <h4 class="card-title"><?= isset($detail['nama_user']) ? $detail['nama_user'] : 'Tidak Diketahui' ?></h4>
-                                    <p class="text-muted"><?= isset($detail['email']) ? $detail['email'] : 'Tidak Ada Email' ?></p>
+                                <img src="../assets/img/user/<?= !empty($detail['gambar_instansi']) ? $detail['gambar_instansi'] : 'avatar.png' ?>" 
+                                    class="mb-3" 
+                                    alt="Profile Picture" 
+                                    style="width: 100px; height: 100px;">
+                                    <h4 class="card-title"><?= isset($detail['nama_panjang']) ? $detail['nama_panjang'] : 'Tidak Diketahui' ?></h4>
                                     <hr>
-                                    <p><strong>Perusahaan:</strong> <?= $detail['nama_panjang']; ?></p>
+                                    <p><strong>Instansi:</strong> <?= $detail['nama_panjang']; ?></p>
                                     <p><strong>Bidang:</strong> <?= $detail['nama_bidang']; ?></p>
                                     <p><strong>Jenis Pengajuan:</strong> <?= $detail['jenis_pengajuan']; ?></p>
                                     <p><strong>Status Lamaran:</strong> <?= getStatusText($detail['status_pengajuan']); ?></p>

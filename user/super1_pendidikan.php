@@ -47,9 +47,9 @@ if (isset($_POST["tambah_universitas"])) {
     <?php } elseif ($result == 405) { ?>
         <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php"); </script>
     <?php } elseif ($result > 0) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Perguruan Tinggi Berhasil", "super1_pendidikan.php"); </script>
     <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Perguruan Tinggi Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
     <?php }
 }
 

@@ -6,31 +6,14 @@ $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_penga
 $daftar_anggota = [];
 $pendidikan_user = null;
 
-
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
-    if (pembimbing_upload_nilai($_POST, $_FILES)) { ?>
+    if (pembimbing_upload_nilai($_POST)) { ?>
         <script>
-            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Unggah Nilai Dan Sertifikat Berhasil", "pembimbing4.php");
-            </script>
-    <?php } else { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Unggah Nilai Dan Sertifikat Gagal", "pembimbing4.php");
-            </script>
-<?php }
-}
-
-if (isset($_GET['id_dokumenHapus'])){
-    $id_dokumen = $_GET['id_dokumenHapus'];
-    $sqlHapus = "UPDATE tb_dokumen SET status_active = '0', change_by = '$id_user' WHERE id_dokumen = '$id_dokumen'";
-    if (mysqli_query($conn, $sqlHapus)) { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Dokumen berhasil dihapus", "pembimbing4.php");
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Input Nilai Berhasil", "pembimbing4.php");
         </script>
     <?php } else { ?>
         <script>
-            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menghapus dokumen", "pembimbing4.php");
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Input Nilai Gagal", "pembimbing4.php");
         </script>
     <?php }
 }
@@ -54,17 +37,26 @@ if (!empty($pengajuan)) {
 
     // Ambil daftar anggota
     $daftar_anggota = query("SELECT pu.id_user, pu.nama_user, pu.gambar_user, u.email
-                                FROM tb_profile_user pu 
-                                JOIN tb_user u ON pu.id_user = u.id_user 
-                                WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
+                            FROM tb_profile_user pu 
+                            JOIN tb_user u ON pu.id_user = u.id_user 
+                            WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
 }
 
 $no = 1;
 ?>
 
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+<style>
+    .signature-pad {
+        background-color: #f8f9fa;
+        width: 100%;
+    }
+    
+    .signature-pad canvas {
+        width: 100%;
+        height: 200px;
+        touch-action: none;
+    }
+</style>
 
 <main>
     <div class="container-fluid px-4">
@@ -87,13 +79,16 @@ $no = 1;
                                 <th>Foto</th>
                                 <th>Pendidikan</th>
                                 <th>Jurusan</th>
-                                <!-- <th>Logbook Peserta</th> -->
-                                <th>Nilai Dan Sertifikat</th>
+                                <th>Nilai Peserta</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <?php foreach ($daftar_anggota as $anggota) : ?>
+                            <?php foreach ($daftar_anggota as $anggota) : 
+                                // Cek apakah nilai sudah diinput
+                                $check_nilai = query("SELECT id_nilai FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user'");
+                                $nilai_exists = !empty($check_nilai);
+                            ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
                                     <td><?= $anggota["nama_user"] ?></td>
@@ -102,58 +97,26 @@ $no = 1;
                                     <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                     <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
 
-                                    <!-- <td>
-                                        <button class="btn btn-info btn-sm openLogbook"
-                                            data-id_pengajuan="<?= $pengajuan_user ?>"
-                                            data-id_user="<?= $anggota['id_user'] ?? '' ?>"
-                                            data-bs-toggle="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? 'modal' : '' ?>"
-                                            data-bs-target="<?= ($status_pengajuan == '4' || $status_pengajuan == '5') ? '#logbookModal' : '' ?>"
-                                            <?= ($status_pengajuan != '4' && $status_pengajuan != '5') ? 'disabled' : '' ?>>
-                                            <i class="bi bi-book"></i>
-                                        </button>
-                                    </td> -->
-
-                                    <!-- Tombol Nilai & Sertifikat -->
-                                   <td>
-                                        `<?php
-                                        // Query untuk mengecek apakah file sudah diupload
-                                        $check_query = "SELECT file_path FROM tb_dokumen 
-                                                    WHERE id_user = '".mysqli_real_escape_string($conn, $anggota['id_user'])."' 
-                                                    AND id_pengajuan = '".mysqli_real_escape_string($conn, $pengajuan_user)."'
-                                                    AND jenis_dokumen = '4' AND status_active = '1'"; // 4 untuk jenis dokumen nilai/sertifikat
-                                        
-                                        $check_result = mysqli_query($conn, $check_query);
-                                        $file_exists = ($check_result && mysqli_num_rows($check_result) > 0);
-                                        ?>
-                                        
+                                    <td>
                                         <button class="btn btn-success btn-sm openNilai"
                                             data-id_pengajuan="<?= $pengajuan_user ?>"
                                             data-id_user="<?= $anggota['id_user'] ?? '' ?>"
-                                            data-bs-toggle="<?= ($status_pengajuan == '5' && !$file_exists) ? 'modal' : '' ?>"
-                                            data-bs-target="<?= ($status_pengajuan == '5' && !$file_exists) ? '#nilaiModal' : '' ?>"
-                                            <?= ($status_pengajuan != '5' || $file_exists) ? 'disabled' : '' ?>
-                                            title="<?= $file_exists ? 'File sudah diupload' : 'Upload nilai/sertifikat' ?>">
-                                            <i class="bi bi-bar-chart"></i>
-                                            <i class="bi bi-file-earmark-pdf"></i>
+                                            data-bs-toggle="<?= ($status_pengajuan == '5' && !$nilai_exists) ? 'modal' : '' ?>"
+                                            data-bs-target="<?= ($status_pengajuan == '5' && !$nilai_exists) ? '#nilaiModal' : '' ?>"
+                                            <?= ($status_pengajuan != '5' || $nilai_exists) ? 'disabled' : '' ?>
+                                            title="<?= $nilai_exists ? 'Nilai sudah diinput' : 'Input nilai peserta' ?>">
+                                            <i class="bi bi-bar-chart"></i> Input Nilai
                                         </button>
 
-                                        <?php
-                                        $doc = "SELECT * FROM tb_dokumen WHERE id_user = '$anggota[id_user]' AND status_active  ='1'";
-                                        $nilaiSertif = mysqli_fetch_assoc(mysqli_query($conn, $doc));
-                                        
-                                        if (!empty($nilaiSertif['file_path'])){?>
-                                            <a href="<?= $nilaiSertif['file_path'] ?>" class="btn btn-sm btn-primary" title="Lihat Dokumen" target="_blank">  <i class="bi bi-eye"></i></a>
-                                            <a href="pembimbing4.php?id_dokumenHapus=<?= $nilaiSertif['id_dokumen'] ?>" 
-                                                class="btn btn-sm btn-danger" 
-                                                title="Hapus" 
-                                                onclick="return confirm_hapus_unggahan_pembimbing(event, <?= $nilaiSertif['id_dokumen'] ?>)">
-                                                <i class="bi bi-trash"></i>
-                                                </a>
-                                        <?php
-                                        }
-                                        ?>
-                                    </td>`
-                                    
+                                        <?php if ($nilai_exists) : ?>
+                                            <a href="pembimbing4_cetak_nilai_sertif.php?id_user=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
+                                                class="btn btn-sm btn-primary" 
+                                                title="Lihat Nilai" 
+                                                target="_blank">
+                                                <i class="bi bi-eye"></i> Lihat
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -170,88 +133,85 @@ $no = 1;
     <?php endif; ?>
 </main>
 
-
-
-<!-- Modal untuk Logbook -->
-<div class="modal fade" id="logbookModal" tabindex="-1" aria-labelledby="logbookModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl"> 
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="logbookModalLabel">Logbook Peserta</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div id="logbookContent">
-                <table id="logbookTable" class="table table-striped table-bordered small" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Tanggal</th>
-                        <th>Kegiatan</th>
-                        <th>Keterangan</th>
-                        <th>Jam Mulai</th>
-                        <th>Jam Selesai</th>
-                    </tr>
-                </thead>
-
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-<!-- Modal untuk Nilai dan Sertifikat -->
+<!-- Modal untuk Input Nilai -->
 <div class="modal fade" id="nilaiModal" tabindex="-1" aria-labelledby="nilaiModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="nilaiForm" method="POST" enctype="multipart/form-data">
+    <div class="modal-dialog modal-lg">
+        <form id="nilaiForm" method="POST">
             <input type="hidden" id="nilai_id_pengajuan" name="id_pengajuan">
             <input type="hidden" id="nilai_id_user" name="id_user">
-            <input type="hidden" name="jenis_dokumen" value="4">
             <input type="hidden" name="upload" value="1">
-            <input type="hidden" name="create_by" id="create_by" value="<?= $id_user ?>">
-
-            <input type="file" name="file_sertifikat" id="hiddenFileInput" style="display: none;">
+            <input type="hidden" name="create_by" value="<?= $id_user ?>">
+            <input type="hidden" id="signatureData" name="signature">
 
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="nilaiModalLabel">Upload Sertifikat dan Nilai</h5>
+                    <h5 class="modal-title" id="nilaiModalLabel">Input Nilai Peserta Magang</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Upload File (PDF)</label>
-                        <div class="dropzone" id="fileDropzone"></div>
-                        <small class="text-secondary">Hanya Bisa Upload 1 File Saja</small>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Kehadiran/Absensi (0-100)</label>
+                            <input type="number" class="form-control" name="kehadiran" min="0" max="100" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ketepatan Waktu/Disiplin (0-100)</label>
+                            <input type="number" class="form-control" name="disiplin" min="0" max="100" required>
+                        </div>
                     </div>
 
-                    <div id="renameContainer" style="display: none;">
-                        <label class="form-label">Nama File</label><br>
-                        <input type="text" class="form-control" id="renameInput" name="nama_dokumen" placeholder="Ubah nama dokumen">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Tanggung Jawab Terhadap Tugas (0-100)</label>
+                            <input type="number" class="form-control" name="tanggung_jawab" min="0" max="100" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Kreativitas (0-100)</label>
+                            <input type="number" class="form-control" name="kreativitas" min="0" max="100" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Kerjasama Tim (0-100)</label>
+                            <input type="number" class="form-control" name="kerjasama" min="0" max="100" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Kemampuan Penggunaan TI (0-100)</label>
+                            <input type="number" class="form-control" name="teknologi_informasi" min="0" max="100" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Catatan/Komentar</label>
+                        <textarea class="form-control" name="catatan" rows="3"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tanda Tangan Pembimbing</label>
+                        <div id="signature-pad" class="signature-pad border rounded">
+                            <canvas width="100%" height="200"></canvas>
+                        </div>
+                        <div class="mt-2">
+                            <button type="button" id="clearSignature" class="btn btn-sm btn-danger">Hapus Tanda Tangan</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" id="uploadBtn" class="btn btn-primary">Upload</button>
+                    <button type="submit" class="btn btn-primary">Simpan Nilai</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-
-
 <?php include "../layout/footerDashboard.php"; ?>
-<!-- Script untuk DataTable -->
 
+<!-- Script untuk Signature Pad -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#table_anggota').DataTable({
@@ -276,80 +236,59 @@ $no = 1;
                 }
             }
         });
-
-        // Event listener untuk membuka modal dengan JavaScript
-        $(".openModal").on("click", function() {
-            var type = $(this).data("type");
-            var id = $(this).data("id");
-            var modalId = "#" + type + "Modal" + id;
-
-            // Membuka modal sesuai dengan ID yang ditentukan
-            $(modalId).modal('show');
-        });
     });
 </script>
 
 <script>
-    Dropzone.autoDiscover = false;
-
-    const myDropzone = new Dropzone("#fileDropzone", {
-        url: "#", // URL ini tidak akan digunakan
-        maxFiles: 1,
-        acceptedFiles: ".pdf",
-        addRemoveLinks: true,
-        autoProcessQueue: false,
-        paramName: "file_sertifikat", // optional
-        init: function() {
-            this.on("addedfile", function(file) {
-                // Tampilkan input rename saat file ditambahkan
-                document.getElementById("renameContainer").style.display = "block";
-                document.getElementById("renameInput").value = file.name;
+    // Inisialisasi signature pad
+    let signaturePad = null;
+    
+    $(document).ready(function() {
+        // Inisialisasi signature pad saat modal ditampilkan
+        $('#nilaiModal').on('shown.bs.modal', function () {
+            const canvas = document.querySelector("canvas");
+            signaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(248, 249, 250)',
+                penColor: 'rgb(0, 0, 0)'
             });
-
-            this.on("removedfile", function() {
-                // Sembunyikan rename input kalau file dihapus
-                document.getElementById("renameContainer").style.display = "none";
-                document.getElementById("renameInput").value = "";
-            });
-        }
-    });
-
-    // Handle tombol upload
-    document.getElementById("uploadBtn").addEventListener("click", function() {
-        const file = myDropzone.getAcceptedFiles()[0];
-
-        if (!file) {
-            alert("Silakan upload file terlebih dahulu.");
-            return;
-        }
-
-        // Masukkan file ke input file tersembunyi
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        document.getElementById("hiddenFileInput").files = dataTransfer.files;
-
-        // Pastikan input nama file ikut dikirim
-        document.getElementById("renameInput").setAttribute("name", "nama_dokumen");
-
-        // Submit form
-        document.getElementById("nilaiForm").submit();
-    });
-</script>
-
-
-
-<script>
-    // Untuk Logbook Modal
-    document.querySelectorAll('.openLogbook').forEach(button => {
-        button.addEventListener('click', function() {
-            const idPengajuan = this.getAttribute('data-id_pengajuan');
-            const idUser = this.getAttribute('data-id_user');
-            document.getElementById('logbook_id_pengajuan').value = idPengajuan;
-            document.getElementById('logbook_id_user').value = idUser;
+            
+            // Handle resize
+            function resizeCanvas() {
+                const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext("2d").scale(ratio, ratio);
+                signaturePad.clear();
+            }
+            
+            window.addEventListener("resize", resizeCanvas);
+            resizeCanvas();
+        });
+        
+        // Clear signature
+        $('#clearSignature').click(function() {
+            signaturePad.clear();
+        });
+        
+        // Handle form submission
+        $('#nilaiForm').submit(function(e) {
+            e.preventDefault();
+            
+            // Validasi tanda tangan
+            if (signaturePad.isEmpty()) {
+                alert('Harap berikan tanda tangan terlebih dahulu');
+                return false;
+            }
+            
+            // Simpan tanda tangan sebagai data URL
+            $('#signatureData').val(signaturePad.toDataURL());
+            
+            // Submit form
+            this.submit();
         });
     });
-
-    // Untuk Nilai & Sertifikat Modal
+    
+    // Untuk Nilai Modal
     document.querySelectorAll('.openNilai').forEach(button => {
         button.addEventListener('click', function() {
             const idPengajuan = this.getAttribute('data-id_pengajuan');
@@ -359,5 +298,3 @@ $no = 1;
         });
     });
 </script>
-
-
