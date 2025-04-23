@@ -746,14 +746,13 @@ function cetakSertifikat($conn, $id_pengajuan_cetak) {
 
 
 // =========================== pembimbing ========================
+// =========================== pembimbing ========================
 function pembimbing_upload_nilai($data) {
     global $conn;
-    
     $id_pengajuan = mysqli_real_escape_string($conn, $data['id_pengajuan']);
     $id_user = mysqli_real_escape_string($conn, $data['id_user']);
     $create_by = mysqli_real_escape_string($conn, $data['create_by']);
-    
-    // Data nilai
+
     $kehadiran = mysqli_real_escape_string($conn, $data['kehadiran']);
     $disiplin = mysqli_real_escape_string($conn, $data['disiplin']);
     $tanggung_jawab = mysqli_real_escape_string($conn, $data['tanggung_jawab']);
@@ -761,16 +760,63 @@ function pembimbing_upload_nilai($data) {
     $kerjasama = mysqli_real_escape_string($conn, $data['kerjasama']);
     $teknologi_informasi = mysqli_real_escape_string($conn, $data['teknologi_informasi']);
     $catatan = mysqli_real_escape_string($conn, $data['catatan']);
-    $signature = mysqli_real_escape_string($conn, $data['signature']);
+    // $signature = mysqli_real_escape_string($conn, $data['signature']);
+
+    // Generate id_nilai: 10 digit id_pengajuan + 2 digit counter
+    $queryCount = "SELECT COUNT(*) as total FROM tb_nilai WHERE id_pengajuan = '$id_pengajuan'";
+    $result = mysqli_query($conn, $queryCount);
+    $dataCount = mysqli_fetch_assoc($result);
+    $counter = str_pad($dataCount['total'] + 1, 2, '0', STR_PAD_LEFT);
+    $id_nilai = $id_pengajuan . $counter;
+
+    $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
+    $query = "INSERT INTO tb_nilai (
+        id_nilai, id_pengajuan, id_user, kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi, rata_rata, catatan, create_by
+    ) VALUES (
+        '$id_nilai', '$id_pengajuan', '$id_user', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas', '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$create_by'
+    )";
+
+    if(mysqli_query($conn, $query)) {
+        return mysqli_affected_rows($conn);
+    } else {
+        return 0;
+    }
+}
+
+
+function pembimbing_update_nilai($data) {
+    global $conn;
     
-    // Hitung nilai rata-rata
+    $id_nilai = mysqli_real_escape_string($conn, $data['id_nilai']);
+    
+    $kehadiran = mysqli_real_escape_string($conn, $data['kehadiran']);
+    $disiplin = mysqli_real_escape_string($conn, $data['disiplin']);
+    $tanggung_jawab = mysqli_real_escape_string($conn, $data['tanggung_jawab']);
+    $kreativitas = mysqli_real_escape_string($conn, $data['kreativitas']);
+    $kerjasama = mysqli_real_escape_string($conn, $data['kerjasama']);
+    $teknologi_informasi = mysqli_real_escape_string($conn, $data['teknologi_informasi']);
+    $catatan = mysqli_real_escape_string($conn, $data['catatan']);
+
     $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
     
-    // Simpan data ke database
-    $query = "INSERT INTO tb_nilai (id_pengajuan, id_user, kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi, rata_rata, catatan, tanda_tangan,create_by
-    ) VALUES ('$id_pengajuan', '$id_user', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas', '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$signature','$create_by'
-    )";
+    // Update data ke database
+    $query = "UPDATE tb_nilai SET 
+                kehadiran = '$kehadiran', 
+                disiplin = '$disiplin', 
+                tanggung_jawab = '$tanggung_jawab', 
+                kreativitas = '$kreativitas', 
+                kerjasama = '$kerjasama', 
+                teknologi_informasi = '$teknologi_informasi', 
+                rata_rata = '$rata_rata', 
+                catatan = '$catatan'
+                WHERE id_nilai = '$id_nilai'";
     
+    return mysqli_query($conn, $query);
+}
+
+function update_logbook_seen($id_logbook, $id_pembimbing) {
+    global $conn;
+    $query = "UPDATE tb_logbook SET status_active = '2' WHERE id_logbook = '$id_logbook'";
     return mysqli_query($conn, $query);
 }
 
