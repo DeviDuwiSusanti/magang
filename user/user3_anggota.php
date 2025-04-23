@@ -157,7 +157,8 @@ if (ISSET($_POST['tambah_anggota'])){
                             <input type="number" class="form-control" id="nisn" name="nisn" oninput="this.value=this.value.slice(0,10)">
                         </div>
                     <?php endif; ?>
-                    
+
+                                        
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" name="tambah_anggota" class="btn btn-primary">Tambah Anggota</button>
@@ -276,6 +277,7 @@ if (isset($_GET['id_pengajuan'])): ?>
     </script>
 <?php endif; ?>
 
+
 <!-- ==========  VALIDASIIII ===============-->
 <script>
 $(document).ready(function() {
@@ -285,7 +287,8 @@ $(document).ready(function() {
 
         // Fungsi tambah pesan error
         function showError(input, message) {
-            $(input).after(<div class="error-message text-danger mt-1">${message}</div>);
+            $(input).after(`<div class="error-message text-danger mt-1">${message}</div>`);
+            $(input).addClass('is-invalid');
         }
 
         // Cari elemen input dalam form yang dikirimkan (tambah atau edit)
@@ -293,74 +296,88 @@ $(document).ready(function() {
         const id_userEdit = form.find("input[name='id_user']").val() || ""; // kosong kalau tambah anggota
 
         // Validasi Nama
-        const nama = form.find("[name='nama_user']").val().trim();
+        const namaInput = form.find("[name='nama_user']");
+        const nama = namaInput.val().trim();
         const namaRegex = /^[a-zA-Z\s]+$/;
         if (nama === "") {
             isValid = false;
-            showError(form.find("[name='nama_user']"), "Nama tidak boleh kosong!");
+            showError(namaInput, "Nama tidak boleh kosong!");
         } else if (!namaRegex.test(nama)) {
             isValid = false;
-            showError(form.find("[name='nama_user']"), "Nama hanya boleh berisi huruf!");
+            showError(namaInput, "Nama hanya boleh berisi huruf!");
         }
 
         // Validasi Email
-        const email = form.find("[name='email']").val().trim();
+        const emailInput = form.find("[name='email']");
+        const email = emailInput.val().trim();
         const originalEmail = form.find("input[name='original_email']").val(); // email awal (sebelum edit)
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
-        // Validasi Email
         if (email === "") {
             isValid = false;
-            showError(form.find("[name='email']"), "Email tidak boleh kosong!");
+            showError(emailInput, "Email tidak boleh kosong!");
         } else if (!emailRegex.test(email)) {
             isValid = false;
-            showError(form.find("[name='email']"), "Masukkan email yang valid!");
+            showError(emailInput, "Masukkan email yang valid!");
         } else if (email !== originalEmail) { // Cek ke DB hanya jika email diubah
-            $.ajax({
+            // Untuk AJAX sync, kita perlu menggunakan deferred object
+            const emailCheck = $.ajax({
                 url: 'cek.php',
                 type: 'POST',
                 data: { email: email, id_userEdit: id_userEdit },
-                async: false,
-                success: function(response) {
-                    if (response === "exists") {
-                        isValid = false;
-                        showError(form.find("[name='email']"), "Email sudah digunakan!");
-                    }
-                }
-            });
+                async: false
+            }).responseText;
+            
+            if (emailCheck === "exists") {
+                isValid = false;
+                showError(emailInput, "Email sudah digunakan!");
+            }
         }
 
         // Validasi NIK
-        const nik = form.find("[name='nik']").val().trim();
+        const nikInput = form.find("[name='nik']");
+        const nik = nikInput.val().trim();
         if (nik === "") {
             isValid = false;
-            showError(form.find("[name='nik']"), "NIK tidak boleh kosong!");
+            showError(nikInput, "NIK tidak boleh kosong!");
         } else if (nik.length !== 16 || isNaN(nik)) {
             isValid = false;
-            showError(form.find("[name='nik']"), "NIK harus 16 digit angka!");
+            showError(nikInput, "NIK harus 16 digit angka!");
         }
 
-        // Validasi NISN
-        const nisn = form.find("[name='nisn']").val().trim();
-        if (nisn === "") {
-            isValid = false;
-            showError(form.find("[name='nisn']"), "NISN tidak boleh kosong!");
-        } else if (nisn.length !== 10 || isNaN(nisn)) {
-            isValid = false;
-            showError(form.find("[name='nisn']"), "NISN harus 10 digit angka!");
-        }
+        // Validasi Pendidikan (NIM/NISN)
+        const isUniversity = <?= strlen($id_studi) == 7 ? 'true' : 'false' ?>;
 
-        // Validasi NIM
-        const nim = form.find("[name='nim']").val().trim();
-        if (nim !== "") { // NIM boleh kosong
-            if (nim.length !== 12 || isNaN(nim)) {
+        if (isUniversity) {
+            // University validation - NIM
+            const nimInput = form.find("[name='nim']");
+            const nim = nimInput.val().trim();
+            if (nim === "") {
                 isValid = false;
-                showError(form.find("[name='nim']"), "NIM harus 12 digit angka jika diisi!");
+                showError(nimInput, "NIM wajib diisi untuk universitas!");
+            } else if (nim.length !== 12 || isNaN(nim)) {
+                isValid = false;
+                showError(nimInput, "NIM harus 12 digit angka!");
+            }
+        } else {
+            // School validation - NISN
+            const nisnInput = form.find("[name='nisn']");
+            const nisn = nisnInput.val().trim();
+            if (nisn === "") {
+                isValid = false;
+                showError(nisnInput, "NISN wajib diisi untuk sekolah!");
+            } else if (nisn.length !== 10 || isNaN(nisn)) {
+                isValid = false;
+                showError(nisnInput, "NISN harus 10 digit angka!");
             }
         }
+
         // Cegah submit jika ada error
         if (!isValid) {
             e.preventDefault();
+        } else {
+            // Jika valid, hapus class error
+            form.find("input").removeClass('is-invalid');
         }
     });
 });

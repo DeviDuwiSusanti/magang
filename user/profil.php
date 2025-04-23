@@ -193,12 +193,20 @@ if (isset($_POST['update_profil'])) {
             </div>
             <div class="modal-body">
                 <form action="" class="editForm" method="POST" enctype="multipart/form-data">
+                <div class="row">
                     <!-- Nama Lengkap -->
-                    <div class="mb-3">
+                    <div class="mb-3 col-6">
                         <label for="nama" class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control" data-error-id="nama-error" id="nama" name="nama" value="<?= $dataLama['nama_user'] ?>">
                         <small class="text-danger" id="nama-error"></small>
                     </div>
+                    <!-- NIK -->
+                    <div class="mb-3 col-6">
+                        <label for="nik" class="form-label">NIK</label>
+                        <input type="text" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
+                        <small class="text-danger" id="nik-error"></small>
+                    </div>
+                </div>
 
                     <div class="row">
                         <div class="mb-3 col-6">
@@ -236,12 +244,7 @@ if (isset($_POST['update_profil'])) {
                             <small id="error-telepon" class="text-danger"></small>
                         </div>
                     </div>
-                    <!-- NIK -->
-                    <div class="mb-3">
-                        <label for="nik" class="form-label">NIK</label>
-                        <input type="text" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
-                        <small class="text-danger" id="nik-error"></small>
-                    </div>
+
 
                     <?php if(($ketua || $anggota) && $level == "3") : ?>
 
@@ -296,8 +299,10 @@ if (isset($_POST['update_profil'])) {
                         </select>
                         <small id="error-fakultas" class="text-danger"></small>
                     </div>
-                    
-                    <div class="mb-3">
+
+                <div class="row">
+                    <!-- Jurusan -->
+                    <div class="mb-3 col-6">
                         <label for="jurusan" class="form-label">Jurusan</label>
                         <select class="form-control" id="jurusan" name="jurusan" data-current="<?= htmlspecialchars($dataLama['jurusan'] ?? '') ?>" data-current-id="<?= htmlspecialchars($dataLama['id_pendidikan'] ?? '') ?>">
                             <?php if (!empty($dataLama['jurusan'])): ?>
@@ -307,21 +312,20 @@ if (isset($_POST['update_profil'])) {
                         <small id="error-jurusan" class="text-danger"></small>
                     </div>
 
-                    <div class="d-flex gap-4">
                         <!-- Input NISN (akan ditampilkan jika bukan universitas) -->
-                        <div class="mb-3" id="nisnContainer" style="flex: 1; <?php echo (isset($dataLama['id_pendidikan']) && strlen($dataLama['id_pendidikan']) === 7 ? 'display:none;' : ''); ?>">
+                        <div class="mb-3 col-6" id="nisnContainer" style="flex: 1; <?php echo (isset($dataLama['id_pendidikan']) && strlen($dataLama['id_pendidikan']) === 7 ? 'display:none;' : ''); ?>">
                             <label for="nisn" class="form-label">NISN</label>
                             <input type="text" class="form-control" id="nisn" name="nisn" value="<?= $row['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
                             <small id="error-nisn" class="text-danger"></small>
                         </div>
                         
                         <!-- Input NIM (akan ditampilkan jika universitas) -->
-                        <div class="mb-3" id="nimContainer" style="flex: 1; <?= (strlen($dataLama['id_pendidikan'] ?? '') === 7 ? '' : 'display:none;') ?>">
+                        <div class="mb-3 col-6" id="nimContainer" style="flex: 1; <?= (strlen($dataLama['id_pendidikan'] ?? '') === 7 ? '' : 'display:none;') ?>">
                             <label for="nim" class="form-label">NIM</label>
                             <input type="text" class="form-control" id="nim" name="nim" value="<?= !empty($row['nim']) ? $row['nim'] : '' ?>" oninput="this.value=this.value.slice(0,12)">
                             <small id="error-nim" class="text-danger"></small>
                         </div>
-                    </div>
+                </div>
                     <?php endif; ?>
 
                     <div class="d-flex gap-4">
