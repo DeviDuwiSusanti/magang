@@ -334,7 +334,7 @@ $no = 1;
         $('.viewNilai').click(function() {
             const idNilai = $(this).data('id_nilai');
             $.ajax({
-                url: 'ajax_view_nilai.php',
+                url: 'ajax2_view_nilai.php',
                 type: 'GET',
                 data: {id_nilai: idNilai},
                 success: function(response) {

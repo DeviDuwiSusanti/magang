@@ -1021,3 +1021,21 @@ function tambah_instansi_super_admin($POST) {
     }
     
 
+
+    // ================================= APPROVE PENILAIAN =================================
+    function approve_nilai($id_nilai, $tanda_tangan_admin, $id_admin) {
+        global $conn;
+        $id_nilai = mysqli_real_escape_string($conn, $id_nilai);
+        $tanda_tangan_admin = mysqli_real_escape_string($conn, $tanda_tangan_admin);
+        $id_admin = mysqli_real_escape_string($conn, $id_admin);
+    
+        $query = "UPDATE tb_nilai SET 
+                    tanda_tangan_admin = '$tanda_tangan_admin',
+                    id_admin_approve = '$id_admin',
+                    tanggal_approve = NOW(),
+                    status_approve = '1'
+                    WHERE id_nilai = '$id_nilai'";
+    
+        return mysqli_query($conn, $query);
+    }
+    
