@@ -224,7 +224,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 }
                 ?>
-             
+            
                 <?php if ($status_pengajuan == 5): ?>
                     <li class="sidebar-item">
                         <a href="user3_laporanAkhir.php" class="sidebar-link">
