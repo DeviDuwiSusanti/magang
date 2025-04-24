@@ -82,8 +82,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/sign_in.css">
     <link rel="icon" href="./assets/img/logo_kab_sidoarjo.png" type="image/png">
     <style>
+    .side-image {
+        position: relative;
+    }
 
-    </style>
+    .source-text-top {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #000; /* warna hitam agar kontras */
+    }
+
+    .source-text-top a {
+        color: #0d6efd;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .source-text-top a:hover {
+        text-decoration: underline;
+    }
+</style>
     <title>Login</title>
 </head>
 
@@ -91,12 +113,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     <div class="wrapper">
         <div class="container main">
             <div class="row">
-                <div class="col-md-6 side-image">
-                    <div class="text">
-                        <p>Welcome <i>- Sidoarjo Internship</i></p>
-                    </div>
+            <div class="col-md-6 side-image" style="position: relative;">
+                <!-- Posisi kiri bawah dan teks lebih tebal -->
+                <p class="text-muted source-text" style="font-size: 12px; position: absolute; bottom: 10px; left: 10px; margin: 0; font-weight: 500;">
+                    Source foto: 
+                    <a href="https://id.pinterest.com/pin/637540891031509847/" target="_blank" style="font-weight: 600;">Pinterest</a>
+                </p>
+
+                <div class="text">
+                    <p>Welcome <i>- Sidoarjo Internship</i></p>
                 </div>
-                <div class="col-md-6 right">
+            </div>
+                     <div class="col-md-6 right">
                     <div class="input-box">
                         <header>Log In</header>
                         <form action="" method="POST">
