@@ -181,11 +181,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
                                                     <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
                                                         <option value="" disabled selected> -- Pilih Pengajuan --</option>
-                                                        <option value="1">Magang</option>
-                                                        <option value="2">Praktek Kerja Lapangan</option>
-                                                        <option value="3">Penelitian</option>
+                                                        <option value="Magang">Magang</option>
+                                                        <option value="Praktek Kerja Lapangan">Praktek Kerja Lapangan</option>
+                                                        <option value="Penelitian">Penelitian</option>
                                                     </select>
                                                 </div>
+                                                <div class="mb-3" style="flex: 1;">
+                                                    <div class="mb-3" id="jenisMagangContainer">
+                                                        <label for="jenis_magang" class="form-label">Jenis Magang</label>
+                                                        <input type="text" class="form-control" id="jenis_magang" name="jenis_magang">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex gap-4">
                                                 <div class="mb-3" style="flex: 1;">
                                                     <label for="kelompok_pribadi" class="form-label">Personil</label>
                                                     <select class="form-control" id="kelompok_pribadi" name="kelompok_pribadi">
@@ -193,15 +202,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                         <option value="Kelompok">Kelompok</option>
                                                         <option value="Pribadi">Pribadi</option>
                                                     </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="d-flex gap-4">
-                                                <div class="mb-3" style="flex: 1;">
-                                                    <div class="mb-3" id="jenisMagangContainer">
-                                                        <label for="jenis_magang" class="form-label">Jenis Magang</label>
-                                                        <input type="text" class="form-control" id="jenis_magang" name="jenis_magang">
-                                                    </div>
                                                 </div>
                                                 <div class="mb-3" style="flex: 1;">
                                                     <div class="mb-3">
@@ -301,7 +301,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
                                         </div>
                                         <div id="bidangDetailContent" style="display: none;">
-                                            <div class="card-header bg-primary">
+                                            <div class="card-header">
                                                 <h1 class="card-subtitle text-white" id="instansiNama" style="color: white !important;"></h1>
                                             </div><hr>
                                             <h1 class="card-subtitle mb-2 text-muted" id="bidangNama"></h1><hr>
@@ -309,7 +309,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <p class="text-start" id="bidangDeskripsi"></p><hr>
                                             <p class="text-start"><strong><i class="bi bi-list-check me-2"></i>Kriteria:</strong></p>
                                             <p class="text-start" id="bidangKriteria"></p><hr>
-                                            <p class="text-start"><strong><i class="bi bi-file-earmark-text me-2"></i>Dokumen Prasyarat:</strong></p>
+                                            <p class="text-start"><strong><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</strong></p>
                                             <p class="text-start"id="bidangDokumen"></p><hr>
                                             <p class="text-start"><strong><i class="bi bi-people-fill me-2"></i>Kuota:</strong> <span id="bidangKuota"></span></p><hr>
                                         </div>
@@ -399,19 +399,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </select>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
-                                            <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
-                                                <option value="<?= $pengajuan['jenis_pengajuan'] ?>"><?= ucfirst($pengajuan['jenis_pengajuan']) ?></option>
-                                                <option value="1">Magang</option>
-                                                <option value="2">Praktek Kerja Lapangan</option>
-                                                <option value="3">Penelitian</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3" id="jenisMagangContainer">
-                                            <label for="jenis_magang" class="form-label">Jenis Magang</label>
-                                            <input type="number" class="form-control" id="jenis_magang" name="jenis_magang" value="<?=  $pengajuan['jenis_magang']  ?>">
+                                        <div class="d-flex gap-4">
+                                            <div class="mb-3" style="flex: 1;">
+                                                <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
+                                                <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
+                                                    <option value="<?= $pengajuan['jenis_pengajuan'] ?>"><?= ucfirst($pengajuan['jenis_pengajuan']) ?></option>
+                                                    <option value="Magang">Magang</option>
+                                                    <option value="Praktek Kerja Lapangan">Praktek Kerja Lapangan</option>
+                                                    <option value="Penelitian">Penelitian</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3" style="flex: 1;">
+                                                <div class="mb-3" id="jenisMagangContainer">
+                                                    <label for="jenis_magang" class="form-label">Jenis Magang</label>
+                                                    <input type="text" class="form-control" id="jenis_magang" name="jenis_magang" value="<?=  $pengajuan['jenis_magang']  ?>">
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="d-flex gap-4">
@@ -450,9 +453,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </div>
                                         </div>
 
-                                            <button type="submit" name="update_pengajuan" class="btn btn-success">
-                                                <i class="bi bi-save me-1"></i> Update
-                                            </button>
+                                            <button type="submit" name="update_pengajuan" class="btn btn-success"><i class="bi bi-save me-1"></i> Update</button>
                                             
                                             <input type="hidden" name="alasan_hapus" id="alasanHapus">
                                             <input type="hidden" name="hapus_pengajuan"> 
@@ -472,7 +473,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
                                     </div>
                                     <div id="bidangDetailContent" style="display: none;">
-                                        <div class="card-header bg-primary">
+                                        <div class="card-header outline-primary">
                                                 <h1 class="card-subtitle text-white" id="instansiNama" style="color: white !important;"><?= $pengajuan['nama_panjang'] ?></h1>
                                             </div><hr>
                                         <h1 class="card-subtitle mb-4 text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h1>
@@ -681,6 +682,7 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const jenisPengajuan = document.getElementById("jenis_pengajuan");
+    const jenisMagangInput = document.getElementById("jenis_magang");
     const jenisMagangContainer = document.getElementById("jenisMagangContainer");
     const kelompokPribadi = document.getElementById("kelompok_pribadi");
     const jumlahAnggotaInput = document.getElementById("jumlah_anggota");
@@ -693,17 +695,32 @@ document.addEventListener("DOMContentLoaded", function() {
     const bidang = document.getElementById("bidang");
     let maxKuota = 0;
 
-    if (jumlahAnggotaContainer) jumlahAnggotaContainer.style.display = "none";
+    // Inisialisasi: tampilkan tapi disabled
+    if (jenisMagangInput) {
+        jenisMagangInput.disabled = true;
+        jenisMagangContainer.style.display = "block"; // Selalu tampilkan
+    }
+    
+    if (jumlahAnggotaInput) {
+        jumlahAnggotaInput.disabled = true;
+        jumlahAnggotaContainer.style.display = "block"; // Selalu tampilkan
+    }
+
     if (step2) step2.style.display = "none";
 
     if (kelompokPribadi) {
         kelompokPribadi.addEventListener("change", function() {
             if (this.value === "Kelompok") {
-                if (jumlahAnggotaContainer) jumlahAnggotaContainer.style.display = "block";
+                if (jumlahAnggotaInput) {
+                    jumlahAnggotaInput.disabled = false; // Enable jika kelompok
+                }
                 if (nextButton) nextButton.style.display = "inline-block";
                 if (submitButton) submitButton.style.display = "none";
             } else {
-                if (jumlahAnggotaContainer) jumlahAnggotaContainer.style.display = "none";
+                if (jumlahAnggotaInput) {
+                    jumlahAnggotaInput.disabled = true; // Disable jika bukan kelompok
+                    jumlahAnggotaInput.value = ""; // Kosongkan nilai
+                }
                 if (step2) step2.style.display = "none";
                 if (nextButton) nextButton.style.display = "none";
                 if (submitButton) submitButton.style.display = "inline-block";
@@ -711,20 +728,21 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    if (jenisPengajuan && jenisMagangContainer) {
+    if (jenisPengajuan && jenisMagangInput) {
         jenisPengajuan.addEventListener("change", function() {
-            if (this.value === "magang") {
-                jenisMagangContainer.style.display = "block";
+            if (this.value === "Magang") { // 1 adalah nilai untuk "Magang"
+                jenisMagangInput.disabled = false; // Enable jika magang
             } else {
-                jenisMagangContainer.style.display = "none";
-                // Reset nilai jenis magang jika bukan magang
-                document.getElementById("jenis_magang").value = "";
+                jenisMagangInput.disabled = true; // Disable jika bukan magang
+                jenisMagangInput.value = ""; // Kosongkan nilai
             }
         });
         
         // Jalankan sekali saat load untuk set initial state
-        if (jenisPengajuan.value === "" || jenisPengajuan.value !== "magang") {
-            jenisMagangContainer.style.display = "none";
+        if (jenisPengajuan.value === "" || jenisPengajuan.value !== "Magang") {
+            jenisMagangInput.disabled = true;
+        } else {
+            jenisMagangInput.disabled = false;
         }
     }
 
@@ -800,20 +818,15 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        // Di dalam fungsi validateStep1(), ubah bagian validasi jenis magang menjadi:
-        if ((formId === "pengajuanForm" || formId === "editPengajuanForm") && 
-            jenisPengajuan && 
-            jenisPengajuan.value === "magang" && 
-            document.getElementById("jenis_magang")) {
-            
-            const jenisMagang = document.getElementById("jenis_magang");
-            if (!jenisMagang.value.trim()) {
-                showError(jenisMagang, "Jenis magang harus diisi!");
-                isValid = false;
-            } else {
-                clearError(jenisMagang);
-            }
+        if (jenisPengajuan && jenisPengajuan.value === "1") { // "1" adalah value untuk Magang
+        const jenisMagang = document.getElementById("jenis_magang");
+        if (jenisMagang && !jenisMagang.disabled && !jenisMagang.value.trim()) {
+            showError(jenisMagang, "Jenis magang harus diisi!");
+            isValid = false;
+        } else if (jenisMagang) {
+            clearError(jenisMagang);
         }
+    }
 
         // Validasi file upload
         const otherFields = [

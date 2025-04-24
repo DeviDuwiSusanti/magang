@@ -79,7 +79,7 @@ if ($ketua){
 
 
 // akses logbook
-$sql4 = "SELECT COUNT(*) AS jumlah_logbook FROM tb_logbook WHERE id_user = '$id_user' AND status_active = '1' AND id_pengajuan = '$id_pengajuan'";
+$sql4 = "SELECT COUNT(*) AS jumlah_logbook FROM tb_logbook WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' AND (status_active = 1 OR status_active = 2)";
 $query4 = mysqli_query($conn, $sql4);
 $total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
 
