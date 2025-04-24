@@ -14,19 +14,28 @@ if (ISSET($_GET['id_pengajuan'])){
 }
 $id_user = $_SESSION['id_user'];
 
-// Query untuk mengambil data logbook dan informasi terkait
-$sql = "SELECT * FROM tb_logbook AS l JOIN tb_pengajuan AS p ON l.id_pengajuan = p.id_pengajuan JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
-        JOIN tb_profile_user AS u ON l.id_user = u.id_user JOIN tb_pendidikan AS d ON u.id_pendidikan = d.id_pendidikan
-        WHERE l.id_pengajuan = '$id_pengajuan' AND l.id_user = '$id_user' AND l.status_active = '2'";
+// Query untuk mengecek apakah ada logbook yang belum diverifikasi (status_active = 1)
+$sql_check = "SELECT COUNT(*) as unverified_count FROM tb_logbook 
+               WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'";
+$query_check = mysqli_query($conn, $sql_check);
+$row_check = mysqli_fetch_assoc($query_check);
 
-$query = mysqli_query($conn, $sql);
-$row = mysqli_fetch_assoc($query);
-if(mysqli_num_rows($query) == 0) {
-    showAlert('Peringatan!', 'Logbook Kamu belum diverifikasi semua oleh Pembimbing.', 'warning', "user3_logbook.php");
+
+if($row_check['unverified_count'] > 0) {
+    showAlert('Peringatan!', 'Masih ada logbook yang belum diverifikasi oleh Pembimbing.', 'warning', "user3_logbook.php");
     exit();
 }
 
+// Query untuk mengambil data logbook dan informasi terkait
+$sql = "SELECT p.*, i.*, b.*, u.*, d.* FROM tb_pengajuan AS p JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi 
+        JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang JOIN tb_profile_user AS u ON p.id_user = u.id_user JOIN tb_pendidikan AS d ON u.id_pendidikan = d.id_pendidikan
+        WHERE p.id_pengajuan = '$id_pengajuan' AND p.id_user = '$id_user'";
+
+$query = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($query);
+
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -127,6 +136,21 @@ if(mysqli_num_rows($query) == 0) {
     </style>
 </head>
 
+<!-- Di bagian paling bawah sebelum </body> -->
+<script>
+// Jalankan print otomatis saat halaman selesai dimuat
+window.onload = function() {
+    // Jika diakses langsung (bukan dari iframe), tampilkan tombol cetak
+    if (window === window.top) {
+        document.querySelector('.no-print').style.display = 'block';
+    } else {
+        // Jika diakses dari iframe, langsung print
+        setTimeout(() => {
+            window.print();
+        }, 500);
+    }
+};
+</script>
 <body>
     <div class="header">
         <h2>LOGBOOK</h2>
@@ -176,7 +200,7 @@ if(mysqli_num_rows($query) == 0) {
         </thead>
         <tbody>
             <?php
-            $sql2 = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'";
+            $sql2 = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '2'";
             $query2 = mysqli_query($conn, $sql2);
             $no = 1;
             $total_logbook = 0;
@@ -189,7 +213,7 @@ if(mysqli_num_rows($query) == 0) {
                     <td style="text-align: left;"><?= formatTanggalLengkapIndonesia($row2['tanggal_logbook']) ?></td>
                     <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
                     <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
-                    <td><?= date('H:i', strtotime($row['jam_mulai'])) ?> - <?= date('H:i', strtotime($row['jam_selesai'])) ?></td>
+                    <td><?= date('H:i', strtotime($row2['jam_mulai'])) ?> - <?= date('H:i', strtotime($row2['jam_selesai'])) ?></td>
                     <td style="text-align: left;"><img src="<?= $row2['foto_kegiatan'] ?>" alt="Gambar kegiatan"></td>
                     <td style="text-align: left;"><img src="<?= $row2['tanda_tangan'] ?>" alt="TTD"></td>
                 </tr>
