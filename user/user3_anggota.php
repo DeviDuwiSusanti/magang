@@ -53,7 +53,7 @@ if (isset($_GET['id_pengajuan']) && count($_GET) === 1 OR isset($_GET['id_userEd
                                 <th>Email</th>
                                 <th>NIK</th>
                                 <?php
-                                $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                                $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'");
                                 $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan']; ?>
                                 <th><?= strlen($id_studi) == 7 ? 'NIM' : 'NISN' ?></th>
                                 <?php if ($row3['status_pengajuan'] == '1') { ?>
@@ -144,7 +144,7 @@ if (ISSET($_POST['tambah_anggota'])){
                     </div>
                     
                     <?php
-                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'");
                     $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
                     if (strlen($id_studi) == 7) : ?>
                         <div class="mb-3">
@@ -199,7 +199,7 @@ if (ISSET($_POST['tambah_anggota'])){
 
                      
                     <?php
-                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                    $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'");
                     $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
                     if (strlen($id_studi) == 7) : ?>
                         <div class="mb-3">

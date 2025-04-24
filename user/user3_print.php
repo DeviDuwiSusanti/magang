@@ -1,4 +1,4 @@
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <?php
 session_start();
 include '../koneksi.php';
@@ -9,6 +9,8 @@ date_default_timezone_set('Asia/Jakarta');
 
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
+}else{
+    $id_pengajuan = $_SESSION['id_pengajuan'];
 }
 $id_user = $_SESSION['id_user'];
 
@@ -19,6 +21,10 @@ $sql = "SELECT * FROM tb_logbook AS l JOIN tb_pengajuan AS p ON l.id_pengajuan =
 
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
+if(mysqli_num_rows($query) == 0) {
+    showAlert('Peringatan!', 'Logbook Kamu belum diverifikasi semua oleh Pembimbing.', 'warning', "user3_logbook.php");
+    exit();
+}
 
 ?>
 <!DOCTYPE html>
