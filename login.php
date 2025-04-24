@@ -146,6 +146,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         <div class="container main">
             <div class="row">
                 <div class="col-md-6 side-image">
+                <p class="text-muted source-text" style="font-size: 12px; position: absolute; bottom: 10px; left: 10px; margin: 0; font-weight: 500;">
+                Source foto: <a href="https://id.pinterest.com/pin/637540891031509847/" target="_blank" style="font-weight: 600;">Pinterest</a></p>
                     <div class="text">
                         <p>Welcome <i>- Sidoarjo Internship</i></p>
                     </div>
