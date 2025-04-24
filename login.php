@@ -82,30 +82,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/sign_in.css">
     <link rel="icon" href="./assets/img/logo_kab_sidoarjo.png" type="image/png">
     <style>
-    .side-image {
-        position: relative;
-    }
 
-    .source-text-top {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        margin: 0;
-        font-size: 13px;
-        font-weight: 600;
-        color: #000; /* warna hitam agar kontras */
-    }
-
-    .source-text-top a {
-        color: #0d6efd;
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    .source-text-top a:hover {
-        text-decoration: underline;
-    }
-</style>
+    </style>
     <title>Login</title>
 </head>
 
@@ -127,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                      <div class="col-md-6 right">
                     <div class="input-box">
                         <header>Log In</header>
-                        <form action="" method="POST">
+                        <form action="" method="POST" id="login-form">
                             <div class="input-field">
                                 <input type="email" class="input" name="email" required>
                                 <label for="email">Email</label>
@@ -142,6 +120,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             </div>
         </div>
     </div>
+    <div class="loader hidden">
+        <div class="spinner"></div>
+        <p>Mohon tunggu sebentar...</p>
+    </div>
+
 </body>
 
 </html>
+
+<script>
+    // Saat halaman selesai dimuat
+    // window.addEventListener('load', () => {
+    //     const loader = document.querySelector('.loader');
+    //     if (loader) {
+    //         loader.classList.add("hidden");
+
+    //         loader.addEventListener('transitionend', () => {
+    //             loader.remove(); // Hilangkan loader dari DOM setelah animasi selesai
+    //         });
+    //     }
+    // });
+
+    // Saat form dikirim
+    document.getElementById('login-form')?.addEventListener('submit', function() {
+        let loader = document.querySelector('.loader');
+
+        // Kalau loader sudah dihapus, buat ulang dari awal
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.className = 'loader';
+            loader.innerHTML = `
+            <div class="spinner"></div>
+            <p>Mohon tunggu sebentar...</p>
+        `;
+            document.body.appendChild(loader);
+        } else {
+            loader.classList.remove("hidden");
+        }
+    });
+</script>

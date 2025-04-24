@@ -53,9 +53,8 @@ if (isset($_POST["id_instansi"])) {
 if (isset($_POST["id_bidang"])) {
     $id_bidang = mysqli_real_escape_string($conn, $_POST["id_bidang"]);
 
-    $sql = "SELECT nama_bidang, deskripsi_bidang, kriteria_bidang, dokumen_prasyarat, kuota_bidang 
-            FROM tb_bidang 
-            WHERE id_bidang = '$id_bidang'";
+    $sql = "SELECT * FROM tb_bidang b, tb_instansi i WHERE b.id_instansi = i.id_instansi
+            AND id_bidang = '$id_bidang'";
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {

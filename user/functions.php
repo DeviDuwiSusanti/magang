@@ -296,7 +296,7 @@ function generateLogbookId($conn, $id_pengajuan) {
 
 function getLogbook($conn, $id_pengajuan, $id_user) {
     // Query untuk mengambil logbook
-    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1' OR status_active = '2'";
+    $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND (status_active = '1' OR status_active = '2')";
     $query = mysqli_query($conn, $sql);
 
     // Periksa apakah query berhasil
@@ -548,8 +548,9 @@ function updatePengajuan($POST, $FILES, $id_user){
 function hapusPengajuan($POST, $id_user){
     global $conn;
     $id_pengajuan = $POST['id_pengajuan'];
+    $alasan_hapus = $_POST['alasan_penghapusan'];
 
-    $sql_hapusPengajuan = "UPDATE tb_pengajuan SET status_active = '0', change_by = '$id_user' WHERE id_pengajuan = '$id_pengajuan'";
+    $sql_hapusPengajuan = "UPDATE tb_pengajuan SET status_active = '0', alasan_penghapusan = '$alasan_hapus', change_by = '$id_user' WHERE id_pengajuan = '$id_pengajuan'";
     if (mysqli_query($conn, $sql_hapusPengajuan)){
         $sql2_hapusPengajuan = "UPDATE tb_profile_user SET id_pengajuan = NULL, change_by = '$id_user' WHERE id_user = '$id_user'";
         $result = mysqli_query($conn, $sql2_hapusPengajuan);

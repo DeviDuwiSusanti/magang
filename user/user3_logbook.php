@@ -115,21 +115,21 @@ if (isset($_GET['id_logbook_hapus'])) {
         <div class="table-responsive-sm" >     
             <div class="bungkus-2">
                 <table id="myTable" class="table table-striped table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Tanggal</th>
-                            <th>Kegiatan</th>
-                            <th>Keterangan</th>
-                            <th>Waktu</th>
-                            <th>Foto Kegiatan</th>
-                            <th>TTD</th>
-                            <?php 
-                            if ($status_pengajuan != '5' && $id_user_anggota == $id_user){?> 
-                                <th>Aksi</th> 
-                            <?php } ?>
-                        </tr>
-                    </thead>
+                <thead>
+                    <tr>
+                        <th class="text-center">No</th>
+                        <th class="text-center">Tanggal</th>
+                        <th class="text-center">Kegiatan</th>
+                        <th class="text-center">Keterangan</th>
+                        <th class="text-center">Waktu</th>
+                        <th class="text-center">Foto Kegiatan</th>
+                        <th class="text-center">TTD</th>
+                        <th class="text-center">Status</th>
+                        <?php if ($status_pengajuan != '5' && $id_user_anggota == $id_user) { ?> 
+                            <th class="text-center">Aksi</th> 
+                        <?php } ?>
+                    </tr>
+                </thead>
                     <tbody>
                         <?php
                         $logbook = getLogbook($conn, $id_pengajuan, $id_user_anggota); 
@@ -140,21 +140,40 @@ if (isset($_GET['id_logbook_hapus'])) {
                                 <td><?= $row['kegiatan_logbook'] ?></td>
                                 <td><?= $row['keterangan_logbook'] ?></td>
                                 <td><?= date('H:i', strtotime($row['jam_mulai'])) ?> - <?= date('H:i', strtotime($row['jam_selesai'])) ?></td>
-                                <td><img src="<?= $row['foto_kegiatan'] ?>" alt="" style="width: 150px; height: 100px;"></td>
-                                <td><img src="<?= $row['tanda_tangan'] ?>" alt="TTD" style="width: 150px; height: 100px;"></td>
-                                <?php
-                                if ($status_pengajuan != '5' && $id_user_anggota == $id_user){?> 
-                                <td>
-                                    <a href="?id_logbook_edit=<?= $row['id_logbook'] ?>" class="btn btn-warning btn-sm">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </a>
+                                <td  class="text-center"><img src="<?= $row['foto_kegiatan'] ?>" alt="" style="width: 150px; height: 100px;"></td>
+                                <td  class="text-center"><img src="<?= $row['tanda_tangan'] ?>" alt="TTD" style="width: 150px; height: 100px;"></td>
+                                <td  class="text-center">
+                                    <?php if($row['status_active'] == 2): ?>
+                                        <span class="text-success" data-bs-toggle="tooltip" title="Sudah Diverifikasi Pembimbing">
+                                            <i class="bi bi-check-circle-fill fs-4"></i>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-warning" data-bs-toggle="tooltip" title="Belum Diverifikasi Pembimbing">
+                                            <i class="bi bi-hourglass-split fs-4"></i>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                                <?php if ($id_user_anggota == $id_user) { ?> 
+                                <td class="text-center">
+                                    <?php if ($row['status_active'] != 2): ?>
+                                        <a href="?id_logbook_edit=<?= $row['id_logbook'] ?>" class="btn btn-warning btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
 
-                                    <a href="javascript:void(0);" 
-                                    onclick="confirmDelete('?id_logbook_hapus=<?= $row['id_logbook'] ?>', 'Logbook <?= $row['kegiatan_logbook'] ?>')" 
-                                    class="btn btn-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Hapus
-                                    </a>
-
+                                        <a href="javascript:void(0);" 
+                                        onclick="confirmDelete('?id_logbook_hapus=<?= $row['id_logbook'] ?>', 'Logbook <?= $row['kegiatan_logbook'] ?>')" 
+                                        class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <button class="btn btn-warning btn-sm" disabled>
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        
+                                        <button class="btn btn-danger btn-sm" disabled>
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php

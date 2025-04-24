@@ -176,6 +176,18 @@ if (isset($_SESSION['email'])) {
                             <span>Daftar Pemagang</span>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="super1_pendidikan.php" class="sidebar-link text-decoration-none">
+                            <i class="bi bi-mortarboard"></i>
+                            <span>Pendidikan</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="admin2_tanda_tangan.php" class="sidebar-link">
+                            <i class="bi bi-check-circle"></i>
+                            <span>Tanda Tangan</span>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
 
