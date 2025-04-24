@@ -49,6 +49,9 @@ if (isset($_GET["id_bidang_ini"])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
+    echo '<pre>';
+    print_r($_POST);
+    echo '</pre>';
     if (edit_bidang($_POST) > 0) {
         echo "
             <script>
@@ -131,7 +134,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateTambahBidang()">
+                <form action="" method="POST" id="tambahBidangForm" enctype="multipart/form-data" onsubmit="return validateTambahBidang()">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_instansi" id="id_instansi" value="<?= $id_instansi ?>">
                     <div class="row">
@@ -185,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditBidang()">
+                <form action="" method="POST" id="editBidangForm" enctype="multipart/form-data" onsubmit="return validateEditBidang()">
                     <input type="hidden" name="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_bidang" id="edit_id_bidang">
                     <div class="row">
@@ -221,12 +224,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" name="edit_bidang" class="btn btn-primary">Simpan Perubahan</button>
+                        <button type="submit" id="edit_bidang" name="edit_bidang" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+</div>
+
+<div class="loader hidden">
+    <div class="spinner"></div>
+    <p>Mohon tunggu sebentar...</p>
 </div>
 
 <?php include "../layout/footerDashboard.php" ?>
@@ -324,5 +332,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         tooltipTriggerList.map(function(el) {
             return new bootstrap.Tooltip(el);
         });
+    });
+
+    const form = document.getElementById('tambahBidangForm');
+
+    if (form) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Hindari submit langsung
+
+            let loader = document.querySelector('.loader');
+
+            if (!loader) {
+                loader = document.createElement('div');
+                loader.className = 'loader';
+                loader.innerHTML = `
+                <div class="spinner"></div>
+                <p>Mohon tunggu sebentar...</p>
+            `;
+                document.body.appendChild(loader);
+            } else {
+                loader.classList.remove("hidden");
+            }
+
+            // ⏱️ Delay 2 detik sebelum submit
+            setTimeout(function() {
+                form.submit();
+            }, 2000);
+        });
+    }
+
+    document.getElementById('editBidangForm')?.addEventListener('submit', function(e) {
+        e.preventDefault(); // Cegah submit langsung
+        let loader = document.querySelector('.loader');
+
+        // Kalau loader belum ada, buat
+        if (!loader) {
+            loader = document.createElement('div');
+            loader.className = 'loader';
+            loader.innerHTML = `
+            <div class="spinner"></div>
+            <p>Mohon tunggu sebentar...</p>
+        `;
+            document.body.appendChild(loader);
+        } else {
+            loader.classList.remove("hidden");
+        }
+
+        console.log("Submit jalan");
+
+        setTimeout(function() {
+            console.log("Form akan disubmit!");
+            document.getElementById('editBidangForm').submit();
+        }, 2000);
+
     });
 </script>

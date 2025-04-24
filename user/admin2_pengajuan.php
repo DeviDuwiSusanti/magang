@@ -7,20 +7,35 @@ $no = 1;
 
 // Query untuk data utama pengajuan
 $sql = "SELECT  
-            pu.nama_user,
-            b.nama_bidang,
-            -- tambahan email
-            u.email,
-            p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai, p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.tanggal_zoom, p.pengingat_dokumen
-        FROM tb_pengajuan AS p
-            INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
-            INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
-            INNER JOIN tb_user AS u ON p.id_user = u.id_user
-        WHERE p.id_instansi = '$id_instansi'
-            AND p.status_active = '1'
-            AND p.status_pengajuan IN ('1', '2')
-        ORDER BY p.id_pengajuan ASC
-";
+        pu.nama_user,
+        b.nama_bidang,
+        b.kuota_bidang AS kuota_bidang,
+        COALESCE(pa.jumlah_pemagang_aktif, 0) AS jumlah_pemagang_aktif,
+        u.email,
+        p.jenis_pengajuan, 
+        p.jumlah_pelamar, 
+        p.tanggal_mulai, 
+        p.tanggal_selesai, 
+        p.id_pengajuan, 
+        p.id_user, 
+        p.status_pengajuan, 
+        p.status_active, 
+        p.tanggal_zoom, 
+        p.pengingat_dokumen
+    FROM tb_pengajuan AS p
+        INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
+        INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+        INNER JOIN tb_user AS u ON p.id_user = u.id_user
+        LEFT JOIN (
+            SELECT id_bidang, COUNT(*) AS jumlah_pemagang_aktif
+            FROM tb_pengajuan
+            WHERE status_pengajuan IN (2, 4)
+            GROUP BY id_bidang
+        ) AS pa ON b.id_bidang = pa.id_bidang
+    WHERE p.id_instansi = '$id_instansi'
+        AND p.status_active = '1'
+        AND p.status_pengajuan IN ('1', '2')
+    ORDER BY p.id_pengajuan ASC";
 $result = mysqli_query($conn, $sql);
 
 // Query untuk mendapatkan daftar nama pengaju
@@ -99,6 +114,18 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                             <?php
                             $id_pengajuan = $row['id_pengajuan'];
                             $status_pengajuan = $row['status_pengajuan'];
+                            $bidang = $row['nama_bidang'];
+                            $jenis_pengajuan = $row['jenis_pengajuan'];
+
+                            // Menghitung durasi magang dari tanggal mulai dan selesai
+                            $tanggal_mulai = new DateTime($row['tanggal_mulai']);
+                            $tanggal_selesai = new DateTime($row['tanggal_selesai']);
+                            $durasi_magang = $tanggal_mulai->diff($tanggal_selesai)->m + ($tanggal_mulai->diff($tanggal_selesai)->y * 12); // durasi dalam bulan
+
+                            $kuota_bidang = $row['kuota_bidang'];
+                            $jumlah_pemagang_aktif = $row['jumlah_pemagang_aktif'];
+                            $jumlah_pelamar = $row['jumlah_pelamar'];
+
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
@@ -167,7 +194,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                     $btnClass = $bisaProses ? 'btn-success' : 'btn-secondary';
                                     $disabled = $bisaProses ? '' : 'disabled';
                                     ?>
-                                    <button
+                                    <!-- <button
                                         class="btn <?= $btnClass ?> btn-sm aksi-btn me-2"
                                         data-bs-toggle="modal"
                                         data-bs-target="#aksiModal"
@@ -176,13 +203,29 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                                         <?= $disabled ?>
                                         title="Proses Pengajuan">
                                         <i class="bi bi-ui-checks"></i>
+                                    </button> -->
+                                    <button
+                                        class="btn <?= $btnClass ?> btn-sm aksi-btn me-2"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#aksiModal"
+                                        data-id="<?= $id_pengajuan ?>"
+                                        data-status="<?= $status_pengajuan ?>"
+                                        data-bidang="<?= $bidang ?>"
+                                        data-jenis="<?= $jenis_pengajuan ?>"
+                                        data-durasi="<?= $durasi_magang ?>"
+                                        data-kuota-awal="<?= $kuota_bidang ?>"
+                                        data-pemagang-aktif="<?= $jumlah_pemagang_aktif ?>"
+                                        data-jumlah-pelamar="<?= $jumlah_pelamar ?>"
+                                        <?= $disabled ?>
+                                        title="Proses Pengajuan">
+                                        <i class="bi bi-ui-checks"></i>
                                     </button>
                                     <!-- tambah tombol kirim pengingat -->
                                     <!-- <?php if ($row['status_pengajuan'] == 2): ?>
                                         <?php
-                                        $sudahTerkirim = $row['pengingat_dokumen'] == 1;
-                                        $btnClass = $sudahTerkirim ? 'btn-secondary' : 'btn-danger';
-                                        $btnDisabled = $sudahTerkirim ? 'disabled' : '';
+                                                $sudahTerkirim = $row['pengingat_dokumen'] == 1;
+                                                $btnClass = $sudahTerkirim ? 'btn-secondary' : 'btn-danger';
+                                                $btnDisabled = $sudahTerkirim ? 'disabled' : '';
                                         ?>
                                         <button
                                             class="btn <?= $btnClass ?> btn-sm kirimPengingatBtn me-2"
@@ -227,7 +270,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
 <!-- Modal untuk Proses Pengajuan -->
 <div class="modal fade" id="aksiModal" tabindex="-1" aria-labelledby="aksiModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="formAksiPengajuan">
                 <div class="modal-header">
@@ -239,6 +282,19 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="status" id="radioTerima" value="terima">
                         <label class="form-check-label" for="radioTerima">Terima Pengajuan</label>
+                    </div>
+                    <div id="infoResumePengajuan" class="resume-container" style="display: none;">
+                        <h6 class="resume-header">
+                            <i class="bi bi-info-circle-fill"></i>
+                            Informasi Pengajuan
+                        </h6>
+                        <ul class="resume-list">
+                            <li><strong>Bidang:</strong> <span id="resumeBidang"></span></li>
+                            <li><strong>Jenis Pengajuan:</strong> <span id="resumeJenis"></span></li>
+                            <li><strong>Durasi Magang:</strong> <span id="resumeDurasi"></span></li>
+                            <li><strong>Kuota Tersisa:</strong> <span id="resumeKuotaTersisa" class="kuota-highlight"></span></li>
+                            <li><strong>Jumlah Pelamar:</strong> <span id="resumeJumlahPelamar" class="kuota-highlight"></span></li>
+                        </ul>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="status" id="radioTolak" value="tolak">
@@ -670,15 +726,36 @@ $result = mysqli_query($conn, $query);
         const radioTolak = document.getElementById("radioTolak");
         const alasanTolak = document.getElementById("alasan_tolak");
         const alasanContainer = document.getElementById("alasanTolakContainer");
+        const infoResume = document.getElementById("infoResumePengajuan");
+
+        // Variabel untuk menyimpan data yang akan digunakan di submit
+        let sisaKuota = 0;
+        let jumlahPelamar = 0;
 
         document.querySelectorAll(".aksi-btn").forEach(button => {
             button.addEventListener("click", function() {
                 const id = this.getAttribute("data-id");
                 const status = this.getAttribute("data-status");
+                const bidang = this.getAttribute("data-bidang");
+                const jenis = this.getAttribute("data-jenis");
+                const durasi = this.getAttribute("data-durasi");
+                const kuotaAwal = parseInt(this.getAttribute("data-kuota-awal"));
+                const pemagangAktif = parseInt(this.getAttribute("data-pemagang-aktif"));
+                jumlahPelamar = parseInt(this.getAttribute("data-jumlah-pelamar"));
+
+                sisaKuota = kuotaAwal - pemagangAktif;
+
+                // Isi elemen resume
+                document.getElementById("resumeBidang").textContent = bidang;
+                document.getElementById("resumeJenis").textContent = jenis;
+                document.getElementById("resumeDurasi").textContent = durasi + " bulan";
+                document.getElementById("resumeKuotaTersisa").textContent = sisaKuota + " orang";
+                document.getElementById("resumeJumlahPelamar").textContent = jumlahPelamar + " orang";
 
                 // Reset form & isi data baru
                 form.reset();
                 alasanContainer.style.display = "none";
+                infoResume.style.display = "none";
                 idInput.value = id;
 
                 // Atur status radio "terima" sesuai kondisi
@@ -686,13 +763,15 @@ $result = mysqli_query($conn, $query);
             });
         });
 
-        // Show/hide alasan penolakan
+        // Show/hide alasan penolakan dan info resume
         radioTolak.addEventListener("change", function() {
             alasanContainer.style.display = "block";
+            infoResume.style.display = "none";
         });
 
         radioTerima.addEventListener("change", function() {
             alasanContainer.style.display = "none";
+            infoResume.style.display = "block";
         });
 
         // Submit form
@@ -703,8 +782,18 @@ $result = mysqli_query($conn, $query);
             const status = form.querySelector("input[name='status']:checked")?.value;
             const alasan = alasanTolak.value.trim();
 
+            if (!status) {
+                Swal.fire("Pilihan Wajib!", "Silakan pilih menerima atau menolak pengajuan.", "warning");
+                return;
+            }
+
             if (status === "tolak" && alasan === "") {
                 Swal.fire("Alasan Wajib!", "Silakan isi alasan penolakan.", "warning");
+                return;
+            }
+
+            if (status === "terima" && jumlahPelamar > sisaKuota) {
+                Swal.fire("Kuota Tidak Cukup!", "Jumlah pelamar melebihi kuota yang tersedia.", "error");
                 return;
             }
 
@@ -718,26 +807,32 @@ $result = mysqli_query($conn, $query);
                 cancelButtonText: "Batal"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const xhr = new XMLHttpRequest();
-                    xhr.open("POST", "admin2_proses_pengajuan.php", true);
-                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                    let postData = `id_pengajuan=${encodeURIComponent(id_pengajuan)}&status=${encodeURIComponent(status)}`;
+                    const formData = new FormData();
+                    formData.append('id_pengajuan', id_pengajuan);
+                    formData.append('status', status);
                     if (status === "tolak") {
-                        postData += `&alasan_tolak=${encodeURIComponent(alasan)}`;
+                        formData.append('alasan_tolak', alasan);
                     }
 
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
+                    fetch("admin2_proses_pengajuan.php", {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok");
+                            }
+                            return response.text();
+                        })
+                        .then(data => {
                             Swal.fire("Sukses!", "Pengajuan berhasil diproses dan email terkirim.", "success").then(() => {
                                 location.reload();
                             });
-                        } else {
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
                             Swal.fire("Gagal!", "Terjadi kesalahan saat mengirim.", "error");
-                        }
-                    };
-
-                    xhr.send(postData);
+                        });
                 }
             });
         });

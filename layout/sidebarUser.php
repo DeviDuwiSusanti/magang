@@ -221,7 +221,7 @@ if (isset($_SESSION['email'])) {
                             <span>Logbook Harian</span>
                         </a>
                     </li>
-
+                    
                     <li class="sidebar-item">
                         <a href="user3_laporanAkhir.php" class="sidebar-link">
                             <i class="bi bi-file-earmark-bar-graph"></i>
@@ -323,6 +323,11 @@ if (isset($_SESSION['email'])) {
                 </div>
             </nav>
 
+            <div class="loader hidden">
+                <div class="spinner"></div>
+                <p>Mohon tunggu sebentar...</p>
+            </div>
+
             <script src="../assets/js/alert.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script src="../assets/js/script.js"></script>
@@ -399,6 +404,35 @@ if (isset($_SESSION['email'])) {
                 // Update setiap detik
                 setInterval(updateGreetingAndClock, 1000);
                 updateGreetingAndClock();
+
+                // Ambil semua link di sidebar
+                const sidebarLinks = document.querySelectorAll('sidebar-link');
+
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault(); // Cegah navigasi langsung
+
+                        let loader = document.querySelector('.loader');
+
+                        // Kalau loader sudah dihapus, buat ulang dari awal
+                        if (!loader) {
+                            loader = document.createElement('div');
+                            loader.className = 'loader';
+                            loader.innerHTML = `
+                <div class="spinner"></div>
+                <p>Mohon tunggu sebentar...</p>
+            `;
+                            document.body.appendChild(loader);
+                        } else {
+                            loader.classList.remove("hidden");
+                        }
+
+                        // Delay 2 detik sebelum navigasi ke link tujuan
+                        setTimeout(() => {
+                            window.location.href = link.href; // Navigasi ke link setelah delay
+                        }, 2000); // 2000 ms = 2 detik
+                    });
+                });
             </script>
 </body>
 
