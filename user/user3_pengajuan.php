@@ -116,8 +116,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-style: italic;
         }
         .swal2-container {
-    z-index: 99999 !important;
-}
+            z-index: 99999 !important;
+        }
+        .card-subtitle.text-muted {
+            font-size: 15px !important;
+            color: #6c757d !important; /* Warna abu-abu Bootstrap */
+        }
     </style>
 </head>
 <body>
@@ -251,6 +255,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <!-- Step 2 -->
                                         <div id="step2" style="display: none;">
                                             <h4>Step 2: Informasi Anggota</h4><br><br>
+                                            <div class="mb-4"></div> <!-- Spacer -->
+                                                <!-- Column Headers -->
+                                                <div class="row mb-2 fw-bold">
+                                                    <div class="col-md-3">Nama Lengkap</div>
+                                                    <div class="col-md-3">Email</div>
+                                                    <div class="col-md-2">NIK</div>
+                                                    <?php if (strlen($id_studi) == 7) : ?>
+                                                        <div class="col-md-2">NIM</div>
+                                                    <?php else : ?>
+                                                        <div class="col-md-2">NISN</div>
+                                                    <?php endif; ?>
+                                                </div>
                                             <div id="ketuaContainer">
                                                 <!-- Anggota 1 (Readonly, diisi otomatis dari profil user) -->
                                                 <div class="mb-3 anggota-group d-flex align-items-center">
@@ -301,17 +317,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
                                         </div>
                                         <div id="bidangDetailContent" style="display: none;">
-                                            <div class="card-header">
-                                                <h1 class="card-subtitle text-white" id="instansiNama" style="color: white !important;"></h1>
-                                            </div><hr>
-                                            <h1 class="card-subtitle mb-2 text-muted" id="bidangNama"></h1><hr>
-                                            <p class="text-start"><strong><i class="bi bi-text-paragraph me-2"></i>Deskripsi:</strong></p>
-                                            <p class="text-start" id="bidangDeskripsi"></p><hr>
-                                            <p class="text-start"><strong><i class="bi bi-list-check me-2"></i>Kriteria:</strong></p>
-                                            <p class="text-start" id="bidangKriteria"></p><hr>
-                                            <p class="text-start"><strong><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</strong></p>
-                                            <p class="text-start"id="bidangDokumen"></p><hr>
-                                            <p class="text-start"><strong><i class="bi bi-people-fill me-2"></i>Kuota:</strong> <span id="bidangKuota"></span></p><hr>
+                                            <strong><h4 class="card-subtitle" id="instansiNama"></h4></strong><hr>
+                                            <h1 class="card-subtitle text-muted" id="bidangNama"></h1><hr>
+                                            <p class="text-start"><i class="bi bi-text-paragraph me-2"></i>Deskripsi:</p>
+                                            <p class="text-start text-muted" id="bidangDeskripsi"></p><hr>
+                                            <p class="text-start"><i class="bi bi-list-check me-2"></i>Kriteria:</p>
+                                            <p class="text-start text-muted" id="bidangKriteria"></p><hr>
+                                            <p class="text-start"><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</p>
+                                            <p class="text-start text-muted"id="bidangDokumen"></p><hr>
+                                            <p class="text-start"><i class="bi bi-people-fill me-2"></i>Kuota : <span id="bidangKuota"></span></p><hr>
                                         </div>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <?php
 session_start();
 include '../koneksi.php';
@@ -19,11 +19,6 @@ $sql = "SELECT * FROM tb_logbook AS l JOIN tb_pengajuan AS p ON l.id_pengajuan =
 
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
-
-if (!$row) {
-    showAlert('Peringatan!', 'Kamu Belum Pernah Mengisi Logbook. Silakan Isi Terlebih Dahulu.', 'warning', "user3_logbook.php");
-    exit();
-}
 
 ?>
 <!DOCTYPE html>
