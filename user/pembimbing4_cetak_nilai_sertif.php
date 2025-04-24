@@ -161,7 +161,10 @@ $admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_
     <div class="signature">
       <p>Kepala Bidang</p>
       <p><?= $sertifikat["nama_panjang"] ?></p>
-      <br><br>
+      <br> <?php if($sertifikat["tanda_tangan_admin"] != "") : ?>
+        <img src="<?= $sertifikat['tanda_tangan_admin'] ?>" alt="TTD" style="width: 150px; height: 100px;">
+        <?php endif; ?>
+      <br>
       <strong><?= $admin_instansi["nama_user"] ?></strong><br>
       NIP. <?= $admin_instansi["nip"] ?>
     </div>
@@ -222,7 +225,9 @@ $admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_
     <div class="signature">
       <p>Kepala Bidang</p>
       <p><?= $sertifikat["nama_panjang"] ?></p>
-      <br><br>
+      <br><?php if($sertifikat["tanda_tangan_admin"] != "") : ?>
+        <img src="<?= $sertifikat['tanda_tangan_admin'] ?>" alt="TTD" style="width: 150px; height: 100px;">
+        <?php endif; ?><br>
       <strong><?= $admin_instansi["nama_user"] ?></strong><br>
       NIP. <?= $admin_instansi["nip"] ?>
     </div>
