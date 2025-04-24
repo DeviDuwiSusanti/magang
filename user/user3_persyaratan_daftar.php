@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['hapus_laporan'])) {
 
 
 // Query daftar dokumen persyaratan
-$stmt = $conn->prepare("SELECT * FROM tb_dokumen WHERE id_user = ? AND jenis_dokumen = '2' AND id_pengajuan = ? AND status_active = 1");
+$stmt = $conn->prepare("SELECT * FROM tb_dokumen WHERE id_user = ? AND jenis_dokumen IN (1, 2) AND id_pengajuan = ? AND status_active = 1");
 $stmt->bind_param("ss", $id_user, $id_pengajuan);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -119,6 +119,7 @@ $result = $stmt->get_result();
             </tbody>
           </table>
         </div>
+
         <!-- Tombol Unggah Baru di dalam modal -->
         <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#unggahModal">
           <i class="bi bi-upload"></i> Unggah Persyaratan Baru

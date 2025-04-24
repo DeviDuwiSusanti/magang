@@ -39,7 +39,8 @@ $sql = "SELECT d.*, p.nama_user FROM tb_dokumen d
         JOIN tb_profile_user p ON d.id_user = p.id_user
         WHERE d.jenis_dokumen = '3' 
         AND d.id_pengajuan = '$id_pengajuan' 
-        AND d.status_active = 1";
+        AND d.status_active IN (1, 2)";
+
 
 // Jika user adalah anggota, hanya bisa melihat laporannya sendiri
 if ($anggota) {
@@ -110,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
 // Tambahkan skrip hapus file
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
     // Cek jika status pengajuan = 5 (tidak boleh hapus)
-    if ($status_pengajuan == 5) {
+    if ($status_active == 2) {
         echo "<script>
             Swal.fire({
                 icon: 'error',
@@ -214,15 +215,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
                                 </td>
                                 <td class="text-center"><?= htmlspecialchars($row2['nama_user'] ?? 'Tidak diketahui') ?></td>
                                 <td class="text-center">
-                                    <?php if ($row2['id_user'] == $id_user && $status_pengajuan != 5): ?>
-                                        <form method="POST" action="" onsubmit="return konfirmasiHapus(event, this);">
-                                            <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
-                                            <input type="hidden" name="hapus_laporan" value="1">
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i> Hapus
-                                            </button>
-                                        </form>
-                                    <?php else: ?>
+                                <?php if ($row2['id_user'] == $id_user && $row2['status_active'] != 2): ?>
+                                    <form method="POST" action="" onsubmit="return konfirmasiHapus(event, this);">
+                                        <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
+                                        <input type="hidden" name="hapus_laporan" value="1">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                <?php else: ?>
                                         <button class="btn btn-secondary btn-sm" disabled>
                                             <i class="bi bi-trash"></i> Hapus
                                         </button>

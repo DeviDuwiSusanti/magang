@@ -7,18 +7,11 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user']) && isset($_GET['id_p
     $id_user = $_GET['id_user'];
     $id_pembimbing = $_GET['id_pembimbing'];
     
-    // Update semua logbook sebagai sudah dilihat
-    $query_update = "UPDATE tb_logbook SET status_active = '2' 
-                    WHERE id_pengajuan = '$id_pengajuan' 
-                    AND id_user = '$id_user'
-                    AND status_active = '1'";
-    mysqli_query($conn, $query_update);
-    
     // Ambil data logbook
     $logbooks = query("SELECT * FROM tb_logbook 
-                        WHERE id_pengajuan = '$id_pengajuan' 
-                        AND id_user = '$id_user'
-                        ORDER BY tanggal_logbook DESC");
+                      WHERE id_pengajuan = '$id_pengajuan' 
+                      AND id_user = '$id_user'
+                      ORDER BY tanggal_logbook DESC");
     
     if (!empty($logbooks)) {
         echo '
@@ -33,6 +26,7 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user']) && isset($_GET['id_p
                         <th>Jam Mulai</th>
                         <th>Jam Selesai</th>
                         <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>';
@@ -40,8 +34,8 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user']) && isset($_GET['id_p
         $no = 1;
         foreach ($logbooks as $logbook) {
             $status = $logbook['status_active'] == 2 ? 
-                        '<span class="badge bg-success">Sudah Dilihat</span>' : 
-                        '<span class="badge bg-warning">Belum Dilihat</span>';
+                        '<span class="badge bg-success">Sudah Diverifikasi</span>' : 
+                        '<span class="badge bg-warning">Belum Diverifikasi</span>';
             
             echo '
             <tr>
@@ -52,6 +46,15 @@ if (isset($_GET['id_pengajuan']) && isset($_GET['id_user']) && isset($_GET['id_p
                 <td>'.$logbook['jam_mulai'].'</td>
                 <td>'.$logbook['jam_selesai'].'</td>
                 <td>'.$status.'</td>
+                <td>';
+                
+            if ($logbook['status_active'] == 1) {
+                echo '<input type="checkbox" name="selected_logbooks[]" value="'.$logbook['id_logbook'].'">';
+            } else {
+                echo '<span class="text-muted">Terverifikasi</span>';
+            }
+                
+            echo '</td>
             </tr>';
         }
         
