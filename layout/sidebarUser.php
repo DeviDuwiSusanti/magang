@@ -225,7 +225,7 @@ if (isset($_SESSION['email'])) {
                 }
                 ?>
             
-                <?php if ($status_pengajuan == 5): ?>
+                <?php if ($level == '3' && $status_pengajuan == '5'): ?>
                     <li class="sidebar-item">
                         <a href="user3_laporanAkhir.php" class="sidebar-link">
                             <i class="bi bi-file-earmark-bar-graph"></i>
