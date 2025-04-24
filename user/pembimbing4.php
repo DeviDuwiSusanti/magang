@@ -30,6 +30,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
     <?php }
 }
 
+// Proses verifikasi logbook yang dipilih
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["verify_logbooks"])) {
+    if (isset($_POST["selected_logbooks"]) && !empty($_POST["selected_logbooks"])) {
+        $selected_logbooks = $_POST["selected_logbooks"];
+        $success = true;
+        
+        foreach ($selected_logbooks as $logbook_id) {
+            $query = "UPDATE tb_logbook SET status_active = '2' WHERE id_logbook = '$logbook_id'";
+            if (!mysqli_query($conn, $query)) {
+                $success = false;
+            }
+        }
+        
+        if ($success) { ?>
+            <script>
+                alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Logbook berhasil diverifikasi", "pembimbing4.php");
+            </script>
+        <?php } else { ?>
+            <script>
+                alert_berhasil_gagal_super_admin("error", "Gagal !!", "Terjadi kesalahan saat memverifikasi logbook", "pembimbing4.php");
+            </script>
+        <?php }
+    } else { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("warning", "Peringatan !!", "Tidak ada logbook yang dipilih", "pembimbing4.php");
+        </script>
+    <?php }
+}
+
 if (!empty($pengajuan)) {
     $pengajuan_user = $pengajuan[0]["id_pengajuan"];
     $user_id = $pengajuan[0]["id_user"];
@@ -285,12 +314,15 @@ $no = 1;
                 <h5 class="modal-title" id="logbookModalLabel">Logbook Peserta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="logbookContent">
-                <!-- Content will be loaded via AJAX -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
+            <form id="logbookForm" method="POST" action="pembimbing4.php">
+                <div class="modal-body" id="logbookContent">
+                    <!-- Content will be loaded via AJAX -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary" name="verify_logbooks">Verifikasi yang Dipilih</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

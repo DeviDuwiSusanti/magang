@@ -12,6 +12,7 @@ $user_1 = query("SELECT COUNT(*) AS total FROM tb_user WHERE status_active = 1")
 
 // =============== admin instansi ==================================
 include "update_status.php";
+include "admin2_kirim_pengingat.php";
 
 $id_instansi = $_SESSION["id_instansi"];
 

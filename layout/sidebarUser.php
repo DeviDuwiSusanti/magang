@@ -221,16 +221,18 @@ if (isset($_SESSION['email'])) {
                             <span>Logbook Harian</span>
                         </a>
                     </li>
-
+                <?php
+                }
+                ?>
+            
+                <?php if ($level == '3' && $status_pengajuan == '5'): ?>
                     <li class="sidebar-item">
                         <a href="user3_laporanAkhir.php" class="sidebar-link">
                             <i class="bi bi-file-earmark-bar-graph"></i>
                             <span>Laporan Akhir</span>
                         </a>
                     </li>
-                <?php
-                }
-                ?>
+                <?php endif; ?>
 
                 <?php if (($ketua || $anggota) && $level == '3') : ?>
                     <li class="sidebar-item">

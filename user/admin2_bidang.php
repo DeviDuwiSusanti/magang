@@ -284,21 +284,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             }
         });
 
-        $('#kriteria').summernote({
-            placeholder: 'Tulis di sini...',
-            height: 175
+        // Modal Tambah
+        $('#tambahBidangModal').on('shown.bs.modal', function() {
+            $('#kriteria, #dokumen').summernote({
+                placeholder: 'Tulis di sini...',
+                height: 175
+            });
         });
-        $('#dokumen').summernote({
-            placeholder: 'Tulis di sini...',
-            height: 175
+
+        $('#tambahBidangModal').on('hidden.bs.modal', function() {
+            $('#kriteria, #dokumen').summernote('destroy');
         });
-        $('#edit_kriteria').summernote({
-            placeholder: 'Tulis di sini...',
-            height: 175
+
+        // Modal Edit
+        $('#editBidangModal').on('shown.bs.modal', function() {
+            $('#edit_kriteria, #edit_dokumen').summernote({
+                placeholder: 'Tulis di sini...',
+                height: 175
+            });
         });
-        $('#edit_dokumen').summernote({
-            placeholder: 'Tulis di sini...',
-            height: 175
+
+        $('#editBidangModal').on('hidden.bs.modal', function() {
+            $('#edit_kriteria, #edit_dokumen').summernote('destroy');
         });
 
         // Inject tombol ke sebelah kanan search box
