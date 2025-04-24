@@ -80,9 +80,9 @@ if (isset($_GET['id_nilai'])) {
 }
 
 function get_kategori_nilai($nilai) {
-    if ($nilai >= 85) return 'Sangat Baik';
-    if ($nilai >= 70) return 'Baik';
-    if ($nilai >= 55) return 'Cukup';
+    if ($nilai >= 88) return 'Sangat Baik';
+    if ($nilai >= 74) return 'Baik';
+    if ($nilai >= 60) return 'Cukup';
     return 'Kurang';
 }
 ?>

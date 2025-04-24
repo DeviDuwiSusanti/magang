@@ -205,11 +205,24 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
             </div>
             <div class="modal-body">
                 <form action="" id="form_tambahLogbook" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="tanggal" class="form-label">Tanggal</label>
-                        <input type="date" class="form-control" id="tanggal" name="tanggal" min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
-                    </div>
+                    <div class="row mb-3 align-items-end">
+                        <!-- Kolom Tanggal -->
+                        <div class="col-md-4">
+                            <label for="tanggal" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
+                        </div>
 
+                        <!-- Kolom Jam Pelaksanaan -->
+                        <div class="col-md-8">
+                            <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
+                            <div class="d-flex gap-2">
+                                <input type="time" class="form-control" id="jam_mulai" name="jam_mulai">
+                                <span class="align-self-center">s/d</span>
+                                <input type="time" class="form-control" id="jam_selesai" name="jam_selesai">
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex gap-4">
                         <div class="mb-3" style="flex: 1;">
                             <label for="kegiatan" class="form-label">Kegiatan</label>
@@ -218,15 +231,6 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                         <div class="mb-3" style="flex: 1;">
                             <label for="keterangan" class="form-label">Keterangan</label>
                             <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
-                        <div class="d-flex gap-2">
-                            <input type="time" class="form-control" id="jam_mulai" name="jam_mulai">
-                            <span class="align-self-center">sampai</span>
-                            <input type="time" class="form-control" id="jam_selesai" name="jam_selesai">
                         </div>
                     </div>
 
