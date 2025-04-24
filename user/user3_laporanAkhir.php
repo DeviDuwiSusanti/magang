@@ -53,7 +53,7 @@ $sql_cek_laporan = "SELECT COUNT(*) as jumlah FROM tb_dokumen
                     WHERE id_user = '$id_user' 
                     AND id_pengajuan = '$id_pengajuan'
                     AND jenis_dokumen = '3'
-                    AND status_active = 1";
+                    AND status_active IN (1, 2)";
 $result_cek_laporan = mysqli_query($conn, $sql_cek_laporan);
 $data_cek = mysqli_fetch_assoc($result_cek_laporan);
 $laporan_terunggah = $data_cek['jumlah'] > 0;
@@ -108,14 +108,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     exit;
 }
 
-// Tambahkan skrip hapus file
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
-    // Cek jika status pengajuan = 5 (tidak boleh hapus)
+    $id_dokumen = $_POST['id_dokumen'];
+
+    // Ambil status dokumen berdasarkan id_dokumen
+    $query_status = "SELECT status_active FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
+    $result_status = mysqli_query($conn, $query_status);
+    $row_status = mysqli_fetch_assoc($result_status);
+    $status_active = $row_status['status_active'];
+
+    // Cek jika status dokumen = 2 (tidak boleh hapus)
     if ($status_active == 2) {
         echo "<script>
             Swal.fire({
                 icon: 'error',
-                title: 'Laporan tidak dapat dihapus karena pengajuan sudah disetujui!',
+                title: 'Laporan tidak dapat dihapus karena statusnya tidak bisa dihapus!',
             });
         </script>";
         exit;
@@ -181,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
         <div class="mb-4 dropdown-divider"></div>
 
         <div class="mb-4 text-end">
-        <?php if (!$laporan_terunggah && $status_pengajuan != 5): ?>
+        <?php if (!$laporan_terunggah && $status_pengajuan == 5): ?>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
                 <i class="bi bi-plus-circle me-1"></i>
                 Tambah Laporan Akhir
