@@ -16,9 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         inputPengajuan($_POST, $_FILES, $id_user);
     } else if (isset($_POST['update_pengajuan'])) {
     updatePengajuan($_POST, $_FILES, $id_user);
-    } else if (isset($_POST['hapus_pengajuan'])) {
-    hapusPengajuan($_POST, $id_user);
-    }
+    } 
 }
 
 ?>
@@ -313,8 +311,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <p class="text-start text-muted" id="bidangDeskripsi"></p><hr>
                                             <p class="text-start"><i class="bi bi-list-check me-2"></i>Kriteria:</p>
                                             <p class="text-start text-muted" id="bidangKriteria"></p><hr>
-                                            <!-- <p class="text-start"><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</p>
-                                            <p class="text-start text-muted"id="bidangDokumen"></p><hr> -->
+                                            <p class="text-start"><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</p>
+                                            <p class="text-start text-muted"id="bidangDokumen"></p><hr>
+                                            <div class="alert alert-info mt-2 p-2 small">
+                                                <i class="bi bi-info-circle me-1"></i> 
+                                                <strong>Catatan:</strong> Dokumen selain KTP, CV, dan Proposal dapat diunggah setelah pengajuan diterima.
+                                                </div>
+                                                <hr>
                                             <p class="text-start"><i class="bi bi-people-fill me-2"></i>Kuota : <span id="bidangKuota"></span></p><hr>
                                         </div>
                                     </div>
@@ -452,11 +455,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </div>
                                         </div>
 
-                                            <button type="submit" name="update_pengajuan" class="btn btn-success"><i class="bi bi-save me-1"></i> Update</button>
-                                            
-                                            <input type="hidden" name="alasan_hapus" id="alasanHapus">
-                                            <input type="hidden" name="hapus_pengajuan"> 
-                                            <button type="submit" class="btn btn-danger" id="hapusPengajuan"><i class="bi bi-trash me-1"></i> Hapus</button>      
+                                        <button type="submit" name="update_pengajuan" class="btn btn-success"><i class="bi bi-save me-1"></i> Update</button>
                                     </div>
                                 </form>
                             </div>
@@ -471,19 +470,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <div id="defaultBidangMessage">
                                         <p class="text-muted text-center">Silahkan pilih bidang lowongan terlebih dahulu</p>
                                     </div>
+                                    
                                     <div id="bidangDetailContent" style="display: none;">
-                                        <div class="card-header outline-primary">
-                                                <h1 class="card-subtitle text-white" id="instansiNama" style="color: white !important;"><?= $pengajuan['nama_panjang'] ?></h1>
-                                            </div><hr>
-                                        <h1 class="card-subtitle mb-4 text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h1>
-                                        <hr>
-                                        <p class="text-start"><strong><i class="bi bi-text-paragraph me-2"></i></strong></p>
-                                        <p class="text-start"id="bidangDeskripsi"><?= $pengajuan['deskripsi_bidang'] ?></p><hr>
-                                        <p class="text-start"><strong><i class="bi bi-list-check me-2"></i>Kriteria:</strong></p>
-                                        <p class="text-start" id="bidangKriteria"><?= $pengajuan['kriteria_bidang'] ?></p><hr>
-                                        <p class="text-start"><strong><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</strong></p>
-                                        <p class="text-start" id="bidangDokumen"><?= $pengajuan['dokumen_prasyarat'] ?></p><hr>
-                                        <p class="text-start"><strong><i class="bi bi-people-fill me-2"></i>Kuota:</strong> <span id="bidangKuota"><?= $pengajuan['kuota_bidang'] ?></span></p><hr>
+                                        <strong><h4 class="card-subtitle" id="instansiNama"><?= $pengajuan['nama_panjang'] ?></h4></strong><hr>
+                                        <h1 class="card-subtitle text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h1><hr>
+                                        <p class="text-start"><i class="bi bi-text-paragraph me-2"></i>Deskripsi:</p>
+                                        <p class="text-start text-muted" id="bidangDeskripsi"><?= $pengajuan['deskripsi_bidang'] ?></p><hr>
+                                        <p class="text-start"><i class="bi bi-list-check me-2"></i>Kriteria:</p>
+                                        <p class="text-start text-muted" id="bidangKriteria"><?= $pengajuan['kriteria_bidang'] ?></p><hr>
+                                        <p class="text-start"><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</p>
+                                        <p class="text-start text-muted"id="bidangDokumen"><?= $pengajuan['dokumen_prasyarat'] ?></p><hr>
+                                        <div class="alert alert-info mt-2 p-2 small">
+                                            <i class="bi bi-info-circle me-1"></i> 
+                                            <strong>Catatan:</strong> Dokumen selain KTP, CV, dan Proposal dapat diunggah setelah pengajuan diterima.
+                                        </div><hr>
+                                        <p class="text-start"><i class="bi bi-people-fill me-2"></i>Kuota : <span id="bidangKuota"><?= $pengajuan['kuota_bidang'] ?></span></p><hr>       
                                     </div>
                                 </div>
                             </div>
@@ -499,59 +500,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 </body>
 </html>
-
-<!-- hapus pengajuan -->
-<script>
-document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
-    event.preventDefault(); // Mencegah form langsung terkirim
-
-    // Langkah 1: Minta input alasan penghapusan
-    Swal.fire({
-        title: 'Alasan Penghapusan',
-        input: 'textarea',
-        inputLabel: 'Silakan berikan alasan penghapusan pengajuan',
-        inputPlaceholder: 'Masukkan alasan Anda di sini...',
-        inputAttributes: {
-            'aria-label': 'Masukkan alasan penghapusan'
-        },
-        showCancelButton: true,
-        confirmButtonText: 'Lanjutkan',
-        cancelButtonText: 'Batal',
-        inputValidator: (value) => {
-            if (!value) {
-                return 'Anda harus memberikan alasan!';
-            }
-        }
-    }).then((firstResult) => {
-        if (firstResult.isConfirmed) {
-            const alasan = firstResult.value;
-            
-            // Langkah 2: Konfirmasi akhir sebelum menghapus
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                html: `Anda akan menghapus pengajuan ini dengan alasan:<br><br><strong>${alasan}</strong>`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
-            }).then((secondResult) => {
-                if (secondResult.isConfirmed) {
-                    // Set nilai alasan ke input hidden
-                    document.getElementById('alasanHapus').value = alasan;
-                    
-                    // Aktifkan input hidden untuk penghapusan
-                    document.querySelector('input[name="hapus_pengajuan"]').value = '1';
-                    
-                    // Kirim form
-                    document.getElementById('editPengajuanForm').submit();
-                }
-            });
-        }
-    });
-});
-</script>
 
 
 <!-- MENGAMBIL DETAIL BIDANG ATAU LOWONGAN  -->
@@ -572,8 +520,6 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
     initSelect2InModal('editPengajuanModal');
     initSelect2InModal('pengajuanModal');
 </script>
-
-
 
 <script>
     $(document).ready(function() {

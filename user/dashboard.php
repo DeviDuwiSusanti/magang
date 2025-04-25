@@ -78,7 +78,6 @@ if ($ketua){
     $total_histori = mysqli_fetch_array($query3)['jumlah_histori'];
 }
 
-
 // akses logbook
 $sql4 = "SELECT COUNT(*) AS jumlah_logbook FROM tb_logbook WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' AND (status_active = 1 OR status_active = 2)";
 $query4 = mysqli_query($conn, $sql4);
@@ -88,7 +87,6 @@ $total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
 $sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3' AND status_active = '1' AND id_pengajuan = '$id_pengajuan'";
 $query5 = mysqli_query($conn, $sql5);
 $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
-
 
 // ===================== pembimbing ======================
 if ($level == 4) :

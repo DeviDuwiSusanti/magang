@@ -413,8 +413,9 @@ function inputPengajuan($POST, $FILES, $id_user){
     $id_instansi = $POST['id_instansi'];
     $id_bidang = $POST['id_bidang'];
     $jenis_pengajuan = $POST['jenis_pengajuan'];
-    $jumlah_pelamar = $POST['jumlah_anggota'];
-    if ($jumlah_pelamar == NULL){
+    if (isset($_POST['jumlah_anggota'])){
+        $jumlah_pelamar = $POST['jumlah_anggota'];
+    }else{
         $jumlah_pelamar = 1;
     }
     $tanggal_mulai = $POST['tanggal_mulai']; // Contoh: 09/04/2025
@@ -569,12 +570,11 @@ function updatePengajuan($POST, $FILES, $id_user){
     }   
 }
 
-function hapusPengajuan($POST, $id_user){
+function hapusPengajuan($POST, $id_user, $id_pengajuan){
     global $conn;
-    $id_pengajuan = $POST['id_pengajuan'];
-    $alasan_hapus = $_POST['alasan_penghapusan'];
+    $alasan_hapus = $POST['alasan_hapus'];
 
-    $sql_hapusPengajuan = "UPDATE tb_pengajuan SET status_active = '0', alasan_penghapusan = '$alasan_hapus', change_by = '$id_user' WHERE id_pengajuan = '$id_pengajuan'";
+    $sql_hapusPengajuan = "UPDATE tb_pengajuan SET alasan_hapus = '$alasan_hapus', status_active = '0', change_by = '$id_user' WHERE id_pengajuan = '$id_pengajuan'";
     if (mysqli_query($conn, $sql_hapusPengajuan)){
         $sql2_hapusPengajuan = "UPDATE tb_profile_user SET id_pengajuan = NULL, change_by = '$id_user' WHERE id_user = '$id_user'";
         $result = mysqli_query($conn, $sql2_hapusPengajuan);

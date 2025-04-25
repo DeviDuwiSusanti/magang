@@ -97,6 +97,10 @@ include "functions.php";
                             <li><?= $item ?></li>
                         <?php endforeach; ?>
                     </ul>
+                    <div class="alert alert-dark mt-3 p-2 small">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Ketentuan Upload Dokumen:</strong> Saat pendaftaran pengajuan hanya perlu mengunggah KTP, CV, dan Proposal. Dokumen lainnya dapat diunggah setelah pengajuan diterima.
+                    </div>
 
                     <h3>Lokasi Instansi</h3>
                     <div class="maps-container">

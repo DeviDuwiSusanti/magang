@@ -1,27 +1,30 @@
 <div class="accordion accordion-flush" id="accordionFlushExample" data-aos="fade-down">
-  <!-- <div class="accordion-item">
+  <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingOne">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-      Apakah saya bisa mendaftar lebih dari satu lowongan?
-      </button>
-    </h2>
-    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">Setiap peserta hanya diperkenankan mendaftar satu lowongan magang saja. Kamu bisa kembali mendaftar lowongan magang lain apabila kamu dinyatakan tidak lolos pada salah satu lowongan magang sebelumnya.</div>
-    </div>
-  </div> -->
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingTwo">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
       Bagaimana cara saya mendaftarkan diri?
       </button>
     </h2>
-    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
       <div class="accordion-body">
         1. Lihat lowongan yang sesuai dengan jurusan Kamu <br>
         2. Lihat detail dan klik "Daftar"<br>
         3. Lalu Kamu akan diarahkan ke halaman "Login"<br>
         4. Jika belum punya akun, Kamu bisa register dulu, dan login jika Kamu sudah punya akun<br>
         5. Nanti Kamu akan diarahkan ke halaman "Dashboard", dan kamu bisa klik "Pengajuan" untuk membuat pengajuan magang.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+      Dokumen apa saja yang diperlukan saat mendaftar magang?
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+        Kamu hanya perlu menyiapkan dokumen KTP, CV, dan Proposal saat akan mengisi form pendaftaran magang, atau kegiatan yang lainnya. Selain dokumen tersebut, Kamu bisa mengunggahnya setelah pengajuan Kamu berstatus diterima.
       </div>
     </div>
   </div>
@@ -81,6 +84,17 @@
         Tidak perlu, untuk anggota kelompok yang lain, bisa langsung login dengan email yang sudah didaftarkan oleh perwakilan
         kelompok sewaktu melakukan pendaftaran magang untuk melakukan unggah logbook harian, cek nilai, sertifikat, dan mengunggah laporan akhir magang <br>
       </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingSeven">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+      Apakah saya bisa mendaftar lebih dari satu lowongan?
+      </button>
+    </h2>
+    <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">Setiap peserta hanya diperkenankan mendaftar satu lowongan magang saja. Kamu bisa kembali mendaftar lowongan magang lain apabila kamu dinyatakan tidak lolos pada lowongan magang sebelumnya.</div>
     </div>
   </div>
 
