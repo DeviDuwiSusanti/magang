@@ -479,7 +479,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <p class="text-start"><i class="bi bi-list-check me-2"></i>Kriteria:</p>
                                         <p class="text-start text-muted" id="bidangKriteria"><?= $pengajuan['kriteria_bidang'] ?></p><hr>
                                         <p class="text-start"><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</p>
-                                        <p class="text-start text-muted"id="bidangDokumen"><?= $pengajuan['dokumen_prasyarat'] ?></p><hr>
+                                        <p class="text-start text-muted"id="bidangDokumen"><?= $pengajuan['dokumen_persyaratan'] ?></p><hr>
                                         <div class="alert alert-info mt-2 p-2 small">
                                             <i class="bi bi-info-circle me-1"></i> 
                                             <strong>Catatan:</strong> Dokumen selain KTP, CV, dan Proposal dapat diunggah setelah pengajuan diterima.
@@ -575,7 +575,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $("#bidangNama").text(response.nama_bidang);
                         $("#bidangDeskripsi").text(response.deskripsi_bidang);
                         $("#bidangKriteria").text(response.kriteria_bidang);
-                        // $("#bidangDokumen").text(response.dokumen_prasyarat);
+                        $("#bidangDokumen").text(response.dokumen_persyaratan);
                         $("#bidangKuota").text(response.kuota_bidang);
                         $("#detailBidangContainer").show();
                     }

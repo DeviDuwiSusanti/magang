@@ -92,7 +92,7 @@ include "functions.php";
                     <h3>Persyaratan Dokumen</h3>
                     <ul class="list">
                         <?php
-                        $doc_prasyarat = isset($row['dokumen_prasyarat']) ? explode(',', $row['dokumen_prasyarat']) : [];
+                        $doc_prasyarat = isset($row['dokumen_persyaratan']) ? explode(',', $row['dokumen_persyaratan']) : [];
                         foreach ($doc_prasyarat as $item) : ?>
                             <li><?= $item ?></li>
                         <?php endforeach; ?>
