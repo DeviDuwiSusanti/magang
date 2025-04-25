@@ -448,6 +448,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 <label for="proposal" class="form-label">Unggah Proposal</label>
                                                 <input type="file" class="form-control pe-5" id="proposal" name="proposal" accept=".pdf" onchange="handleFileLabel('proposal')">
                                                 <small id="proposal-label" class="form-text text-primary" style="cursor: pointer;" onclick="previewFile('proposal')"></small>
+                                                <p class="mt-1">Dokumen saat ini: <a href="<?= ($daftar_dokumen[2]['file_path']) ?>" target="_blank">Lihat Proposal</a></p>
                                             </div>
                                         </div>
 
@@ -948,7 +949,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <div class="col"><input type="email" class="form-control anggota-email" name="anggota_email[]" placeholder="Email" onblur="checkEmail(this)"></div>
                         <div class="col"><input type="number" class="form-control" name="anggota_nik[]" placeholder="NIK" oninput="this.value=this.value.slice(0,16)"></div>
                         <?php
-                         $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan'");
+                         $studi = mysqli_query($conn, "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'");
                          $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
                          if (strlen($id_studi) == 7) : ?>
                             <div class="col"><input type="number" class="form-control" name="anggota_nim[]" placeholder="NIM" oninput="this.value=this.value.slice(0,12)"></div>

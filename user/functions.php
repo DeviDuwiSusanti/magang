@@ -427,30 +427,42 @@ function inputPengajuan($POST, $FILES, $id_user){
     // Menangani upload file KTP dan CV
     $ktp = uploadFileUser($FILES['ktp'], $id_pengajuan);
     $cv = uploadFileUser($FILES['cv'], $id_pengajuan);
+    $proposal = uploadFileUser($FILES['proposal'], $id_pengajuan);
 
     if (ISSET($POST['anggota_nama'])){
         // Mengambil data anggota dari form Step 2
         $anggota_nama = $POST['anggota_nama'];
         $anggota_email = $POST['anggota_email'];
         $anggota_nik = $POST['anggota_nik'];
-        $anggota_nisn = $POST['anggota_nisn'];
-        $anggota_nim = $POST['anggota_nim'];
+        if (isset($POST['anggota_nisn'])){
+            $anggota_nisn = $POST['anggota_nisn'];
+            $anggota_nim = NULL;
+        } else if (isset($POST['anggota_nim'])){
+            $anggota_nisn = NULL;
+            $anggota_nim = $POST['anggota_nim'];
+        }
 
         foreach ($anggota_nama as $index => $nama) {
             $email = $anggota_email[$index];
+            if ($anggota_nisn == NULL){
+                $nisn = NULL;
+                $nim = $anggota_nim[$index];
+            } else if ($anggota_nisn != NULL){
+                $nim = NULL;
+                $nisn = $anggota_nisn[$index];
+            }
+
             $nik = $anggota_nik[$index];
-            $nisn = $anggota_nisn[$index];
-            $nim = $anggota_nim[$index];
-            $id_user4 = generateIdAnggota($conn, $id_user);
+            $id_userAnggota = generateIdAnggota($conn, $id_user);
 
             $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
             $result = mysqli_query($conn, $pendidikan);
             $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
         
-            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+            $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_userAnggota', '$nama', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
             $query_anggota1 = mysqli_query($conn, $sql_anggota1);
             
-            $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
+            $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_userAnggota', '$email', '3', '$id_user')";
             $query_anggota2 = mysqli_query($conn, $sql_anggota2);
         }
     }
@@ -459,20 +471,24 @@ function inputPengajuan($POST, $FILES, $id_user){
     VALUES ('$id_pengajuan', '$id_user', '$id_instansi', '$id_bidang', '$jenis_pengajuan', '$jumlah_pelamar', '$tanggal_mulai', '$tanggal_selesai', '1', '1', '$id_user', NOW(), '', '')";
     $query2 = mysqli_query($conn, $sql2);
 
-    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', 'ktp', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+    $sql3 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_ktp', '$ktp[name]', '1', '$ktp[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
     $query3 = mysqli_query($conn, $sql3);
 
 
     if ($query2 && $query3){
+        // query cv
         $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
-        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', 'cv', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', '$cv[name]', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
         $query4 = mysqli_query($conn, $sql4);
-        if ($query4){
-            $sql5 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
-            $query5 = mysqli_query($conn, $sql5);
-        }
-    }
-    if ($query5) {?>
+        // query proposal
+        $id_dokumen_proposal = generateIdDokumen($conn, $id_pengajuan);
+        $sql5 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_proposal', '$proposal[name]', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $query5 = mysqli_query($conn, $sql5);
+        // query update id_pengajuan user
+        $sql6 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
+        $query6 = mysqli_query($conn, $sql6);
+}
+    if ($query2 && $query3 && $query4 && $query5 && $query6) {?>
         <?php
         showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "user3_statusPengajuan.php");
         exit();
@@ -508,35 +524,43 @@ function updatePengajuan($POST, $FILES, $id_user){
     $query_update1 = mysqli_query($conn, $sql_update1);
 
 
-    // akses id_dokumen ktp dan cv
-    function getDokumenIdentitas($nama_dokumen, $id_pengajuan){
-        global $conn;
-        $dokumen = "SELECT id_dokumen FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuan' AND nama_dokumen = '$nama_dokumen'";
-        $result = mysqli_fetch_assoc(mysqli_query($conn, $dokumen));
-        return $result['id_dokumen'];
-    }
+    // akses id_dokumen ktp, cv dan proposal
+    $sql_dokumen = "SELECT id_dokumen FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuan' ORDER BY id_dokumen ASC";
+    $query_dokumen = mysqli_query($conn, $sql_dokumen);
+    $dokumen = mysqli_fetch_all($query_dokumen, MYSQLI_ASSOC);
 
     // Proses update KTP
     if (!empty($FILES['ktp']['name'])) {
-        deleteOldDocument(getDokumenIdentitas('ktp', $id_pengajuan));
+        deleteOldDocument($dokumen[0]['id_dokumen']);
+        $id_dokumenKTP = $dokumen[0]['id_dokumen'];
         $ktpData = uploadFileUser($FILES['ktp'], $id_pengajuan);
         if ($ktpData) {
-            $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]', change_by = '$id_user' WHERE nama_dokumen = 'ktp' AND id_pengajuan = '$id_pengajuan'";
+            $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]', change_by = '$id_user' WHERE id_dokumen = '$id_dokumenKTP' AND id_pengajuan = '$id_pengajuan'";
             $updateKTP = mysqli_query($conn, $sql_updateKTP);
         }
     }
 
     // Proses update CV
     if (!empty($FILES['cv']['name'])) {
-        deleteOldDocument(getDokumenIdentitas('cv', $id_pengajuan));
+        deleteOldDocument($dokumen[1]['id_dokumen']);
+        $id_dokumenCV = $dokumen[1]['id_dokumen'];
         $cvData = uploadFileUser($FILES['cv'], $id_pengajuan);
         if ($cvData) {
-            $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]', change_by = '$id_user' WHERE nama_dokumen = 'cv' AND id_pengajuan = '$id_pengajuan'";
+            $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]', change_by = '$id_user' WHERE id_dokumen = '$id_dokumenCV' AND id_pengajuan = '$id_pengajuan'";
             $updateCV = mysqli_query($conn, $sql_updateCV);
         }
     } 
-    ?>
-    <?php
+    // Proses update Proposal
+    if (!empty($FILES['proposal']['name'])) {
+        deleteOldDocument($dokumen[2]['id_dokumen']);
+        $id_dokumenProposal = $dokumen[2]['id_dokumen'];
+        $proposalData = uploadFileUser($FILES['proposal'], $id_pengajuan);
+        if ($proposalData) {
+            $sql_updateProposal = "UPDATE tb_dokumen SET file_path = '$proposalData[path]', change_by = '$id_user' WHERE id_dokumen = '$id_dokumenProposal' AND id_pengajuan = '$id_pengajuan'";
+            $updateProposal = mysqli_query($conn, $sql_updateProposal);
+        }
+    } 
+
      if ($query_update1){
         showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "user3_statusPengajuan.php");
         exit();
@@ -625,14 +649,14 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
         $nisn = NULL;
     }
 
-    $id_user4  = generateIdAnggota($conn, $id_user);
+    $id_userAnggota  = generateIdAnggota($conn, $id_user);
     $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
     $result = mysqli_query($conn, $pendidikan);
     $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
 
-    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_user4', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
+    $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_userAnggota', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
     if (mysqli_query($conn, $sqlTambah)){
-        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user4', '$email', '3', '$id_user')";
+        $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_userAnggota', '$email', '3', '$id_user')";
         if (mysqli_query($conn, $sqlTambah2)){
             showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "user3_statusPengajuan.php");
             exit();
