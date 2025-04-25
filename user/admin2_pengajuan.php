@@ -657,36 +657,37 @@ $result = mysqli_query($conn, $query);
 
                 if (!Array.isArray(data) || data.length === 0) {
                     tabList.innerHTML = `
-                    <li class="nav-item">
-                        <span class="nav-link active">Tidak ada dokumen</span>
-                    </li>`;
+                <li class="nav-item">
+                    <span class="nav-link active">Tidak ada dokumen</span>
+                </li>`;
                     tabContent.innerHTML = `
-                    <div class="tab-pane fade show active p-2">
-                        Tidak tersedia dokumen untuk ditampilkan.
-                    </div>`;
+                <div class="tab-pane fade show active p-2">
+                    Tidak tersedia dokumen untuk ditampilkan.
+                </div>`;
                     return;
                 }
+
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
                 data.forEach((doc, index) => {
                     const tabId = `doc-tab-${index}`;
                     const filename = doc.path.split('/').pop();
                     const displayName = (doc.nama || `Dokumen ${index + 1}`).toUpperCase();
-                    // displayName = displayName.toUpperCase();
 
                     // Tab header
                     const tab = document.createElement('li');
                     tab.classList.add('nav-item');
                     tab.innerHTML = `
-                        <button class="nav-link ${index === 0 ? 'active' : ''}" 
-                                id="${tabId}-tab" 
-                                data-bs-toggle="tab" 
-                                data-bs-target="#${tabId}" 
-                                type="button" 
-                                role="tab" 
-                                aria-controls="${tabId}" 
-                                aria-selected="${index === 0 ? 'true' : 'false'}">
-                            ${displayName}
-                        </button>`;
+                    <button class="nav-link ${index === 0 ? 'active' : ''}" 
+                            id="${tabId}-tab" 
+                            data-bs-toggle="tab" 
+                            data-bs-target="#${tabId}" 
+                            type="button" 
+                            role="tab" 
+                            aria-controls="${tabId}" 
+                            aria-selected="${index === 0 ? 'true' : 'false'}">
+                        ${displayName}
+                    </button>`;
                     tabList.appendChild(tab);
 
                     // Tab content
@@ -698,23 +699,54 @@ $result = mysqli_query($conn, $query);
                     tabPane.setAttribute('aria-labelledby', `${tabId}-tab`);
 
                     const isPdf = doc.path.toLowerCase().endsWith('.pdf');
-                    const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(doc.path);
+                    const isImage = /\.(jpg|jpeg|png|gif|webp|bmp)$/i.test(doc.path);
 
                     if (isPdf) {
-                        tabPane.innerHTML = `<iframe src="${doc.path}" width="100%" height="500px" style="border: none;"></iframe>`;
+                        const viewerPath = isMobile ?
+                            `https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(doc.path)}` :
+                            doc.path;
+
+                        tabPane.innerHTML = `
+                        <iframe 
+                            src="${viewerPath}" 
+                            width="100%" 
+                            height="500px" 
+                            style="border: none;" 
+                            allowfullscreen
+                        ></iframe>
+                        <div class="mt-2">
+                            <a href="${doc.path}" target="_blank" download class="btn btn-sm btn-outline-secondary">
+                                Unduh PDF
+                            </a>
+                        </div>
+                    `;
                     } else if (isImage) {
-                        tabPane.innerHTML = `<img src="${doc.path}" alt="${filename}" class="img-fluid rounded shadow">`;
+                        tabPane.innerHTML = `
+                        <img 
+                            src="${doc.path}" 
+                            alt="${filename}" 
+                            class="img-fluid rounded shadow" 
+                            loading="lazy"
+                            style="max-height: 500px;"
+                        >
+                    `;
                     } else {
-                        tabPane.innerHTML = `<a href="${doc.path}" target="_blank" class="btn btn-outline-primary">
-                        Lihat atau Unduh ${filename}
-                    </a>`;
+                        tabPane.innerHTML = `
+                        <div class="alert alert-info">
+                            Dokumen ini tidak dapat ditampilkan langsung. Silakan unduh untuk melihat isinya.
+                        </div>
+                        <a href="${doc.path}" target="_blank" download class="btn btn-outline-primary">
+                            Unduh ${filename}
+                        </a>
+                    `;
                     }
+
                     tabContent.appendChild(tabPane);
                 });
-
             });
         });
     });
+
 
 
     // ========== Event handler untuk tombol proses pengajuan ==========
