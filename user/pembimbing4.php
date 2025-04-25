@@ -7,7 +7,7 @@ $daftar_anggota = [];
 $pendidikan_user = null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["upload"])) {
-    if (pembimbing_upload_nilai($_POST)) { ?>
+    if (pembimbing_input_nilai($_POST)) { ?>
         <script>
             alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Input Nilai Berhasil", "pembimbing4.php");
         </script>
@@ -115,7 +115,7 @@ $no = 1;
                         <tbody>
                             <?php foreach ($daftar_anggota as $anggota) : 
                                 // Cek apakah nilai sudah diinput
-                                $check_nilai = query("SELECT * FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user'");
+                                $check_nilai = query("SELECT * FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user' AND status_active = '1' ");
                                 $nilai_exists = !empty($check_nilai);
                                 $nilai_data = $nilai_exists ? $check_nilai[0] : null;
                                 
@@ -168,6 +168,7 @@ $no = 1;
                                                 <i class="bi bi-eye"></i>
                                             </button>
                                             
+                                            <?php if($nilai_data["tanda_tangan_admin"] == "") : ?>
                                             <button class="btn btn-warning btn-sm editNilai"
                                                 data-id_nilai="<?= $nilai_data['id_nilai'] ?>"
                                                 data-bs-toggle="modal"
@@ -175,8 +176,9 @@ $no = 1;
                                                 title="Edit Nilai">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            
-                                            <a href="pembimbing4_cetak_nilai_sertif.php?id_user_ini=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
+                                            <?php endif; ?>
+
+                                            <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
                                                 class="btn btn-sm btn-secondary" 
                                                 title="Cetak Nilai" 
                                                 target="_blank">
@@ -316,7 +318,7 @@ $no = 1;
             </div>
             <form id="logbookForm" method="POST" action="pembimbing4.php">
                 <div class="modal-body" id="logbookContent">
-                    <!-- Content will be loaded via AJAX -->
+                    <!-- Content akan diisi via AJAX -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -362,26 +364,26 @@ $no = 1;
             $('#nilai_id_user').val(idUser);
         });
 
-        // View Nilai Modal
+        // View Nilai Modal - Ganti dengan ini
         $('.viewNilai').click(function() {
             const idNilai = $(this).data('id_nilai');
             $.ajax({
-                url: 'ajax2_view_nilai.php',
+                url: 'pembimbing4_penilaian.php',
                 type: 'GET',
-                data: {id_nilai: idNilai},
+                data: {id_nilai: idNilai, action: 'view'},
                 success: function(response) {
                     $('#viewNilaiContent').html(response);
                 }
             });
         });
 
-        // Edit Nilai Modal
+        // Edit Nilai Modal - Ganti dengan ini
         $('.editNilai').click(function() {
             const idNilai = $(this).data('id_nilai');
             $.ajax({
-                url: 'ajax_edit_nilai.php',
+                url: 'pembimbing4_penilaian.php',
                 type: 'GET',
-                data: {id_nilai: idNilai},
+                data: {id_nilai: idNilai, action: 'edit'},
                 success: function(response) {
                     $('#editNilaiContent').html(response);
                     $('#edit_id_nilai').val(idNilai);
@@ -395,7 +397,7 @@ $no = 1;
             const idUser = $(this).data('id_user');
             
             $.ajax({
-                url: 'ajax_logbook.php',
+                url: 'pembimbing4_view_logbook_peserta.php',
                 type: 'GET',
                 data: {
                     id_pengajuan: idPengajuan,

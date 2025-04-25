@@ -810,8 +810,25 @@ function cetakSertifikat($conn, $id_pengajuan_cetak) {
 
 
 // =========================== pembimbing ========================
-// =========================== pembimbing ========================
-function pembimbing_upload_nilai($data) {
+function generateId_nilai($id_pengajuan) {
+    global $conn;
+    // Ambil ID nilai terbesar berdasarkan id_pengajuan
+    $query = "SELECT id_nilai FROM tb_nilai WHERE id_pengajuan = '$id_pengajuan' ORDER BY id_nilai DESC LIMIT 1";
+    $result = mysqli_query($conn, $query);
+    $lastId = mysqli_fetch_assoc($result);
+
+    if ($lastId) {
+        // Ambil 2 digit terakhir sebagai counter dan tambahkan 1
+        $lastCounter = intval(substr($lastId['id_nilai'], -2));
+        $newCounter = str_pad($lastCounter + 1, 2, '0', STR_PAD_LEFT);
+    } else {
+        $newCounter = '01';
+    }
+
+    return $id_pengajuan . $newCounter;
+}
+
+function pembimbing_input_nilai($data) {
     global $conn;
     $id_pengajuan = mysqli_real_escape_string($conn, $data['id_pengajuan']);
     $id_user = mysqli_real_escape_string($conn, $data['id_user']);
@@ -824,16 +841,10 @@ function pembimbing_upload_nilai($data) {
     $kerjasama = mysqli_real_escape_string($conn, $data['kerjasama']);
     $teknologi_informasi = mysqli_real_escape_string($conn, $data['teknologi_informasi']);
     $catatan = mysqli_real_escape_string($conn, $data['catatan']);
-    // $signature = mysqli_real_escape_string($conn, $data['signature']);
 
-    // Generate id_nilai: 10 digit id_pengajuan + 2 digit counter
-    $queryCount = "SELECT COUNT(*) as total FROM tb_nilai WHERE id_pengajuan = '$id_pengajuan'";
-    $result = mysqli_query($conn, $queryCount);
-    $dataCount = mysqli_fetch_assoc($result);
-    $counter = str_pad($dataCount['total'] + 1, 2, '0', STR_PAD_LEFT);
-    $id_nilai = $id_pengajuan . $counter;
-
+    $id_nilai = generateId_nilai($id_pengajuan);
     $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
+
     $query = "INSERT INTO tb_nilai (
         id_nilai, id_pengajuan, id_user, kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi, rata_rata, catatan, create_by
     ) VALUES (
@@ -846,6 +857,7 @@ function pembimbing_upload_nilai($data) {
         return 0;
     }
 }
+
 
 
 function pembimbing_update_nilai($data) {
