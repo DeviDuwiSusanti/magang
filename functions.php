@@ -782,7 +782,7 @@ function tambah_instansi_super_admin($POST) {
         $kuota = $POST["kuota"];
         $dokumen_prasyarat = $POST["dokumen"];
 
-        $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_prasyarat, create_by)
+        $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_persyaratan, create_by)
             VALUES ('$id_bidang','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$id_instansi', '$dokumen_prasyarat', '$id_user')";
         mysqli_query($conn, $query);
         return mysqli_affected_rows($conn);
@@ -804,7 +804,7 @@ function tambah_instansi_super_admin($POST) {
                     deskripsi_bidang = '$deskripsi',
                     kriteria_bidang = '$kriteria',
                     kuota_bidang = '$kuota',
-                    dokumen_prasyarat = '$dokumen_prasyarat',
+                    dokumen_persyaratan = '$dokumen_prasyarat',
                     change_by = '$id_user'
                     WHERE id_bidang = '$id_bidang'";
         mysqli_query($conn, $query);
