@@ -10,10 +10,7 @@ if (isset($_GET['check_verification']) && $_GET['check_verification'] == true) {
     $id_pengajuan = $_GET['id_pengajuan'];
     $id_user = $_SESSION['id_user'];
     
-    $sql = "SELECT COUNT(*) as unverified_count FROM tb_logbook 
-            WHERE id_pengajuan = '$id_pengajuan' 
-            AND id_user = '$id_user' 
-            AND status_active = '1'";
+    $sql = "SELECT COUNT(*) as unverified_count FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'";
     $query = mysqli_query($conn, $sql);
     $result = mysqli_fetch_assoc($query);
     
@@ -60,6 +57,16 @@ $status_pengajuan = mysqli_fetch_assoc($query3)['status_pengajuan'];
 // akses anggota
 $sql_anggota = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user AND u.status_active = '1'";
 $query_anggota = mysqli_query($conn, $sql_anggota);
+
+// Cek apakah user sudah unggah laporan akhir
+$sql_cek_laporan = "SELECT COUNT(*) as jumlah FROM tb_dokumen 
+                    WHERE id_user = '$id_user' 
+                    AND id_pengajuan = '$id_pengajuan'
+                    AND jenis_dokumen = '3'
+                    AND status_active IN (1, 2)";
+$result_cek_laporan = mysqli_query($conn, $sql_cek_laporan);
+$data_cek = mysqli_fetch_assoc($result_cek_laporan);
+$laporan_terunggah = $data_cek['jumlah'] > 0;
 
 // HAPUS LOGBOOK
 if (isset($_GET['id_logbook_hapus'])) {
@@ -114,8 +121,17 @@ if (isset($_GET['id_logbook_hapus'])) {
             <?php
                 $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
                 if ($id_user_anggota == $id_user){
-                    if ($status_pengajuan != '5'){?>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
+                    if (!$laporan_terunggah && $status_pengajuan == 5){ ?>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                            <i class="bi bi-plus-circle me-1"></i>
+                            Tambah Laporan Akhir
+                        </button>
+                    <?php } else if ($laporan_terunggah && $status_pengajuan == 5){?> 
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                            Lihat Laporan Akhir
+                        </button>
+                    <?php } else if ($status_pengajuan != '5'){?>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
                             <i class="bi bi-plus-circle me-1"></i>
                             Tambah Logbook
                         </button>

@@ -37,6 +37,11 @@ while ($row_check = mysqli_fetch_assoc($query)) {
     }
 }
 
+// hapus pengajuan
+if (isset($_POST['hapus_pengajuan'])) {
+    hapusPengajuan($_POST, $id_user, $id_pengajuan);
+}
+
 // Reset query
 $query = mysqli_query($conn, $sql);
 ?>
@@ -108,16 +113,23 @@ $query = mysqli_query($conn, $sql);
                                 <i class="bi bi-upload"></i></button>
                             <?php endif; ?>
                             
-                            <?php if ($status_pengajuan < 2 || $status_pengajuan > 5): ?>
-                                <a href="?id_pengajuanEdit=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-warning text-white" title="Edit Pengajuan">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                            <?php endif; ?>
-
+                            
                             <?php if ($status_pengajuan != 3 && $status_pengajuan != 5): ?>
                                 <a href="?id_pengajuan=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-info text-white" title="Lihat Anggota">
                                     <i class="bi bi-people"></i>
                                 </a>
+                                <?php endif; ?>
+
+                            <?php if ($status_pengajuan < 2 || $status_pengajuan > 5): ?>
+                                <a href="?id_pengajuanEdit=<?= $row['id_pengajuan'] ?>" class="btn btn-sm btn-warning text-white" title="Edit Pengajuan">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                
+                                <form action="" method="POST" id="FormHapus">
+                                    <input type="hidden" name="alasan_hapus" id="alasanHapus">
+                                    <input type="hidden" name="hapus_pengajuan"> 
+                                    <button type="submit" class="btn btn-sm btn-danger text-white" id="hapusPengajuan" ><i class="bi bi-trash me-1"></i></button> 
+                                </form>     
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -183,3 +195,56 @@ include "user3_anggota.php";
 include "user3_pengajuan.php";
 include "../layout/footerDashboard.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- hapus pengajuan -->
+<script>
+document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
+    event.preventDefault(); // Mencegah form langsung terkirim
+
+    // Langkah 1: Minta input alasan penghapusan
+    Swal.fire({
+        title: 'Alasan Penghapusan',
+        input: 'textarea',
+        inputLabel: 'Silakan berikan alasan penghapusan pengajuan',
+        inputPlaceholder: 'Masukkan alasan Anda di sini...',
+        inputAttributes: {
+            'aria-label': 'Masukkan alasan penghapusan'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Lanjutkan',
+        cancelButtonText: 'Batal',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Anda harus memberikan alasan!';
+            }
+        }
+    }).then((firstResult) => {
+        if (firstResult.isConfirmed) {
+            const alasan = firstResult.value;
+            
+            // Langkah 2: Konfirmasi akhir sebelum menghapus
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                html: `Anda akan menghapus pengajuan ini dengan alasan:<br><br><strong>${alasan}</strong>`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((secondResult) => {
+                if (secondResult.isConfirmed) {
+                    // Set nilai alasan ke input hidden
+                    document.getElementById('alasanHapus').value = alasan;
+                    
+                    // Aktifkan input hidden untuk penghapusan
+                    document.querySelector('input[name="hapus_pengajuan"]').value = '1';
+                    
+                    // Kirim form
+                    document.getElementById('FormHapus').submit();
+                }
+            });
+        }
+    });
+});
+</script>
