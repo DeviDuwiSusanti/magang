@@ -285,18 +285,11 @@ function validateTambahBidang() {
     isValid = false;
   }
 
-  // const kriteria = document.getElementById("kriteria").value.trim();
-  // if (kriteria === "") {
-  //   showError("kriteria", "kriteria_error", "Kriteria tidak boleh kosong.");
-  //   isValid = false;
-  // } else if (!kriteria.includes(",")) {
-  //   showError(
-  //     "kriteria",
-  //     "kriteria_error",
-  //     "Minimal harus ada satu koma untuk memisahkan kriteria."
-  //   );
-  //   isValid = false;
-  // }
+  const kriteria = document.getElementById("kriteria").value.trim();
+  if (kriteria === "") {
+    showError("kriteria", "kriteria_error", "Kriteria tidak boleh kosong.");
+    isValid = false;
+  }
 
   const kuota = document.getElementById("kuota").value.trim();
   if (kuota === "") {
@@ -313,13 +306,6 @@ function validateTambahBidang() {
       "dokumen",
       "dokumen_error",
       "Dokumen prasyarat tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!dokumen.includes(",")) {
-    showError(
-      "dokumen",
-      "dokumen_error",
-      "Minimal harus ada satu koma untuk memisahkan dokumen prasyarat."
     );
     isValid = false;
   }
@@ -356,22 +342,15 @@ function validateEditBidang() {
     isValid = false;
   }
 
-  // const kriteria = document.getElementById("edit_kriteria").value.trim();
-  // if (kriteria === "") {
-  //   showError(
-  //     "edit_kriteria",
-  //     "edit_kriteria_error",
-  //     "Kriteria tidak boleh kosong."
-  //   );
-  //   isValid = false;
-  // } else if (!kriteria.includes(",")) {
-  //   showError(
-  //     "edit_kriteria",
-  //     "edit_kriteria_error",
-  //     "Minimal harus ada satu koma untuk memisahkan kriteria."
-  //   );
-  //   isValid = false;
-  // }
+  const kriteria = document.getElementById("edit_kriteria").value.trim();
+  if (kriteria === "") {
+    showError(
+      "edit_kriteria",
+      "edit_kriteria_error",
+      "Kriteria tidak boleh kosong."
+    );
+    isValid = false;
+  }
 
   const kuota = document.getElementById("edit_kuota").value.trim();
   if (kuota === "") {
@@ -392,13 +371,6 @@ function validateEditBidang() {
       "edit_dokumen",
       "edit_dokumen_error",
       "Dokumen prasyarat tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!dokumen.includes(",")) {
-    showError(
-      "edit_dokumen",
-      "edit_dokumen_error",
-      "Minimal harus ada satu koma untuk memisahkan dokumen prasyarat."
     );
     isValid = false;
   }
