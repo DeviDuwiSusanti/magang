@@ -88,10 +88,34 @@ $no = 1;
                                 <i class="bi bi-eye"></i>
                                 </a>
 
-                                <!-- Tombol Sertifikat -->
-                                <a href="?cetak=<?= $data['id_pengajuan'] ?>" class="btn btn-primary btn-sm px-3" title="Cetak Sertifikat & Nilai">
+                              <!-- Tombol Cetak Nilai dan Sertif-->
+                                <!-- Tombol Trigger Modal -->
+                                <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#printOptions<?= $data['id_pengajuan'] ?>">
                                 <i class="bi bi-printer"></i>
-                                </a>
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="printOptions<?= $data['id_pengajuan'] ?>" tabindex="-1" aria-labelledby="printOptionsLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="printOptionsLabel">Pilihan Cetak</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <!-- Tombol Cetak Sertifikat -->
+                                        <a href="user3_cetak_sertifikat.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2">
+                                            <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
+                                        </a>
+                                        
+                                        <!-- Tombol Cetak Nilai -->
+                                        <a href="user3_cetak_nilai.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2">
+                                            <i class="bi bi-file-text me-2"></i>Cetak Nilai
+                                        </a>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
                             </div>
                         </td>
 

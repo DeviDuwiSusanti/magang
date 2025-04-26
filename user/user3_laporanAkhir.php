@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     Swal.fire({
         icon: '$icon',
         title: '$msg',
-    }).then(() => { window.location.href = 'user3_laporanAkhir.php?id_pengajuan=$id_pengajuan'; });
+    }).then(() => { window.location.href = 'user3_logbook.php?id_pengajuan=$id_pengajuan'; });
     </script>";
     exit;
 }
@@ -149,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Laporan berhasil dihapus!',
-                }).then(() => { window.location.href = 'user3_laporanAkhir.php?id_pengajuan=$id_pengajuan'; });
+                }).then(() => { window.location.href = 'user3_logbook.php?id_pengajuan=$id_pengajuan'; });
             </script>";            
             } else {
                 echo "<script>
@@ -216,9 +216,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
                         <form method="POST" class="hapus-dokumen-form">
                             <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
                             <input type="hidden" name="hapus_laporan" value="1">
-                            <button type="button" class="btn btn-danger btn-sm hapus-btn">
-                            <i class="bi bi-trash"></i>
-                            </button>
+                            <button type="button" class="btn btn-danger btn-sm hapus-btn" onclick="konfirmasiHapus(event, this.form)">
+    <i class="bi bi-trash"></i>
+</button>
+
                         </form>
                         <?php else: ?>
                         <button class="btn btn-secondary btn-sm" disabled>
