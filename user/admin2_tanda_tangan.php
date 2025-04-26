@@ -70,7 +70,8 @@ $no = 1;
                                     <td><?= $no++ ?></td>
                                     <td class="text-center">
                                         <div>
-                                            <img src="../assets/img/user/<?= $nilai["gambar_user"] ?>" alt="Foto" class="rounded-circle mb-2" style="object-fit: cover; width: 100px; height: 100px">
+                                        <?php $gambar = !empty($nilai["gambar_user"]) ? $nilai["gambar_user"] : 'avatar.png'; ?>
+                                            <img src="../assets/img/user/<?= $gambar ?>" alt="Foto" class="rounded-circle mb-2" style="object-fit: cover; width: 100px; height: 100px">
                                             <div style="font-size: 14px;"><?= $nilai["nama_user"] ?></div>
                                         </div>
                                     </td>

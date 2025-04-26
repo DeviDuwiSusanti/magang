@@ -74,16 +74,20 @@ $no = 1;
                     $query2 = mysqli_query($conn, $sql2);
                     $profile = mysqli_fetch_assoc($query2);
 
-                    // Cek apakah ada nilai untuk pengajuan ini
-                    $check_nilai = query("SELECT * FROM tb_nilai WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'");
-                    $nilai_exists = !empty($check_nilai);
+                    // Cek apakah ada nilai untuk pengajuan ini dan sudah diapprove
+                    $check_nilai = query("SELECT * FROM tb_nilai 
+                                        WHERE id_pengajuan = '$id_pengajuan' 
+                                        AND id_user = '$id_user' 
+                                        AND status_active = '1'
+                                        AND status_approve = '1'");
+                    $nilai_approved = !empty($check_nilai);
                 ?>
                     <tr>
                         <td class="text-center"><?= $no++ ?></td>
                         <td><?= htmlspecialchars($data['nama_panjang']) ?></td>
                         <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
                         <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
-                          <!-- Kolom Aksi -->
+                        <!-- Kolom Aksi -->
                         <td class="text-center">
                             <div class="d-flex gap-1 justify-content-center flex-wrap">
                                 <!-- Tombol Detail -->
@@ -92,35 +96,53 @@ $no = 1;
                                 <i class="bi bi-eye"></i>
                                 </a>
 
-                                <?php if($nilai_exists) : ?>
-                                <!-- Tombol Cetak Nilai dan Sertif-->
-                                <!-- Tombol Trigger Modal -->
-                                <button type="button" class="btn btn-primary btn-sm px-3" title="Cetak Nilai & Sertifikat" data-bs-toggle="modal" data-bs-target="#printOptions<?= $data['id_pengajuan'] ?>">
-                                <i class="bi bi-printer"></i>
-                                </button>
+                                <?php if($nilai_approved) : ?>
+                                    <!-- Tombol Cetak Nilai dan Sertifikat -->
+                                    <button type="button" class="btn btn-primary btn-sm px-3" title="Cetak Nilai & Sertifikat" data-bs-toggle="modal" data-bs-target="#printOptions<?= $data['id_pengajuan'] ?>">
+                                        <i class="bi bi-printer"></i>
+                                    </button>
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="printOptions<?= $data['id_pengajuan'] ?>" tabindex="-1" aria-labelledby="printOptionsLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="printOptionsLabel">Pilihan Cetak</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <!-- Modal Cetak -->
+                                    <div class="modal fade" id="printOptions<?= $data['id_pengajuan'] ?>" tabindex="-1" aria-labelledby="printOptionsLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="printOptionsLabel">Pilihan Cetak</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-center">
+                                                    <!-- Tombol Cetak Sertifikat -->
+                                                    <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2" target="_blank">
+                                                        <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
+                                                    </a>
+                                                    
+                                                    <!-- Tombol Cetak Nilai -->
+                                                    <a href="user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2" target="_blank">
+                                                        <i class="bi bi-file-text me-2"></i>Cetak Nilai
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="modal-body text-center">
-                                        <!-- Tombol Cetak Sertifikat -->
-                                        <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2" target="_blank">
-                                            <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
-                                        </a>
-                                        
-                                        <!-- Tombol Cetak Nilai -->
-                                        <a href="user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2" target="_blank">
-                                            <i class="bi bi-file-text me-2"></i>Cetak Nilai
-                                        </a>
-                                    </div>
-                                    </div>
-                                </div>
-                                </div>
+                                <?php else : ?>
+                                    <!-- Cek apakah nilai ada tapi belum diapprove -->
+                                    <?php 
+                                    $check_nilai_exists = query("SELECT * FROM tb_nilai 
+                                                               WHERE id_pengajuan = '$id_pengajuan' 
+                                                               AND id_user = '$id_user' 
+                                                               AND status_active = '1'");
+                                    $nilai_exists = !empty($check_nilai_exists);
+                                    ?>
+                                    
+                                    <?php if($nilai_exists) : ?>
+                                        <button class="btn btn-secondary btn-sm px-3" disabled title="Menunggu persetujuan admin">
+                                            <i class="bi bi-hourglass"></i>
+                                        </button>
+                                    <?php else : ?>
+                                        <button class="btn btn-secondary btn-sm px-3" disabled title="Belum ada nilai">
+                                            <i class="bi bi-file-earmark-excel"></i>
+                                        </button>
+                                    <?php endif; ?>
                                 <?php endif; ?>
                             </div>
                         </td>
