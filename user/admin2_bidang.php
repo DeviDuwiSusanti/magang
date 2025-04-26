@@ -1,7 +1,7 @@
 <?php include '../layout/sidebarUser.php';
 
 $id_instansi = $_SESSION['id_instansi'];
-$bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidang, b.kuota_bidang, b.kriteria_bidang, b.dokumen_prasyarat,
+$bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidang, b.kuota_bidang, b.kriteria_bidang, b.dokumen_persyaratan,
                   i.id_instansi, i.nama_panjang, 
                   pu.id_user 
             FROM tb_bidang AS b
@@ -86,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                             <th>Deskripsi</th>
                             <th>Kriteria</th>
                             <th>Kuota</th>
-                            <th>Dokumen Prasyarat</th>
+                            <th>Dokumen Persyaratan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                 <td><?= $bd["deskripsi_bidang"] ?></td>
                                 <td><?= $bd["kriteria_bidang"] ?></td>
                                 <td><?= $bd["kuota_bidang"] ?></td>
-                                <td><?= $bd["dokumen_prasyarat"] ?></td>
+                                <td><?= $bd["dokumen_persyaratan"] ?></td>
                                 <td style="width: 85px;">
                                     <button type="button" class="btn btn-warning btn-sm editBidangBtn me-2"
                                         data-bs-toggle="modal" data-bs-target="#editBidangModal"
@@ -107,7 +107,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                         data-deskripsi="<?= $bd['deskripsi_bidang'] ?>"
                                         data-kriteria="<?= $bd['kriteria_bidang'] ?>"
                                         data-kuota="<?= $bd['kuota_bidang'] ?>"
-                                        data-dokumen="<?= $bd['dokumen_prasyarat'] ?>"
+                                        data-dokumen="<?= $bd['dokumen_persyaratan'] ?>"
                                         title="Edit Data Bidang">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
@@ -157,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                             <small class="text-danger" id="kriteria_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="dokumen" class="form-label">Dokumen Prasyarat</label>
+                            <label for="dokumen" class="form-label">Dokumen Persyaratan</label>
                             <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="5" placeholder="Masukkan dokumen prasyarat"></textarea>
                             <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
                             <small class="text-danger" id="dokumen_error"></small>
@@ -211,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                             <small class="text-danger" id="edit_kriteria_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="dokumen" class="form-label fw-bold">Dokumen Prasyarat</label>
+                            <label for="dokumen" class="form-label fw-bold">Dokumen Persyaratan</label>
                             <textarea class="form-control" data-error-id="edit_dokumen_error" id="edit_dokumen" name="dokumen" rows="5"></textarea>
                             <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
                             <small class="text-danger" id="edit_dokumen_error"></small>
@@ -250,8 +250,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 document.getElementById("edit_nama_bidang").value = this.getAttribute("data-nama_bidang");
                 document.getElementById("edit_deskripsi").value = this.getAttribute("data-deskripsi");
                 document.getElementById("edit_kuota").value = this.getAttribute("data-kuota");
-                // document.getElementById("edit_kriteria").value = this.getAttribute("data-kriteria");
-                // document.getElementById("edit_dokumen").value = this.getAttribute("data-dokumen");
 
                 // Gunakan Summernote API untuk set konten
                 $('#edit_kriteria').summernote('code', this.getAttribute("data-kriteria"));
