@@ -110,7 +110,7 @@ $no = 1;
                                 <th>Pendidikan</th>
                                 <th>Jurusan</th>
                                 <th>Logbook</th>
-                                <th>Laporan Akhir</th>
+                                <!-- <th>Laporan Akhir</th> -->
                                 <th>Penilaian</th>
                             </tr>
                         </thead>
@@ -130,12 +130,11 @@ $no = 1;
                                 $unseen_count = $logbook_unseen[0]['total'];
                                 
                                 // Cek apakah sudah upload laporan (jenis_dokumen = 3)
-                                $check_laporan = query("SELECT id_dokumen, file_path FROM tb_dokumen 
+                                $check_laporan = query("SELECT id_dokumen FROM tb_dokumen 
                                                        WHERE jenis_dokumen = '3' 
                                                        AND id_user = '".$anggota['id_user']."'
                                                        AND status_active = '1'");
                                 $laporan_exists = !empty($check_laporan);
-                                $laporan_data = $laporan_exists ? $check_laporan[0] : null;
                             ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
@@ -157,19 +156,6 @@ $no = 1;
                                                 <span class="badge bg-danger"><?= $unseen_count ?></span>
                                             <?php endif; ?>
                                         </button>
-                                    </td>
-
-                                    <td>
-                                        <?php if ($laporan_exists) : ?>
-                                            <a href="../<?= $pengajuan_user ?>/<?= $laporan_data['file_path'] ?>" 
-                                               class="btn btn-success btn-sm" 
-                                               target="_blank"
-                                               title="Lihat Laporan Akhir">
-                                                <i class="bi bi-file-earmark-text"></i>
-                                            </a>
-                                        <?php else : ?>
-                                            <span class="badge bg-secondary">Belum Upload</span>
-                                        <?php endif; ?>
                                     </td>
 
                                     <td>
@@ -201,6 +187,13 @@ $no = 1;
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <?php endif; ?>
+
+                                            <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
+                                                class="btn btn-sm btn-secondary" 
+                                                title="Cetak Nilai" 
+                                                target="_blank">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -358,7 +351,7 @@ $no = 1;
             lengthMenu: [5, 10],
             columnDefs: [{
                 orderable: false,
-                targets: [3, 6, 7, 8]
+                targets: [3, 6, 7]
             }],
             language: {
                 search: "Cari : ",

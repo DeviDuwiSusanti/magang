@@ -4,12 +4,12 @@ include "../layout/sidebarUser.php";
 include "functions.php";
 
 // Initialize user ID from session
-$id_user = $_SESSION['id_user'];
+$id_user = $_SESSION['id_user'];  // <-- ADD THIS LINE HERE
 
 //Untuk cetak nilai
 if (isset($_GET['cetak'])) {
     $id_pengajuan_cetak = $_GET['cetak'];
-    // cetakSertifikat($conn, $id_pengajuan_cetak);
+    cetakSertifikat($conn, $id_pengajuan_cetak);
 }
 
 // Ambil daftar pengajuan magang berdasarkan id_user
@@ -73,10 +73,6 @@ $no = 1;
                             WHERE pu.id_user = '$id_user'";
                     $query2 = mysqli_query($conn, $sql2);
                     $profile = mysqli_fetch_assoc($query2);
-
-                    // Cek apakah ada nilai untuk pengajuan ini
-                    $check_nilai = query("SELECT * FROM tb_nilai WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'");
-                    $nilai_exists = !empty($check_nilai);
                 ?>
                     <tr>
                         <td class="text-center"><?= $no++ ?></td>
@@ -92,8 +88,7 @@ $no = 1;
                                 <i class="bi bi-eye"></i>
                                 </a>
 
-                                <?php if($nilai_exists) : ?>
-                                <!-- Tombol Cetak Nilai dan Sertif-->
+                              <!-- Tombol Cetak Nilai dan Sertif-->
                                 <!-- Tombol Trigger Modal -->
                                 <button type="button" class="btn btn-primary btn-sm px-3" title="Cetak Nilai & Sertifikat" data-bs-toggle="modal" data-bs-target="#printOptions<?= $data['id_pengajuan'] ?>">
                                 <i class="bi bi-printer"></i>
@@ -109,19 +104,18 @@ $no = 1;
                                     </div>
                                     <div class="modal-body text-center">
                                         <!-- Tombol Cetak Sertifikat -->
-                                        <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2" target="_blank">
+                                        <a href="user3_cetak_sertifikat.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2">
                                             <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
                                         </a>
                                         
                                         <!-- Tombol Cetak Nilai -->
-                                        <a href="user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2" target="_blank">
+                                        <a href="user3_cetak_nilai.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2">
                                             <i class="bi bi-file-text me-2"></i>Cetak Nilai
                                         </a>
                                     </div>
                                     </div>
                                 </div>
                                 </div>
-                                <?php endif; ?>
                             </div>
                         </td>
 
@@ -139,6 +133,7 @@ $no = 1;
                                 </a>
                             </div>
                         </td>
+                    </tr>
                     </tr>
                     
                     <!-- Modal Detail -->
