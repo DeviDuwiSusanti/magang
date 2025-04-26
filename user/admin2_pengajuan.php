@@ -27,7 +27,7 @@ $sql = "SELECT
         INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
         INNER JOIN tb_user AS u ON p.id_user = u.id_user
         LEFT JOIN (
-            SELECT id_bidang, COUNT(*) AS jumlah_pemagang_aktif
+            SELECT id_bidang, SUM(jumlah_pelamar) AS jumlah_pemagang_aktif
             FROM tb_pengajuan
             WHERE status_pengajuan IN (2, 4)
             GROUP BY id_bidang
@@ -177,7 +177,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 
                                     $title = (!empty($tanggal_zoom) && $tanggal_zoom !== '0000-00-00')
                                         ? 'Informasi Zoom sudah dikirim'
-                                        : 'Tambah Informasi Zoom';
+                                        : 'Tambah Informasi Wawancara';
                                     ?>
                                     <button type="button" class="btn <?= $btn_class ?> btn-sm zoom-btn me-2"
                                         data-bs-toggle="tooltip" data-bs-placement="top"
@@ -306,6 +306,7 @@ $daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary">Kirim</button>
                 </div>
             </form>
@@ -329,7 +330,7 @@ $result = mysqli_query($conn, $query);
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="zoomModalLabel">Informasi Wawancara Zoom</h5>
+                <h5 class="modal-title" id="zoomModalLabel">Informasi Wawancara Online</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
@@ -365,8 +366,9 @@ $result = mysqli_query($conn, $query);
                             <small class="text-danger" id="pembimbing_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="link_zoom" class="form-label">Link Zoom</label>
-                            <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="https://us02web.zoom.us/j/123456789">
+                            <label for="link_zoom" class="form-label">Link Meet</label>
+                            <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="Masukkan link meet">
+                            <small class="text-muted">*Link harus berasal dari Zoom atau Google Meet</small> <br>
                             <small class="text-danger" id="link_zoom_error"></small>
                         </div>
                     </div>
@@ -570,7 +572,13 @@ $result = mysqli_query($conn, $query);
                     previous: "Sebelumnya",
                     next: "Berikutnya"
                 }
-            }
+            },
+            columnDefs: [
+                {
+                    targets: [2, 3, 4, 5, 6, 7],
+                    orderable: false
+                }
+            ] 
         });
 
         // ========== Inisialisasi Clockpicker & datepicker ==========

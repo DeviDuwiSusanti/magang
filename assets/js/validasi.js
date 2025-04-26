@@ -628,15 +628,21 @@ function validateZoomForm() {
     isValid = false;
   }
 
-  // Validasi Link Zoom
+  // Validasi Link Meeting (Zoom atau Gmeet)
   if (linkZoom === "") {
-    showError("link_zoom", "link_zoom_error", "Link Zoom tidak boleh kosong.");
-    isValid = false;
-  } else if (!/^https?:\/\/(www\.)?zoom\.us\/.+/.test(linkZoom)) {
     showError(
       "link_zoom",
       "link_zoom_error",
-      "Link Zoom harus berasal dari zoom.us."
+      "Link meeting tidak boleh kosong."
+    );
+    isValid = false;
+  } else if (
+    !/^https?:\/\/(www\.)?(zoom\.us|meet\.google\.com)\/.+/.test(linkZoom)
+  ) {
+    showError(
+      "link_zoom",
+      "link_zoom_error",
+      "Link meeting harus berasal dari zoom.us atau meet.google.com."
     );
     isValid = false;
   }

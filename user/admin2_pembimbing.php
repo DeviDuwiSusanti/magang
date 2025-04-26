@@ -498,12 +498,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
         });
     });
 
-    // $('#tambahPembimbingModal').on('shown.bs.modal', function() {
-    //     $('#pilih_bidang').select2({
-    //         dropdownParent: $('#tambahPembimbingModal')
-    //     });
-    // });
-
     $(document).ready(function() {
         var isMobile = window.innerWidth < 768;
 

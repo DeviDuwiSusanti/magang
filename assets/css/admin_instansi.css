@@ -1047,7 +1047,7 @@ body.dark-mode .note-btn {
 }
 
 .resume-list li {
-    padding: 8px 0;
+    padding: 8px 5px;
     display: flex;
     align-items: flex-start;
 }

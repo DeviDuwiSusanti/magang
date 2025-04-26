@@ -137,7 +137,7 @@ if (isset($_POST["register"])) {
                             <span id="nik_error" class="error-message" style="color: red; display: none; font-size: 12px;">NIK harus 16 digit!</span>
                         </div>
 
-                        
+
 
                         <div class="mb-3">
                             <label class="form-label">Pilih Pendidikan</label>
@@ -164,11 +164,11 @@ if (isset($_POST["register"])) {
                                     <option value="">Pilih Jurusan</option>
                                 </select>
                             </div>
-                                <div class="input-field">
-                                    <input type="text" maxlength="10" id="nisn" inputmode="numeric" class="input mt-4" name="nisn">
-                                    <label class="mt-4" for="nisn">NISN</label>
-                                    <span id="nisn_error" class="error-message" style="color: red; display: none; font-size: 12px;">NISN harus 10 digit!</span>
-                                </div>
+                            <div class="input-field">
+                                <input type="text" maxlength="10" id="nisn" inputmode="numeric" class="input mt-4" name="nisn">
+                                <label class="mt-4" for="nisn">NISN</label>
+                                <span id="nisn_error" class="error-message" style="color: red; display: none; font-size: 12px;">NISN harus 10 digit!</span>
+                            </div>
                         </div>
 
                         <!-- Opsi untuk Universitas -->
@@ -224,7 +224,7 @@ if (isset($_POST["register"])) {
                         </div>
 
                         <div class="input-field">
-                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir" >
+                            <input type="text" class="input" name="tempat_lahir" id="tempat_lahir">
                             <label for="tempat_lahir">Tempat Lahir</label>
                         </div>
 
@@ -239,7 +239,7 @@ if (isset($_POST["register"])) {
                             <textarea name="alamat_user" id="alamat_user" class="form-control" placeholder="Alamat Domisili"></textarea>
                         </div>
                         <div class="input-field">
-                            <input type="tel" pattern="[0-9]{8,15}" class="input" name="telepone_user" id="telepone_user" inputmode="numeric"  maxlength="15">
+                            <input type="tel" pattern="[0-9]{8,15}" class="input" name="telepone_user" id="telepone_user" inputmode="numeric" maxlength="15">
                             <label for="telepone_user">No. Telepone</label>
                         </div>
 
@@ -253,6 +253,9 @@ if (isset($_POST["register"])) {
                             <input type="file" class="input" id="image" name="gambar_user" accept="image/*" onchange="validateFile()">
                         </div>
                         <button type="submit" name="register" class="submit" id="submitBtn">Signup</button>
+                        <div class="login-link">
+                            Sudah punya akun? <a href="login.php">Login sekarang</a>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -296,13 +299,13 @@ if (isset($_POST["register"])) {
         const sekolahData = <?= json_encode($sekolahData) ?>;
         const universitasData = <?= json_encode($universitasData) ?>;
 
-        document.getElementById("nik_user").addEventListener("input", function (e) {
+        document.getElementById("nik_user").addEventListener("input", function(e) {
             this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
         });
-        document.getElementById("nisn").addEventListener("input", function (e) {
+        document.getElementById("nisn").addEventListener("input", function(e) {
             this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
         });
-        document.getElementById("telepone_user").addEventListener("input", function (e) {
+        document.getElementById("telepone_user").addEventListener("input", function(e) {
             this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
         });
 
@@ -328,7 +331,7 @@ if (isset($_POST["register"])) {
                     nikError.hide();
                 }
 
-                if(userType === 'sekolah') {
+                if (userType === 'sekolah') {
                     if (nisn.length === 0) {
                         nisnError.text('NISN tidak boleh kosong!').show();
                         isValid = false;
@@ -341,7 +344,7 @@ if (isset($_POST["register"])) {
                 } else {
                     nisnError.hide();
                 }
-                
+
 
                 // Jika tidak valid, hentikan submit
                 if (!isValid) {
@@ -389,7 +392,7 @@ if (isset($_POST["register"])) {
         function updateSelectedId() {
             let selectedId = null;
             let educationType = document.getElementById("educationSelect").value;
-            
+
             if (educationType === "sekolah") {
                 selectedId = document.getElementById("jurusanSelect").value;
             } else if (educationType === "universitas") {
@@ -477,7 +480,6 @@ if (isset($_POST["register"])) {
                 document.getElementById("idPendidikanInput").value = ""; // Kosongkan jika tidak valid
             }
         });
-
     </script>
 </body>
 
