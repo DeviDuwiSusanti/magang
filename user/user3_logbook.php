@@ -715,3 +715,7 @@ function printVerifiedLogbook(id_pengajuan) {
     };
 }
 </script>
+
+<?php
+include "user3_laporanAkhir.php";
+?>

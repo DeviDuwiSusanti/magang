@@ -178,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
 }
 ?>
 
-<!-- Modal Laporan Akhir -->
+<!-- Modal Daftar Laporan Akhir -->
 <div class="modal fade" id="laporanAkhirModal" tabindex="-1" aria-labelledby="laporanAkhirModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
