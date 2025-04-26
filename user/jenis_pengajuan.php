@@ -5,9 +5,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
     $nama = trim($_POST['nama']);
     $nama = ucfirst(strtolower($nama));
 
-    $cek = mysqli_query($conn, "SELECT jenis_pengajuan FROM tb_instansi LIMIT 1");
+    $cek = mysqli_query($conn, "SELECT jenis2_pengajuan FROM tb_instansi LIMIT 1");
     $row = mysqli_fetch_assoc($cek);
-    $data = json_decode($row['jenis_pengajuan'], true);
+    $data = json_decode($row['jenis2_pengajuan'], true);
 
     if (!is_array($data)) {
         $data = [];
@@ -26,15 +26,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
             </script>
         ";
     } else {
-        $res = mysqli_query($conn, "SELECT id_instansi, jenis_pengajuan FROM tb_instansi");
+        $res = mysqli_query($conn, "SELECT id_instansi, jenis2_pengajuan FROM tb_instansi");
         while ($r = mysqli_fetch_assoc($res)) {
-            $d = json_decode($r['jenis_pengajuan'], true);
+            $d = json_decode($r['jenis2_pengajuan'], true);
             if (!is_array($d)) {
                 $d = [];
             }
             $d[] = $nama;
             $json = json_encode($d);
-            mysqli_query($conn, "UPDATE tb_instansi SET jenis_pengajuan='$json' WHERE id_instansi=" . $r['id_instansi']);
+            mysqli_query($conn, "UPDATE tb_instansi SET jenis2_pengajuan='$json' WHERE id_instansi=" . $r['id_instansi']);
         }
         echo "
             <script>
@@ -56,15 +56,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah'])) {
 if (isset($_GET['hapus'])) {
     $hapus = $_GET['hapus'];
 
-    $res = mysqli_query($conn, "SELECT id_instansi, jenis_pengajuan FROM tb_instansi");
+    $res = mysqli_query($conn, "SELECT id_instansi, jenis2_pengajuan FROM tb_instansi");
     while ($r = mysqli_fetch_assoc($res)) {
-        $d = json_decode($r['jenis_pengajuan'], true);
+        $d = json_decode($r['jenis2_pengajuan'], true);
         if (!is_array($d)) {
             $d = [];
         }
         $d = array_filter($d, fn($item) => $item !== $hapus);
         $json = json_encode(array_values($d));
-        mysqli_query($conn, "UPDATE tb_instansi SET jenis_pengajuan='$json' WHERE id_instansi=" . $r['id_instansi']);
+        mysqli_query($conn, "UPDATE tb_instansi SET jenis2_pengajuan='$json' WHERE id_instansi=" . $r['id_instansi']);
     }
     echo "
         <script>
@@ -86,8 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     $lama = $_POST['lama'];
     $baru = ucfirst(strtolower(trim($_POST['baru'])));
 
-    $cek = mysqli_query($conn, "SELECT jenis_pengajuan FROM tb_instansi LIMIT 1");
-    $data = json_decode(mysqli_fetch_assoc($cek)['jenis_pengajuan'], true);
+    $cek = mysqli_query($conn, "SELECT jenis2_pengajuan FROM tb_instansi LIMIT 1");
+    $data = json_decode(mysqli_fetch_assoc($cek)['jenis2_pengajuan'], true);
 
     if (!is_array($data)) {
         $data = [];
@@ -106,9 +106,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
             </script>
         ";
     } else {
-        $res = mysqli_query($conn, "SELECT id_instansi, jenis_pengajuan FROM tb_instansi");
+        $res = mysqli_query($conn, "SELECT id_instansi, jenis2_pengajuan FROM tb_instansi");
         while ($r = mysqli_fetch_assoc($res)) {
-            $d = json_decode($r['jenis_pengajuan'], true);
+            $d = json_decode($r['jenis2_pengajuan'], true);
             if (!is_array($d)) {
                 $d = [];
             }
@@ -118,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
                 }
             }
             $json = json_encode($d);
-            mysqli_query($conn, "UPDATE tb_instansi SET jenis_pengajuan='$json' WHERE id_instansi=" . $r['id_instansi']);
+            mysqli_query($conn, "UPDATE tb_instansi SET jenis2_pengajuan='$json' WHERE id_instansi=" . $r['id_instansi']);
         }
         echo "
             <script>
@@ -137,12 +137,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
 }
 
 // Ambil data terbaru
-$ambil = mysqli_query($conn, "SELECT jenis_pengajuan FROM tb_instansi LIMIT 1");
+$ambil = mysqli_query($conn, "SELECT jenis2_pengajuan FROM tb_instansi LIMIT 1");
 $row = mysqli_fetch_assoc($ambil);
-$jenis_pengajuan = json_decode($row['jenis_pengajuan'], true);
+$jenis2_pengajuan = json_decode($row['jenis2_pengajuan'], true);
 
-if (!is_array($jenis_pengajuan)) {
-    $jenis_pengajuan = [];
+if (!is_array($jenis2_pengajuan)) {
+    $jenis2_pengajuan = [];
 }
 ?>
 
@@ -173,12 +173,12 @@ if (!is_array($jenis_pengajuan)) {
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (empty($jenis_pengajuan)): ?>
+                            <?php if (empty($jenis2_pengajuan)): ?>
                                 <tr>
                                     <td colspan="3" class="text-center">Tidak ada data jenis pengajuan</td>
                                 </tr>
                             <?php else: ?>
-                                <?php foreach ($jenis_pengajuan as $i => $jp): ?>
+                                <?php foreach ($jenis2_pengajuan as $i => $jp): ?>
                                     <tr>
                                         <td><?= $i + 1 ?></td>
                                         <td><?= htmlspecialchars($jp) ?></td>
