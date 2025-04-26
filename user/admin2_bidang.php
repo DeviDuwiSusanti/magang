@@ -232,10 +232,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
     </div>
 </div>
 
-<div class="loader hidden">
+<!-- <div class="loader hidden">
     <div class="spinner"></div>
     <p>Mohon tunggu sebentar...</p>
-</div>
+</div> -->
 
 <?php include "../layout/footerDashboard.php" ?>
 <script src="../assets/js/validasi.js"></script>
@@ -332,56 +332,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         });
     });
 
-    const form = document.getElementById('tambahBidangForm');
+    // const form = document.getElementById('tambahBidangForm');
 
-    if (form) {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Hindari submit langsung
+    // if (form) {
+    //     form.addEventListener('submit', function(event) {
+    //         event.preventDefault(); // Hindari submit langsung
 
-            let loader = document.querySelector('.loader');
+    //         let loader = document.querySelector('.loader');
 
-            if (!loader) {
-                loader = document.createElement('div');
-                loader.className = 'loader';
-                loader.innerHTML = `
-                <div class="spinner"></div>
-                <p>Mohon tunggu sebentar...</p>
-            `;
-                document.body.appendChild(loader);
-            } else {
-                loader.classList.remove("hidden");
-            }
+    //         if (!loader) {
+    //             loader = document.createElement('div');
+    //             loader.className = 'loader';
+    //             loader.innerHTML = `
+    //             <div class="spinner"></div>
+    //             <p>Mohon tunggu sebentar...</p>
+    //         `;
+    //             document.body.appendChild(loader);
+    //         } else {
+    //             loader.classList.remove("hidden");
+    //         }
 
-            // ⏱️ Delay 2 detik sebelum submit
-            setTimeout(function() {
-                form.submit();
-            }, 2000);
-        });
-    }
+    //         // ⏱️ Delay 2 detik sebelum submit
+    //         setTimeout(function() {
+    //             form.submit();
+    //         }, 2000);
+    //     });
+    // }
 
-    document.getElementById('editBidangForm')?.addEventListener('submit', function(e) {
-        e.preventDefault(); // Cegah submit langsung
-        let loader = document.querySelector('.loader');
+    // document.getElementById('editBidangForm')?.addEventListener('submit', function(e) {
+    //     e.preventDefault(); // Cegah submit langsung
+    //     let loader = document.querySelector('.loader');
 
-        // Kalau loader belum ada, buat
-        if (!loader) {
-            loader = document.createElement('div');
-            loader.className = 'loader';
-            loader.innerHTML = `
-            <div class="spinner"></div>
-            <p>Mohon tunggu sebentar...</p>
-        `;
-            document.body.appendChild(loader);
-        } else {
-            loader.classList.remove("hidden");
-        }
+    //     // Kalau loader belum ada, buat
+    //     if (!loader) {
+    //         loader = document.createElement('div');
+    //         loader.className = 'loader';
+    //         loader.innerHTML = `
+    //         <div class="spinner"></div>
+    //         <p>Mohon tunggu sebentar...</p>
+    //     `;
+    //         document.body.appendChild(loader);
+    //     } else {
+    //         loader.classList.remove("hidden");
+    //     }
 
-        console.log("Submit jalan");
+    //     console.log("Submit jalan");
 
-        setTimeout(function() {
-            console.log("Form akan disubmit!");
-            document.getElementById('editBidangForm').submit();
-        }, 2000);
+    //     setTimeout(function() {
+    //         console.log("Form akan disubmit!");
+    //         document.getElementById('editBidangForm').submit();
+    //     }, 2000);
 
-    });
+    // });
 </script>
