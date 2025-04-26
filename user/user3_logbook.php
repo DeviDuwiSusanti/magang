@@ -3,22 +3,6 @@ include "../layout/sidebarUser.php";
 include "functions.php"; 
 confirmDeleteScript();
 
-// ============ CEK VERIFIKASI LOGBOOK ============
-if (isset($_GET['check_verification']) && $_GET['check_verification'] == true) {
-    header('Content-Type: application/json');
-    
-    $id_pengajuan = $_GET['id_pengajuan'];
-    $id_user = $_SESSION['id_user'];
-    
-    $sql = "SELECT COUNT(*) as unverified_count FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND status_active = '1'";
-    $query = mysqli_query($conn, $sql);
-    $result = mysqli_fetch_assoc($query);
-    
-    echo json_encode($result);
-    exit();
-}
-
-
 if (ISSET($_GET['id_pengajuan'])){
     $id_pengajuan = $_GET['id_pengajuan'];
 };
@@ -57,16 +41,6 @@ $status_pengajuan = mysqli_fetch_assoc($query3)['status_pengajuan'];
 // akses anggota
 $sql_anggota = "SELECT * FROM tb_profile_user pu, tb_user u WHERE pu.id_pengajuan = '$id_pengajuan' AND pu.id_user = u.id_user AND u.status_active = '1'";
 $query_anggota = mysqli_query($conn, $sql_anggota);
-
-// Cek apakah user sudah unggah laporan akhir
-$sql_cek_laporan = "SELECT COUNT(*) as jumlah FROM tb_dokumen 
-                    WHERE id_user = '$id_user' 
-                    AND id_pengajuan = '$id_pengajuan'
-                    AND jenis_dokumen = '3'
-                    AND status_active IN (1, 2)";
-$result_cek_laporan = mysqli_query($conn, $sql_cek_laporan);
-$data_cek = mysqli_fetch_assoc($result_cek_laporan);
-$laporan_terunggah = $data_cek['jumlah'] > 0;
 
 // HAPUS LOGBOOK
 if (isset($_GET['id_logbook_hapus'])) {
@@ -121,24 +95,15 @@ if (isset($_GET['id_logbook_hapus'])) {
             <?php
                 $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
                 if ($id_user_anggota == $id_user){
-                    if (!$laporan_terunggah && $status_pengajuan == 5){ ?>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                            <i class="bi bi-plus-circle me-1"></i>
-                            Tambah Laporan Akhir
-                        </button>
-                    <?php } else if ($laporan_terunggah && $status_pengajuan == 5){?> 
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                            Lihat Laporan Akhir
-                        </button>
-                    <?php } else if ($status_pengajuan != '5'){?>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
+                    if ($status_pengajuan != '5'){?>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahLogbook">
                             <i class="bi bi-plus-circle me-1"></i>
                             Tambah Logbook
                         </button>
                     <?php
                     }
                     ?>
-                    <a href="javascript:void(0)" onclick="checkAndPrint('<?= $id_pengajuan ?>')" class="btn btn-success">
+                    <a href="javascript:void(0)" onclick="printInline('<?= $id_pengajuan ?>')" class="btn btn-success">
                         <i class="bi bi-printer me-1"></i> Cetak
                     </a>
 
@@ -159,8 +124,9 @@ if (isset($_GET['id_logbook_hapus'])) {
                         <th class="text-center">Waktu</th>
                         <th class="text-center">Foto Kegiatan</th>
                         <th class="text-center">TTD</th>
+                        <th class="text-center">Status</th>
                         <?php if ($id_user_anggota == $id_user) { ?> 
-                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th> 
                         <?php } ?>
                     </tr>
                 </thead>
@@ -176,23 +142,37 @@ if (isset($_GET['id_logbook_hapus'])) {
                                 <td><?= date('H:i', strtotime($row['jam_mulai'])) ?> - <?= date('H:i', strtotime($row['jam_selesai'])) ?></td>
                                 <td  class="text-center"><img src="<?= $row['foto_kegiatan'] ?>" alt="" style="width: 150px; height: 100px;"></td>
                                 <td  class="text-center"><img src="<?= $row['tanda_tangan'] ?>" alt="TTD" style="width: 150px; height: 100px;"></td>
-                                </td>
-                                <?php if ($id_user_anggota == $id_user) { ?> 
-                                <td class="text-center">
-                                    <?php if ($row['status_active'] == 2): ?>
+                                <td  class="text-center">
+                                    <?php if($row['status_active'] == 2): ?>
                                         <span class="text-success" data-bs-toggle="tooltip" title="Sudah Diverifikasi Pembimbing">
                                             <i class="bi bi-check-circle-fill fs-4"></i>
                                         </span>
-                                        <?php else: ?>
-                                            <a href="?id_logbook_edit=<?= $row['id_logbook'] ?>" class="btn btn-warning btn-sm">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-    
-                                            <a href="javascript:void(0);" 
-                                            onclick="confirmDelete('?id_logbook_hapus=<?= $row['id_logbook'] ?>', 'Logbook <?= $row['kegiatan_logbook'] ?>')" 
-                                            class="btn btn-danger btn-sm">
-                                                <i class="bi bi-trash"></i>
-                                            </a>     
+                                    <?php else: ?>
+                                        <span class="text-warning" data-bs-toggle="tooltip" title="Belum Diverifikasi Pembimbing">
+                                            <i class="bi bi-hourglass-split fs-4"></i>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
+                                <?php if ($id_user_anggota == $id_user) { ?> 
+                                <td class="text-center">
+                                    <?php if ($row['status_active'] != 2): ?>
+                                        <a href="?id_logbook_edit=<?= $row['id_logbook'] ?>" class="btn btn-warning btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <a href="javascript:void(0);" 
+                                        onclick="confirmDelete('?id_logbook_hapus=<?= $row['id_logbook'] ?>', 'Logbook <?= $row['kegiatan_logbook'] ?>')" 
+                                        class="btn btn-danger btn-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <button class="btn btn-warning btn-sm" disabled>
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        
+                                        <button class="btn btn-danger btn-sm" disabled>
+                                            <i class="bi bi-trash"></i>
+                                        </button>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -225,23 +205,24 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
             </div>
             <div class="modal-body">
                 <form action="" id="form_tambahLogbook" method="POST" enctype="multipart/form-data">
-                    <!-- Kolom Tanggal -->
-                    <div class="d-flex gap-4">
-                        <div class="mb-3" style="flex: 1;">
+                    <div class="row mb-3 align-items-end">
+                        <!-- Kolom Tanggal -->
+                        <div class="col-md-4">
                             <label for="tanggal" class="form-label">Tanggal</label>
                             <input type="date" class="form-control" id="tanggal" name="tanggal"
-                            min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
+                                min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
                         </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="jam_mulai" class="form-label">Jam Mulai</label>
-                            <input type="time" class="form-control"  id="edit_jam_mulai" name="jam_mulai">
-                        </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="jam_selesai" class="form-label">Jam Selesai</label>
-                            <input type="time" class="form-control"  id="edit_jam_selesai" name="jam_selesai">
+
+                        <!-- Kolom Jam Pelaksanaan -->
+                        <div class="col-md-8">
+                            <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
+                            <div class="d-flex gap-2">
+                                <input type="time" class="form-control" id="jam_mulai" name="jam_mulai">
+                                <span class="align-self-center">s/d</span>
+                                <input type="time" class="form-control" id="jam_selesai" name="jam_selesai">
+                            </div>
                         </div>
                     </div>
-                    
                     <div class="d-flex gap-4">
                         <div class="mb-3" style="flex: 1;">
                             <label for="kegiatan" class="form-label">Kegiatan</label>
@@ -289,32 +270,29 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
             </div>
             <div class="modal-body">
                 <form action="" id="form_editLogbook" method="POST" enctype="multipart/form-data">
-                    <div class="d-flex gap-4">
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="edit_tanggal" class="form-label">Tanggal</label>
-                            <input type="date" class="form-control" id="edit_tanggal" name="tanggal" value="<?= $dataLama['tanggal_logbook'] ?>">
-                        </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="jam_mulai" class="form-label">Jam Mulai</label>
+                    <div class="mb-3">
+                        <label for="edit_tanggal" class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" id="edit_tanggal" name="tanggal" value="<?= $dataLama['tanggal_logbook'] ?>">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_kegiatan" class="form-label">Kegiatan</label>
+                        <input type="text" class="form-control" id="edit_kegiatan" name="kegiatan" value="<?= $dataLama['kegiatan_logbook'] ?>">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="edit_keterangan" class="form-label">Keterangan</label>
+                        <textarea class="form-control" id="edit_keterangan" name="keterangan" rows="3"><?= $dataLama['keterangan_logbook'] ?></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="jam_pelaksanaan" class="form-label">Jam Pelaksanaan</label>
+                        <div class="d-flex gap-2">
                             <input type="time" class="form-control"  id="edit_jam_mulai" name="jam_mulai" value="<?= $dataLama['jam_mulai'] ?>">
-                        </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="jam_selesai" class="form-label">Jam Selesai</label>
+                            <span class="align-self-center">sampai</span>
                             <input type="time" class="form-control"  id="edit_jam_selesai" name="jam_selesai" value="<?= $dataLama['jam_selesai'] ?>">
                         </div>
                     </div>
-
-                    <div class="d-flex gap-4">
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="edit_kegiatan" class="form-label">Kegiatan</label>
-                            <textarea class="form-control" id="kegiatan" name="kegiatan" rows="3"><?= $dataLama['kegiatan_logbook'] ?></textarea>
-                        </div>
-                        <div class="mb-3" style="flex: 1;">
-                            <label for="edit_keterangan" class="form-label">Keterangan</label>
-                            <textarea class="form-control" id="edit_keterangan" name="keterangan" rows="3"><?= $dataLama['keterangan_logbook'] ?></textarea>
-                        </div>
-                    </div>
-                    
 
                     <div class="d-flex gap-4">
                         <div class="mb-3" style="flex: 1;">
@@ -648,71 +626,45 @@ $(document).ready(function() {
 
 <!-- ====== ajax untuk print ====== -->
 <script>
-function checkAndPrint(id_pengajuan) {
-    // Tampilkan loading
-    Swal.fire({
-        title: 'Memeriksa...',
-        html: 'Sedang memverifikasi logbook',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-            
-            // Lakukan AJAX check langsung di halaman ini
-            $.ajax({
-                url: window.location.href, // Gunakan URL yang sama
-                type: 'GET',
-                data: {
-                    'check_verification': true,
-                    'id_pengajuan': id_pengajuan
-                },
-                success: function(response) {
-                    Swal.close();
-                    
-                    if (response.unverified_count > 0) {
-                        Swal.fire({
-                            title: 'Tidak Dapat Mencetak',
-                            text: 'Masih ada ' + response.unverified_count + ' logbook yang belum diverifikasi',
-                            icon: 'warning'
-                        });
-                    } else {
-                        // Jika semua sudah diverifikasi, buka halaman print dalam iframe
-                        printVerifiedLogbook(id_pengajuan);
-                    }
-                },
-                error: function(xhr) {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Gagal memeriksa verifikasi logbook',
-                        icon: 'error'
-                    });
-                }
-            });
-        }
-    });
+function printInline(id_pengajuan) {
+    fetch('user3_print.php?id_pengajuan=' + id_pengajuan)
+        .then(response => response.text())
+        .then(html => {
+            const printArea = document.createElement('div');
+            printArea.id = 'print-area';
+            printArea.innerHTML = html;
+            printArea.style.display = 'none';
+
+            document.body.appendChild(printArea);
+
+            const originalContent = document.body.innerHTML;
+            document.body.innerHTML = printArea.innerHTML;
+
+            // Simpan fungsi redirect di variable supaya bisa dihapus kalau perlu
+            const redirectAfterPrint = () => {
+                // Balikin isi halaman sebelumnya
+                document.body.innerHTML = originalContent;
+                // Hapus elemen sementara
+                document.getElementById('print-area')?.remove();
+                // Redirect ke halaman daftar logbook
+                window.location.href = 'user3_logbook.php';
+            };
+
+            window.onafterprint = redirectAfterPrint;
+
+            // Paksa browser menunggu 100ms agar DOM siap sebelum print
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        })
+        .catch(err => {
+            console.error('Gagal memuat halaman cetak:', err);
+            Swal.fire('Gagal!', 'Tidak bisa menampilkan cetakan.', 'error');
+        });
 }
 
-// Fungsi baru untuk menangani print
-function printVerifiedLogbook(id_pengajuan) {
-    // Buat iframe untuk menampung halaman print
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = 'user3_print.php?id_pengajuan=' + id_pengajuan;
-    
-    document.body.appendChild(iframe);
-    
-    iframe.onload = function() {
-        // Tunggu sebentar untuk memastikan konten sudah dimuat
-        setTimeout(() => {
-            // Fokus ke iframe dan jalankan print
-            iframe.contentWindow.focus();
-            iframe.contentWindow.print();
-            
-            // Hapus iframe setelah beberapa detik
-            setTimeout(() => {
-                document.body.removeChild(iframe);
-            }, 1000);
-        }, 500);
-    };
-}
 </script>
 
+<?PHP
+include "user3_laporanAkhir.php";
+?>
