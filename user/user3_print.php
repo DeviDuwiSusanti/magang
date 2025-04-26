@@ -27,9 +27,9 @@ if($row_check['unverified_count'] > 0) {
 }
 
 // Query untuk mengambil data logbook dan informasi terkait
-$sql = "SELECT p.*, i.*, b.*, u.*, d.* FROM tb_pengajuan AS p JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi 
-        JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang JOIN tb_profile_user AS u ON p.id_user = u.id_user JOIN tb_pendidikan AS d ON u.id_pendidikan = d.id_pendidikan
-        WHERE p.id_pengajuan = '$id_pengajuan' AND p.id_user = '$id_user'";
+$sql = "SELECT * FROM tb_pengajuan p JOIN tb_instansi i ON p.id_instansi = i.id_instansi 
+        JOIN tb_bidang b ON p.id_bidang = b.id_bidang JOIN tb_profile_user u ON u.id_user = '$id_user' JOIN tb_pendidikan d ON u.id_pendidikan = d.id_pendidikan
+        WHERE p.id_pengajuan = '$id_pengajuan'";
 
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);

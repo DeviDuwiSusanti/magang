@@ -55,7 +55,7 @@ $pemagang_2 = query("SELECT SUM(
         AND tb_pengajuan.status_pengajuan IN ('2', '4', '5')")[0];
 // ========================== end of admin insatansi level 2 ===============================
 
-
+// =========================== USER 3 =========================
 
 // Query dapat jumlah pengajuan user
 $sql2 = "SELECT COUNT(*) AS jumlah_pengajuan FROM tb_pengajuan WHERE id_user = '$id_user' AND status_pengajuan = '1' AND status_active = '1'";
@@ -84,7 +84,7 @@ $query4 = mysqli_query($conn, $sql4);
 $total_logbook = mysqli_fetch_array($query4)['jumlah_logbook'];
 
 // akses laporan akhir
-$sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3' AND status_active = '1' AND id_pengajuan = '$id_pengajuan'";
+$sql5 = "SELECT COUNT(*) jumlah_laprak FROM tb_dokumen WHERE id_user = '$id_user' AND jenis_dokumen = '3' AND id_pengajuan = '$id_pengajuan' AND (status_active = 1 OR status_active = 2)";
 $query5 = mysqli_query($conn, $sql5);
 $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 
@@ -247,7 +247,8 @@ endif;
                     </div>
                 </div>
             </div>
-            
+            <?php
+            } if (isset($row2['status_pengajuan']) && $row2['status_pengajuan'] == '5') { ?>
             <!-- Card 2 -->
             <div class="col-lg-3 col-md-6 mb-4">
                 <div class="card shadow-sm border-0">
@@ -255,7 +256,7 @@ endif;
                         <h5 class="card-title">Laporan Akhir</h5>
                         <h2 class="card-text text-success"><?= $total_laprak ?></h2>
                         <p class="text-muted">Laporan Terunggah</p>
-                        <a href="user3_laporanAkhir.php" class="btn btn-success mt-3 detail">View Details</a>
+                        <a href="user3_logbook.php" class="btn btn-success mt-3 detail">View Details</a>
                     </div>
                 </div>
             </div>

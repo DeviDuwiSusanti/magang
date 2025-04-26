@@ -1,8 +1,4 @@
 <?php 
-include "../layout/sidebarUser.php";
-include '../koneksi.php';
-include "functions.php";
-
 define('MAX_FILE_SIZE', 5 * 1024 * 1024); // Maksimum ukuran file 5MB
 
 // Ambil ID User dari session dan ID Pengajuan dari parameter GET
@@ -103,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
     Swal.fire({
         icon: '$icon',
         title: '$msg',
-    }).then(() => { window.location.href = 'user3_laporanAkhir.php?id_pengajuan=$id_pengajuan'; });
+    }).then(() => { window.location.href = 'user3_logbook.php?id_pengajuan=$id_pengajuan'; });
     </script>";
     exit;
 }
@@ -153,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
                 Swal.fire({
                     icon: 'success',
                     title: 'Laporan berhasil dihapus!',
-                }).then(() => { window.location.href = 'user3_laporanAkhir.php?id_pengajuan=$id_pengajuan'; });
+                }).then(() => { window.location.href = 'user3_logbook.php?id_pengajuan=$id_pengajuan'; });
             </script>";            
             } else {
                 echo "<script>
@@ -182,71 +178,68 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
 }
 ?>
 
-<div class="main-content p-3">
-    <div class="container-fluid">
-        <h1 class="mb-4">Daftar Laporan Akhir Kegiatan Anda</h1>
-        <div class="mb-4 dropdown-divider"></div>
-
-        <div class="mb-4 text-end">
-        <?php if (!$laporan_terunggah && $status_pengajuan == 5): ?>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                <i class="bi bi-plus-circle me-1"></i>
-                Tambah Laporan Akhir
-            </button>
-        <?php endif; ?>
-        </div>
-
+<!-- Modal Daftar Laporan Akhir -->
+<div class="modal fade" id="laporanAkhirModal" tabindex="-1" aria-labelledby="laporanAkhirModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="laporanAkhirModalLabel">Daftar Laporan Akhir</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
         <div class="table-responsive-sm">
-        <div class="bungkus">
             <table class="table table-striped table-bordered table-hover">
                 <thead>
-                    <tr>
-                        <th class="text-center">No</th>
-                        <th class="text-center">Tanggal</th>
-                        <th class="text-center">Nama Dokumen</th>
-                        <th class="text-center">Pemilik Laporan</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Tanggal</th>
+                    <th class="text-center">Nama Dokumen</th>
+                    <th class="text-center">Pemilik Laporan</th>
+                    <th class="text-center">Aksi</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <?php if (mysqli_num_rows($result) > 0): 
-                        $no = 1;
-                        while ($row2 = mysqli_fetch_assoc($result)): ?>
-                            <tr>
-                                <td class="text-center"><?= $no++ ?></td>
-                                <td class="text-center"><?= isset($row2['create_date']) ? date('d/m/Y', strtotime($row2['create_date'])) : '-' ?></td>
-                                <td>
-                                    <a href="<?= $row2['file_path'] ?? '#' ?>" target="_blank">
-                                        <?= htmlspecialchars($row2['nama_dokumen'] ?? 'Tidak diketahui') ?>
-                                    </a>
-                                </td>
-                                <td class="text-center"><?= htmlspecialchars($row2['nama_user'] ?? 'Tidak diketahui') ?></td>
-                                <td class="text-center">
-                                <?php if ($row2['id_user'] == $id_user && $row2['status_active'] != 2): ?>
-                                    <form method="POST" action="" onsubmit="return konfirmasiHapus(event, this);">
-                                        <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
-                                        <input type="hidden" name="hapus_laporan" value="1">
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </button>
-                                    </form>
-                                <?php else: ?>
-                                        <button class="btn btn-secondary btn-sm" disabled>
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </button>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endwhile; 
-                    else: ?>
-                        <tr><td colspan="5" class="text-center">Tidak ada laporan akhir.</td></tr>
-                    <?php endif; ?>
+                <?php if (mysqli_num_rows($result) > 0): 
+                    $no = 1;
+                    while ($row2 = mysqli_fetch_assoc($result)): ?>
+                    <tr>
+                    <td class="text-center"><?= $no++ ?></td>
+                    <td class="text-center"><?= isset($row2['create_date']) ? date('d/m/Y', strtotime($row2['create_date'])) : '-' ?></td>
+                    <td>
+                        <a href="<?= $row2['file_path'] ?? '#' ?>" target="_blank">
+                        <?= htmlspecialchars($row2['nama_dokumen'] ?? 'Tidak diketahui') ?>
+                        </a>
+                    </td>
+                    <td class="text-center"><?= htmlspecialchars($row2['nama_user'] ?? 'Tidak diketahui') ?></td>
+                    <td class="text-center">
+                        <?php if ($row2['id_user'] == $id_user && $row2['status_active'] != 2): ?>
+                        <form method="POST" class="hapus-dokumen-form">
+                            <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
+                            <input type="hidden" name="hapus_laporan" value="1">
+                            <button type="button" class="btn btn-danger btn-sm hapus-btn" onclick="konfirmasiHapus(event, this.form)">
+    <i class="bi bi-trash"></i>
+</button>
+
+                        </form>
+                        <?php else: ?>
+                        <button class="btn btn-secondary btn-sm" disabled>
+                            <i class="bi bi-trash"></i>
+                        </button>
+                        <?php endif; ?>
+                    </td>
+                    </tr>
+                <?php endwhile; 
+                else: ?>
+                    <tr><td colspan="5" class="text-center">Tidak ada laporan akhir.</td></tr>
+                <?php endif; ?>
                 </tbody>
-            </table>
+          </table>
         </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>
+
 
 <!-- Modal Upload -->
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
@@ -300,5 +293,3 @@ function konfirmasiHapus(event, form) {
     });
 }
 </script>
-
-<?php include "../layout/footerDashboard.php"; ?>

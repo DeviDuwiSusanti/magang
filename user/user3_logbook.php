@@ -122,12 +122,12 @@ if (isset($_GET['id_logbook_hapus'])) {
                 $id_user_anggota = isset($_GET['id_user_anggota']) && $_GET['id_user_anggota'] != $id_user ? $_GET['id_user_anggota'] : $id_user;
                 if ($id_user_anggota == $id_user){
                     if (!$laporan_terunggah && $status_pengajuan == 5){ ?>
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-                            <i class="bi bi-plus-circle me-1"></i>
-                            Tambah Laporan Akhir
-                        </button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Tambah Laporan Akhir
+                    </button>
                     <?php } else if ($laporan_terunggah && $status_pengajuan == 5){?> 
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#laporanAkhirModal">
                             Lihat Laporan Akhir
                         </button>
                     <?php } else if ($status_pengajuan != '5'){?>
@@ -403,7 +403,7 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                     img.src = e.target.result;
                     img.onload = function () {
                         if (img.width >= img.height) {
-                            previewContainer.innerHTML = `<img src="${img.src}" alt="Preview" style="max-width:100%; height:auto;">`;
+                            previewContainer.innerHTML = <img src="${img.src}" alt="Preview" style="max-width:100%; height:auto;">;
                         } else {
                             alert('Hanya gambar landscape yang diperbolehkan.');
                             fileInput.value = ''; // reset input
@@ -716,3 +716,6 @@ function printVerifiedLogbook(id_pengajuan) {
 }
 </script>
 
+<?php
+include "user3_laporanAkhir.php";
+?>

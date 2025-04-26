@@ -249,55 +249,59 @@ if (isset($_POST['update_profil'])) {
                     <?php if(($ketua || $anggota) && $level == "3") : ?>
 
                     <!-- Asal Studi -->
-                    <div class="mb-3">
+                    <div class="row">
+                        <!-- Nama Lengkap -->
+                        <div class="mb-3 col-6">
                         <label for="asal_studi" class="form-label">Asal Studi</label>
-                        <select class="form-control select2" id="asal_studi" name="asal_studi" required>
-                            <option value="">Pilih Asal Studi</option>
-                            <?php 
-                            // Current selected value - ambil id_pendidikan dari data lama
-                            $currentIdPendidikan = $dataLama['id_pendidikan'] ?? '';
-                            
-                            // Cari nama_pendidikan yang sesuai dengan id_pendidikan yang disimpan
-                            $currentNamaPendidikan = '';
-                            foreach ($dataPendidikan as $studi) {
-                                if ($studi['id_pendidikan'] == $currentIdPendidikan) {
-                                    $currentNamaPendidikan = $studi['nama_pendidikan'];
-                                    break;
-                                }
-                            }
-                            
-                            // Group by nama_pendidikan
-                            $groupedPendidikan = [];
-                            foreach ($dataPendidikan as $studi) {
-                                $groupedPendidikan[$studi['nama_pendidikan']][] = $studi;
-                            }
-                            
-                            foreach ($groupedPendidikan as $namaPendidikan => $items) {
-                                // Cek apakah ini adalah pilihan yang sedang aktif
-                                $isSelected = ($namaPendidikan === $currentNamaPendidikan);
+                            <select class="form-control select2" id="asal_studi" name="asal_studi" required>
+                                <option value="">Pilih Asal Studi</option>
+                                <?php 
+                                // Current selected value - ambil id_pendidikan dari data lama
+                                $currentIdPendidikan = $dataLama['id_pendidikan'] ?? '';
                                 
-                                // Gunakan id_pendidikan yang sesuai dengan data lama jika ada
-                                $selectedId = $currentIdPendidikan;
-                                if (!$isSelected) {
-                                    $selectedId = $items[0]['id_pendidikan'];
+                                // Cari nama_pendidikan yang sesuai dengan id_pendidikan yang disimpan
+                                $currentNamaPendidikan = '';
+                                foreach ($dataPendidikan as $studi) {
+                                    if ($studi['id_pendidikan'] == $currentIdPendidikan) {
+                                        $currentNamaPendidikan = $studi['nama_pendidikan'];
+                                        break;
+                                    }
                                 }
                                 
-                                echo '<option value="'.htmlspecialchars($selectedId).'" '
-                                    .($isSelected ? 'selected' : '').'>'
-                                    .htmlspecialchars($namaPendidikan).'</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                    <div class="mb-3" id="fakultasContainer" style="display: none;">
-                        <label for="fakultas" class="form-label">Fakultas</label>
-                        <select class="form-control" id="fakultas" name="fakultas">
-                            <?php if (!empty($dataLama['fakultas'])): ?>
-                                <option value="<?= $dataLama['fakultas'] ?>" selected><?= $dataLama['fakultas'] ?></option>
-                            <?php endif; ?>
-                        </select>
-                        <small id="error-fakultas" class="text-danger"></small>
+                                // Group by nama_pendidikan
+                                $groupedPendidikan = [];
+                                foreach ($dataPendidikan as $studi) {
+                                    $groupedPendidikan[$studi['nama_pendidikan']][] = $studi;
+                                }
+                                
+                                foreach ($groupedPendidikan as $namaPendidikan => $items) {
+                                    // Cek apakah ini adalah pilihan yang sedang aktif
+                                    $isSelected = ($namaPendidikan === $currentNamaPendidikan);
+                                    
+                                    // Gunakan id_pendidikan yang sesuai dengan data lama jika ada
+                                    $selectedId = $currentIdPendidikan;
+                                    if (!$isSelected) {
+                                        $selectedId = $items[0]['id_pendidikan'];
+                                    }
+                                    
+                                    echo '<option value="'.htmlspecialchars($selectedId).'" '
+                                        .($isSelected ? 'selected' : '').'>'
+                                        .htmlspecialchars($namaPendidikan).'</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        
+                        <!-- NIK -->
+                        <div class="mb-3 col-6" id="fakultasContainer">
+                            <label for="fakultas" class="form-label">Fakultas</label>
+                            <select class="form-control" id="fakultas" name="fakultas">
+                                <?php if (!empty($dataLama['fakultas'])): ?>
+                                    <option value="<?= $dataLama['fakultas'] ?>" selected><?= $dataLama['fakultas'] ?></option>
+                                <?php endif; ?>
+                            </select>
+                            <small id="error-fakultas" class="text-danger"></small>           
+                        </div>
                     </div>
 
                 <div class="row">
