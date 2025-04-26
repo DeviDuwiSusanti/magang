@@ -19,6 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } 
 }
 
+// Ambil satu contoh jenis pengajuan dari database
+$sql_jenis = "SELECT jenis2_pengajuan FROM tb_instansi WHERE jenis2_pengajuan IS NOT NULL LIMIT 1";
+$result_jenis = mysqli_query($conn, $sql_jenis);
+$row_jenis = mysqli_fetch_assoc($result_jenis);
+$jenis_pengajuan_options = json_decode($row_jenis['jenis2_pengajuan'], true) ?? ['Magang', 'Praktek Kerja Lapangan', 'Penelitian'];
+
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -183,9 +189,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                     <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
                                                     <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
                                                         <option value="" disabled selected> -- Pilih Pengajuan --</option>
-                                                        <option value="Magang">Magang</option>
-                                                        <option value="Praktek Kerja Lapangan">Praktek Kerja Lapangan</option>
-                                                        <option value="Penelitian">Penelitian</option>
+                                                        <?php foreach ($jenis_pengajuan_options as $jenis): ?>
+                                                            <option value="<?= htmlspecialchars($jenis) ?>"><?= htmlspecialchars($jenis) ?></option>
+                                                        <?php endforeach; ?>
                                                     </select>
                                                 </div>
                                                 <div class="mb-3" style="flex: 1;">
@@ -411,9 +417,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 <label for="jenis_pengajuan" class="form-label">Jenis Pengajuan</label>
                                                 <select class="form-control" id="jenis_pengajuan" name="jenis_pengajuan">
                                                     <option value="<?= $pengajuan['jenis_pengajuan'] ?>"><?= ucfirst($pengajuan['jenis_pengajuan']) ?></option>
-                                                    <option value="Magang">Magang</option>
-                                                    <option value="Praktek Kerja Lapangan">Praktek Kerja Lapangan</option>
-                                                    <option value="Penelitian">Penelitian</option>
+                                                    <?php foreach ($jenis_pengajuan_options as $jenis): ?>
+                                                            <option value="<?= htmlspecialchars($jenis) ?>"><?= htmlspecialchars($jenis) ?></option>
+                                                        <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>

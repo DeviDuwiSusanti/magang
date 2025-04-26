@@ -161,11 +161,11 @@ $query = mysqli_query($conn, $sql);
                                     style="width: 100px; height: 100px;">
                                     <h4 class="card-title"><?= isset($detail['nama_panjang']) ? $detail['nama_panjang'] : 'Tidak Diketahui' ?></h4>
                                     <hr>
-                                    <p><strong>Instansi :</strong> <?= $detail['nama_panjang']; ?></p>
-                                    <p><strong>Bidang :</strong> <?= $detail['nama_bidang']; ?></p>
-                                    <p><strong>Jenis Pengajuan :</strong> <?= $detail['jenis_pengajuan']; ?></p>
-                                    <p><strong>Status Lamaran :</strong> <?= getStatusText($detail['status_pengajuan']); ?></p>
-                                    <p><strong>Durasi :</strong><?= isset($interval) ? $interval->m . " Bulan " . floor($interval->d / 7) . " Minggu" : "Durasi Tidak Diketahui"; ?></p>                                    <p><strong>Periode Magang:</strong> <?= formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']) ?> </p>
+                                    <p><strong>Instansi : </strong> <?= $detail['nama_panjang']; ?></p>
+                                    <p><strong>Bidang : </strong> <?= $detail['nama_bidang']; ?></p>
+                                    <p><strong>Jenis Pengajuan : </strong> <?= $detail['jenis_pengajuan']; ?></p>
+                                    <p><strong>Status Lamaran : </strong> <?= getStatusText($detail['status_pengajuan']); ?></p>
+                                    <p><strong>Durasi : </strong><?= isset($interval) ? $interval->m . " Bulan " . floor($interval->d / 7) . " Minggu" : "Durasi Tidak Diketahui"; ?></p>                                    <p><strong>Periode Magang:</strong> <?= formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']) ?> </p>
 
                                  <!-- Tombol Aksi dalam Modal -->
                                     <div class="modal-footer flex-column align-items-start">
