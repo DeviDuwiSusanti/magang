@@ -81,7 +81,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     }
     $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
 }
-$daftar_dokumen_json = json_encode($daftar_dokumen, JSON_PRETTY_PRINT);
 ?>
 
 <div class="main-content p-3">
