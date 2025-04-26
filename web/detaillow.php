@@ -76,27 +76,18 @@ include "functions.php";
                     <p><?= $row['deskripsi_bidang'] ?></p>
 
                     <h3>Kriteria</h3>
-                    <!-- <ul class="list">
-                        <?php
-                        $kriteria = isset($row['kriteria_bidang']) ? explode(',', $row['kriteria_bidang']) : [];
-                        foreach ($kriteria as $item) : ?>
-                            <li><?= $item ?></li>
-                        <?php endforeach; ?>
-                    </ul> -->
                     <!-- pakai summerote -->
                     <div class="summernote-output">
                         <?= $row['kriteria_bidang'] ?>
                     </div>
 
-
                     <h3>Persyaratan Dokumen</h3>
-                    <ul class="list">
-                        <?php
-                        $doc_prasyarat = isset($row['dokumen_persyaratan']) ? explode(',', $row['dokumen_persyaratan']) : [];
-                        foreach ($doc_prasyarat as $item) : ?>
-                            <li><?= $item ?></li>
-                        <?php endforeach; ?>
-                    </ul>
+                    <!-- pakai summerote -->
+                    <div class="summernote-output">
+                        <?= $row['dokumen_persyaratan'] ?>
+                    </div>
+
+
                     <div class="alert alert-dark mt-3 p-2 small">
                         <i class="bi bi-info-circle me-2"></i>
                         <strong>Ketentuan Upload Dokumen:</strong> Saat pendaftaran pengajuan hanya perlu mengunggah KTP, CV, dan Proposal. Dokumen lainnya dapat diunggah setelah pengajuan diterima.
