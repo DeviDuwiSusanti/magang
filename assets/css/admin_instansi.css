@@ -191,23 +191,39 @@ a.sidebar-link:hover {
     position: relative;
 }
 
+/* Level 1 dropdown untuk sidebar collapse */
 #sidebar:not(.expand) .sidebar-item .sidebar-dropdown {
     position: absolute;
     top: 0;
     left: 70px;
     background-color: #0e223e;
-    padding: 0;
+    padding: 0.5rem 0;
+    min-width: 15rem;
+    display: none;
+    z-index: 999;
+}
+
+/* Tampilkan level 1 saat hover */
+#sidebar:not(.expand) .sidebar-item:hover .has-dropdown + .sidebar-dropdown {
+    display: block;
+}
+
+/* Level 2 (nested submenu) positioning */
+#sidebar:not(.expand) .sidebar-dropdown .sidebar-item .sidebar-dropdown {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #0e223e;
     min-width: 15rem;
     display: none;
 }
 
-#sidebar:not(.expand) .sidebar-item:hover .has-dropdown+.sidebar-dropdown {
+/* Tampilkan level 2 saat hover di parent */
+#sidebar:not(.expand) .sidebar-dropdown .sidebar-item:hover > .sidebar-dropdown {
     display: block;
-    max-height: 15em;
-    width: 100%;
-    opacity: 1;
 }
 
+/* Icon rotate untuk expand mode */
 #sidebar.expand .sidebar-link[data-bs-toggle="collapse"]::after {
     border: solid;
     border-width: 0 .075rem .075rem 0;
@@ -226,15 +242,24 @@ a.sidebar-link:hover {
     transition: all .2s ease-out;
 }
 
-#sidebar:not(.expand) a.sidebar-link.active {
-    background-color: rgba(255, 255, 255, 0.075);
-    border-left: 3px solid #3b7ddd;
-}
-
-#sidebar.expand a.sidebar-link.active {
+/* Active states */
+#sidebar a.sidebar-link.active {
     background-color: rgba(255, 255, 255, 0.075);
     border-left: 3px solid #3b7ddd;
     font-weight: bold;
+}
+
+/* Submenu link: agak menjorok */
+.sidebar-link.submenu-link {
+    padding-left: 2.5rem; /* lebih menjorok kanan */
+    font-size: 0.95rem;   /* sedikit lebih kecil kalau mau */
+}
+
+/* Icon kecil di submenu */
+.sidebar-link.submenu-link i {
+    font-size: 0.6rem;
+    margin-right: 0.5rem;
+    vertical-align: middle;
 }
 
 /* Navbar */

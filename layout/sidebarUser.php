@@ -153,22 +153,46 @@ if (isset($_SESSION['email'])) {
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="admin2_bidang.php" class="sidebar-link">
-                            <i class="bi bi-building-fill-add"></i>
-                            <span>Kelola Bidang</span>
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#multi"
+                            aria-expanded="false" aria-controls="multi">
+                            <i class="bi bi-building"></i>
+                            <span>Bidang Instansi</span>
                         </a>
+                        <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="admin2_bidang.php" class="sidebar-link submenu-link">
+                                    <i class="bi bi-building-fill-add"></i> <!-- Icon bulat kecil -->
+                                    Kelola Bidang
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="admin2_pembimbing.php" class="sidebar-link submenu-link">
+                                    <i class="bi bi-person-badge-fill"></i>
+                                    Pembimbing Bidang
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="sidebar-item">
-                        <a href="admin2_pembimbing.php" class="sidebar-link">
-                            <i class="bi bi-person-workspace"></i>
-                            <span>Pembimbing Bidang</span>
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#multi2"
+                            aria-expanded="false" aria-controls="multi2">
+                            <i class="bi bi-list-stars"></i>
+                            <span>Pengajuan</span>
                         </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a href="admin2_pengajuan.php" class="sidebar-link">
-                            <i class="bi bi-journals"></i>
-                            <span>Kelola Pengajuan</span>
-                        </a>
+                        <ul id="multi2" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a href="jenis_pengajuan.php" class="sidebar-link submenu-link">
+                                    <i class="bi bi-journal-bookmark-fill"></i> <!-- Icon bulat kecil -->
+                                    Kelola Jenis Pengajuan
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a href="admin2_pengajuan.php" class="sidebar-link submenu-link">
+                                    <i class="bi bi-send-check-fill"></i>
+                                    Proses Pengajuan User
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="sidebar-item">
                         <a href="admin2_user.php" class="sidebar-link">
@@ -224,7 +248,7 @@ if (isset($_SESSION['email'])) {
                 <?php
                 }
                 ?>
-            
+
                 <?php if (isset($status_pengajuan) && $status_pengajuan == '5' && $level == '3'): ?>
                     <li class="sidebar-item">
                         <a href="user3_laporanAkhir.php" class="sidebar-link">
