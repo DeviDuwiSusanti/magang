@@ -49,9 +49,6 @@ if (isset($_GET["id_bidang_ini"])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
-    echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
     if (edit_bidang($_POST) > 0) {
         echo "
             <script>
