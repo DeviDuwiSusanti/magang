@@ -90,7 +90,7 @@ $no = 1;
 
                               <!-- Tombol Cetak Nilai dan Sertif-->
                                 <!-- Tombol Trigger Modal -->
-                                <button type="button" class="btn btn-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#printOptions<?= $data['id_pengajuan'] ?>">
+                                <button type="button" class="btn btn-primary btn-sm px-3" title="Cetak Nilai & Sertifikat" data-bs-toggle="modal" data-bs-target="#printOptions<?= $data['id_pengajuan'] ?>">
                                 <i class="bi bi-printer"></i>
                                 </button>
 

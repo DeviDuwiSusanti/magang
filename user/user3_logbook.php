@@ -403,7 +403,7 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                     img.src = e.target.result;
                     img.onload = function () {
                         if (img.width >= img.height) {
-                            previewContainer.innerHTML = <img src="${img.src}" alt="Preview" style="max-width:100%; height:auto;">;
+                            previewContainer.innerHTML = `<img src="${img.src}" alt="Preview" style="max-width:100%; height:auto;">`;
                         } else {
                             alert('Hanya gambar landscape yang diperbolehkan.');
                             fileInput.value = ''; // reset input
@@ -696,7 +696,7 @@ function printVerifiedLogbook(id_pengajuan) {
     // Buat iframe untuk menampung halaman print
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
-    iframe.src = 'user3_print.php?id_pengajuan=' + id_pengajuan;
+    iframe.src = 'user3_cetak_logbook.php?id_pengajuan=' + id_pengajuan;
     
     document.body.appendChild(iframe);
     
@@ -717,5 +717,4 @@ function printVerifiedLogbook(id_pengajuan) {
 </script>
 
 <?php
-include "user3_laporanAkhir.php";
-?>
+include "user3_laporanAkhir.php";?>
