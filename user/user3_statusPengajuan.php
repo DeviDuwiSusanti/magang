@@ -129,7 +129,7 @@ $query = mysqli_query($conn, $sql);
                                     <input type="hidden" name="alasan_hapus" id="alasanHapus">
                                     <input type="hidden" name="hapus_pengajuan"> 
                                     <button type="submit" class="btn btn-sm btn-danger text-white" id="hapusPengajuan" ><i class="bi bi-trash me-1"></i></button> 
-                                </form>     
+                                </form>
                             <?php endif; ?>
                         </td>
                     </tr>

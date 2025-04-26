@@ -148,12 +148,12 @@ if (ISSET($_POST['tambah_anggota'])){
                     $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
                     if (strlen($id_studi) == 7) : ?>
                         <div class="mb-3">
-                            <label for="nim" class="form-label">Nim</label>
+                            <label for="nim" class="form-label">NIM</label>
                             <input type="number" class="form-control" id="nim" name="nim" oninput="this.value=this.value.slice(0,12)">
                         </div>
                     <?php else : ?>
                         <div class="mb-3">
-                            <label for="nisn" class="form-label">Nisn</label>
+                            <label for="nisn" class="form-label">NISN</label>
                             <input type="number" class="form-control" id="nisn" name="nisn" oninput="this.value=this.value.slice(0,10)">
                         </div>
                     <?php endif; ?>
@@ -203,12 +203,12 @@ if (ISSET($_POST['tambah_anggota'])){
                     $id_studi = mysqli_fetch_assoc($studi)['id_pendidikan'];
                     if (strlen($id_studi) == 7) : ?>
                         <div class="mb-3">
-                            <label for="edit_nim" class="form-label">Nim</label>
+                            <label for="edit_nim" class="form-label">NIM</label>
                             <input type="number" class="form-control" id="edit_nim" name="nim" value="<?= $editRow['nim'] ?>" oninput="this.value=this.value.slice(0,12)">
                         </div>
                     <?php else : ?>
                         <div class="mb-3">
-                            <label for="edit_nisn" class="form-label">Nisn</label>
+                            <label for="edit_nisn" class="form-label">NISN</label>
                             <input type="number" class="form-control" id="edit_nisn" name="nisn" value="<?= $editRow['nisn'] ?>" oninput="this.value=this.value.slice(0,10)">
                         </div>
                     <?php endif; ?>
