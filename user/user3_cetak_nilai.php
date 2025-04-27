@@ -3,10 +3,12 @@ include "../functions.php";
 
 $id_user_ini = $_GET["id_user_ini"];
 $id_pengajuan = $_GET["id_pengajuan"];
+
+// Query untuk mengambil data peserta dan nilai
 $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.* 
                     FROM tb_profile_user pu
                     JOIN tb_pengajuan p ON pu.id_pengajuan = p.id_pengajuan
-                    JOIN tb_nilai n ON p.id_pengajuan = n.id_pengajuan
+                    JOIN tb_nilai n ON p.id_pengajuan = n.id_pengajuan AND n.id_user = pu.id_user
                     JOIN tb_instansi i ON p.id_instansi = i.id_instansi
                     JOIN tb_bidang b ON p.id_bidang = b.id_bidang
                     WHERE pu.id_user = $id_user_ini")[0];
@@ -175,15 +177,15 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
   </table>
 
   <div class="signature">
-    <p>Kepala Bidang</p>
+    <p>Pembimbing Magang</p>
     <p><?= $sertifikat["nama_panjang"] ?></p>
     <br> 
-    <?php if($sertifikat["tanda_tangan_admin"] != "") : ?>
+    <?php if(!empty($sertifikat) && $sertifikat["tanda_tangan_admin"] != "") : ?>
       <img src="<?= $sertifikat['tanda_tangan_admin'] ?>" alt="TTD" style="width: 150px; height: 100px;">
     <?php endif; ?>
     <br>
-    <strong><?= $admin_instansi["nama_user"] ?></strong><br>
-    NIP. <?= $admin_instansi["nip"] ?>
+    <strong><?= !empty($admin_instansi) ? $admin_instansi["nama_user"] : '-' ?></strong><br>
+    NIP. <?= !empty($admin_instansi) ? $admin_instansi["nip"] : '-' ?>
   </div>
 </body>
 </html>

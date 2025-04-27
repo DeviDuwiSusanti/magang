@@ -3,19 +3,29 @@ include "../layout/sidebarUser.php";
 
 $id_instansi_ini = $_SESSION["id_instansi"];
 
+// Function untuk generate ID Background
+// function generateIdBackground($id_instansi) {
+//     // Ambil counter terakhir dari database
+//     $query = "SELECT COUNT(*) as total FROM tb_sertifikat_background WHERE id_instansi = '$id_instansi'";
+//     $result = query($query);
+//     $counter = $result[0]['total'] + 1;
+    
+//     // Format counter menjadi 2 digit (01, 02, ...)
+//     $counterFormatted = str_pad($counter, 2, '0', STR_PAD_LEFT);
+    
+//     // Gabungkan dengan id_instansi (9 digit) + counter (2 digit) = 11 digit
+//     return $id_instansi . $counterFormatted;
+// }
+
 if(isset($_POST["submit_approve"])) {
-    $result = approve_nilai($_POST) ;
+    $result = approve_nilai($_POST);
     if($result === 404) { ?>
         <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak Boleh Kosong", "admin2_tanda_tangan.php")</script>
     <?php } else if ($result > 0) { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")
-        </script>
+        <script>alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")</script>
     <?php } else { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")
-        </script>
-<?php }
+        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")</script>
+    <?php }
 }
 
 // Handle upload background sertifikat
@@ -47,12 +57,12 @@ if(isset($_FILES['background_file']) && is_array($_FILES['background_file']['nam
                 $targetFilePath = $uploadDir . $uniqueName;
                 
                 if(move_uploaded_file($fileTmpName, $targetFilePath)) {
-                    // Simpan ke database dengan background_active = 0 dan status_active = 1
+                    // Simpan ke database
                     $id_background = generateIdBackground($id_instansi_ini);
                     $query = "INSERT INTO tb_sertifikat_background 
-                             (id_background, id_instansi, nama_file, path_file, background_active, status_active, create_by) 
+                             (id_background, id_instansi, nama_file, path_file, create_by) 
                               VALUES 
-                             ('$id_background', '$id_instansi_ini', '$fileName', '$targetFilePath', '0', '1', '$id_user')";
+                             ('$id_background', '$id_instansi_ini', '$fileName', '$targetFilePath',  '$id_user')";
                     
                     if(!mysqli_query($conn, $query)) {
                         $errorMessages[] = "Gagal menyimpan file $fileName ke database";
@@ -104,16 +114,16 @@ if(isset($_POST['update_nama_file'])) {
     <?php }
 }
 
-// Handle aktifkan background (set background_active = 1)
-if(isset($_POST['aktifkan_background'])) {
+// Handle set active background
+if(isset($_POST['set_active'])) {
     $id_background = $_POST['id_background'];
     
     // Nonaktifkan semua background untuk instansi ini
-    $query = "UPDATE tb_sertifikat_background SET background_active = '0' WHERE id_instansi = '$id_instansi_ini'";
+    $query = "UPDATE tb_sertifikat_background SET status_active = '0' WHERE id_instansi = '$id_instansi_ini'";
     mysqli_query($conn, $query);
     
     // Aktifkan background yang dipilih
-    $query = "UPDATE tb_sertifikat_background SET background_active = '1', change_by = '$id_user', change_date = NOW() WHERE id_background = '$id_background'";
+    $query = "UPDATE tb_sertifikat_background SET status_active = '1', change_by = '$id_user', change_date = NOW() WHERE id_background = '$id_background'";
     if(mysqli_query($conn, $query)) { ?>
         <script>
             alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Background sertifikat berhasil diaktifkan", "admin2_tanda_tangan.php");
@@ -125,21 +135,33 @@ if(isset($_POST['aktifkan_background'])) {
     <?php }
 }
 
-// Handle hapus background (soft delete - set status_active = 0)
+// Handle hapus background (soft delete)
 if(isset($_POST['hapus_background'])) {
     $id_background = $_POST['id_background'];
     
-    // Update status di database (soft delete)
-    $query = "UPDATE tb_sertifikat_background SET status_active = '0', change_by = '$id_user', change_date = NOW() WHERE id_background = '$id_background'";
-    if(mysqli_query($conn, $query)) { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Background sertifikat berhasil dihapus", "admin2_tanda_tangan.php");
-        </script>
-    <?php } else { ?>
-        <script>
-            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menghapus data dari database", "admin2_tanda_tangan.php");
-        </script>
-    <?php }
+    // Ambil path file dari database
+    $fileData = query("SELECT path_file FROM tb_sertifikat_background WHERE id_background = '$id_background' AND id_instansi = '$id_instansi_ini'");
+    
+    if(!empty($fileData)) {
+        $filePath = $fileData[0]['path_file'];
+        
+        // Hapus file dari server
+        if(file_exists($filePath)) {
+            unlink($filePath);
+        }
+        
+        // Update status di database (soft delete)
+        $query = "UPDATE tb_sertifikat_background SET status_active = '0', change_by = '$id_user', change_date = NOW() WHERE id_background = '$id_background'";
+        if(mysqli_query($conn, $query)) { ?>
+            <script>
+                alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Background sertifikat berhasil dihapus", "admin2_tanda_tangan.php");
+            </script>
+        <?php } else { ?>
+            <script>
+                alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menghapus data dari database", "admin2_tanda_tangan.php");
+            </script>
+        <?php }
+    }
 }
 
 // Get all nilai that need approval (where tanda_tangan_admin is null)
@@ -151,8 +173,8 @@ $nilai_need_approval = query("SELECT n.*, p.id_instansi, pu.nama_user, pu.gambar
                             JOIN tb_pengajuan p ON n.id_pengajuan = p.id_pengajuan
                             WHERE n.tanda_tangan_admin IS NULL AND p.id_instansi = '$id_instansi_ini'");
 
-// Get all background sertifikat untuk instansi ini yang status_active = 1
-$backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi = '$id_instansi_ini' AND status_active = '1'");
+// Get all background sertifikat untuk instansi ini
+$backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi = '$id_instansi_ini' AND status_active != '0'");
 
 $no = 1;
 ?>
@@ -162,7 +184,7 @@ $no = 1;
         background-color: #f8f9fa;
         width: 100%;
     }
-
+    
     .signature-pad canvas {
         width: 100%;
         height: 200px;
@@ -244,17 +266,9 @@ $no = 1;
     .nama-file-display:hover {
         text-decoration: underline;
     }
-    
-    .badge-background-active {
-        background-color: #28a745;
-    }
-    
-    .badge-background-inactive {
-        background-color: #6c757d;
-    }
 </style>
 
-<div class="main-content p-3">
+<main>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Persetujuan Nilai Magang</h1>
         <ol class="breadcrumb mb-4">
@@ -317,14 +331,14 @@ $no = 1;
                                         </div>
                                     </td>
                                     <td>
-                                        <form method="POST">
-                                            <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
-                                            <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
-                                            <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
-                                            <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
-                                                <i class="bi bi-check-circle"></i> Setujui
-                                            </button>
-                                        </form>
+                                    <form method="POST">
+                                        <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
+                                        <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
+                                        <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
+                                        <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
+                                            <i class="bi bi-check-circle"></i> Setujui
+                                        </button>
+                                    </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -340,9 +354,7 @@ $no = 1;
             </div>
         </div>
     <?php endif; ?>
-</div>
-
-<?php include "../layout/footerDashboard.php"; ?>
+</main>
 
 <!-- Modal untuk View Nilai -->
 <div class="modal fade" id="viewNilaiModal" tabindex="-1" aria-labelledby="viewNilaiModalLabel" aria-hidden="true">
@@ -400,8 +412,8 @@ $no = 1;
                                 <img src="<?= $bg['path_file'] ?>" class="background-preview" alt="Background Sertifikat">
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <div>
-                                        <span class="badge <?= $bg['background_active'] == '1' ? 'badge-background-active' : 'badge-background-inactive' ?>">
-                                            <?= $bg['background_active'] == '1' ? 'Aktif' : 'Nonaktif' ?>
+                                        <span class="badge bg-<?= $bg['status_active'] == '1' ? 'success' : 'secondary' ?>">
+                                            <?= $bg['status_active'] == '1' ? 'Aktif' : 'Nonaktif' ?>
                                         </span>
                                         <div class="nama-file-display ms-2" data-id="<?= $bg['id_background'] ?>">
                                             <?= $bg['nama_file'] ?>
@@ -422,15 +434,9 @@ $no = 1;
                                     <div>
                                         <form method="POST" class="d-inline">
                                             <input type="hidden" name="id_background" value="<?= $bg['id_background'] ?>">
-                                            <?php if($bg['background_active'] == '0'): ?>
-                                                <button type="submit" name="aktifkan_background" class="btn btn-sm btn-outline-success">
-                                                    <i class="bi bi-check-circle"></i> Aktifkan
-                                                </button>
-                                            <?php else: ?>
-                                                <button type="button" class="btn btn-sm btn-success" disabled>
-                                                    <i class="bi bi-check-circle"></i> Aktif
-                                                </button>
-                                            <?php endif; ?>
+                                            <button type="submit" name="set_active" class="btn btn-sm btn-<?= $bg['status_active'] == '1' ? 'info' : 'outline-info' ?>" <?= $bg['status_active'] == '1' ? 'disabled' : '' ?>>
+                                                <i class="bi bi-check-circle"></i> Set Aktif
+                                            </button>
                                             <button type="submit" name="hapus_background" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus background ini?')">
                                                 <i class="bi bi-trash"></i> Hapus
                                             </button>
@@ -455,6 +461,7 @@ $no = 1;
     </div>
 </div>
 
+<?php include "../layout/footerDashboard.php"; ?>
 
 <!-- Script untuk Signature Pad -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
@@ -491,7 +498,7 @@ $no = 1;
                 backgroundColor: 'rgb(248, 249, 250)',
                 penColor: 'rgb(0, 0, 0)'
             });
-
+            
             // Handle resize
             function resizeCanvas() {
                 const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -500,7 +507,7 @@ $no = 1;
                 canvas.getContext("2d").scale(ratio, ratio);
                 signaturePads[id].clear();
             }
-
+            
             window.addEventListener("resize", resizeCanvas);
             resizeCanvas();
         });
@@ -517,9 +524,7 @@ $no = 1;
             $.ajax({
                 url: 'pembimbing4_penilaian.php',
                 type: 'GET',
-                data: {
-                    id_nilai: idNilai
-                },
+                data: {id_nilai: idNilai},
                 success: function(response) {
                     $('#viewNilaiContent').html(response);
                 }

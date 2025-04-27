@@ -2,7 +2,9 @@
 include '../layout/sidebarUser.php';
 include "functions.php";
 
-$pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
+// Hanya tampilkan pengajuan yang sudah selesai (status 5)
+$pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' 
+                    AND (status_pengajuan = '5' OR status_pengajuan = '2' OR status_pengajuan = '4' )");
 $daftar_anggota = [];
 $pendidikan_user = null;
 
@@ -80,7 +82,7 @@ if (!empty($pengajuan)) {
     $daftar_anggota = query("SELECT pu.id_user, pu.nama_user, pu.gambar_user, u.email
                             FROM tb_profile_user pu 
                             JOIN tb_user u ON pu.id_user = u.id_user 
-                            WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
+                            WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'"); 
 }
 
 $no = 1;
@@ -108,14 +110,15 @@ $no = 1;
                                 <th>Pendidikan</th>
                                 <th>Jurusan</th>
                                 <th>Logbook</th>
-                                <th>Nilai Peserta</th>
+                                <th>Laporan Akhir</th>
+                                <th>Penilaian</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             <?php foreach ($daftar_anggota as $anggota) : 
                                 // Cek apakah nilai sudah diinput
-                                $check_nilai = query("SELECT * FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user' AND status_active = '1' ");
+                                $check_nilai = query("SELECT * FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user' AND status_active = '1'");
                                 $nilai_exists = !empty($check_nilai);
                                 $nilai_data = $nilai_exists ? $check_nilai[0] : null;
                                 
@@ -125,6 +128,14 @@ $no = 1;
                                                         AND id_pengajuan = '$pengajuan_user'
                                                         AND status_active = '1'");
                                 $unseen_count = $logbook_unseen[0]['total'];
+                                
+                                // Cek apakah sudah upload laporan (jenis_dokumen = 3)
+                                $check_laporan = query("SELECT id_dokumen, file_path FROM tb_dokumen 
+                                                       WHERE jenis_dokumen = '3' 
+                                                       AND id_user = '".$anggota['id_user']."'
+                                                       AND status_active = '1'");
+                                $laporan_exists = !empty($check_laporan);
+                                $laporan_data = $laporan_exists ? $check_laporan[0] : null;
                             ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
@@ -149,14 +160,27 @@ $no = 1;
                                     </td>
 
                                     <td>
+                                        <?php if ($laporan_exists) : ?>
+                                            <a href="../<?= $pengajuan_user ?>/<?= $laporan_data['file_path'] ?>" 
+                                               class="btn btn-success btn-sm" 
+                                               target="_blank"
+                                               title="Lihat Laporan Akhir">
+                                                <i class="bi bi-file-earmark-text"></i>
+                                            </a>
+                                        <?php else : ?>
+                                            <span class="badge bg-secondary">Belum Upload</span>
+                                        <?php endif; ?>
+                                    </td>
+
+                                    <td>
                                         <?php if (!$nilai_exists) : ?>
                                             <button class="btn btn-success btn-sm openNilai"
                                                 data-id_pengajuan="<?= $pengajuan_user ?>"
                                                 data-id_user="<?= $anggota['id_user'] ?? '' ?>"
-                                                data-bs-toggle="<?= ($status_pengajuan == '5') ? 'modal' : '' ?>"
-                                                data-bs-target="<?= ($status_pengajuan == '5') ? '#nilaiModal' : '' ?>"
-                                                <?= ($status_pengajuan != '5') ? 'disabled' : '' ?>
-                                                title="Input nilai peserta">
+                                                data-bs-toggle="<?= ($status_pengajuan == '5' && $laporan_exists) ? 'modal' : '' ?>"
+                                                data-bs-target="<?= ($status_pengajuan == '5' && $laporan_exists) ? '#nilaiModal' : '' ?>"
+                                                <?= ($status_pengajuan != '5' || !$laporan_exists) ? 'disabled' : '' ?>
+                                                title="<?= ($status_pengajuan != '5') ? 'Magang belum selesai' : (!$laporan_exists ? 'Laporan belum diupload' : 'Input nilai peserta') ?>">
                                                 <i class="bi bi-bar-chart"></i>
                                             </button>
                                         <?php else : ?>
@@ -177,13 +201,6 @@ $no = 1;
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <?php endif; ?>
-
-                                            <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $anggota['id_user'] ?>&id_pengajuan=<?= $pengajuan_user ?>" 
-                                                class="btn btn-sm btn-secondary" 
-                                                title="Cetak Nilai" 
-                                                target="_blank">
-                                                <i class="bi bi-printer"></i>
-                                            </a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -341,7 +358,7 @@ $no = 1;
             lengthMenu: [5, 10],
             columnDefs: [{
                 orderable: false,
-                targets: [3, 6, 7]
+                targets: [3, 6, 7, 8]
             }],
             language: {
                 search: "Cari : ",

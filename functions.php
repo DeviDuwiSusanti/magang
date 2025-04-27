@@ -875,7 +875,8 @@ function tambah_pembimbing($POST)
     return mysqli_affected_rows($conn);
 }
 
-function edit_pembimbing($POST) {
+function edit_pembimbing($POST)
+{
     global $conn;
 
     // Ambil data dari form
@@ -940,12 +941,12 @@ function edit_pembimbing($POST) {
         // Eksekusi query dan akumulasi affected rows
         mysqli_query($conn, $query_update_profile);
         $total_affected += mysqli_affected_rows($conn);
-        
+
         mysqli_query($conn, $query_update_user);
         $total_affected += mysqli_affected_rows($conn);
     } else {
         // Jika bidang tidak berubah, update data saja tanpa mengganti id_user
-        
+
         // Query untuk tb_profile_user (DIUTAMAKAN DULUAN)
         $query_update_profile = "UPDATE tb_profile_user
                                 SET nama_user = '$nama_pembimbing',
@@ -965,7 +966,7 @@ function edit_pembimbing($POST) {
         // Eksekusi query dan akumulasi affected rows
         mysqli_query($conn, $query_update_profile);
         $total_affected += mysqli_affected_rows($conn);
-        
+
         mysqli_query($conn, $query_update_user);
         $total_affected += mysqli_affected_rows($conn);
     }
@@ -1106,4 +1107,23 @@ function approve_nilai($POST)
     } else {
         return 0;
     }
+}
+
+
+
+function generateIdBackground($id_instansi)
+{
+    $query = "SELECT MAX(RIGHT(id_background, 2)) as max_counter 
+                    FROM tb_sertifikat_background 
+                    WHERE LEFT(id_background, 9) = '$id_instansi'";
+    $result = query($query);
+
+    if ($result[0]['max_counter']) {
+        $newCounter = (int)$result[0]['max_counter'] + 1;
+    } else {
+        $newCounter = 1;
+    }
+
+    $counterFormatted = str_pad($newCounter, 2, '0', STR_PAD_LEFT);
+    return $id_instansi . $counterFormatted;
 }
