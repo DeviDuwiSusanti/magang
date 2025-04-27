@@ -34,7 +34,7 @@ $result = mysqli_query($conn, $sql);
 
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Daftar Pemagang</h1>
+        <h1 class="mt-3">Daftar Pemagang</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Daftar Data Pemagang</li>
         </ol>

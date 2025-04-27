@@ -146,59 +146,55 @@ if (!is_array($jenis2_pengajuan)) {
 }
 ?>
 
-<div class="main-content p-4">
+<div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Jenis Pengajuan</h1>
+        <h1 class="mt-3">Jenis Pengajuan</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Kelola Jenis Pengajuan</li>
         </ol>
-        <div class="dropdown-divider"></div>
-        
-        <div class="card mb-4 bungkus-2">
-            <div class="card-header">
-                <i class="fas fa-table me-1"></i>
-                Daftar Jenis Pengajuan
-                <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#tambahModal">
-                    <i class="bi bi-plus-circle"></i> Tambah Jenis
-                </button>
+        <div class="alert alert-warning d-flex align-items-center mb-4">
+            <div class="flex-shrink-0 me-2">
+                <i class="bi bi-info-circle-fill fs-4"></i>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Jenis Pengajuan</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (empty($jenis2_pengajuan)): ?>
+            <div>
+                <strong>Perhatian!</strong> Menambah, mengedit, atau menghapus jenis pengajuan akan mempengaruhi semua jenis pengajuan di seluruh instansi. Pastikan perubahan yang dilakukan sesuai dengan kebijakan yang berlaku.
+            </div>
+        </div>
+        <div class="mb-4 dropdown-divider"></div>
+        <div class="table-responsive-sm">
+            <div class="datatable_header mb-2"></div>
+            <div class="bungkus-2 datatable-scrollable">
+                <table id="myTable" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Jenis Pengajuan</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($jenis2_pengajuan)): ?>
+                            <?php foreach ($jenis2_pengajuan as $i => $jp): ?>
                                 <tr>
-                                    <td colspan="3" class="text-center">Tidak ada data jenis pengajuan</td>
+                                    <td class="text-center"><?= $i + 1 ?></td>
+                                    <td class="text-center"><?= htmlspecialchars($jp) ?></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
+                                            data-jenis="<?= htmlspecialchars($jp) ?>">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger btn-hapus"
+                                            data-jenis="<?= htmlspecialchars($jp) ?>">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
                                 </tr>
-                            <?php else: ?>
-                                <?php foreach ($jenis2_pengajuan as $i => $jp): ?>
-                                    <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td><?= htmlspecialchars($jp) ?></td>
-                                        <td>
-                                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal" 
-                                                data-jenis="<?= htmlspecialchars($jp) ?>">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger btn-hapus" 
-                                                data-jenis="<?= htmlspecialchars($jp) ?>">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
+            <div class="datatable-footer mt-2"></div>
         </div>
     </div>
 </div>
@@ -257,7 +253,7 @@ if (!is_array($jenis2_pengajuan)) {
 <script>
     function validateJenisPengajuan() {
         const nama = document.getElementById('nama').value.trim();
-        
+
         if (nama === '') {
             Swal.fire({
                 title: 'Error!',
@@ -267,7 +263,7 @@ if (!is_array($jenis2_pengajuan)) {
             });
             return false;
         }
-        
+
         return true;
     }
 
@@ -277,7 +273,7 @@ if (!is_array($jenis2_pengajuan)) {
         editModal.addEventListener('show.bs.modal', function(event) {
             var button = event.relatedTarget;
             var jenis = button.getAttribute('data-jenis');
-            
+
             document.getElementById('editLama').value = jenis;
             document.getElementById('editBaru').value = jenis;
         });
@@ -286,7 +282,7 @@ if (!is_array($jenis2_pengajuan)) {
         document.querySelectorAll('.btn-hapus').forEach(button => {
             button.addEventListener('click', function() {
                 const jenis = this.getAttribute('data-jenis');
-                
+
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: `Anda akan menghapus jenis pengajuan "${jenis}"`,
@@ -303,5 +299,43 @@ if (!is_array($jenis2_pengajuan)) {
                 });
             });
         });
+    });
+
+    $(document).ready(function() {
+        // Cek apakah sedang di mobile untuk scrollX
+        var isMobile = window.innerWidth < 768;
+
+        // Inisialisasi DataTable hanya sekali
+        var table = $('#myTable').DataTable({
+            scrollX: isMobile,
+            responsive: true,
+            dom: '<"datatable-header row mb-2"' +
+                '<"col-md-6 text-md-start text-center"l>' +
+                '<"col-md-6 text-md-end text-center d-flex justify-content-end align-items-center gap-2"f>' +
+                '>t' +
+                '<"datatable-footer row mt-2"' +
+                '<"col-md-6 text-md-start text-center"i>' +
+                '<"col-md-6 text-md-end text-center"p>' +
+                '>',
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                emptyTable: "Tidak ada data jenis pengajuan yang tersedia",
+                zeroRecords: "Tidak ada data jenis pengajuan yang cocok",
+                paginate: {
+                    previous: "Sebelumnya",
+                    next: "Berikutnya"
+                }
+            }
+        });
+        const tambahJenisPengajuan = `
+        <button type="button" class="btn btn-primary btn-sm ms-2" 
+            data-bs-toggle="modal" 
+            data-bs-target="#tambahModal"
+            title="Tambah Jenis Pengajuan">
+            <i class="bi bi-plus-circle"></i>
+        </button>`;
+        $('.dataTables_filter').append(tambahJenisPengajuan);
     });
 </script>

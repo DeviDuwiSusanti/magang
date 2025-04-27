@@ -3,15 +3,21 @@ include "../layout/sidebarUser.php";
 
 
 
-if(isset($_POST["submit_approve"])) {
-    $result = approve_nilai($_POST) ;
-    if($result === 404) { ?>
-        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak Boleh Kosong", "admin2_tanda_tangan.php")</script>
+if (isset($_POST["submit_approve"])) {
+    $result = approve_nilai($_POST);
+    if ($result === 404) { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak Boleh Kosong", "admin2_tanda_tangan.php")
+        </script>
     <?php } else if ($result > 0) { ?>
-        <script>alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")</script>
+        <script>
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")
+        </script>
     <?php } else { ?>
-        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")</script>
-    <?php }
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")
+        </script>
+<?php }
 }
 
 
@@ -32,7 +38,7 @@ $no = 1;
         background-color: #f8f9fa;
         width: 100%;
     }
-    
+
     .signature-pad canvas {
         width: 100%;
         height: 200px;
@@ -40,7 +46,7 @@ $no = 1;
     }
 </style>
 
-<main>
+<div class="main-content p-3">
     <div class="container-fluid px-4">
         <h1 class="mt-4">Persetujuan Nilai Magang</h1>
         <ol class="breadcrumb mb-4">
@@ -95,14 +101,14 @@ $no = 1;
                                         </div>
                                     </td>
                                     <td>
-                                    <form method="POST">
-                                        <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
-                                        <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
-                                        <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
-                                        <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
-                                            <i class="bi bi-check-circle"></i> Setujui
-                                        </button>
-                                    </form>
+                                        <form method="POST">
+                                            <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
+                                            <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
+                                            <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
+                                            <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
+                                                <i class="bi bi-check-circle"></i> Setujui
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -118,7 +124,9 @@ $no = 1;
             </div>
         </div>
     <?php endif; ?>
-</main>
+</div>
+
+<?php include "../layout/footerDashboard.php"; ?>
 
 <!-- Modal untuk View Nilai -->
 <div class="modal fade" id="viewNilaiModal" tabindex="-1" aria-labelledby="viewNilaiModalLabel" aria-hidden="true">
@@ -138,7 +146,6 @@ $no = 1;
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php"; ?>
 
 <!-- Script untuk Signature Pad -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
@@ -173,7 +180,7 @@ $no = 1;
                 backgroundColor: 'rgb(248, 249, 250)',
                 penColor: 'rgb(0, 0, 0)'
             });
-            
+
             // Handle resize
             function resizeCanvas() {
                 const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -182,7 +189,7 @@ $no = 1;
                 canvas.getContext("2d").scale(ratio, ratio);
                 signaturePads[id].clear();
             }
-            
+
             window.addEventListener("resize", resizeCanvas);
             resizeCanvas();
         });
@@ -199,7 +206,9 @@ $no = 1;
             $.ajax({
                 url: 'ajax2_view_nilai.php',
                 type: 'GET',
-                data: {id_nilai: idNilai},
+                data: {
+                    id_nilai: idNilai
+                },
                 success: function(response) {
                     $('#viewNilaiContent').html(response);
                 }

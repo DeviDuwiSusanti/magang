@@ -1150,3 +1150,8 @@ body.dark-mode .kuota-highlight {
     background-color: rgba(52, 152, 219, 0.15);
     color: #ecf0f1;
 }
+
+.alert-warning {
+    font-size: 14px;
+    line-height: 1.5;
+}

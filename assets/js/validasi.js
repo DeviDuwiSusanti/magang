@@ -21,11 +21,39 @@ function clearError(event) {
   }
 }
 
+// Fungsi untuk mengambil value, handle summernote juga
+function getValue(id) {
+  const element = document.getElementById(id);
+  if (element.classList.contains("summernote")) {
+    return $("#" + id)
+      .summernote("code")
+      .replace(/<[^>]*>?/gm, "")
+      .trim();
+  } else {
+    return element.value.trim();
+  }
+}
+
 // Tambahkan event listener ke semua input dan textarea agar error dihapus saat user mengetik
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll("input, textarea, select").forEach((input) => {
     input.addEventListener("input", clearError);
   });
+
+  // Tambahkan ini untuk Summernote
+  i; // Clear error kalau user edit di Summernote
+  if (typeof $ !== "undefined" && typeof $.fn.summernote !== "undefined") {
+    $(".summernote").on(
+      "summernote.change",
+      function (we, contents, $editable) {
+        const errorId = this.dataset.errorId;
+        const errorElement = document.getElementById(errorId);
+        if (errorElement) {
+          errorElement.textContent = "";
+        }
+      }
+    );
+  }
 });
 
 function validateEditForm() {
@@ -273,6 +301,19 @@ function validateTambahBidang() {
       "Nama bidang tidak boleh kosong."
     );
     isValid = false;
+  } else {
+    // Cek existing nama bidang dengan case-insensitive
+    const namaBidangLower = namaBidang.toLowerCase();
+    const existingLower = existingNamaBidang.map((nama) => nama.toLowerCase());
+
+    if (existingLower.includes(namaBidangLower)) {
+      Swal.fire({
+        icon: "error",
+        title: "Nama Bidang Sudah Ada!",
+        text: "Silakan gunakan nama bidang lain.",
+      });
+      isValid = false;
+    }
   }
 
   const deskripsi = document.getElementById("deskripsi").value.trim();
@@ -323,6 +364,8 @@ function validateEditBidang() {
     .forEach((el) => (el.textContent = ""));
 
   const namaBidang = document.getElementById("edit_nama_bidang").value.trim();
+  const oldNamaBidang = document.getElementById("bidang_nama").value.trim();
+
   if (namaBidang === "") {
     showError(
       "edit_nama_bidang",
@@ -330,6 +373,22 @@ function validateEditBidang() {
       "Nama bidang tidak boleh kosong."
     );
     isValid = false;
+  } else if (namaBidang !== oldNamaBidang) {
+    // Cek existing nama bidang dengan case-insensitive hanya jika nama bidang diubah
+    const namaBidangLower = namaBidang.toLowerCase();
+    const existingLower = existingNamaBidang.map((bidang) =>
+      bidang.toLowerCase()
+    );
+
+    // Cek apakah nama bidang sudah ada
+    if (existingLower.includes(namaBidangLower)) {
+      Swal.fire({
+        icon: "error",
+        title: "Nama Bidang Sudah Ada!",
+        text: "Silakan gunakan nama bidang lain.",
+      });
+      isValid = false;
+    }
   }
 
   const deskripsi = document.getElementById("edit_deskripsi").value.trim();
@@ -406,12 +465,31 @@ function validateTambahPembimbing() {
   }
 
   const email = document.getElementById("email").value.trim();
+
   if (email === "") {
     showError("email", "email_error", "Email tidak boleh kosong.");
     isValid = false;
   } else if (!/^\S+@\S+\.\S+$/.test(email)) {
     showError("email", "email_error", "Format email tidak valid.");
     isValid = false;
+  } else {
+    // Cek existing email dengan case-insensitive
+    const emailPembimbing = email.toLowerCase();
+
+    // Menggunakan data yang dikirim dari PHP (existingDataPembimbing)
+    const existingLower = existingDataPembimbing.map((pembimbing) =>
+      pembimbing.email.toLowerCase()
+    );
+
+    // Cek apakah email sudah ada
+    if (existingLower.includes(emailPembimbing)) {
+      Swal.fire({
+        icon: "error",
+        title: "Email Sudah Terdaftar!",
+        text: "Silakan gunakan email lain.",
+      });
+      isValid = false;
+    }
   }
 
   const nik = document.getElementById("nik_pembimbing").value.trim();
@@ -496,12 +574,24 @@ function validateEditPembimbing() {
   }
 
   const email = document.getElementById("edit_email").value.trim();
+  const oldEmail = document.getElementById("edit_email_lama").value.trim();
+
   if (email === "") {
     showError("edit_email", "edit_email_error", "Email tidak boleh kosong.");
     isValid = false;
   } else if (!/^\S+@\S+\.\S+$/.test(email)) {
     showError("edit_email", "edit_email_error", "Format email tidak valid.");
     isValid = false;
+  } else if (email.toLowerCase() !== oldEmail.toLowerCase()) {
+    // Hanya cek jika email berubah (case-insensitive)
+    const existingEmails = existingDataPembimbing
+      .filter((p) => p.email.toLowerCase() !== oldEmail.toLowerCase())
+      .map((p) => p.email.toLowerCase());
+
+    if (existingEmails.includes(email.toLowerCase())) {
+      Swal.fire("Error", "Email sudah digunakan oleh pembimbing lain", "error");
+      isValid = false;
+    }
   }
 
   const nik = document.getElementById("edit_nik_pembimbing").value.trim();

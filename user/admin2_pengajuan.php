@@ -85,7 +85,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
 
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Pengajuan</h1>
+        <h1 class="mt-3">Pengajuan</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Kelola Daftar Pengajuan User</li>
         </ol>
