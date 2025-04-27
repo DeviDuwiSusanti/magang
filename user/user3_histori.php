@@ -151,7 +151,7 @@ $no = 1;
                         <td class="text-center">
                             <div class="d-flex gap-1 justify-content-center flex-wrap">
                                 <!-- Tombol Laporan -->
-                                <a href="user3_laporanAkhir.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Laporan">
+                                <a href="user3_logbook.php?id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-info btn-sm px-3" title="Laporan">
                                     <i class="bi bi-journal-text"></i>
                                 </a>
 

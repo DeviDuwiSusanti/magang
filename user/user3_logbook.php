@@ -234,11 +234,11 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                         </div>
                         <div class="mb-3" style="flex: 1;">
                             <label for="jam_mulai" class="form-label">Jam Mulai</label>
-                            <input type="time" class="form-control"  id="edit_jam_mulai" name="jam_mulai">
+                            <input type="time" class="form-control"  id="jam_mulai" name="jam_mulai">
                         </div>
                         <div class="mb-3" style="flex: 1;">
                             <label for="jam_selesai" class="form-label">Jam Selesai</label>
-                            <input type="time" class="form-control"  id="edit_jam_selesai" name="jam_selesai">
+                            <input type="time" class="form-control"  id="jam_selesai" name="jam_selesai">
                         </div>
                     </div>
                     
