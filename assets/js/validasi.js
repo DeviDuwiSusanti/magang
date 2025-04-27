@@ -364,7 +364,7 @@ function validateEditBidang() {
     .forEach((el) => (el.textContent = ""));
 
   const namaBidang = document.getElementById("edit_nama_bidang").value.trim();
-  const oldNamaBidang = document.getElementById("bidang_nama").value.trim();
+  const oldNamaBidang = document.getElementById("edit_bidang_lama").value.trim();
 
   if (namaBidang === "") {
     showError(
