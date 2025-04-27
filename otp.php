@@ -7,6 +7,35 @@ if (!isset($_SESSION['email'])) {
     exit();
 }
 
+// Ambil waktu kedaluwarsa OTP dari database
+$email = $_SESSION['email'];
+$query = "SELECT otp_expired FROM tb_user WHERE email = '$email'";
+$result = $conn->query($query);
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $otpExpiredTime = strtotime($row['otp_expired']);
+    $currentTime = time();
+    $timeLeft = $otpExpiredTime - $currentTime;
+    
+    // Jika OTP sudah kedaluwarsa
+    if ($timeLeft <= 0) {
+        $conn->query("UPDATE tb_user SET otp = NULL, otp_expired = NULL WHERE email = '$email'");
+        
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Kode OTP Kedaluwarsa',
+                text: 'Kode OTP telah kedaluwarsa. Silakan login kembali.',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            }).then((result) => {
+                window.location.href = 'login.php';
+            });
+        </script>";
+        exit();
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $otp = $conn->real_escape_string($_POST['otp']);
     $email = $_SESSION['email'];
@@ -46,10 +75,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         exit();
     } else {
-        echo "<script>
-            window.onload = function() {
-                showSwalAlert('error', 'OTP Salah atau Kedaluwarsa!', 'Silakan coba lagi.');
-            };
+        $errorMessage = "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'OTP Salah!',
+                text: 'Silakan coba lagi.',
+                confirmButtonText: 'OK'
+            });
         </script>";
     }
 }
@@ -87,7 +119,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             outline: none;
         }
 
-        /* loader */
         .loader {
             position: fixed;
             top: 0;
@@ -146,6 +177,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+    <?php 
+    if (isset($errorMessage)) echo $errorMessage;
+    ?>
+    
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
         <div class="card p-4 shadow-lg" style="width: 22rem;">
             <a href="login.php" class="text-decoration-none text-dark mb-3 d-block">
@@ -165,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="text" class="otp-input" maxlength="1" name="otp6" required>
                 </div>
                 <input type="hidden" name="otp" id="full-otp">
-                <p class="text-center mt-3" id="timer">Waktu tersisa: 2:00</p>
+                <p class="text-center mt-3" id="timer"></p>
                 <button type="submit" class="btn btn-primary w-100 mt-2">Verifikasi</button>
             </form>
         </div>
@@ -176,11 +211,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <p>Mohon tunggu sebentar...</p>
     </div>
 
-    <script src="./assets/js/alert.js"></script>
-
     <script>
         const inputs = document.querySelectorAll('.otp-input');
         const hiddenOtp = document.getElementById('full-otp');
+        const timerElement = document.getElementById('timer');
 
         // Auto move to next input
         inputs.forEach((input, index) => {
@@ -203,19 +237,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             hiddenOtp.value = Array.from(inputs).map(input => input.value).join('');
         }
 
-        // Timer countdown 2 menit (120 detik)
-        let timeLeft = 120;
-        const timerElement = document.getElementById('timer');
-        const countdown = setInterval(() => {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            timerElement.textContent = `Waktu tersisa: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-            if (timeLeft === 0) {
-                clearInterval(countdown);
-                otp_expired();
-            }
-            timeLeft--;
-        }, 1000);
+        // Timer countdown berdasarkan waktu server
+        let timeLeft = <?php echo isset($timeLeft) && $timeLeft > 0 ? $timeLeft : 0; ?>;
+        
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Jika waktu sudah habis, tampilkan pesan dan redirect
+        if (timeLeft <= 0) {
+            timerElement.textContent = "Kode OTP telah kedaluwarsa";
+            Swal.fire({
+                icon: 'error',
+                title: 'Kode OTP Kedaluwarsa',
+                text: 'Kode OTP telah kedaluwarsa. Silakan login kembali.',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false
+            }).then((result) => {
+                window.location.href = 'login.php';
+            });
+        } else {
+            // Update timer segera
+            timerElement.textContent = `Waktu tersisa: ${formatTime(timeLeft)}`;
+            
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = `Waktu tersisa: ${formatTime(timeLeft)}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    timerElement.textContent = "Kode OTP telah kedaluwarsa";
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Kode OTP Kedaluwarsa',
+                        text: 'Kode OTP telah kedaluwarsa. Silakan login kembali.',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        window.location.href = 'login.php';
+                    });
+                }
+            }, 1000);
+        }
 
         window.addEventListener('load', () => {
             const loader = document.querySelector('.loader');
@@ -223,33 +288,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 loader.classList.add("hidden");
 
                 loader.addEventListener('transitionend', () => {
-                    loader.remove();
+                    if (loader.classList.contains("hidden")) {
+                        loader.style.display = "none";
+                    }
                 });
             }
         });
 
         document.getElementById('otp-form')?.addEventListener('submit', function(e) {
-            e.preventDefault(); // Cegah submit form langsung
+            e.preventDefault();
 
-            let loader = document.querySelector('.loader');
-
-            // Kalau loader sudah dihapus, buat ulang dari awal
-            if (!loader) {
-                loader = document.createElement('div');
-                loader.className = 'loader';
-                loader.innerHTML = `
-            <div class="spinner"></div>
-            <p>Mohon tunggu sebentar...</p>
-        `;
-                document.body.appendChild(loader);
-            } else {
-                loader.classList.remove("hidden");
+            // Validasi OTP terlebih dahulu
+            const otpValue = document.getElementById('full-otp').value;
+            if (otpValue.length !== 6) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'OTP Tidak Lengkap',
+                    text: 'Harap masukkan 6 digit kode OTP',
+                    confirmButtonText: 'OK'
+                });
+                return;
             }
 
-            // Delay 2 detik sebelum submit form
+            // Tampilkan loader
+            const loader = document.querySelector('.loader');
+            loader.style.display = "flex";
+            loader.classList.remove("hidden");
+
+            // Submit form setelah validasi
             setTimeout(() => {
-                e.target.submit(); // Submit form secara manual setelah delay
-            }, 2000); // 2000 ms = 2 detik
+                this.submit();
+            }, 1000);
         });
     </script>
 </body>
