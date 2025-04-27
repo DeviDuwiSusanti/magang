@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
 
 <div class="main-content p-4">
     <div class="container-fluid">
-        <h1 class="mb-4">Profile Instansi</h1>
+        <h1 class="mt-3">Profile Instansi</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Kelola Data Profile Instansi</li>
         </ol>

@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
 
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Bidang Instansi</h1>
+        <h1 class="mt-3">Bidang Instansi</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Kelola Bidang Instansi</li>
         </ol>
@@ -104,9 +104,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                         data-deskripsi="<?= $bd['deskripsi_bidang'] ?>"
                                         data-kriteria="<?= $bd['kriteria_bidang'] ?>"
                                         data-kuota="<?= $bd['kuota_bidang'] ?>"
-                                        data-dokumen="<?= $bd['dokumen_persyaratan'] ?>"
-                                        title="Edit Data Bidang">
-                                        <i class="bi bi-pencil-square"></i>
+                                        data-dokumen="<?= $bd['dokumen_persyaratan'] ?>">
+                                        <i class="bi bi-pencil-square" title="Edit Data Bidang" data-toggle="tooltip"></i>
                                     </button>
                                     <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" onclick="hapus_bidang_admin_instansi('<?= $bd['id_bidang'] ?>')">
                                         <i class="bi bi-trash"></i>
@@ -121,6 +120,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         </div>
     </div>
 </div>
+
+<?php
+// Ambil semua nama bidang instansi yang sedang login dari database
+$bidang_result = mysqli_query($conn, "SELECT nama_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi'");
+
+$existingBidang = [];
+while ($row = mysqli_fetch_assoc($bidang_result)) {
+    $existingBidang[] = $row['nama_bidang'];
+}
+?>
+<script>
+    const existingNamaBidang = <?php echo json_encode($existingBidang); ?>;
+</script>
 
 <!-- Modal Tambah Bidang -->
 <div class="modal fade" id="tambahBidangModal" tabindex="-1" aria-labelledby="tambahBidangModalLabel" aria-hidden="true">
@@ -149,14 +161,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="kriteria" class="form-label">Kriteria</label>
-                            <textarea class="form-control" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="5" placeholder="Masukkan kriteria bidang"></textarea>
-                            <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
+                            <textarea class="form-control summernote" data-error-id="kriteria_error" id="kriteria" name="kriteria" rows="5" placeholder="Masukkan kriteria bidang"></textarea>
                             <small class="text-danger" id="kriteria_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dokumen" class="form-label">Dokumen Persyaratan</label>
-                            <textarea class="form-control" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="5" placeholder="Masukkan dokumen prasyarat"></textarea>
-                            <!-- <small class="text-muted">*Pisahkan dengan koma</small> <br> -->
+                            <textarea class="form-control summernote" data-error-id="dokumen_error" id="dokumen" name="dokumen" rows="5" placeholder="Masukkan dokumen prasyarat"></textarea>
                             <small class="text-danger" id="dokumen_error"></small>
                         </div>
                     </div>
@@ -188,6 +198,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 <form action="" method="POST" id="editBidangForm" enctype="multipart/form-data" onsubmit="return validateEditBidang()">
                     <input type="hidden" name="id_user" value="<?= $id_user ?>">
                     <input type="hidden" name="id_bidang" id="edit_id_bidang">
+                    <?php foreach ($bidang as $b) : ?>
+                        <input type="hidden" name="bidang_nama" id="bidang_nama" value="<?php echo $b['nama_bidang']; ?>">
+                    <?php endforeach; ?>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="nama_bidang" class="form-label fw-bold">Nama Bidang</label>
@@ -255,13 +268,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
         });
     });
 
-    // Inisialisasi tooltip secara global
     document.addEventListener('DOMContentLoaded', function() {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
-        tooltipTriggerList.map(function(tooltipTriggerEl) {
+        let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"], [title]'));
+        let tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
+
+        // Function untuk refresh semua tooltip
+        function refreshTooltips() {
+            // Dispose semua tooltip dulu
+            tooltipList.forEach(function(tooltip) {
+                tooltip.dispose();
+            });
+            // Buat lagi
+            tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"], [title]'));
+            tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+
+        // Tangkap SEMUA modal yang punya class .modal
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(function(modal) {
+            modal.addEventListener('hidden.bs.modal', function() {
+                refreshTooltips();
+            });
+        });
     });
+
+
+
 
     $(document).ready(function() {
         var isMobile = window.innerWidth < 768;
@@ -280,6 +316,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                 search: "Cari:",
                 lengthMenu: "Tampilkan _MENU_ data",
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                emptyTable: "Tidak ada data bidang yang tersedia",
+                zeroRecords: "Tidak ada data bidang yang cocok",
                 paginate: {
                     previous: "Sebelumnya",
                     next: "Berikutnya"
@@ -318,8 +356,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             data-bs-target="#tambahBidangModal" 
             title="Tambah Bidang">
             <i class="bi bi-plus-circle-fill"></i>
-        </button>
-    `;
+        </button>`;
         $('.dataTables_filter').append(tombolTambahBidang);
 
         // Aktifkan tooltip jika pakai Bootstrap Tooltip

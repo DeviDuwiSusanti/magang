@@ -7,7 +7,6 @@ $instansi = mysqli_fetch_assoc($query_instansi);
 $id_instansi_admin = $instansi["id_instansi"];
 $id_instansi = $_SESSION["id_instansi"];
 
-
 // Query untuk mendapatkan daftar bidang
 $bidang = "SELECT 
             pu.id_user AS id_pembimbing, 
@@ -28,24 +27,15 @@ $bidang = "SELECT
             ON pu.id_user = u.id_user
         WHERE pu.status_active = '1'
         AND u.status_active = '1'
-        -- AND b.status_active = '1' 
         AND i.id_instansi = '$id_instansi_admin'
         ORDER BY b.id_bidang ASC";
 
 $query = mysqli_query($conn, $bidang);
 $bidang_list = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
-$list_bidang = query("SELECT tb_bidang.*, 
-                    IFNULL(tb_profile_user.id_user, '') AS id_pembimbing
-                FROM tb_bidang
-                LEFT JOIN tb_profile_user 
-                    ON tb_bidang.id_bidang = tb_profile_user.id_bidang
-                LEFT JOIN tb_user 
-                    ON tb_profile_user.id_user = tb_user.id_user
-                WHERE tb_bidang.id_instansi = '$id_instansi'
-                AND (tb_user.level = '4' OR tb_user.level IS NULL)
-                AND (tb_bidang.status_active = '1' OR tb_bidang.status_active = '0')
-");
+$list_bidang = query("SELECT * FROM tb_bidang 
+                    WHERE id_instansi = '$id_instansi'
+                    AND (status_active = '1' OR status_active = '0')");
 
 $no = 1;
 
@@ -104,43 +94,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
 
 <div class="main-content p-3">
     <div class="container-fluid">
-        <h1 class="mb-4">Pembimbing Magang</h1>
+        <h1 class="mt-3">Pembimbing Magang</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Kelola Data Daftar Pembimbing</li>
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
-        <div class="mb-4 text-end">
-            <?php
-            $jumlahBidang = count($list_bidang);
-
-            // Hitung berapa bidang yang belum punya pembimbing
-            $bidangBelumAdaPembimbing = array_filter($list_bidang, function ($bidang) {
-                return empty($bidang['id_pembimbing']);
-            });
-
-            $jumlahBidangBelumAdaPembimbing = count($bidangBelumAdaPembimbing);
-            ?>
-            <?php if ($jumlahBidang === 0): ?>
-                <!-- Tidak ada bidang, maka tombol tidak ditampilkan -->
-            <?php else: ?>
-                <div class="mb-4 text-end">
-                    <?php
-                    $disabled = $jumlahBidangBelumAdaPembimbing === 0;
-                    $btnClass = $disabled ? 'btn-secondary' : 'btn-primary';
-                    $tombol = '<button type="button"
-                        class="btn ' . $btnClass . ' btn-sm ms-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#tambahPembimbingModal"
-                        title="Tambah Pembimbing"
-                        ' . ($disabled ? 'disabled title="Semua bidang sudah memiliki pembimbing"' : '') . '>
-                        <i class="bi bi-plus-circle-fill"></i>
-                    </button>';
-                    ?>
-                </div>
-            <?php endif; ?>
-        </div>
         <div class="table-responsive-sm">
-            <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
+            <div class="datatable-header mb-2"></div>
             <div class="bungkus-2 datatable-scrollable">
                 <table id="myTable" class="table table-striped table-hover nowrap" style="width:100%">
                     <thead>
@@ -156,19 +116,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     <tbody>
                         <?php if (!empty($bidang_list)): ?>
                             <?php foreach ($bidang_list as $pembimbing): ?>
-                                <?php
-                                // Ambil semua bidang yang sudah memiliki pembimbing
-                                $bidangSudahAdaPembimbing = array_filter($list_bidang, function ($b) {
-                                    return !empty($b['id_pembimbing']);
-                                });
-
-                                // Ambil id_bidang-nya
-                                $idBidangTerpakai = array_column($bidangSudahAdaPembimbing, 'id_bidang');
-
-                                // Hapus id_bidang milik pembimbing ini sendiri dari daftar yang akan di-disable
-                                // $disabledBidang = array_values(array_diff($idBidangTerpakai, [$pembimbing['id_bidang']]));
-                                $disabledBidang = $idBidangTerpakai;
-                                ?>
                                 <tr>
                                     <td><?= $no++ ?></td>
                                     <td><?= ($pembimbing['nama_pembimbing']) ?></td>
@@ -186,7 +133,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                                             data-jabatan="<?= $pembimbing['jabatan'] ?>"
                                             data-telepon="<?= $pembimbing['telepone_pembimbing'] ?>"
                                             data-id_bidang="<?= $pembimbing['id_bidang'] ?>"
-                                            data-disabled_bidang='<?= json_encode($disabledBidang) ?>'
                                             title="Edit Data Pembimbing">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
@@ -200,12 +146,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                     </tbody>
                 </table>
             </div>
-            <div class="datatable-footer mt-2"></div> <!-- Tempat info dan pagination -->
+            <div class="datatable-footer mt-2"></div>
         </div>
     </div>
 </div>
 
 <?php include "../layout/footerDashboard.php" ?>
+
+<?php
+// Ambil semua nama bidang dari database
+$pembimbing_result = mysqli_query($conn, "SELECT tb_user.email, tb_profile_user.jabatan FROM tb_user LEFT JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user");
+
+$existingPembimbing = [];
+while ($row = mysqli_fetch_assoc($pembimbing_result)) {
+    $existingPembimbing[] = ['email' => $row['email'], 'jabatan' => $row['jabatan']];
+}
+?>
+<script>
+    const existingDataPembimbing = <?php echo json_encode($existingPembimbing); ?>;
+</script>
 
 <!-- Modal Tambah Pembimbing -->
 <div class="modal fade" id="tambahPembimbingModal" tabindex="-1" aria-labelledby="tambahPembimbingModalLabel" aria-hidden="true">
@@ -274,7 +233,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                             <?php if (!empty($list_bidang)): ?>
                                 <select id="id_bidang" name="id_bidang" class="form-select select2">
                                     <?php foreach ($list_bidang as $bidang): ?>
-                                        <option value="<?= $bidang['id_bidang']; ?>" <?= !empty($bidang['id_pembimbing']) ? 'disabled' : ''; ?>>
+                                        <option value="<?= $bidang['id_bidang']; ?>">
                                             <?= $bidang['nama_bidang']; ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -307,6 +266,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                 <form action="" method="POST" enctype="multipart/form-data" onsubmit="return validateEditPembimbing()">
                     <input type="hidden" id="edit_id_user" name="edit_id_user" value="<?= $id_user ?>">
                     <input type="hidden" id="edit_id_pembimbing" name="edit_id_pembimbing">
+                    <input type="hidden" id="edit_email_lama" name="edit_email_lama">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="nama_pembimbing" class="form-label">Nama Pembimbing</label>
@@ -315,7 +275,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="email" class="form-label">Email Pembimbing</label>
-                            <input type="email" class="form-control" id="edit_email" name="edit_email">
+                            <input type="text" class="form-control" id="edit_email" name="edit_email">
                             <small id="edit_email_error" class="text-danger"></small>
                         </div>
                     </div>
@@ -365,6 +325,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
 </div>
 
 <script src="../assets/js/validasi.js"></script>
+
+<script>
+// Tangkap event saat modal edit ditampilkan
+document.getElementById('editPembimbingModal').addEventListener('show.bs.modal', function(event) {
+    const button = event.relatedTarget;
+    const emailLama = button.getAttribute('data-email_pembimbing');
+    document.getElementById('edit_email_lama').value = emailLama;
+    document.getElementById('edit_email').value = emailLama;
+});
+</script>
 
 <script>
     $('#editPembimbingModal').on('shown.bs.modal', function() {
@@ -460,36 +430,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                 document.getElementById("edit_jabatan").value = this.getAttribute("data-jabatan");
                 document.getElementById("edit_telepone_pembimbing").value = this.getAttribute("data-telepon");
                 document.getElementById("edit_bidang").value = this.getAttribute("data-id_bidang");
-
-                // Reset semua option: enable dulu semua
-                const bidangSelect = document.getElementById("edit_bidang");
-                Array.from(bidangSelect.options).forEach(option => {
-                    option.disabled = false;
-                });
-
-                // Ambil bidang yang harus di-disable
-                const disabledBidangRaw = this.getAttribute("data-disabled_bidang");
-                let disabledBidang = [];
-
-                try {
-                    disabledBidang = JSON.parse(disabledBidangRaw);
-                } catch (e) {
-                    console.error("Gagal parse disabled_bidang:", e);
-                }
-
-                // Disable bidang yang tidak boleh dipilih
-                Array.from(bidangSelect.options).forEach(option => {
-                    if (disabledBidang.includes(option.value)) {
-                        option.disabled = true;
-                    }
-                });
-
-                // Set selected option
-                bidangSelect.value = this.getAttribute("data-id_bidang");
             });
         });
     });
-
 
     document.addEventListener('DOMContentLoaded', function() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
@@ -526,9 +469,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
         });
 
         // Tambahkan tombol ke samping search
-        var tombol = `<?= $tombol ?>`;
+        var tombol = '<button type="button" class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#tambahPembimbingModal" title="Tambah Pembimbing"><i class="bi bi-plus-circle-fill"></i></button>';
         $('.dataTables_filter').append(tombol);
-        // 🔥 Inisialisasi tooltip untuk tombol yang baru ditambahkan
+
+        // Inisialisasi tooltip untuk tombol yang baru ditambahkan
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
         tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
