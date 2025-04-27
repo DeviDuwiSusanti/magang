@@ -9,7 +9,7 @@ if (!isset($_SESSION['email'])) {
 
 // Ambil waktu kedaluwarsa OTP dari database
 $email = $_SESSION['email'];
-$query = "SELECT otp_expired FROM tb_user WHERE email = '$email'";
+$query = "SELECT otp_expired FROM tb_user WHERE email = '$email' AND status_active = '1'";
 $result = $conn->query($query);
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
