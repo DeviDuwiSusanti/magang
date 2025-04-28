@@ -121,7 +121,7 @@ endif;
                         <div class="card-body">
                             <h5 class="card-title">Instansi Terdaftar</h5>
                             <h2 class="card-text text-success"><?= $instansi_1["total"] ?></h2>
-                            <p class="text-muted">Lihat Dan Kelola Daftar Instansi</p>
+                            <!-- <p class="text-muted">Lihat Dan Kelola Daftar Instansi</p> -->
                             <a href="super1_instansi.php" class="btn btn-success mt-3 detail">View Details</a>
                         </div>
                     </div>
@@ -132,7 +132,7 @@ endif;
                         <div class="card-body">
                             <h5 class="card-title">Daftar Pengguna</h5>
                             <h2 class="card-text text-warning"><?= $user_1["total"] ?></h2>
-                            <p class="text-muted">Lihat Dan Kelola Daftar Pengguna</p>
+                            <!-- <p class="text-muted">Lihat Dan Kelola Daftar Pengguna</p> -->
                             <a href="super1_user.php" class="btn btn-warning mt-3 detail">View Details</a>
                         </div>
                     </div>
@@ -144,7 +144,7 @@ endif;
                         <div class="card-body">
                             <h5 class="card-title">Daftar Pendidikan</h5>
                             <h2 class="card-text text-primary"><?= $pendidikan_1["total"] ?></h2>
-                            <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p>
+                            <!-- <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p> -->
                             <a href="super1_pendidikan.php" class="btn btn-primary mt-3 detail">View Details</a>
                         </div>
                     </div>
@@ -156,7 +156,7 @@ endif;
                         <div class="card-body">
                             <h5 class="card-title">Pengajuan User</h5>
                             <h2 class="card-text text-danger"><?= $pengajuan_1["total"] ?></h2>
-                            <p class="text-muted">Daftar Pengajuan Pengguna</p>
+                            <!-- <p class="text-muted">Daftar Pengajuan Pengguna</p> -->
                             <a href="super1_pengajuan.php" class="btn btn-danger mt-3 detail">View Details</a>
                         </div>
                     </div>
