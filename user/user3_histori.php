@@ -135,11 +135,11 @@ $no = 1;
                                     ?>
                                     
                                     <?php if($nilai_exists) : ?>
-                                        <button class="btn btn-secondary btn-sm px-3" disabled title="Menunggu persetujuan admin">
+                                        <button class="btn btn-secondary btn-sm px-3"  title="Menunggu persetujuan admin">
                                             <i class="bi bi-hourglass"></i>
                                         </button>
                                     <?php else : ?>
-                                        <button class="btn btn-secondary btn-sm px-3" disabled title="Belum ada nilai">
+                                        <button class="btn btn-secondary btn-sm px-3"  title="Belum ada nilai">
                                             <i class="bi bi-file-earmark-excel"></i>
                                         </button>
                                     <?php endif; ?>

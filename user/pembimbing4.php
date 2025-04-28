@@ -141,7 +141,7 @@ $no = 1;
                                     <td><?= $no++ ?></td>
                                     <td><?= $anggota["nama_user"] ?></td>
                                     <td><?= $anggota["email"] ?></td>
-                                    <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
+                                    <td><img src="../assets/img/user/<?= !empty($anggota["gambar_user"]) ? $anggota["gambar_user"] : 'avatar.png' ?>" alt="Foto" width="50" class="rounded-circle"></td>
                                     <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                     <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
 
