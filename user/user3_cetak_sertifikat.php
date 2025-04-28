@@ -179,7 +179,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= htmlspecialchars($sertifikat["jenis_pengajuan"]) ?> pada <?= htmlspecialchars($sertifikat["nama_panjang"]) ?>
+    <p>Telah melaksanakan <?= htmlspecialchars($sertifikat["jenis_pengajuan"]) ?> pada <?= htmlspecialchars($sertifikat["nama_panjang"]) ?> di Bidang <?= $sertifikat["nama_bidang"] ?>
       selama 1 periode, dari tanggal <?= $tanggal_mulai ?> sampai <?= $tanggal_selesai ?>.</p>
 
     <?php
