@@ -104,6 +104,19 @@ if ($level == 4) :
 endif;
 
 ?>
+<script>
+    document.addEventListener('keydown', function (event) {
+        // Cek apakah user menekan tombol F12 atau Ctrl + Shift + I
+        if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
+            event.preventDefault(); // Mencegah developer tools terbuka
+        }
+    });
+
+    // Mencegah menggunakan klik kanan
+    document.addEventListener('contextmenu', function (event) {
+        event.preventDefault(); // Menonaktifkan menu klik kanan
+    });
+</script>
 
 <div class="main-content p-4">
     <div class="container-fluid">
