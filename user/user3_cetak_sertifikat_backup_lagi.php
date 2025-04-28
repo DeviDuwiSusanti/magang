@@ -44,7 +44,7 @@ if (!empty($background)) {
 $contentStyle = "margin-top: 40px;";
 if (!empty($background)) {
   $contentStyle .= "
-    background-color: transparant;
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 10px;
   ";
