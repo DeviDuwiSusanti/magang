@@ -109,8 +109,13 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       <td>: <strong><?= $sertifikat["nama_user"] ?></strong></td>
     </tr>
     <tr>
-      <td>NIM</td>
-      <td>: <?= $sertifikat["nim"] ?></td>
+      <?php if($sertifikat["nim"] == "") {?>
+        <td>NISN</td>
+        <td>: <?= $sertifikat["nisn"] ?></td>
+      <?php } else { ?>
+          <td>NIM</td>
+          <td>: <?= $sertifikat["nim"] ?></td>
+      <?php } ?>
     </tr>
     <tr>
       <td>Nama Instansi</td>
