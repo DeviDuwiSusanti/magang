@@ -278,7 +278,7 @@ $jenis_pengajuan_options = json_decode($row_jenis['jenis2_pengajuan'], true) ?? 
                                                         <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
                                                     </div>
                                                     <?php
-                                                     if (strlen($id_studi) == 7) : ?>
+                                                    if (strlen($id_studi) == 7) : ?>
                                                         <div class="col">
                                                             <input type="number" class="form-control" value="<?= $pendaftar['nim'] ?>"  readonly>
                                                         </div>
@@ -478,19 +478,19 @@ $jenis_pengajuan_options = json_decode($row_jenis['jenis2_pengajuan'], true) ?? 
                                     </div>
                                     
                                     <div id="bidangDetailContent" style="display: none;">
-                                        <strong><h4 class="card-subtitle" id="instansiNama"><?= $pengajuan['nama_panjang'] ?></h4></strong><hr>
-                                        <h1 class="card-subtitle text-muted" id="bidangNama"><?= $pengajuan['nama_bidang'] ?></h1><hr>
+                                        <strong><h4 class="card-subtitle" id="instansiNama"></h4></strong><hr>
+                                        <h1 class="card-subtitle text-muted" id="bidangNama"></h1><hr>
                                         <p class="text-start"><i class="bi bi-text-paragraph me-2"></i>Deskripsi:</p>
-                                        <p class="text-start text-muted" id="bidangDeskripsi"><?= $pengajuan['deskripsi_bidang'] ?></p><hr>
+                                        <p class="text-start text-muted" id="bidangDeskripsi">p><hr>
                                         <p class="text-start"><i class="bi bi-list-check me-2"></i>Kriteria:</p>
-                                        <p class="text-start text-muted" id="bidangKriteria"><?= $pengajuan['kriteria_bidang'] ?></p><hr>
+                                        <p class="text-start text-muted" id="bidangKriteria"></p><hr>
                                         <p class="text-start"><i class="bi bi-file-earmark-text me-2"></i>Dokumen Persyaratan:</p>
-                                        <p class="text-start text-muted"id="bidangDokumen"><?= $pengajuan['dokumen_persyaratan'] ?></p><hr>
+                                        <p class="text-start text-muted"id="bidangDokumen"></p><hr>
                                         <div class="alert alert-info mt-2 p-2 small">
                                             <i class="bi bi-info-circle me-1"></i> 
                                             <strong>Catatan:</strong> Dokumen selain KTP, CV, dan Proposal dapat diunggah setelah pengajuan diterima.
                                         </div><hr>
-                                        <p class="text-start"><i class="bi bi-people-fill me-2"></i>Kuota : <span id="bidangKuota"><?= $pengajuan['kuota_bidang'] ?></span></p><hr>       
+                                        <p class="text-start"><i class="bi bi-people-fill me-2"></i>Kuota : <span id="bidangKuota"></span></p><hr>       
                                     </div>
                                 </div>
                             </div>
@@ -580,8 +580,9 @@ $jenis_pengajuan_options = json_decode($row_jenis['jenis2_pengajuan'], true) ?? 
                         $("#instansiNama").text(response.nama_panjang);
                         $("#bidangNama").text(response.nama_bidang);
                         $("#bidangDeskripsi").text(response.deskripsi_bidang);
-                        $("#bidangKriteria").text(response.kriteria_bidang);
-                        $("#bidangDokumen").text(response.dokumen_persyaratan);
+                        // Di dalam success callback AJAX:
+                        $("#bidangKriteria").html(response.kriteria_bidang);
+                        $("#bidangDokumen").html(response.dokumen_persyaratan);
                         $("#bidangKuota").text(response.kuota_bidang);
                         $("#detailBidangContainer").show();
                     }

@@ -63,9 +63,9 @@ $query2 = mysqli_query($conn, $sql2);
 $total_pengajuan = mysqli_fetch_array($query2)['jumlah_pengajuan'];
 
 // akses sertifikat/nilai
-$sql2 = "SELECT COUNT(*) jumlah_nilai FROM tb_pengajuan, tb_dokumen WHERE tb_pengajuan.id_user = '$id_user' AND tb_dokumen.id_pengajuan = tb_dokumen.id_pengajuan AND jenis_dokumen = '4'";
+$sql2 = "SELECT COUNT(*) AS nilai FROM tb_nilai WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' AND status_active = '1'";
 $query2 = mysqli_query($conn, $sql2);
-$total_nilai = mysqli_fetch_assoc($query2)['jumlah_nilai'];
+$total_nilai = mysqli_fetch_assoc($query2)['nilai'];
 
 // akses histori
 if ($ketua){

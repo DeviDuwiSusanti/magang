@@ -3,20 +3,23 @@ include "../layout/sidebarUser.php";
 
 $id_instansi_ini = $_SESSION["id_instansi"];
 
-
 if(isset($_POST["submit_approve"])) {
-    $result = approve_nilai($_POST);
+    $result = approve_nilai($_POST) ;
     if($result === 404) { ?>
         <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak Boleh Kosong", "admin2_tanda_tangan.php")</script>
     <?php } else if ($result > 0) { ?>
-        <script>alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")</script>
+        <script>
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")
+        </script>
     <?php } else { ?>
-        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")</script>
-    <?php }
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")
+        </script>
+<?php }
 }
 
 // Handle upload background sertifikat
-if(isset($_FILES['background_file']) && $_FILES['background_file']['error'] == UPLOAD_ERR_OK) {
+if(isset($_FILES['background_file']) && is_array($_FILES['background_file']['name'])) {
     $uploadDir = '../assets/img/instansi/'.$id_instansi_ini.'/';
     
     // Buat folder jika belum ada
@@ -24,58 +27,93 @@ if(isset($_FILES['background_file']) && $_FILES['background_file']['error'] == U
         mkdir($uploadDir, 0777, true);
     }
     
-    // Upload file
-    $fileName = basename($_FILES['background_file']['name']);
-    $targetFilePath = $uploadDir . $fileName;
-    $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
+    $successCount = 0;
+    $errorMessages = [];
     
-    // Allow certain file formats
-    $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
-    
-    if(in_array($fileType, $allowTypes)) {
-        // Generate unique filename to prevent overwrite
-        $uniqueName = uniqid() . '_' . $fileName;
-        $targetFilePath = $uploadDir . $uniqueName;
-        
-        if(move_uploaded_file($_FILES['background_file']['tmp_name'], $targetFilePath)) {
-            // Simpan ke database
-            $id_background = generateIdBackground($id_instansi_ini);
-            $query = "INSERT INTO tb_sertifikat_background 
-                     (id_background, id_instansi, nama_file, path_file, status_active, create_by) 
-                      VALUES 
-                     ('$id_background', '$id_instansi_ini', '$fileName', '$targetFilePath', '1', '$id_user')";
+    // Loop melalui semua file yang diupload
+    for($i = 0; $i < count($_FILES['background_file']['name']); $i++) {
+        if($_FILES['background_file']['error'][$i] == UPLOAD_ERR_OK) {
+            $fileName = basename($_FILES['background_file']['name'][$i]);
+            $fileTmpName = $_FILES['background_file']['tmp_name'][$i];
+            $targetFilePath = $uploadDir . $fileName;
+            $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
             
-            if(mysqli_query($conn, $query)) { ?>
-                <script>
-                    alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Background sertifikat berhasil diupload", "admin2_tanda_tangan.php");
-                </script>
-            <?php } else { ?>
-                <script>
-                    alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menyimpan data ke database: <?= mysqli_error($conn) ?>", "admin2_tanda_tangan.php");
-                </script>
-            <?php }
-        } else { ?>
-            <script>
-                alert_berhasil_gagal_super_admin("error", "Gagal !!", "Maaf, terjadi error saat upload file", "admin2_tanda_tangan.php");
-            </script>
-        <?php }
-    } else { ?>
+            // Allow certain file formats
+            $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+            
+            if(in_array($fileType, $allowTypes)) {
+                // Generate unique filename to prevent overwrite
+                $uniqueName = uniqid() . '_' . $fileName;
+                $targetFilePath = $uploadDir . $uniqueName;
+                
+                if(move_uploaded_file($fileTmpName, $targetFilePath)) {
+                    // Simpan ke database dengan background_active = 0 dan status_active = 1
+                    $id_background = generateIdBackground($id_instansi_ini);
+                    $query = "INSERT INTO tb_sertifikat_background 
+                             (id_background, id_instansi, nama_file, path_file, background_active, status_active, create_by) 
+                              VALUES 
+                             ('$id_background', '$id_instansi_ini', '$fileName', '$targetFilePath', '0', '1', '$id_user')";
+                    
+                    if(!mysqli_query($conn, $query)) {
+                        $errorMessages[] = "Gagal menyimpan file $fileName ke database";
+                        // Hapus file yang sudah diupload jika gagal simpan ke database
+                        if(file_exists($targetFilePath)) {
+                            unlink($targetFilePath);
+                        }
+                    } else {
+                        $successCount++;
+                    }
+                } else {
+                    $errorMessages[] = "Gagal upload file $fileName";
+                }
+            } else {
+                $errorMessages[] = "File $fileName: Format tidak didukung (hanya JPG, PNG, JPEG, GIF)";
+            }
+        }
+    }
+    
+    // Tampilkan pesan hasil upload
+    if($successCount > 0 || !empty($errorMessages)) {
+        $successMsg = $successCount > 0 ? "Berhasil upload $successCount file" : "";
+        $errorMsg = !empty($errorMessages) ? implode("<br>", $errorMessages) : "";
+        ?>
         <script>
-            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hanya file JPG, JPEG, PNG, & GIF yang diperbolehkan", "admin2_tanda_tangan.php");
+            alert_berhasil_gagal_super_admin("<?= $successCount > 0 ? 'success' : 'error' ?>", 
+                "Upload File", 
+                "<?= $successMsg ?><?= ($successMsg && $errorMsg) ? '<br>' : '' ?><?= $errorMsg ?>", 
+                "admin2_tanda_tangan.php");
+        </script>
+        <?php
+    }
+}
+
+// Handle update nama file
+if(isset($_POST['update_nama_file'])) {
+    $id_background = $_POST['id_background'];
+    $nama_file = mysqli_real_escape_string($conn, $_POST['nama_file']);
+    
+    $query = "UPDATE tb_sertifikat_background SET nama_file = '$nama_file', change_by = '$id_user', change_date = NOW() WHERE id_background = '$id_background'";
+    if(mysqli_query($conn, $query)) { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Nama file berhasil diupdate", "admin2_tanda_tangan.php");
+        </script>
+    <?php } else { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal mengupdate nama file", "admin2_tanda_tangan.php");
         </script>
     <?php }
 }
 
-// Handle set active background
-if(isset($_POST['set_active'])) {
+// Handle aktifkan background (set background_active = 1)
+if(isset($_POST['aktifkan_background'])) {
     $id_background = $_POST['id_background'];
     
     // Nonaktifkan semua background untuk instansi ini
-    $query = "UPDATE tb_sertifikat_background SET status_active = '0' WHERE id_instansi = '$id_instansi_ini'";
+    $query = "UPDATE tb_sertifikat_background SET background_active = '0' WHERE id_instansi = '$id_instansi_ini'";
     mysqli_query($conn, $query);
     
     // Aktifkan background yang dipilih
-    $query = "UPDATE tb_sertifikat_background SET status_active = '1' WHERE id_background = '$id_background'";
+    $query = "UPDATE tb_sertifikat_background SET background_active = '1', change_by = '$id_user', change_date = NOW() WHERE id_background = '$id_background'";
     if(mysqli_query($conn, $query)) { ?>
         <script>
             alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Background sertifikat berhasil diaktifkan", "admin2_tanda_tangan.php");
@@ -87,33 +125,21 @@ if(isset($_POST['set_active'])) {
     <?php }
 }
 
-// Handle hapus background
+// Handle hapus background (soft delete - set status_active = 0)
 if(isset($_POST['hapus_background'])) {
     $id_background = $_POST['id_background'];
     
-    // Ambil path file dari database
-    $fileData = query("SELECT path_file FROM tb_sertifikat_background WHERE id_background = '$id_background' AND id_instansi = '$id_instansi_ini'");
-    
-    if(!empty($fileData)) {
-        $filePath = $fileData[0]['path_file'];
-        
-        // Hapus file dari server
-        if(file_exists($filePath)) {
-            unlink($filePath);
-        }
-        
-        // Hapus dari database
-        $query = "DELETE FROM tb_sertifikat_background WHERE id_background = '$id_background' AND id_instansi = '$id_instansi_ini'";
-        if(mysqli_query($conn, $query)) { ?>
-            <script>
-                alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Background sertifikat berhasil dihapus", "admin2_tanda_tangan.php");
-            </script>
-        <?php } else { ?>
-            <script>
-                alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menghapus data dari database", "admin2_tanda_tangan.php");
-            </script>
-        <?php }
-    }
+    // Update status di database (soft delete)
+    $query = "UPDATE tb_sertifikat_background SET status_active = '0', change_by = '$id_user', change_date = NOW() WHERE id_background = '$id_background'";
+    if(mysqli_query($conn, $query)) { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Background sertifikat berhasil dihapus", "admin2_tanda_tangan.php");
+        </script>
+    <?php } else { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Gagal menghapus data dari database", "admin2_tanda_tangan.php");
+        </script>
+    <?php }
 }
 
 // Get all nilai that need approval (where tanda_tangan_admin is null)
@@ -125,8 +151,8 @@ $nilai_need_approval = query("SELECT n.*, p.id_instansi, pu.nama_user, pu.gambar
                             JOIN tb_pengajuan p ON n.id_pengajuan = p.id_pengajuan
                             WHERE n.tanda_tangan_admin IS NULL AND p.id_instansi = '$id_instansi_ini'");
 
-// Get all background sertifikat untuk instansi ini
-$backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi = '$id_instansi_ini'");
+// Get all background sertifikat untuk instansi ini yang status_active = 1
+$backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi = '$id_instansi_ini' AND status_active = '1'");
 
 $no = 1;
 ?>
@@ -136,7 +162,7 @@ $no = 1;
         background-color: #f8f9fa;
         width: 100%;
     }
-    
+
     .signature-pad canvas {
         width: 100%;
         height: 200px;
@@ -169,11 +195,13 @@ $no = 1;
         padding: 20px;
         text-align: center;
         cursor: pointer;
+        position: relative;
     }
     
     .dropzone .dz-message {
         font-size: 1.2em;
         color: #666;
+        pointer-events: none;
     }
     
     .dropzone .dz-preview .dz-image {
@@ -184,9 +212,49 @@ $no = 1;
     #uploadButton {
         margin-top: 15px;
     }
+    
+    .file-input-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .file-input-wrapper input {
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+    
+    .edit-nama-file {
+        display: none;
+    }
+    
+    .edit-nama-file.active {
+        display: block;
+    }
+    
+    .nama-file-display {
+        cursor: pointer;
+    }
+    
+    .nama-file-display:hover {
+        text-decoration: underline;
+    }
+    
+    .badge-background-active {
+        background-color: #28a745;
+    }
+    
+    .badge-background-inactive {
+        background-color: #6c757d;
+    }
 </style>
 
-<main>
+<div class="main-content p-3">
     <div class="container-fluid px-4">
         <h1 class="mt-4">Persetujuan Nilai Magang</h1>
         <ol class="breadcrumb mb-4">
@@ -249,14 +317,14 @@ $no = 1;
                                         </div>
                                     </td>
                                     <td>
-                                    <form method="POST">
-                                        <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
-                                        <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
-                                        <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
-                                        <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
-                                            <i class="bi bi-check-circle"></i> Setujui
-                                        </button>
-                                    </form>
+                                        <form method="POST">
+                                            <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
+                                            <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
+                                            <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
+                                            <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
+                                                <i class="bi bi-check-circle"></i> Setujui
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -272,7 +340,9 @@ $no = 1;
             </div>
         </div>
     <?php endif; ?>
-</main>
+</div>
+
+<?php include "../layout/footerDashboard.php"; ?>
 
 <!-- Modal untuk View Nilai -->
 <div class="modal fade" id="viewNilaiModal" tabindex="-1" aria-labelledby="viewNilaiModalLabel" aria-hidden="true">
@@ -309,8 +379,8 @@ $no = 1;
                             Seret file ke sini atau klik untuk mengupload<br>
                             <span class="text-muted">(Format: JPG, PNG, JPEG, GIF)</span>
                         </div>
-                        <div class="fallback">
-                            <input name="background_file" type="file" />
+                        <div class="file-input-wrapper">
+                            <input type="file" name="background_file[]" id="background_file" multiple accept="image/*">
                         </div>
                     </div>
                     <div class="text-center mt-3">
@@ -330,17 +400,37 @@ $no = 1;
                                 <img src="<?= $bg['path_file'] ?>" class="background-preview" alt="Background Sertifikat">
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <div>
-                                        <span class="badge bg-<?= $bg['background_active'] == '1' ? 'success' : 'secondary' ?>">
+                                        <span class="badge <?= $bg['background_active'] == '1' ? 'badge-background-active' : 'badge-background-inactive' ?>">
                                             <?= $bg['background_active'] == '1' ? 'Aktif' : 'Nonaktif' ?>
                                         </span>
-                                        <span class="ms-2"><?= $bg['nama_file'] ?></span>
+                                        <div class="nama-file-display ms-2" data-id="<?= $bg['id_background'] ?>">
+                                            <?= $bg['nama_file'] ?>
+                                        </div>
+                                        <form method="POST" class="edit-nama-file" id="edit-nama-<?= $bg['id_background'] ?>">
+                                            <input type="hidden" name="id_background" value="<?= $bg['id_background'] ?>">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" name="nama_file" value="<?= $bg['nama_file'] ?>">
+                                                <button type="submit" name="update_nama_file" class="btn btn-success">
+                                                    <i class="bi bi-check"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-secondary cancel-edit" data-id="<?= $bg['id_background'] ?>">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                     <div>
                                         <form method="POST" class="d-inline">
                                             <input type="hidden" name="id_background" value="<?= $bg['id_background'] ?>">
-                                            <button type="submit" name="set_active" class="btn btn-sm btn-<?= $bg['background_active'] == '1' ? 'info' : 'outline-info' ?>" <?= $bg['background_active'] == '1' ? 'disabled' : '' ?>>
-                                                <i class="bi bi-check-circle"></i> Set Aktif
-                                            </button>
+                                            <?php if($bg['background_active'] == '0'): ?>
+                                                <button type="submit" name="aktifkan_background" class="btn btn-sm btn-outline-success">
+                                                    <i class="bi bi-check-circle"></i> Aktifkan
+                                                </button>
+                                            <?php else: ?>
+                                                <button type="button" class="btn btn-sm btn-success" disabled>
+                                                    <i class="bi bi-check-circle"></i> Aktif
+                                                </button>
+                                            <?php endif; ?>
                                             <button type="submit" name="hapus_background" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus background ini?')">
                                                 <i class="bi bi-trash"></i> Hapus
                                             </button>
@@ -365,7 +455,6 @@ $no = 1;
     </div>
 </div>
 
-<?php include "../layout/footerDashboard.php"; ?>
 
 <!-- Script untuk Signature Pad -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
@@ -402,7 +491,7 @@ $no = 1;
                 backgroundColor: 'rgb(248, 249, 250)',
                 penColor: 'rgb(0, 0, 0)'
             });
-            
+
             // Handle resize
             function resizeCanvas() {
                 const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -411,7 +500,7 @@ $no = 1;
                 canvas.getContext("2d").scale(ratio, ratio);
                 signaturePads[id].clear();
             }
-            
+
             window.addEventListener("resize", resizeCanvas);
             resizeCanvas();
         });
@@ -428,7 +517,9 @@ $no = 1;
             $.ajax({
                 url: 'pembimbing4_penilaian.php',
                 type: 'GET',
-                data: {id_nilai: idNilai},
+                data: {
+                    id_nilai: idNilai
+                },
                 success: function(response) {
                     $('#viewNilaiContent').html(response);
                 }
@@ -445,18 +536,32 @@ $no = 1;
             return true;
         }
 
+        // Fungsi untuk edit nama file
+        $('.nama-file-display').click(function() {
+            const id = $(this).data('id');
+            $(this).hide();
+            $('#edit-nama-' + id).addClass('active');
+        });
+        
+        $('.cancel-edit').click(function() {
+            const id = $(this).data('id');
+            $('#edit-nama-' + id).removeClass('active');
+            $('.nama-file-display[data-id="' + id + '"]').show();
+        });
+
         // Inisialisasi Dropzone
         Dropzone.autoDiscover = false;
         
-        // Konfigurasi Dropzone yang lebih sederhana
+        // Konfigurasi Dropzone
         $("#myDropzone").dropzone({
             url: "admin2_tanda_tangan.php", // URL untuk upload
             paramName: "background_file", // Parameter name
-            maxFilesize: 5, // MB
+            maxFilesize: 1, // MB
             acceptedFiles: "image/*",
             addRemoveLinks: true,
             autoProcessQueue: false, // Tidak otomatis upload
-            parallelUploads: 1, // Hanya 1 file sekaligus
+            parallelUploads: 5, // Bisa upload multiple file
+            uploadMultiple: true, // Enable multiple file upload
             dictDefaultMessage: "<i class='bi bi-cloud-arrow-up' style='font-size: 2rem;'></i><br>Seret file ke sini atau klik untuk mengupload<br><span class='text-muted'>(Format: JPG, PNG, JPEG, GIF)</span>",
             dictFileTooBig: "File terlalu besar ({{filesize}}MB). Maksimal {{maxFilesize}}MB.",
             dictInvalidFileType: "Format file tidak didukung.",
@@ -494,6 +599,25 @@ $no = 1;
                     alert("Error: " + message);
                     this.removeFile(file);
                 });
+            }
+        });
+        
+        // Handle klik pada seluruh area dropzone untuk memunculkan file dialog
+        $('#myDropzone').click(function(e) {
+            // Hanya trigger jika yang diklik bukan elemen dropzone internal
+            if ($(e.target).hasClass('dropzone') || $(e.target).hasClass('dz-message')) {
+                $('#background_file').click();
+            }
+        });
+        
+        // Update tampilan dropzone ketika file dipilih
+        $('#background_file').change(function() {
+            if(this.files.length > 0) {
+                const dropzone = $('#myDropzone');
+                dropzone.find('.dz-message').html(
+                    `Dipilih ${this.files.length} file<br>
+                     <span class="text-muted">Klik Upload untuk mengunggah</span>`
+                );
             }
         });
     });
