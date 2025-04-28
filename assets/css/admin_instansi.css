@@ -1178,3 +1178,19 @@ body.dark-mode .kuota-highlight {
     max-width: 100%;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
+/* Dark mode untuk PDF Viewer */
+body.dark-mode #docPreview {
+    background-color: #2c3e50; /* warna gelap */
+    border-radius: 5px;
+    padding: 15px;
+    color: #ecf0f1; /* teks lebih terang */
+}
+
+/* Dark mode untuk canvas di dalam PDF Viewer */
+body.dark-mode #docPreview canvas {
+    background-color: #34495e; /* sedikit lebih terang dari background docPreview */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4); /* bayangan lebih gelap */
+    border-radius: 5px;
+}
+
