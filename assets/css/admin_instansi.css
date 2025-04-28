@@ -1155,3 +1155,26 @@ body.dark-mode .kuota-highlight {
     font-size: 14px;
     line-height: 1.5;
 }
+
+/* Style untuk PDF viewer */
+#docPreview {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+/* Style untuk list dokumen */
+#docList .list-group-item {
+    transition: all 0.2s;
+}
+
+#docList .list-group-item:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+/* Style untuk canvas PDF */
+#docPreview canvas {
+    max-width: 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}

@@ -1,4 +1,4 @@
-<?php
+<?php 
 include "../functions.php";
 
 $id_user_ini = $_GET["id_user_ini"];
@@ -20,33 +20,28 @@ $id_instansi = query("SELECT id_instansi FROM tb_pengajuan WHERE id_pengajuan = 
 $id_instansi_ini = $id_instansi["id_instansi"];
 $admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_instansi_ini'")[0];
 
-// Ambil background aktif dari instansi
-$background = query("SELECT * FROM tb_sertifikat_background 
-                    WHERE id_instansi = '$id_instansi_ini' AND background_active = '1' AND status_active = '1'")[0];
-
 // Fungsi untuk konversi tanggal
-function formatTanggal($date)
-{
-  $bulan = array(
-    1 => 'Januari',
-    2 => 'Februari',
-    3 => 'Maret',
-    4 => 'April',
-    5 => 'Mei',
-    6 => 'Juni',
-    7 => 'Juli',
-    8 => 'Agustus',
-    9 => 'September',
-    10 => 'Oktober',
-    11 => 'November',
-    12 => 'Desember'
-  );
-
-  $tanggal = date('j', strtotime($date));
-  $bulan_num = date('n', strtotime($date));
-  $tahun = date('Y', strtotime($date));
-
-  return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
+function formatTanggal($date) {
+    $bulan = array(
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    );
+    
+    $tanggal = date('j', strtotime($date));
+    $bulan_num = date('n', strtotime($date));
+    $tahun = date('Y', strtotime($date));
+    
+    return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
 }
 
 $tanggal_mulai = formatTanggal($sertifikat["tanggal_mulai"]);
@@ -56,7 +51,6 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8">
   <title>Sertifikat Magang</title>
@@ -65,80 +59,40 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       size: A4 landscape;
       margin: 0;
     }
-
     body {
       font-family: Arial, sans-serif;
       margin: 50px;
-      <?php if (!empty($background)) { ?>
-        background-image: url('<?= $background['path_file'] ?>');
-        background-color : white;
-        background-size : cover;
-        background-position : center;
-        background-repeat: no-repeat;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      <?php } else { ?>
-        background-color : white;
-      <?php }?>
     }
-
-    @media print {
-      body {
-        margin: 0;
-        padding: 0;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .content {
-        background-color: rgba(255, 255, 255, 0.8) !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-    }
-
-    h1,
-    h2,
-    h3 {
+    h1, h2, h3 {
       text-align: center;
       margin-bottom: 0;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
-
     .no-border {
       border: none;
     }
-
     .center {
       text-align: center;
     }
-
     .signature {
       margin-top: 80px;
       text-align: right;
     }
-
     .content {
       margin-top: 40px;
-      <?php if (!empty($background)): ?>
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 10px;
-      <?php endif; ?>
     }
   </style>
 </head>
-
 <body>
-  <div class="content">
-    <h1>Sertifikat</h1>
-    <h3>HASIL PRAKTIK MAGANG</h3>
-    <p class="center">Nomor: 500.5.7.10/239/438.5.14/2025</p>
+  <h1>Sertifikat</h1>
+  <h3>HASIL PRAKTIK MAGANG</h3>
+  <p class="center">Nomor: 500.5.7.10/239/438.5.14/2025</p>
 
+  <div class="content">
     <p>Diberikan kepada:</p>
     <h2><?= $sertifikat["nama_user"] ?></h2>
 
@@ -148,7 +102,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
         <td><?= $sertifikat["tempat_lahir"] ?>, <?= $tanggal_lahir ?></td>
       </tr>
       <tr>
-        <?php if ($pendidikan["fakultas"] == "") { ?>
+        <?php if($pendidikan["fakultas"] == "") { ?>
           <td>Sekolah</td>
         <?php } else { ?>
           <td>Universitas</td>
@@ -156,7 +110,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
         <td><?= $pendidikan["nama_pendidikan"] ?></td>
       </tr>
       <tr>
-        <?php if ($pendidikan["fakultas"] == "") { ?>
+      <?php if($pendidikan["fakultas"] == "") { ?>
           <td>Nomor Induk Sekolah Nasional</td>
           <td><?= $sertifikat["nisn"] ?></td>
         <?php } else { ?>
@@ -170,19 +124,19 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= $sertifikat["jenis_pengajuan"] ?> pada <?= $sertifikat["nama_panjang"] ?>
-      Selama 1 Periode, dari tanggal <?= $tanggal_mulai ?> sampai <?= $tanggal_selesai ?>.</p>
+    <p>Telah melaksanakan <?= $sertifikat["jenis_pengajuan"] ?> pada <?= $sertifikat["nama_panjang"] ?> 
+    Selama 1 Periode, dari tanggal <?= $tanggal_mulai ?> sampai <?= $tanggal_selesai ?>.</p>
 
-    <?php
-    if ($sertifikat["rata_rata"] >= 88) {
-      $prefikat = "SANGAT BAIK";
-    } else if ($sertifikat["rata_rata"] >= 74) {
-      $predikat = "BAIK";
-    } else if ($sertifikat["rata_rata"] >= 60) {
-      $predikat = "CUKUP";
-    } else {
-      $predikat = "KURANG";
-    }
+    <?php 
+      if($sertifikat["rata_rata"] >= 88) {
+        $prefikat = "SANGAT BAIK";
+      } else if($sertifikat["rata_rata"] >= 74) {
+        $predikat = "BAIK";
+      } else if ($sertifikat["rata_rata"] >= 60 ) {
+        $predikat = "CUKUP";
+      } else {
+        $predikat = "KURANG";
+      }
     ?>
     <p class="center"><strong>Dengan predikat:<br><?= $predikat ?></strong></p>
 
@@ -190,7 +144,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       <p>Pembimbing Magang</p>
       <p><?= $sertifikat["nama_panjang"] ?></p>
       <br>
-      <?php if (!empty($sertifikat) && $sertifikat["tanda_tangan_admin"] != "") : ?>
+      <?php if(!empty($sertifikat) && $sertifikat["tanda_tangan_admin"] != "") : ?>
         <img src="<?= $sertifikat['tanda_tangan_admin'] ?>" alt="TTD" style="width: 150px; height: 100px;">
       <?php endif; ?>
       <br>
@@ -198,15 +152,5 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       NIP. <?= !empty($admin_instansi) ? $admin_instansi["nip"] : '-' ?>
     </div>
   </div>
-  
-  <script>
-    // Script untuk memastikan background tercetak
-    window.onload = function() {
-      if (window.location.href.indexOf('print') > -1) {
-        window.print();
-      }
-    }
-  </script>
 </body>
-
 </html>
