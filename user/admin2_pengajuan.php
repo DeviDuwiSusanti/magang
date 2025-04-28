@@ -320,24 +320,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     </div>
 </div>
 
-<!-- rubah ini -->
-
-<?php
-// Query untuk mengambil semua pembimbing beserta bidangnya
-$query = "SELECT 
-            pu.id_user, 
-            pu.nama_user, 
-            b.nama_bidang
-        FROM tb_user u
-        JOIN tb_profile_user pu ON u.id_user = pu.id_user
-        JOIN tb_bidang b ON pu.id_bidang = b.id_bidang
-        WHERE u.level = 4 
-        AND b.id_instansi = $id_instansi
-        ORDER BY pu.id_user;";
-
-$result = mysqli_query($conn, $query);
-?>
-
 <!-- Modal untuk Informasi Zoom -->
 <div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -367,14 +349,9 @@ $result = mysqli_query($conn, $query);
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
+                            <!-- HTML Awal (Kosong) -->
                             <select class="form-control select2" id="pembimbing" name="pembimbing">
-                                <option value="">-- Pilih Pembimbing --</option>
-                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <option value="<?= $row['id_user'] ?>">
-                                        <?= htmlspecialchars($row['nama_user']) ?>
-                                        - <span class="badge bg-primary"><?= htmlspecialchars($row['nama_bidang']) ?></span>
-                                    </option>
-                                <?php endwhile; ?>
+                                <option value="">-- Loading Pembimbing... --</option>
                             </select>
                             <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
                             <small class="text-danger" id="pembimbing_error"></small>
@@ -399,16 +376,40 @@ $result = mysqli_query($conn, $query);
 <script src="../assets/js/validasi.js"></script>
 
 <script>
-    // ==========Inisialisasi Select2 pada Modal Zoom ==========
+    // ========== Inisialisasi Select2 pada Modal Zoom ==========
     $('#zoomModal').on('shown.bs.modal', function() {
         $('#pembimbing').select2({
             dropdownParent: $('#zoomModal'),
             placeholder: "Pilih Pembimbing",
             allowClear: true,
             width: '100%',
-            minimumResultsForSearch: 0
+            minimumResultsForSearch: 0,
+            templateResult: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var bidang = $(data.element).data('nama-bidang');
+                var namaUser = data.text.split(' - ')[0];
+                return $(
+                    '<span>' + namaUser + ' <span class="badge bg-primary ms-1">' + bidang + '</span></span>'
+                );
+            },
+            templateSelection: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var bidang = $(data.element).data('nama-bidang');
+                var namaUser = data.text.split(' - ')[0];
+                return $(
+                    '<span>' + namaUser + ' <span class="badge bg-primary ms-1">' + bidang + '</span></span>'
+                );
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
         });
     });
+
 
     $('#zoomModal').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
