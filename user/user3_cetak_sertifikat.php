@@ -24,6 +24,32 @@ $admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_
 $background = query("SELECT * FROM tb_sertifikat_background 
                     WHERE id_instansi = '$id_instansi_ini' AND background_active = '1' AND status_active = '1'")[0];
 
+// CSS background yang akan digunakan
+$backgroundCSS = "";
+if (!empty($background)) {
+  $backgroundCSS = "
+    background-image: url('{$background['path_file']}');
+    background-color: white;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  ";
+} else {
+  $backgroundCSS = "background-color: white;";
+}
+
+// CSS content tambahan
+$contentStyle = "margin-top: 40px;";
+if (!empty($background)) {
+  $contentStyle .= "
+    background-color: transparant;
+    padding: 20px;
+    border-radius: 10px;
+  ";
+}
+
 // Fungsi untuk konversi tanggal
 function formatTanggal($date)
 {
@@ -69,17 +95,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     body {
       font-family: Arial, sans-serif;
       margin: 50px;
-      <?php if (!empty($background)) { ?>
-        background-image: url('<?= $background['path_file'] ?>');
-        background-color : white;
-        background-size : cover;
-        background-position : center;
-        background-repeat: no-repeat;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      <?php } else { ?>
-        background-color : white;
-      <?php }?>
+      <?= $backgroundCSS ?>
     }
 
     @media print {
@@ -96,9 +112,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       }
     }
 
-    h1,
-    h2,
-    h3 {
+    h1, h2, h3 {
       text-align: center;
       margin-bottom: 0;
     }
@@ -123,12 +137,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     }
 
     .content {
-      margin-top: 40px;
-      <?php if (!empty($background)): ?>
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 10px;
-      <?php endif; ?>
+      <?= $contentStyle ?>
     }
   </style>
 </head>
@@ -140,67 +149,67 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     <p class="center">Nomor: 500.5.7.10/239/438.5.14/2025</p>
 
     <p>Diberikan kepada:</p>
-    <h2><?= $sertifikat["nama_user"] ?></h2>
+    <h2><?= htmlspecialchars($sertifikat["nama_user"]) ?></h2>
 
     <table class="no-border">
       <tr>
         <td>Tempat, Tanggal Lahir</td>
-        <td><?= $sertifikat["tempat_lahir"] ?>, <?= $tanggal_lahir ?></td>
+        <td><?= htmlspecialchars($sertifikat["tempat_lahir"]) ?>, <?= $tanggal_lahir ?></td>
       </tr>
       <tr>
-        <?php if ($pendidikan["fakultas"] == "") { ?>
+        <?php if (empty($pendidikan["fakultas"])) { ?>
           <td>Sekolah</td>
         <?php } else { ?>
           <td>Universitas</td>
         <?php } ?>
-        <td><?= $pendidikan["nama_pendidikan"] ?></td>
+        <td><?= htmlspecialchars($pendidikan["nama_pendidikan"]) ?></td>
       </tr>
       <tr>
-        <?php if ($pendidikan["fakultas"] == "") { ?>
+        <?php if (empty($pendidikan["fakultas"])) { ?>
           <td>Nomor Induk Sekolah Nasional</td>
-          <td><?= $sertifikat["nisn"] ?></td>
+          <td><?= htmlspecialchars($sertifikat["nisn"]) ?></td>
         <?php } else { ?>
           <td>Nomor Induk Mahasiswa</td>
-          <td><?= $sertifikat["nim"] ?></td>
+          <td><?= htmlspecialchars($sertifikat["nim"]) ?></td>
         <?php } ?>
       </tr>
       <tr>
         <td>Bidang Keahlian</td>
-        <td><?= $sertifikat["nama_bidang"] ?></td>
+        <td><?= htmlspecialchars($sertifikat["nama_bidang"]) ?></td>
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= $sertifikat["jenis_pengajuan"] ?> pada <?= $sertifikat["nama_panjang"] ?>
-      Selama 1 Periode, dari tanggal <?= $tanggal_mulai ?> sampai <?= $tanggal_selesai ?>.</p>
+    <p>Telah melaksanakan <?= htmlspecialchars($sertifikat["jenis_pengajuan"]) ?> pada <?= htmlspecialchars($sertifikat["nama_panjang"]) ?>
+      selama 1 periode, dari tanggal <?= $tanggal_mulai ?> sampai <?= $tanggal_selesai ?>.</p>
 
     <?php
     if ($sertifikat["rata_rata"] >= 88) {
-      $prefikat = "SANGAT BAIK";
-    } else if ($sertifikat["rata_rata"] >= 74) {
+      $predikat = "SANGAT BAIK";
+    } elseif ($sertifikat["rata_rata"] >= 74) {
       $predikat = "BAIK";
-    } else if ($sertifikat["rata_rata"] >= 60) {
+    } elseif ($sertifikat["rata_rata"] >= 60) {
       $predikat = "CUKUP";
     } else {
       $predikat = "KURANG";
     }
     ?>
+
     <p class="center"><strong>Dengan predikat:<br><?= $predikat ?></strong></p>
 
     <div class="signature">
       <p>Pembimbing Magang</p>
-      <p><?= $sertifikat["nama_panjang"] ?></p>
+      <p><?= htmlspecialchars($sertifikat["nama_panjang"]) ?></p>
       <br>
-      <?php if (!empty($sertifikat) && $sertifikat["tanda_tangan_admin"] != "") : ?>
-        <img src="<?= $sertifikat['tanda_tangan_admin'] ?>" alt="TTD" style="width: 150px; height: 100px;">
+      <?php if (!empty($sertifikat["tanda_tangan_admin"])) : ?>
+        <img src="<?= htmlspecialchars($sertifikat['tanda_tangan_admin']) ?>" alt="TTD" style="width: 150px; height: 100px;">
       <?php endif; ?>
       <br>
-      <strong><?= !empty($admin_instansi) ? $admin_instansi["nama_user"] : '-' ?></strong><br>
-      NIP. <?= !empty($admin_instansi) ? $admin_instansi["nip"] : '-' ?>
+      <strong><?= !empty($admin_instansi) ? htmlspecialchars($admin_instansi["nama_user"]) : '-' ?></strong><br>
+      NIP. <?= !empty($admin_instansi) ? htmlspecialchars($admin_instansi["nip"]) : '-' ?>
     </div>
   </div>
-  
+
   <script>
-    // Script untuk memastikan background tercetak
     window.onload = function() {
       if (window.location.href.indexOf('print') > -1) {
         window.print();
