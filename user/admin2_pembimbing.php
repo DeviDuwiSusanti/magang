@@ -465,7 +465,11 @@ document.getElementById('editPembimbingModal').addEventListener('show.bs.modal',
                     previous: "Sebelumnya",
                     next: "Berikutnya"
                 }
-            }
+            },
+            columnDefs: [{
+                targets: [3, 4, 5],
+                orderable: false
+            }]
         });
 
         // Tambahkan tombol ke samping search

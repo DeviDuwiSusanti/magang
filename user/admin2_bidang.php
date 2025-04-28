@@ -325,7 +325,11 @@ document.getElementById('editBidangModal').addEventListener('show.bs.modal', fun
                     previous: "Sebelumnya",
                     next: "Berikutnya"
                 }
-            }
+            },
+            columnDefs: [{
+                targets: [2, 3, 4, 5, 6],
+                orderable: false
+            }]
         });
 
         // Modal Tambah
