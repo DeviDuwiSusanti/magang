@@ -278,7 +278,7 @@ $jenis_pengajuan_options = json_decode($row_jenis['jenis2_pengajuan'], true) ?? 
                                                         <input type="number" class="form-control" value="<?= $pendaftar['nik'] ?>" readonly>
                                                     </div>
                                                     <?php
-                                                     if (strlen($id_studi) == 7) : ?>
+                                                    if (strlen($id_studi) == 7) : ?>
                                                         <div class="col">
                                                             <input type="number" class="form-control" value="<?= $pendaftar['nim'] ?>"  readonly>
                                                         </div>

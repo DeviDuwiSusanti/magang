@@ -10,6 +10,7 @@ $sql = "SELECT
             pu.nama_user,
             b.nama_bidang,
             b.kuota_bidang,
+            b.id_bidang,
             COALESCE(pa.jumlah_pemagang_aktif, 0) AS jumlah_pemagang_aktif,
             u.email,
             p.jenis_pengajuan, 
@@ -111,6 +112,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                             <th>Calon Pelamar</th>
                             <th>Periode</th>
                             <th>Durasi</th>
+                            <th>Tanggal Wawancara</th>
                             <th style="text-align: center;">Status</th>
                             <th style="width: 200px; text-align: center">Aksi</th>
                         </tr>
@@ -122,6 +124,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                             $id_pengajuan = $row['id_pengajuan'];
                             $status_pengajuan = $row['status_pengajuan'];
                             $bidang = $row['nama_bidang'];
+                            $id_bidang = $row['id_bidang'];
                             $jenis_pengajuan = $row['jenis_pengajuan'];
 
                             $tanggal_mulai = new DateTime($row['tanggal_mulai']);
@@ -162,6 +165,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                         Durasi Tidak Diketahui
                                     <?php endif; ?>
                                 </td>
+                                <td class="text-center align-middle"><?= $row['tanggal_zoom'] ? htmlspecialchars(formatTanggalLengkapIndonesia($row['tanggal_zoom'])) : '-' ?></td>
                                 <td class="text-center align-middle">
                                     <?php
                                     $status = '';
@@ -181,7 +185,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                     echo "<span class='$badgeClass'>$status</span>";
                                     ?>
                                 </td>
-
                                 <td class="text-center align-middle">
                                     <!-- Tombol lihat dokumen -->
                                     <a href="#"
@@ -204,11 +207,13 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                         ? 'Informasi Zoom sudah dikirim'
                                         : 'Tambah Informasi Wawancara';
                                     ?>
-                                    <button type="button" class="btn <?= $btn_class ?> btn-sm zoom-btn me-2"
-                                        title="<?= $title ?>"
+                                    <button type="button"
+                                        class="btn <?= $btn_class ?> btn-sm me-2"
+                                        data-bs-toggle="modal"
                                         data-bs-target="#zoomModal"
-                                        data-id="<?= $id_pengajuan ?>"
-                                        <?= $disabled ?>>
+                                        data-pengajuan-id="<?= $id_pengajuan ?>"
+                                        <?= $disabled ?>
+                                        title="<?= $title ?>">
                                         <i class="bi bi-zoom-in"></i>
                                     </button>
                                     <!-- Tombol Proses Pengajuan -->
@@ -315,17 +320,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     </div>
 </div>
 
-<?php
-// Query untuk mengambil semua pembimbing beserta bidangnya
-$query = "SELECT pu.id_user, pu.nama_user, b.nama_bidang 
-          FROM tb_profile_user pu
-          JOIN tb_bidang b ON pu.id_bidang = b.id_bidang
-          JOIN tb_user u ON pu.id_user = u.id_user
-          WHERE u.level = 4";
-
-$result = mysqli_query($conn, $query);
-?>
-
 <!-- Modal untuk Informasi Zoom -->
 <div class="modal fade" id="zoomModal" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -355,13 +349,9 @@ $result = mysqli_query($conn, $query);
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
+                            <!-- HTML Awal (Kosong) -->
                             <select class="form-control select2" id="pembimbing" name="pembimbing">
-                                <option value="">-- Pilih Pembimbing --</option>
-                                <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                                    <option value="<?= $row['id_user']; ?>">
-                                        <?= $row['nama_user'] . ' - <span class="badge bg-primary">' . $row['nama_bidang'] . '</span>'; ?>
-                                    </option>
-                                <?php endwhile; ?>
+                                <option value="">-- Loading Pembimbing... --</option>
                             </select>
                             <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
                             <small class="text-danger" id="pembimbing_error"></small>
@@ -386,16 +376,61 @@ $result = mysqli_query($conn, $query);
 <script src="../assets/js/validasi.js"></script>
 
 <script>
-    // ==========Inisialisasi Select2 pada Modal Zoom ==========
+    // ========== Inisialisasi Select2 pada Modal Zoom ==========
     $('#zoomModal').on('shown.bs.modal', function() {
         $('#pembimbing').select2({
             dropdownParent: $('#zoomModal'),
             placeholder: "Pilih Pembimbing",
             allowClear: true,
             width: '100%',
-            minimumResultsForSearch: 0
+            minimumResultsForSearch: 0,
+            templateResult: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var bidang = $(data.element).data('nama-bidang');
+                var namaUser = data.text.split(' - ')[0];
+                return $(
+                    '<span>' + namaUser + ' <span class="badge bg-primary ms-1">' + bidang + '</span></span>'
+                );
+            },
+            templateSelection: function(data) {
+                if (!data.id) {
+                    return data.text;
+                }
+                var bidang = $(data.element).data('nama-bidang');
+                var namaUser = data.text.split(' - ')[0];
+                return $(
+                    '<span>' + namaUser + ' <span class="badge bg-primary ms-1">' + bidang + '</span></span>'
+                );
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }
         });
     });
+
+
+    $('#zoomModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var pengajuanId = button.data('pengajuan-id'); // ambil data dari tombol
+
+        $('#pengajuan_id_zoom').val(pengajuanId); // set ke hidden input
+
+        // Sekarang panggil AJAX buat ambil pembimbing
+        fetch('ambil_pembimbing.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'pengajuan_id=' + pengajuanId
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('pembimbing').innerHTML = '<option value="">-- Pilih Pembimbing --</option>' + data;
+            });
+    });
+
 
 
     // ========== Fungsi untuk mengirim pengingat lengkapi dokumen ==========
@@ -451,28 +486,8 @@ $result = mysqli_query($conn, $query);
 
     // ========== Fungsi untuk menampilkan modal Zoom ==========
     document.addEventListener("DOMContentLoaded", function() {
-        let zoomModal = document.getElementById("zoomModal");
         let zoomForm = document.getElementById("zoomForm");
         let submitButton = document.getElementById("submitButton");
-
-        // Event listener untuk semua tombol Zoom
-        document.querySelectorAll(".zoom-btn").forEach(function(button) {
-            button.addEventListener("click", function() {
-                let idPengajuan = this.getAttribute("data-id");
-                document.getElementById("pengajuan_id_zoom").value = idPengajuan;
-
-                let modal = new bootstrap.Modal(zoomModal);
-                modal.show();
-            });
-        });
-
-        zoomModal.addEventListener("show.bs.modal", function() {
-            zoomModal.removeAttribute("aria-hidden");
-        });
-
-        zoomModal.addEventListener("hidden.bs.modal", function() {
-            zoomModal.setAttribute("aria-hidden", "true");
-        });
 
         zoomForm.addEventListener("submit", function(event) {
             event.preventDefault();
@@ -575,7 +590,7 @@ $result = mysqli_query($conn, $query);
                 }
             },
             columnDefs: [{
-                targets: [2, 3, 4, 5, 6, 7],
+                targets: [2, 3, 4, 5, 6, 7, 8],
                 orderable: false
             }]
         });

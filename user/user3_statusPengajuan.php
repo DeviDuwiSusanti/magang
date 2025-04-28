@@ -155,9 +155,9 @@ $query = mysqli_query($conn, $sql);
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                <img src="../assets/img/user/<?= !empty($detail['gambar_instansi']) ? $detail['gambar_instansi'] : 'avatar.png' ?>" 
+                                <img src="../assets/img/logo_kab_sidoarjo.png" 
                                     class="mb-3" 
-                                    alt="Profile Picture" 
+                                    alt="Sidoarjo" 
                                     style="width: 100px; height: 100px;">
                                     <h4 class="card-title"><?= isset($detail['nama_panjang']) ? $detail['nama_panjang'] : 'Tidak Diketahui' ?></h4>
                                     <hr>
