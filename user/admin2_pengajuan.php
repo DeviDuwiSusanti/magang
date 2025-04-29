@@ -330,6 +330,11 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
+                <div class="alert alert-info align-items-center" role="alert" id="zoomInfo" style="display: none;">
+                    <div>
+                        <strong>Mohon Tunggu!</strong> Sistem sedang mengirimkan informasi wawancara. Proses ini mungkin memerlukan waktu beberapa detik. Jangan tutup atau reload halaman sampai proses selesai.
+                    </div>
+                </div>
                 <form id="zoomForm" onsubmit="return validateZoomForm()">
                     <input type="hidden" name="pengajuan_id" id="pengajuan_id_zoom">
                     <div class="row">
@@ -347,22 +352,11 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                             <small class="text-danger" id="jam_pelaksanaan_error"></small>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
-                            <!-- HTML Awal (Kosong) -->
-                            <select class="form-control select2" id="pembimbing" name="pembimbing">
-                                <option value="">-- Loading Pembimbing... --</option>
-                            </select>
-                            <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
-                            <small class="text-danger" id="pembimbing_error"></small>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="link_zoom" class="form-label">Link Meet</label>
-                            <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="Masukkan link meet">
-                            <small class="text-muted">*Link harus berasal dari Zoom atau Google Meet</small> <br>
-                            <small class="text-danger" id="link_zoom_error"></small>
-                        </div>
+                    <div class="mb-3">
+                        <label for="link_zoom" class="form-label">Link Meet</label>
+                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="Masukkan link meet">
+                        <small class="text-muted">*Link harus berasal dari Zoom atau Google Meet</small> <br>
+                        <small class="text-danger" id="link_zoom_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -489,70 +483,99 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     document.addEventListener("DOMContentLoaded", function() {
         let zoomForm = document.getElementById("zoomForm");
         let submitButton = document.getElementById("submitButton");
+        let zoomInfo = document.getElementById("zoomInfo");
 
-        zoomForm.addEventListener("submit", function(event) {
-            event.preventDefault();
+        if (zoomInfo) {
+            zoomInfo.style.display = "none";
+        }
 
-            // Cek validasi form dulu
-            if (!validateZoomForm()) {
-                return;
+        $('#zoomModal').on('hidden.bs.modal', function() {
+            if (zoomInfo) {
+                zoomInfo.style.display = "none";
             }
+        });
 
-            Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Informasi Zoom akan dikirim!",
-                icon: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Kirim!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let formData = new FormData(zoomForm);
-                    let urlEncodedData = new URLSearchParams();
-                    formData.forEach((value, key) => urlEncodedData.append(key, value));
+        $('#zoomModal').on('shown.bs.modal', function() {
+            if (zoomInfo) {
+                zoomInfo.style.display = "none";
+            }
+        });
 
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "admin2_simpan_zoom.php", true);
-                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        if (zoomForm) {
+            zoomForm.addEventListener("submit", function(event) {
+                event.preventDefault();
 
-                    xhr.onload = function() {
-                        if (xhr.status == 200) {
-                            Swal.fire({
-                                title: 'Berhasil!',
-                                text: 'Informasi Zoom telah dikirim.',
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
+                // Cek validasi form dulu
+                if (!validateZoomForm()) {
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Informasi Zoom akan dikirim!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Kirim!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (zoomInfo) {
+                            zoomInfo.style.display = "block";
+                        }
+
+                        let formData = new FormData(zoomForm);
+                        let urlEncodedData = new URLSearchParams();
+                        formData.forEach((value, key) => urlEncodedData.append(key, value));
+
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("POST", "admin2_simpan_zoom.php", true);
+                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+                        xhr.onload = function() {
+                            if (zoomInfo) {
+                                zoomInfo.style.display = "none";
+                            }
+
+                            if (xhr.status == 200) {
+                                Swal.fire({
+                                    title: 'Berhasil!',
+                                    text: 'Informasi Zoom telah dikirim.',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal!',
+                                    text: 'Terjadi kesalahan, coba lagi.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        };
+
+                        xhr.onerror = function() {
+                            if (zoomInfo) {
+                                zoomInfo.style.display = "none";
+                            }
+
                             Swal.fire({
                                 title: 'Gagal!',
-                                text: 'Terjadi kesalahan, coba lagi.',
+                                text: 'Tidak dapat menghubungi server.',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
-                        }
-                    };
+                        };
 
-                    xhr.onerror = function() {
-                        Swal.fire({
-                            title: 'Gagal!',
-                            text: 'Tidak dapat menghubungi server.',
-                            icon: 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    };
-
-                    xhr.send(urlEncodedData.toString());
-                }
-
-                // Hapus inert setelah SweetAlert selesai
-                zoomModal.removeAttribute("inert");
+                        xhr.send(urlEncodedData.toString());
+                    }
+                });
             });
-        });
+        }
     });
+
 
 
     // ========== Inisialisasi tooltip secara global ==========

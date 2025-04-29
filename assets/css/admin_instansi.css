@@ -1156,6 +1156,11 @@ body.dark-mode .kuota-highlight {
     line-height: 1.5;
 }
 
+.alert-info {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
 /* Style untuk PDF viewer */
 #docPreview {
     background-color: #f8f9fa;

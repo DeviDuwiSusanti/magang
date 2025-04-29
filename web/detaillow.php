@@ -39,82 +39,128 @@ include "functions.php";
     <main class="main">
         <section class="blog section" id="blog">
             <div class="container">
-                <h1 class="blog__title">Detail Lowongan</h1>
+                <div class="breadcrumb mb-4">
+                    <a href="lowongan.php" class="breadcrumb-link">Lowongan</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-current">Detail Lowongan</span>
+                </div>
+
+                <div class="job-header">
+                    <div class="job-header-content">
+                        <h1 class="blog__title"><?= $row['nama_bidang'] ?></h1>
+                        <div class="job-company">
+                            <i class="bx bx-buildings"></i>
+                            <span><?= $row['nama_panjang'] ?></span>
+                        </div>
+                        <div class="job-location">
+                            <i class="bx bx-map"></i>
+                            <span><?= $row['alamat_instansi'] ?></span>
+                        </div>
+                    </div>
+                    <div class="job-header-badge">
+                        <span class="badge">Internship</span>
+                    </div>
+                </div>
 
                 <!-- Detail Lowongan -->
                 <div class="blog__detail">
-                    <h3>Internship - <?= $row['nama_bidang'] ?></h3>
-                    <table class="detail-table">
-                        <tr>
-                            <td><b>Instansi</b></td>
-                            <td>:</td>
-                            <td><?= $row['nama_panjang'] ?></td>
-                        </tr>
-                        <tr>
-                            <td><b>Alamat</b></td>
-                            <td>:</td>
-                            <td><?= $row['alamat_instansi'] ?></td>
-                        </tr>
-                        <tr>
-                            <td><b>Pemagang Aktif</b></td>
-                            <td>:</td>
-                            <td><?= $pemagang_aktif ?></td>
-                        </tr>
-                        <tr>
-                            <td><b>Kuota Lowongan</b></td>
-                            <td>:</td>
-                            <td><?= $row['kuota_bidang'] ?></td>
-                        </tr>
-                        <tr>
-                            <td><b>Dibuat pada</b></td>
-                            <td>:</td>
-                            <td><?= date('d-F-Y', strtotime($row['bidang_change_date'])) ?></td>
-                        </tr>
-                    </table>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="job-section">
+                                <h3 class="section-title">
+                                    <i class="bx bx-detail"></i>
+                                    <span>Deskripsi Lowongan</span>
+                                </h3>
+                                <div class="job-content">
+                                    <?= $row['deskripsi_bidang'] ?>
+                                </div>
+                            </div>
 
-                    <h3>Deskripsi Lowongan</h3>
-                    <p><?= $row['deskripsi_bidang'] ?></p>
+                            <div class="job-section">
+                                <h3 class="section-title">
+                                    <i class="bx bx-list-check"></i>
+                                    <span>Kriteria</span>
+                                </h3>
+                                <div class="job-content summernote-output">
+                                    <?= $row['kriteria_bidang'] ?>
+                                </div>
+                            </div>
 
-                    <h3>Kriteria</h3>
-                    <!-- pakai summerote -->
-                    <div class="summernote-output">
-                        <?= $row['kriteria_bidang'] ?>
-                    </div>
+                            <div class="job-section">
+                                <h3 class="section-title">
+                                    <i class="bx bx-file"></i>
+                                    <span>Persyaratan Dokumen</span>
+                                </h3>
+                                <div class="job-content summernote-output">
+                                    <?= $row['dokumen_persyaratan'] ?>
+                                </div>
+                            </div>
+                        </div>
 
-                    <h3>Persyaratan Dokumen</h3>
-                    <!-- pakai summerote -->
-                    <div class="summernote-output">
-                        <?= $row['dokumen_persyaratan'] ?>
-                    </div>
+                        <div class="col-lg-4">
+                            <div class="job-sidebar">
+                                <div class="sidebar-card">
+                                    <h4 class="sidebar-title">Ringkasan Lowongan</h4>
+                                    <div class="sidebar-item">
+                                        <i class="bx bx-user"></i>
+                                        <div>
+                                            <span class="sidebar-item-label">Pemagang Aktif</span>
+                                            <span class="sidebar-item-value"><?= $pemagang_aktif ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="sidebar-item">
+                                        <i class="bx bx-group"></i>
+                                        <div>
+                                            <span class="sidebar-item-label">Kuota Lowongan</span>
+                                            <span class="sidebar-item-value"><?= $row['kuota_bidang'] ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="sidebar-item">
+                                        <i class="bx bx-calendar"></i>
+                                        <div>
+                                            <span class="sidebar-item-label">Dibuat pada</span>
+                                            <span class="sidebar-item-value"><?= date('d-F-Y', strtotime($row['bidang_change_date'])) ?></span>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="sidebar-card">
+                                    <h4 class="sidebar-title">Lokasi Instansi</h4>
+                                    <div class="sidebar-item">
+                                        <i class="bx bx-map"></i>
+                                        <div>
+                                            <?php if (!empty($row['lokasi_instansi'])): ?>
+                                                <a href="<?= $row['lokasi_instansi'] ?>" target="_blank" rel="noopener noreferrer" class="maps-link">
+                                                    Lihat di Google Maps
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="sidebar-item-value">Lokasi tidak tersedia</span>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <div class="alert alert-dark mt-3 p-2 small">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <strong>Ketentuan Upload Dokumen:</strong> Saat pendaftaran pengajuan hanya perlu mengunggah KTP, CV, dan Proposal. Dokumen lainnya dapat diunggah setelah pengajuan diterima.
-                    </div>
+                                <div class="sidebar-card">
+                                    <div class="alert alert-info">
+                                        <i class="bx bx-info-circle"></i>
+                                        <div>
+                                            <strong>Ketentuan Upload Dokumen:</strong> Saat pendaftaran pengajuan hanya perlu mengunggah KTP, CV, dan Proposal. Dokumen lainnya dapat diunggah setelah pengajuan diterima.
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <h3>Lokasi Instansi</h3>
-                    <div class="maps-container">
-                        <?php
-                        if (!empty($row['lokasi_instansi'])) {
-                            $map = $row['lokasi_instansi'];
-
-                            echo "<a href='$map' target='_blank' rel='noopener noreferrer'>
-                                    Lihat Lokasi di Google Maps
-                                </a>";
-                        } else {
-                            echo "Lokasi Instansi Tidak Diketahui";
-                        }
-                        ?>
-                    </div>
-
-                    <div class="d-flex justify-content-left mt-4">
-                        <a href="../user/user3_statusPengajuan.php" class="btn btn-primary">Daftar Sekarang</a>
+                                <div class="apply-now">
+                                    <a href="../user/user3_statusPengajuan.php" class="btn btn-primary btn-apply">
+                                        <i class="bx bx-send"></i>
+                                        Daftar Sekarang
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <?php include "../layout/footerUser.php" ?>

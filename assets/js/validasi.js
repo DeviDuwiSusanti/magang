@@ -657,7 +657,7 @@ function validateZoomForm() {
   // Ambil nilai
   const tanggal = document.getElementById("tanggal_pelaksanaan").value.trim();
   const jam = document.getElementById("jam_pelaksanaan").value.trim();
-  const pembimbing = document.getElementById("pembimbing").value.trim();
+  // const pembimbing = document.getElementById("pembimbing").value.trim();
   const linkZoom = document.getElementById("link_zoom").value.trim();
 
   // Validasi Tanggal
@@ -680,15 +680,15 @@ function validateZoomForm() {
     isValid = false;
   }
 
-  // Validasi Pembimbing
-  if (pembimbing === "") {
-    showError(
-      "pembimbing",
-      "pembimbing_error",
-      "Pilih pembimbing terlebih dahulu."
-    );
-    isValid = false;
-  }
+  // // Validasi Pembimbing
+  // if (pembimbing === "") {
+  //   showError(
+  //     "pembimbing",
+  //     "pembimbing_error",
+  //     "Pilih pembimbing terlebih dahulu."
+  //   );
+  //   isValid = false;
+  // }
 
   // Validasi Link Meeting (Zoom atau Gmeet)
   if (linkZoom === "") {
