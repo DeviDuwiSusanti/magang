@@ -90,6 +90,11 @@ $total_laprak = mysqli_fetch_assoc($query5)['jumlah_laprak'];
 
 // ===================== pembimbing ======================
 if ($level == 4) :
+    $id_bidang = query("SELECT id_bidang FROM tb_profile_user WHERE id_user = '$id_user'")[0];
+    $id_bidang_ini = $id_bidang["id_bidang"];
+    $pengajuan_bidang = query("SELECT * FROM tb_pengajuan WHERE id_bidang = '$id_bidang_ini'");
+    $persetujuan_pembimbing = count($pengajuan_bidang);
+    
     $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
     if (!empty($pengajuan)) {
         $pengajuan_user = $pengajuan[0]["id_pengajuan"];
@@ -297,9 +302,19 @@ endif;
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
-                            <h5 class="card-title">Peserta Magang</h5>
+                            <h5 class="card-title">Persetujuan Pembimbing</h5>
+                            <h2 class="card-text text-danger"><?= $persetujuan_pembimbing ?></h2>
+                            <p class="text-muted">Persetujuan Pembimbing Terkait Peserta Magang</p>
+                            <a href="pembimbing4_persetujuan.php" class="btn btn-danger mt-3 detail">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Daftar Peserta Magang</h5>
                             <h2 class="card-text text-success"><?= $daftar_peserta_magang ?></h2>
-                            <p class="text-muted">Daftar Peserta Yang Saya Bimbing</p>
+                            <p class="text-muted">Daftar Peserta Magang Yang Akan Saya Bimbing</p>
                             <a href="pembimbing4.php" class="btn btn-success mt-3 detail">View Details</a>
                         </div>
                     </div>
