@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
         <script>
             alert_berhasil_gagal_super_admin("error", "Gagal !!", "Update Nilai Gagal", "pembimbing4.php");
         </script>
-    <?php }
+        <?php }
 }
 
 // Proses verifikasi logbook yang dipilih
@@ -37,14 +37,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["verify_logbooks"])) {
     if (isset($_POST["selected_logbooks"]) && !empty($_POST["selected_logbooks"])) {
         $selected_logbooks = $_POST["selected_logbooks"];
         $success = true;
-        
+
         foreach ($selected_logbooks as $logbook_id) {
             $query = "UPDATE tb_logbook SET status_active = '2' WHERE id_logbook = '$logbook_id'";
             if (!mysqli_query($conn, $query)) {
                 $success = false;
             }
         }
-        
+
         if ($success) { ?>
             <script>
                 alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Logbook berhasil diverifikasi", "pembimbing4.php");
@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["verify_logbooks"])) {
         <script>
             alert_berhasil_gagal_super_admin("warning", "Peringatan !!", "Tidak ada logbook yang dipilih", "pembimbing4.php");
         </script>
-    <?php }
+<?php }
 }
 
 if (!empty($pengajuan)) {
@@ -82,13 +82,13 @@ if (!empty($pengajuan)) {
     $daftar_anggota = query("SELECT pu.id_user, pu.nama_user, pu.gambar_user, u.email
                             FROM tb_profile_user pu 
                             JOIN tb_user u ON pu.id_user = u.id_user 
-                            WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'"); 
+                            WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
 }
 
 $no = 1;
 ?>
 
-<main>
+<div class="main-content p-3">
     <div class="container-fluid px-4">
         <h1 class="mt-4">Daftar Anggota Magang</h1>
         <ol class="breadcrumb mb-4">
@@ -116,23 +116,23 @@ $no = 1;
                         </thead>
 
                         <tbody>
-                            <?php foreach ($daftar_anggota as $anggota) : 
+                            <?php foreach ($daftar_anggota as $anggota) :
                                 // Cek apakah nilai sudah diinput
-                                $check_nilai = query("SELECT * FROM tb_nilai WHERE id_user = '".$anggota['id_user']."' AND id_pengajuan = '$pengajuan_user' AND status_active = '1'");
+                                $check_nilai = query("SELECT * FROM tb_nilai WHERE id_user = '" . $anggota['id_user'] . "' AND id_pengajuan = '$pengajuan_user' AND status_active = '1'");
                                 $nilai_exists = !empty($check_nilai);
                                 $nilai_data = $nilai_exists ? $check_nilai[0] : null;
-                                
+
                                 // Cek logbook yang belum dilihat pembimbing
                                 $logbook_unseen = query("SELECT COUNT(*) as total FROM tb_logbook 
-                                                        WHERE id_user = '".$anggota['id_user']."' 
+                                                        WHERE id_user = '" . $anggota['id_user'] . "' 
                                                         AND id_pengajuan = '$pengajuan_user'
                                                         AND status_active = '1'");
                                 $unseen_count = $logbook_unseen[0]['total'];
-                                
+
                                 // Cek apakah sudah upload laporan (jenis_dokumen = 3)
                                 $check_laporan = query("SELECT id_dokumen, file_path FROM tb_dokumen 
                                                        WHERE jenis_dokumen = '3' 
-                                                       AND id_user = '".$anggota['id_user']."'
+                                                       AND id_user = '" . $anggota['id_user'] . "'
                                                        AND status_active = '1'");
                                 $laporan_exists = !empty($check_laporan);
                                 $laporan_data = $laporan_exists ? $check_laporan[0] : null;
@@ -141,10 +141,10 @@ $no = 1;
                                     <td><?= $no++ ?></td>
                                     <td><?= $anggota["nama_user"] ?></td>
                                     <td><?= $anggota["email"] ?></td>
-                                    <td><img src="../assets/img/user/<?= $anggota["gambar_user"] ?>" alt="Foto" width="50" class="rounded-circle"></td>
+                                    <td><img src="../assets/img/user/<?= !empty($anggota["gambar_user"]) ? $anggota["gambar_user"] : 'avatar.png' ?>" alt="Foto" width="50" class="rounded-circle"></td>
                                     <td><?= $pendidikan_user['nama_pendidikan'] ?? '-' ?></td>
                                     <td><?= $pendidikan_user['jurusan'] ?? '-' ?></td>
-                                    
+
                                     <td>
                                         <button class="btn btn-info btn-sm openLogbook"
                                             data-id_pengajuan="<?= $pengajuan_user ?>"
@@ -161,10 +161,10 @@ $no = 1;
 
                                     <td>
                                         <?php if ($laporan_exists) : ?>
-                                            <a href="../<?= $pengajuan_user ?>/<?= $laporan_data['file_path'] ?>" 
-                                               class="btn btn-success btn-sm" 
-                                               target="_blank"
-                                               title="Lihat Laporan Akhir">
+                                            <a href="../<?= $pengajuan_user ?>/<?= $laporan_data['file_path'] ?>"
+                                                class="btn btn-success btn-sm"
+                                                target="_blank"
+                                                title="Lihat Laporan Akhir">
                                                 <i class="bi bi-file-earmark-text"></i>
                                             </a>
                                         <?php else : ?>
@@ -191,15 +191,15 @@ $no = 1;
                                                 title="Lihat Nilai">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            
-                                            <?php if($nilai_data["tanda_tangan_admin"] == "") : ?>
-                                            <button class="btn btn-warning btn-sm editNilai"
-                                                data-id_nilai="<?= $nilai_data['id_nilai'] ?>"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editNilaiModal"
-                                                title="Edit Nilai">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
+
+                                            <?php if ($nilai_data["tanda_tangan_admin"] == "") : ?>
+                                                <button class="btn btn-warning btn-sm editNilai"
+                                                    data-id_nilai="<?= $nilai_data['id_nilai'] ?>"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editNilaiModal"
+                                                    title="Edit Nilai">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                     </td>
@@ -217,7 +217,7 @@ $no = 1;
             </div>
         </div>
     <?php endif; ?>
-</main>
+</div>
 
 <!-- Modal untuk Input Nilai -->
 <div class="modal fade" id="nilaiModal" tabindex="-1" aria-labelledby="nilaiModalLabel" aria-hidden="true">
@@ -307,7 +307,7 @@ $no = 1;
         <form id="editNilaiForm" method="POST">
             <input type="hidden" id="edit_id_nilai" name="id_nilai">
             <input type="hidden" name="update" value="1">
-            
+
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editNilaiModalLabel">Edit Nilai Peserta Magang</h5>
@@ -387,7 +387,10 @@ $no = 1;
             $.ajax({
                 url: 'pembimbing4_penilaian.php',
                 type: 'GET',
-                data: {id_nilai: idNilai, action: 'view'},
+                data: {
+                    id_nilai: idNilai,
+                    action: 'view'
+                },
                 success: function(response) {
                     $('#viewNilaiContent').html(response);
                 }
@@ -400,7 +403,10 @@ $no = 1;
             $.ajax({
                 url: 'pembimbing4_penilaian.php',
                 type: 'GET',
-                data: {id_nilai: idNilai, action: 'edit'},
+                data: {
+                    id_nilai: idNilai,
+                    action: 'edit'
+                },
                 success: function(response) {
                     $('#editNilaiContent').html(response);
                     $('#edit_id_nilai').val(idNilai);
@@ -412,7 +418,7 @@ $no = 1;
         $('.openLogbook').click(function() {
             const idPengajuan = $(this).data('id_pengajuan');
             const idUser = $(this).data('id_user');
-            
+
             $.ajax({
                 url: 'pembimbing4_view_logbook_peserta.php',
                 type: 'GET',

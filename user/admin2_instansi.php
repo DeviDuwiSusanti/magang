@@ -135,6 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                         <div class="col-md-6 mb-3">
                             <label for="lokasi_instansi" class="form-label">Link Lokasi</label>
                             <textarea class="form-control" data-error-id="lokasi_instansi_error" id="lokasi_instansi" name="lokasi_instansi" rows="7" placeholder="Masukkan link lokasi"><?= $instansi["lokasi_instansi"] ?></textarea>
+                            <small class="text-muted">*Link harus berasal dari Google Maps</small> <br>
                             <small class="text-danger" id="lokasi_instansi_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">

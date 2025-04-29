@@ -1,103 +1,62 @@
-<?php include '../layout/sidebarUser.php';
+<div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-layers me-2"></i>Bidang Instansi</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Kelola Bidang Instansi</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
-$id_instansi = $_SESSION['id_instansi'];
-$bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidang, b.kuota_bidang, b.kriteria_bidang, b.dokumen_persyaratan,
-                  i.id_instansi, i.nama_panjang, 
-                  pu.id_user 
-            FROM tb_bidang AS b
-            JOIN tb_instansi AS i ON b.id_instansi = i.id_instansi
-            JOIN tb_profile_user AS pu ON i.id_instansi = pu.id_instansi
-            WHERE pu.id_user = '$id_user'
-            AND b.status_active = '1'
-            ORDER BY b.id_bidang ASC";
+    <div class="container">
+        <!-- Content Card -->
+        <div class="content-card">
+            <div class="card-header">
+                <h5 class="card-title"><i class="bi bi-table me-2"></i>Daftar Bidang Instansi</h5>
+                <button type="button" class="btn btn-primary btn-add" data-bs-toggle="modal" data-bs-target="#tambahBidangModal">
+                    <i class="bi bi-plus-circle"></i> Tambah Bidang
+                </button>
+            </div>
 
-$query = mysqli_query($conn, $bidang);
-$bidang = mysqli_fetch_all($query, MYSQLI_ASSOC);
-$no = 1;
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tambah_bidang'])) {
-    if (tambah_bidang($_POST) > 0) {
-        echo "
-            <script>
-                tambah_bidang_admin_instansi_success();
-            </script>
-        ";
-    } else {
-        echo "
-            <script>
-                tambah_bidang_admin_instansi_gagal();
-            </script>
-        ";
-    }
-}
-
-if (isset($_GET["id_bidang_ini"])) {
-    $id = $_GET["id_bidang_ini"];
-    if (hapus_bidang($id, $id_user)) {
-        echo "
-            <script>
-                hapus_bidang_admin_instansi_success();
-            </script>
-        ";
-    } else {
-        echo "
-            <script>
-                hapus_bidang_admin_instansi_gagal();
-            </script>
-        ";
-    }
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
-    if (edit_bidang($_POST) > 0) {
-        echo "
-            <script>
-                edit_bidang_admin_instansi_success();
-            </script>
-        ";
-    } else {
-        echo "
-            <script>
-                edit_bidang_admin_instansi_gagal();
-            </script>
-        ";
-    }
-}
-?>
-
-<div class="main-content p-3">
-    <div class="container-fluid">
-        <h1 class="mt-3">Bidang Instansi</h1>
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Kelola Bidang Instansi</li>
-        </ol>
-        <div class=" mb-4 dropdown-divider"></div>
-        <div class="table-responsive-sm">
-            <div class="datatable-header mb-2"></div>
-            <div class="bungkus-2 datatable-scrollable">
-                <table id="myTable" class="table table-striped table-hover">
+            <div class="table-responsive">
+                <table id="tableBidang" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>No</th>
+                            <th style="width: 60px;">No</th>
                             <th>Nama Bidang</th>
                             <th>Deskripsi</th>
                             <th>Kriteria</th>
-                            <th>Kuota</th>
+                            <th style="width: 90px;">Kuota</th>
                             <th>Dokumen Persyaratan</th>
-                            <th>Aksi</th>
+                            <th class="action-column">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($bidang as $bd) : ?>
                             <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= $bd["nama_bidang"] ?></td>
-                                <td><?= $bd["deskripsi_bidang"] ?></td>
-                                <td><?= $bd["kriteria_bidang"] ?></td>
-                                <td><?= $bd["kuota_bidang"] ?></td>
-                                <td><?= $bd["dokumen_persyaratan"] ?></td>
-                                <td style="width: 85px;">
-                                    <button type="button" class="btn btn-warning btn-sm editBidangBtn me-2"
+                                <td class="text-center"><?= $no++ ?></td>
+                                <td class="fw-medium"><?= $bd["nama_bidang"] ?></td>
+                                <td>
+                                    <span class="truncate" title="<?= htmlspecialchars($bd["deskripsi_bidang"]) ?>"><?= $bd["deskripsi_bidang"] ?></span>
+                                </td>
+                                <td>
+                                    <span class="truncate" title="<?= htmlspecialchars($bd["kriteria_bidang"]) ?>"><?= $bd["kriteria_bidang"] ?></span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge-kuota"><?= $bd["kuota_bidang"] ?></span>
+                                </td>
+                                <td>
+                                    <div class="doc-indicator">
+                                        <i class="bi bi-file-earmark-text doc-icon"></i>
+                                        <span class="truncate" title="<?= htmlspecialchars($bd["dokumen_persyaratan"]) ?>"><?= $bd["dokumen_persyaratan"] ?></span>
+                                    </div>
+                                </td>
+                                <td class="action-column">
+                                    <button type="button" class="btn btn-warning btn-action editBidangBtn"
                                         data-bs-toggle="modal" data-bs-target="#editBidangModal"
                                         data-id_bidang="<?= $bd['id_bidang'] ?>"
                                         data-nama_bidang="<?= $bd['nama_bidang'] ?>"
@@ -105,9 +64,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                         data-kriteria="<?= $bd['kriteria_bidang'] ?>"
                                         data-kuota="<?= $bd['kuota_bidang'] ?>"
                                         data-dokumen="<?= $bd['dokumen_persyaratan'] ?>">
-                                        <i class="bi bi-pencil-square" title="Edit Data Bidang" data-toggle="tooltip"></i>
+                                        <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus" onclick="hapus_bidang_admin_instansi('<?= $bd['id_bidang'] ?>')">
+                                    <button type="button" class="btn btn-danger btn-action"
+                                        onclick="hapus_bidang_admin_instansi('<?= $bd['id_bidang'] ?>')">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
@@ -116,10 +76,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                     </tbody>
                 </table>
             </div>
-            <div class="datatable-footer mt-2"></div>
         </div>
     </div>
 </div>
+
 
 <?php
 // Ambil semua nama bidang instansi yang sedang login dari database
@@ -244,13 +204,13 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
 <script src="../assets/js/validasi.js"></script>
 
 <script>
-// Tangkap event saat modal edit ditampilkan
-document.getElementById('editBidangModal').addEventListener('show.bs.modal', function(event) {
-    const button = event.relatedTarget;
-    const bidangLama = button.getAttribute('data-nama_bidang');
-    document.getElementById('edit_bidang_lama').value = bidangLama;
-    document.getElementById('edit_nama_bidang').value = bidangLama;
-});
+    // Tangkap event saat modal edit ditampilkan
+    document.getElementById('editBidangModal').addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const bidangLama = button.getAttribute('data-nama_bidang');
+        document.getElementById('edit_bidang_lama').value = bidangLama;
+        document.getElementById('edit_nama_bidang').value = bidangLama;
+    });
 </script>
 
 <script>
@@ -325,7 +285,11 @@ document.getElementById('editBidangModal').addEventListener('show.bs.modal', fun
                     previous: "Sebelumnya",
                     next: "Berikutnya"
                 }
-            }
+            },
+            columnDefs: [{
+                targets: [2, 3, 4, 5, 6],
+                orderable: false
+            }]
         });
 
         // Modal Tambah

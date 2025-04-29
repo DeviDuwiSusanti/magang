@@ -18,16 +18,17 @@ $sql = "SELECT
         p.status_pengajuan,
         p.status_active,
         pembimbing.nama_user AS nama_pembimbing
-    FROM tb_profile_user pu
-    INNER JOIN tb_pengajuan p ON pu.id_pengajuan = p.id_pengajuan
+    FROM tb_pengajuan p
+    INNER JOIN tb_profile_user pu ON pu.id_pengajuan = p.id_pengajuan
     INNER JOIN tb_bidang b ON p.id_bidang = b.id_bidang
     LEFT JOIN tb_profile_user AS pembimbing 
-        ON p.id_bidang = pembimbing.id_bidang
+        ON pembimbing.id_user = p.id_pembimbing
     WHERE p.id_instansi = '$id_instansi'
         AND p.status_active = '1'
         AND p.status_pengajuan IN ('2', '4', '5')
     ORDER BY p.id_pengajuan DESC
 ";
+
 
 $result = mysqli_query($conn, $sql);
 ?>

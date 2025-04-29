@@ -696,6 +696,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
     $tanggal_lahir = $POST['tanggal_lahir'];
     $jenis_kelamin = $POST['jenis_kelamin'];
     $nik = $POST['nik'];
+    $nip = $POST['nip'];
     $telepone = $POST['telepon'];
     $alamat_user = $POST['alamat'];
     $asal_studi = $POST['asal_studi'];
@@ -758,6 +759,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         tanggal_lahir = '$tanggal_lahir',
         jenis_kelamin = '$jenis_kelamin',
         nik = '$nik',
+        nip = '$nip',
         nim = '$nim',
         nisn = '$nisn',
         id_pendidikan = '$id_pendidikan',
@@ -871,5 +873,25 @@ function update_logbook_seen($id_logbook, $id_pembimbing) {
     return mysqli_query($conn, $query);
 }
 
-?>
 
+
+function generateId_persetujuan($id_pembimbing) {
+    global $conn;
+
+    $query = "SELECT id_persetujuan FROM tb_persetujuan_pembimbing WHERE id_pembimbing = '$id_pembimbing' ORDER BY id_persetujuan DESC LIMIT 1";
+    $result = mysqli_query($conn, $query);
+    $lastId = mysqli_fetch_assoc($result);
+
+    if ($lastId) {
+        // Ambil 3 digit terakhir sebagai counter
+        $lastCounter = intval(substr($lastId['id_persetujuan'], -3));
+        $newCounter = str_pad($lastCounter + 1, 3, '0', STR_PAD_LEFT);
+    } else {
+        $newCounter = '001';
+    }
+    return $id_pembimbing . $newCounter;
+}
+
+
+
+?>

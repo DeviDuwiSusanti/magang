@@ -303,15 +303,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                             <li><strong>Jumlah Pelamar:</strong> <span id="resumeJumlahPelamar" class="kuota-highlight"></span></li>
                         </ul>
                     </div>
-                    <!-- Tambahkan select pembimbing di sini -->
-                    <div class="mt-3" id="pembimbingContainer" style="display: none;">
-                        <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
-                        <select class="form-select" id="pembimbing" name="pembimbing">
-                            <option value="">-- Pilih Pembimbing --</option>
-                            <!-- Options akan diisi via JavaScript -->
-                        </select>
-                        <small class="text-muted">*Pilih pembimbing yang tersedia</small>
-                    </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="status" id="radioTolak" value="tolak">
                         <label class="form-check-label" for="radioTolak">Tolak Pengajuan</label>
@@ -339,11 +330,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
             </div>
             <div class="modal-body">
-                <div class="alert alert-info align-items-center" role="alert" id="zoomInfo" style="display: none;">
-                    <div>
-                        <strong>Mohon Tunggu!</strong> Sistem sedang mengirimkan informasi wawancara. Proses ini mungkin memerlukan waktu beberapa detik. Jangan tutup atau reload halaman sampai proses selesai.
-                    </div>
-                </div>
                 <form id="zoomForm" onsubmit="return validateZoomForm()">
                     <input type="hidden" name="pengajuan_id" id="pengajuan_id_zoom">
                     <div class="row">
@@ -361,11 +347,22 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                             <small class="text-danger" id="jam_pelaksanaan_error"></small>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="link_zoom" class="form-label">Link Meet</label>
-                        <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="Masukkan link meet">
-                        <small class="text-muted">*Link harus berasal dari Zoom atau Google Meet</small> <br>
-                        <small class="text-danger" id="link_zoom_error"></small>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
+                            <!-- HTML Awal (Kosong) -->
+                            <select class="form-control select2" id="pembimbing" name="pembimbing">
+                                <option value="">-- Loading Pembimbing... --</option>
+                            </select>
+                            <small class="text-muted">*Pilih pembimbing sesuai bidang yang diajukan oleh user</small> <br>
+                            <small class="text-danger" id="pembimbing_error"></small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="link_zoom" class="form-label">Link Meet</label>
+                            <input type="url" class="form-control" id="link_zoom" name="link_zoom" placeholder="Masukkan link meet">
+                            <small class="text-muted">*Link harus berasal dari Zoom atau Google Meet</small> <br>
+                            <small class="text-danger" id="link_zoom_error"></small>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -435,6 +432,8 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
             });
     });
 
+
+
     // ========== Fungsi untuk mengirim pengingat lengkapi dokumen ==========
     document.addEventListener("DOMContentLoaded", function() {
         const pengingatButtons = document.querySelectorAll(".kirimPengingatBtn");
@@ -490,99 +489,70 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     document.addEventListener("DOMContentLoaded", function() {
         let zoomForm = document.getElementById("zoomForm");
         let submitButton = document.getElementById("submitButton");
-        let zoomInfo = document.getElementById("zoomInfo");
 
-        if (zoomInfo) {
-            zoomInfo.style.display = "none";
-        }
+        zoomForm.addEventListener("submit", function(event) {
+            event.preventDefault();
 
-        $('#zoomModal').on('hidden.bs.modal', function() {
-            if (zoomInfo) {
-                zoomInfo.style.display = "none";
+            // Cek validasi form dulu
+            if (!validateZoomForm()) {
+                return;
             }
-        });
 
-        $('#zoomModal').on('shown.bs.modal', function() {
-            if (zoomInfo) {
-                zoomInfo.style.display = "none";
-            }
-        });
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Informasi Zoom akan dikirim!",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Kirim!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let formData = new FormData(zoomForm);
+                    let urlEncodedData = new URLSearchParams();
+                    formData.forEach((value, key) => urlEncodedData.append(key, value));
 
-        if (zoomForm) {
-            zoomForm.addEventListener("submit", function(event) {
-                event.preventDefault();
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "admin2_simpan_zoom.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                // Cek validasi form dulu
-                if (!validateZoomForm()) {
-                    return;
-                }
-
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Informasi Zoom akan dikirim!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, Kirim!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        if (zoomInfo) {
-                            zoomInfo.style.display = "block";
-                        }
-
-                        let formData = new FormData(zoomForm);
-                        let urlEncodedData = new URLSearchParams();
-                        formData.forEach((value, key) => urlEncodedData.append(key, value));
-
-                        let xhr = new XMLHttpRequest();
-                        xhr.open("POST", "admin2_simpan_zoom.php", true);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                        xhr.onload = function() {
-                            if (zoomInfo) {
-                                zoomInfo.style.display = "none";
-                            }
-
-                            if (xhr.status == 200) {
-                                Swal.fire({
-                                    title: 'Berhasil!',
-                                    text: 'Informasi Zoom telah dikirim.',
-                                    icon: 'success',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Gagal!',
-                                    text: 'Terjadi kesalahan, coba lagi.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        };
-
-                        xhr.onerror = function() {
-                            if (zoomInfo) {
-                                zoomInfo.style.display = "none";
-                            }
-
+                    xhr.onload = function() {
+                        if (xhr.status == 200) {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: 'Informasi Zoom telah dikirim.',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
                             Swal.fire({
                                 title: 'Gagal!',
-                                text: 'Tidak dapat menghubungi server.',
+                                text: 'Terjadi kesalahan, coba lagi.',
                                 icon: 'error',
                                 confirmButtonText: 'OK'
                             });
-                        };
+                        }
+                    };
 
-                        xhr.send(urlEncodedData.toString());
-                    }
-                });
+                    xhr.onerror = function() {
+                        Swal.fire({
+                            title: 'Gagal!',
+                            text: 'Tidak dapat menghubungi server.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    };
+
+                    xhr.send(urlEncodedData.toString());
+                }
+
+                // Hapus inert setelah SweetAlert selesai
+                zoomModal.removeAttribute("inert");
             });
-        }
+        });
     });
-
 
 
     // ========== Inisialisasi tooltip secara global ==========
@@ -901,7 +871,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
         const alasanTolak = document.getElementById("alasan_tolak");
         const alasanContainer = document.getElementById("alasanTolakContainer");
         const infoResume = document.getElementById("infoResumePengajuan");
-        const pembimbingContainer = document.getElementById("pembimbingContainer"); // Tambahkan ini
 
         // Variabel untuk menyimpan data yang akan digunakan di submit
         let sisaKuota = 0;
@@ -933,46 +902,20 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                 infoResume.style.display = "none";
                 idInput.value = id;
 
-                pembimbingContainer.style.display = "none";
-
-                loadPembimbing(id);
-
                 // Atur status radio "terima" sesuai kondisi
                 radioTerima.disabled = (status === "2");
             });
         });
 
-        // Fungsi untuk memuat data pembimbing
-        function loadPembimbing(idPengajuan) {
-            fetch(`ambil_pembimbing.php?id_pengajuan=${idPengajuan}`)
-                .then(response => response.json())
-                .then(data => {
-                    const select = document.getElementById('pembimbing');
-                    select.innerHTML = '<option value="">-- Pilih Pembimbing --</option>';
-
-                    data.forEach(pembimbing => {
-                        const option = document.createElement('option');
-                        option.value = pembimbing.id_pembimbing;
-                        option.textContent = pembimbing.nama_pembimbing;
-                        select.appendChild(option);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error loading pembimbing:', error);
-                });
-        }
-
         // Show/hide alasan penolakan dan info resume
         radioTolak.addEventListener("change", function() {
             alasanContainer.style.display = "block";
             infoResume.style.display = "none";
-            pembimbingContainer.style.display = "none";
         });
 
         radioTerima.addEventListener("change", function() {
             alasanContainer.style.display = "none";
             infoResume.style.display = "block";
-            pembimbingContainer.style.display = "block";
         });
 
         // Submit form
@@ -982,7 +925,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
             const id_pengajuan = idInput.value;
             const status = form.querySelector("input[name='status']:checked")?.value;
             const alasan = alasanTolak.value.trim();
-            const pembimbing = document.getElementById('pembimbing')?.value;
 
             if (!status) {
                 Swal.fire("Pilihan Wajib!", "Silakan pilih menerima atau menolak pengajuan.", "warning");
@@ -996,11 +938,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
 
             if (status === "terima" && jumlahPelamar > sisaKuota) {
                 Swal.fire("Kuota Tidak Cukup!", "Jumlah pelamar melebihi kuota yang tersedia.", "error");
-                return;
-            }
-
-            if (status === "terima" && !pembimbing) {
-                Swal.fire("Pembimbing Wajib!", "Silakan pilih pembimbing untuk pengajuan ini.", "warning");
                 return;
             }
 
@@ -1019,8 +956,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                     formData.append('status', status);
                     if (status === "tolak") {
                         formData.append('alasan_tolak', alasan);
-                    } else {
-                        formData.append('id_pembimbing', pembimbing);
                     }
 
                     fetch("admin2_proses_pengajuan.php", {
