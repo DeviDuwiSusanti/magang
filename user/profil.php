@@ -115,7 +115,12 @@ $row2 = mysqli_fetch_assoc($query2);
                                     <td><i class="bi bi-credit-card"></i> <strong>NIK</strong></td>
                                     <td><?= $row2['nik'] ?></td>
                                 </tr>
-
+                                <?php if($level == '1' || $level == '2' || $level == '4') : ?>
+                                <tr>
+                                    <td><i class="bi bi-person-badge"></i> <strong>NIP</strong></td>
+                                    <td><?= $row2['nip'] ?></td>
+                                </tr>
+                                <?php endif; ?>
                                 <?php if (($ketua || $anggota) && $level == "3") : ?>
                                     <tr>
                                         <td><i class="bi bi-mortarboard"></i> <strong> <?= !empty($row['nim']) ? 'NIM' : (!empty($row['nisn']) ? 'NISN' : 'NIM/NISN') ?></strong></td>
@@ -193,21 +198,40 @@ if (isset($_POST['update_profil'])) {
             </div>
             <div class="modal-body">
                 <form action="" class="editForm" method="POST" enctype="multipart/form-data">
+                <?php if($level == '1' || $level == '2' || $level == '4') { ?>
+                <!-- Nama Lengkap -->
+                <div class="mb-3">
+                    <label for="nama" class="form-label">Nama Lengkap</label>
+                    <input type="text" class="form-control" data-error-id="nama-error" id="nama" name="nama" value="<?= $dataLama['nama_user'] ?>">
+                    <small class="text-danger" id="nama-error"></small>
+                </div>
                 <div class="row">
-                    <!-- Nama Lengkap -->
-                    <div class="mb-3 col-6">
-                        <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" data-error-id="nama-error" id="nama" name="nama" value="<?= $dataLama['nama_user'] ?>">
-                        <small class="text-danger" id="nama-error"></small>
-                    </div>
                     <!-- NIK -->
                     <div class="mb-3 col-6">
                         <label for="nik" class="form-label">NIK</label>
-                        <input type="text" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
+                        <input type="text" maxlength="16" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
+                        <small class="text-danger" id="nik-error"></small>
+                    </div>
+                    <div class="mb-3 col-6">
+                        <label for="nik" class="form-label">NIP</label>
+                        <input type="text" maxlength="18" class="form-control" data-error-id="nik-error" id="nip" name="nip" value="<?= $dataLama['nip'] ?>">
                         <small class="text-danger" id="nik-error"></small>
                     </div>
                 </div>
-
+                <?php } else if ($level == '3'){ ?>
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="nama" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" data-error-id="nama-error" id="nama" name="nama" value="<?= $dataLama['nama_user'] ?>">
+                            <small class="text-danger" id="nama-error"></small>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="nik" class="form-label">NIK</label>
+                            <input type="text" maxlength="16" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
+                            <small class="text-danger" id="nik-error"></small>
+                        </div>
+                    </div>
+                <?php } ?>
                     <div class="row">
                         <div class="mb-3 col-6">
                             <label for="tempat_lahir" class="form-label">Tempat Lahir</label>

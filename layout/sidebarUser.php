@@ -286,6 +286,13 @@ if (isset($_SESSION['email'])) {
                 <?php if ($level == 4): ?>
                     <!-- Daftar Peserta Magang -->
                     <li class="sidebar-item">
+                        <a href="pembimbing4_persetujuan.php" class="sidebar-link">
+                            <i class="bi bi-clipboard-check"></i>
+                            <span>Peserta Magang</span>
+                        </a>
+                    </li>
+                    <!-- Daftar Peserta Magang -->
+                    <li class="sidebar-item">
                         <a href="pembimbing4.php" class="sidebar-link">
                             <i class="bi bi-people-fill"></i>
                             <span>Peserta Magang</span>
