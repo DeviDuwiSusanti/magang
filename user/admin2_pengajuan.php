@@ -303,6 +303,15 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                             <li><strong>Jumlah Pelamar:</strong> <span id="resumeJumlahPelamar" class="kuota-highlight"></span></li>
                         </ul>
                     </div>
+                    <!-- Tambahkan select pembimbing di sini -->
+                    <div class="mt-3" id="pembimbingContainer" style="display: none;">
+                        <label for="pembimbing" class="form-label">Pilih Pembimbing</label>
+                        <select class="form-select" id="pembimbing" name="pembimbing">
+                            <option value="">-- Pilih Pembimbing --</option>
+                            <!-- Options akan diisi via JavaScript -->
+                        </select>
+                        <small class="text-muted">*Pilih pembimbing yang tersedia</small>
+                    </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="status" id="radioTolak" value="tolak">
                         <label class="form-check-label" for="radioTolak">Tolak Pengajuan</label>
@@ -425,8 +434,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                 document.getElementById('pembimbing').innerHTML = '<option value="">-- Pilih Pembimbing --</option>' + data;
             });
     });
-
-
 
     // ========== Fungsi untuk mengirim pengingat lengkapi dokumen ==========
     document.addEventListener("DOMContentLoaded", function() {
@@ -894,6 +901,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
         const alasanTolak = document.getElementById("alasan_tolak");
         const alasanContainer = document.getElementById("alasanTolakContainer");
         const infoResume = document.getElementById("infoResumePengajuan");
+        const pembimbingContainer = document.getElementById("pembimbingContainer"); // Tambahkan ini
 
         // Variabel untuk menyimpan data yang akan digunakan di submit
         let sisaKuota = 0;
@@ -925,20 +933,46 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                 infoResume.style.display = "none";
                 idInput.value = id;
 
+                pembimbingContainer.style.display = "none";
+
+                loadPembimbing(id);
+
                 // Atur status radio "terima" sesuai kondisi
                 radioTerima.disabled = (status === "2");
             });
         });
 
+        // Fungsi untuk memuat data pembimbing
+        function loadPembimbing(idPengajuan) {
+            fetch(`ambil_pembimbing.php?id_pengajuan=${idPengajuan}`)
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.getElementById('pembimbing');
+                    select.innerHTML = '<option value="">-- Pilih Pembimbing --</option>';
+
+                    data.forEach(pembimbing => {
+                        const option = document.createElement('option');
+                        option.value = pembimbing.id_pembimbing;
+                        option.textContent = pembimbing.nama_pembimbing;
+                        select.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading pembimbing:', error);
+                });
+        }
+
         // Show/hide alasan penolakan dan info resume
         radioTolak.addEventListener("change", function() {
             alasanContainer.style.display = "block";
             infoResume.style.display = "none";
+            pembimbingContainer.style.display = "none";
         });
 
         radioTerima.addEventListener("change", function() {
             alasanContainer.style.display = "none";
             infoResume.style.display = "block";
+            pembimbingContainer.style.display = "block";
         });
 
         // Submit form
@@ -948,6 +982,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
             const id_pengajuan = idInput.value;
             const status = form.querySelector("input[name='status']:checked")?.value;
             const alasan = alasanTolak.value.trim();
+            const pembimbing = document.getElementById('pembimbing')?.value;
 
             if (!status) {
                 Swal.fire("Pilihan Wajib!", "Silakan pilih menerima atau menolak pengajuan.", "warning");
@@ -961,6 +996,11 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
 
             if (status === "terima" && jumlahPelamar > sisaKuota) {
                 Swal.fire("Kuota Tidak Cukup!", "Jumlah pelamar melebihi kuota yang tersedia.", "error");
+                return;
+            }
+
+            if (status === "terima" && !pembimbing) {
+                Swal.fire("Pembimbing Wajib!", "Silakan pilih pembimbing untuk pengajuan ini.", "warning");
                 return;
             }
 
@@ -979,6 +1019,8 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                     formData.append('status', status);
                     if (status === "tolak") {
                         formData.append('alasan_tolak', alasan);
+                    } else {
+                        formData.append('id_pembimbing', pembimbing);
                     }
 
                     fetch("admin2_proses_pengajuan.php", {

@@ -1199,3 +1199,55 @@ body.dark-mode #docPreview canvas {
     border-radius: 5px;
 }
 
+/* Styles for Pembimbing Selection Container */
+#pembimbingContainer {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    border-left: 4px solid #0d6efd;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+#pembimbingContainer:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#pembimbingContainer .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+#pembimbingContainer .form-select {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    /* padding: 10px; */
+    transition: border-color 0.2s;
+}
+
+#pembimbingContainer .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* #pembimbingContainer .form-select option {
+    padding: 10px;
+} */
+
+#pembimbingContainer .text-muted {
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Animation for when container appears */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#pembimbingContainer.show {
+    display: block !important;
+    animation: fadeIn 0.4s ease-out;
+}

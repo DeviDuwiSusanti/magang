@@ -10,6 +10,7 @@ include '../assets/phpmailer/src/Exception.php';
 include '../assets/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $id_pembimbing = mysqli_real_escape_string($conn, $_POST["id_pembimbing"]);   
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["id_pengajuan"]);
     $status = $_POST["status"];
 
@@ -47,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $salam = salamBerdasarkanWaktu();
 
                 if ($status === 'terima') {
-                    $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2' WHERE id_pengajuan = '$id_pengajuan'";
+                    $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2', id_pembimbing = '$id_pembimbing' WHERE id_pengajuan = '$id_pengajuan'";
 
                     if (mysqli_query($conn, $sql_update)) {
                         $subject = 'Pemberitahuan Penerimaan Magang';
@@ -99,7 +100,7 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = $email_pengirim;
-    $mail->Password = 'leeufuyyxfovbqtb'; // Gunakan App Password Gmail
+    $mail->Password = 'leeufuyyxfovbqtb';
     $mail->Port = 465;
     $mail->SMTPSecure = 'ssl';
 

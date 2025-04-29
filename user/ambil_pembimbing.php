@@ -1,30 +1,26 @@
 <?php
-include '../koneksi.php'; // kalau perlu
+include "../koneksi.php";
 
-$pengajuan_id = (int) $_POST['pengajuan_id'];
+$id_pengajuan = $_GET['id_pengajuan'];
 
-// Cari id_bidang dari pengajuan
-$query_pengajuan = "SELECT id_bidang FROM tb_pengajuan WHERE id_pengajuan = $pengajuan_id";
-$result_pengajuan = mysqli_query($conn, $query_pengajuan);
-$data_pengajuan = mysqli_fetch_assoc($result_pengajuan);
-$id_bidang_diajukan = $data_pengajuan['id_bidang'];
+$query = "SELECT 
+            pp.id_pembimbing, 
+            pu.nama_user AS nama_pembimbing
+          FROM tb_persetujuan_pembimbing pp
+          JOIN tb_profile_user pu ON pp.id_pembimbing = pu.id_user
+          WHERE pp.id_pengajuan = ?
+          AND pp.status_persetujuan = 1";
 
-// Cari pembimbing sesuai bidang
-$query_pembimbing = "SELECT pu.id_user, pu.nama_user, b.nama_bidang
-                     FROM tb_user u
-                     JOIN tb_profile_user pu ON u.id_user = pu.id_user
-                     JOIN tb_bidang b ON pu.id_bidang = b.id_bidang
-                     WHERE u.level = 4
-                       AND pu.id_bidang = $id_bidang_diajukan
-                     ORDER BY pu.nama_user";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $id_pengajuan);
+$stmt->execute();
+$result = $stmt->get_result();
 
-$result_pembimbing = mysqli_query($conn, $query_pembimbing);
-
-// Outputkan semua pembimbing sebagai <option>
-while ($row = mysqli_fetch_assoc($result_pembimbing)) {
-  $nama_user = htmlspecialchars($row['nama_user']);
-  $nama_bidang = htmlspecialchars($row['nama_bidang']);
-  echo '<option value="'.$row['id_user'].'" data-nama-bidang="'.$nama_bidang.'">'.$nama_user.' - '.$nama_bidang.'</option>';
+$data = [];
+while ($row = $result->fetch_assoc()) {
+    $data[] = $row;
 }
 
+header('Content-Type: application/json');
+echo json_encode($data);
 ?>
