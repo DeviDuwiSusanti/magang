@@ -944,7 +944,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
 
         // Fungsi untuk memuat data pembimbing
         function loadPembimbing(idPengajuan) {
-            fetch(`ambil_pembimbing.php?id_pengajuan=${idPengajuan}`)
+            fetch(`admin2_proses_pengajuan.php?get_pembimbing=true&id_pengajuan=${idPengajuan}`)
                 .then(response => response.json())
                 .then(data => {
                     const select = document.getElementById('pembimbing');
