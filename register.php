@@ -194,7 +194,7 @@ if (isset($_POST["register"])) {
 
                             </div>
                             <div class="input-field mt-3">
-                                <input type="text" class="input" name="nim" maxlength="15">
+                                <input type="text" class="input" name="nim" maxlength="12">
                                 <label for="nim">NIM</label>
                             </div>
                         </div>
