@@ -13,54 +13,9 @@ $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.*
                     JOIN tb_bidang b ON p.id_bidang = b.id_bidang
                     WHERE pu.id_user = $id_user_ini")[0];
 
-// Validasi kelengkapan data diri
-$data_diri_kosong = [];
-$kolom_wajib = [
-    'nama_user', 
-    'tanggal_lahir',
-    'nama_panjang',
-    'nama_bidang',
-    'tanggal_mulai',
-    'tanggal_selesai'
-];
-
-// Validasi NIM/NISN (minimal salah satu harus ada)
-if (empty($sertifikat["nim"]) && empty($sertifikat["nisn"])) {
-    $data_diri_kosong[] = "NIM atau NISN";
-}
-
-foreach ($kolom_wajib as $kolom) {
-    if (empty($sertifikat[$kolom])) {
-        $data_diri_kosong[] = str_replace('_', ' ', $kolom);
-    }
-}
-
-// Jika ada data diri yang kosong, tampilkan sweetalert dan hentikan proses
-if (!empty($data_diri_kosong)) {
-    echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-    echo '<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            Swal.fire({
-                icon: "error",
-                title: "Gagal !!",
-                text: "Silahkan lengkapi data diri terlebih dahulu",
-                showConfirmButton: true,
-                confirmButtonText: "OK"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "profil.php";
-                }
-            });
-        });
-    </script>';
-    exit(); // Hentikan eksekusi script
-}
-
-// Lanjutkan dengan kode berikutnya jika data lengkap
 $id_instansi = query("SELECT id_instansi FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan' ")[0];
 $id_instansi_ini = $id_instansi["id_instansi"];
 $admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_instansi_ini'")[0];
-
 
 // Fungsi untuk konversi tanggal
 function formatTanggal($date) {
@@ -98,7 +53,6 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8">
   <title>Lembar Penilaian Magang</title>
@@ -268,5 +222,3 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
   </div>
 </body>
 </html>
-
-<script src="../assets//js/alert.js"></script>

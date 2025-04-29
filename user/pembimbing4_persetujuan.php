@@ -3,7 +3,7 @@ include '../layout/sidebarUser.php';
 include "functions.php";
 
 // Ambil data bidang pembimbing saat ini
-$current_user = query("SELECT id_bidang FROM tb_profile_user WHERE id_user = '$id_user'")[0];
+$current_user = query("SELECT id_bidang FROM tb_profile_user WHERE id_user = '$id_user' AND status_active = '1'")[0];
 $id_bidang = $current_user['id_bidang'];
 
 // Ambil semua pengajuan di bidang pembimbing saat ini dengan status 1 (sedang diajukan)
@@ -14,7 +14,7 @@ $pengajuan = query("SELECT p.id_pengajuan, p.id_user, p.status_pengajuan, p.tang
                     JOIN tb_profile_user pu ON p.id_user = pu.id_user
                     LEFT JOIN tb_pendidikan pen ON pu.id_pendidikan = pen.id_pendidikan
                     JOIN tb_bidang b ON p.id_bidang = b.id_bidang
-                    WHERE p.id_bidang = '$id_bidang' AND p.status_pengajuan = '1'");
+                    WHERE p.id_bidang = '$id_bidang' AND p.status_pengajuan = '1' AND p.status_active = '1'");
 
 // Cek apakah form disubmit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -23,12 +23,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $id_user_magang = $_POST['id_user_magang'];
         $action = $_POST['action'];
         $alasan = isset($_POST['alasan']) ? $_POST['alasan'] : null;
-        
+        $id_persetujuan = generateId_persetujuan($id_user);
         // Simpan persetujuan pembimbing ke database
         $query = "INSERT INTO tb_persetujuan_pembimbing 
-                 (id_pengajuan, id_pembimbing, status_persetujuan, alasan_penolakan, tanggal_persetujuan, create_by) 
-                 VALUES ('$id_pengajuan', '$id_user', ";
-        $query .= $action == 'bersedia' ? "'1'" : "'0'"; // 1 = bersedia, 0 = tidak bersedia
+                 (id_persetujuan, id_pengajuan, id_pembimbing, status_persetujuan, alasan_penolakan, tanggal_persetujuan, create_by) 
+                 VALUES ('$id_persetujuan','$id_pengajuan', '$id_user', ";
+        $query .= $action == 'bersedia' ? "'1'" : "'0'";
         $query .= ", ";
         $query .= $alasan ? "'$alasan'" : "NULL";
         $query .= ", NOW(), '$id_user')";
