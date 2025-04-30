@@ -196,36 +196,56 @@ include "user3_pengajuan.php";
 include "../layout/footerDashboard.php"; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- hapus pengajuan -->
 <script>
 document.getElementById('hapusPengajuan').addEventListener('click', function(event) {
-    event.preventDefault(); // Mencegah form langsung terkirim
+    event.preventDefault();
 
-    // Langkah 1: Minta input alasan penghapusan
     Swal.fire({
         title: 'Alasan Penghapusan',
-        input: 'textarea',
-        inputLabel: 'Silakan berikan alasan penghapusan pengajuan',
-        inputPlaceholder: 'Masukkan alasan Anda di sini...',
-        inputAttributes: {
-            'aria-label': 'Masukkan alasan penghapusan'
-        },
+        html: `
+            <div style="margin-bottom: 10px;">Silakan berikan alasan penghapusan pengajuan</div>
+            <textarea id="alasanTextarea" class="swal2-textarea" 
+                    placeholder="Masukkan alasan Anda di sini..." 
+                    aria-label="Masukkan alasan penghapusan"
+                    maxlength="200" 
+                    style="min-height: 100px; width: 100%; padding: 10px;"></textarea>
+            <div style="text-align: right; margin-top: 5px; color: #666; font-size: 0.8em;">
+                <span id="charCounter">0</span>/200
+            </div>
+        `,
         showCancelButton: true,
         confirmButtonText: 'Lanjutkan',
         cancelButtonText: 'Batal',
+        width: '600px',  // Lebar modal lebih besar
+        padding: '2em',
+        focusConfirm: false,
+        preConfirm: () => {
+            return document.getElementById('alasanTextarea').value;
+        },
+        didOpen: () => {
+            const textarea = document.getElementById('alasanTextarea');
+            const counter = document.getElementById('charCounter');
+            
+            textarea.addEventListener('input', function() {
+                counter.textContent = this.value.length;
+            });
+        },
         inputValidator: (value) => {
             if (!value) {
                 return 'Anda harus memberikan alasan!';
+            }
+            if (value.length > 200) {
+                return 'Alasan maksimal 200 karakter!';
             }
         }
     }).then((firstResult) => {
         if (firstResult.isConfirmed) {
             const alasan = firstResult.value;
             
-            // Langkah 2: Konfirmasi akhir sebelum menghapus
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                html: `Anda akan menghapus pengajuan ini dengan alasan:<br><br><strong>${alasan}</strong>`,
+                html: `Anda akan menghapus pengajuan ini dengan alasan:<br><br>
+                      <strong>${alasan}</strong><br><br>`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
@@ -234,13 +254,8 @@ document.getElementById('hapusPengajuan').addEventListener('click', function(eve
                 cancelButtonText: 'Batal'
             }).then((secondResult) => {
                 if (secondResult.isConfirmed) {
-                    // Set nilai alasan ke input hidden
                     document.getElementById('alasanHapus').value = alasan;
-                    
-                    // Aktifkan input hidden untuk penghapusan
                     document.querySelector('input[name="hapus_pengajuan"]').value = '1';
-                    
-                    // Kirim form
                     document.getElementById('FormHapus').submit();
                 }
             });

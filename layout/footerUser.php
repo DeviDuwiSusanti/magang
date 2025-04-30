@@ -1,3 +1,7 @@
+<?php
+// akses email super admin
+$email_super = mysqli_fetch_assoc(mysqli_query($conn, "SELECT email from tb_user WHERE level = '1'"));
+?>
     <footer class="footer section">
             <div class="footer__container container grid">
                 <div>
@@ -13,7 +17,7 @@
                      Jawa Timur 61213
                     </p>
                     <p class="text-gray-400 mt-2">
-                        Email: <a href="mailto:hello@magangsidoarjo.id" class="text-gray-400 hover:text-white">sma.tchplatform@sidoarjo.go.id.</a><br/>
+                        Email: <a href="mailto:<?= htmlspecialchars($email_super['email']) ?>" class="text-gray-400 hover:text-white"><?= htmlspecialchars($email_super['email']) ?></a><br/>
                         Akses peluang magang terbaik di Sidoarjo dengan mudah</p>
                 </div>
 
@@ -34,7 +38,7 @@
                             <a href="tentang.php" class="footer__link text-gray-400 hover:text-white">Tentang Kami</a>
                             </li>
                             <li>
-                            <a href="../user/detail_user3_histori.php" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
+                            <a href="../user/user3_histori.php" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
                             </li>
                         </ul>
                     </div>

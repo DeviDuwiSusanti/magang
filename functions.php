@@ -166,7 +166,6 @@ function register($POST)
     $nama = $POST["nama_user"];
     $email = $POST["email"];
     $nik = $POST["nik"];
-    $nisn = $POST["nisn"];
     $pendidikan = $POST["id_pendidikan"];
     $jenis_kelamin = $POST["jenis_kelamin"];
     $tempat_lahir = $POST["tempat_lahir"];
@@ -174,9 +173,15 @@ function register($POST)
     $alamat = $POST["alamat_user"];
     $telepone = $POST["telepone_user"];
     $level = $POST["level"];
-    $nim = $POST["nim"];
     $gambar = uploadImage($_FILES["gambar_user"], "avatar.png", "assets/img/user/");
 
+    if (strlen($pendidikan) === 7) {
+        $nim = $POST['nim'];
+        $nisn = NULL; 
+    } else {
+        $nisn = $POST['nisn'];
+        $nim = NULL;
+    }
     // Cek email
     $check_email = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE email = '$email'");
 
