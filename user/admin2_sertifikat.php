@@ -24,7 +24,7 @@ if(isset($_FILES['background_file']) && is_array($_FILES['background_file']['nam
             $fileType = strtolower(pathinfo($targetFilePath, PATHINFO_EXTENSION));
             
             // Allow certain file formats
-            $allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+            $allowTypes = array('jpg', 'png', 'jpeg');
             
             if(in_array($fileType, $allowTypes)) {
                 // Generate unique filename to prevent overwrite
@@ -52,7 +52,7 @@ if(isset($_FILES['background_file']) && is_array($_FILES['background_file']['nam
                     $errorMessages[] = "Gagal upload file $fileName";
                 }
             } else {
-                $errorMessages[] = "File $fileName: Format tidak didukung (hanya JPG, PNG, JPEG, GIF)";
+                $errorMessages[] = "File $fileName: Format tidak didukung (hanya JPG, PNG, JPEG)";
             }
         }
     }
@@ -215,6 +215,30 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
     .badge-background-inactive {
         background-color: #6c757d;
     }
+    
+    /* Style untuk daftar file yang akan diupload */
+    .file-list {
+        margin-top: 15px;
+        padding: 10px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    
+    .file-list-item {
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .file-list-item:last-child {
+        border-bottom: none;
+    }
+    
+    /* Memastikan tombol aktifkan selalu terlihat */
+    .btn-aktifkan {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
 </style>
 
 <div class="main-content p-3">
@@ -236,17 +260,25 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
         <div class="card shadow-lg">
             <div class="card-body">
                 <h5>Tambah Background Baru</h5>
+                <p class="small text-muted">Nb. Ukuran File Max 1Mb, Bisa Upload Multiple File</p>
                 <form id="uploadForm" method="POST" enctype="multipart/form-data">
                     <div class="dropzone" id="myDropzone">
                         <div class="dz-message">
                             <i class="bi bi-cloud-arrow-up" style="font-size: 2rem;"></i><br>
                             Seret file ke sini atau klik untuk mengupload<br>
-                            <span class="text-muted">(Format: JPG, PNG, JPEG, GIF)</span>
+                            <span class="text-muted">(Format: JPG, PNG, JPEG)</span>
                         </div>
                         <div class="file-input-wrapper">
-                            <input type="file" name="background_file[]" id="background_file" multiple accept="image/*">
+                            <input type="file" name="background_file[]" id="background_file" multiple accept="image/jpg, image/jpeg, image/png">
                         </div>
                     </div>
+                    
+                    <!-- Daftar file yang akan diupload -->
+                    <div id="selectedFiles" class="file-list" style="display: none;">
+                        <h6>File yang akan diupload:</h6>
+                        <div id="fileListContent"></div>
+                    </div>
+                    
                     <div class="text-center mt-3">
                         <button type="submit" name="upload_background" class="btn btn-primary" id="uploadButton">
                             <i class="bi bi-upload"></i> Upload Background
@@ -287,7 +319,7 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
                                         <form method="POST" class="d-inline">
                                             <input type="hidden" name="id_background" value="<?= $bg['id_background'] ?>">
                                             <?php if($bg['background_active'] == '0'): ?>
-                                                <button type="submit" name="aktifkan_background" class="btn btn-sm btn-outline-success">
+                                                <button type="submit" name="aktifkan_background" class="btn btn-sm btn-outline-success btn-aktifkan">
                                                     <i class="bi bi-check-circle"></i> Aktifkan
                                                 </button>
                                             <?php else: ?>
@@ -336,6 +368,35 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
             $('.nama-file-display[data-id="' + id + '"]').show();
         });
 
+        // Tampilkan daftar file yang dipilih
+        $('#background_file').change(function() {
+            const files = this.files;
+            const fileList = $('#fileListContent');
+            const selectedFilesContainer = $('#selectedFiles');
+            
+            fileList.empty();
+            
+            if (files.length > 0) {
+                selectedFilesContainer.show();
+                
+                for (let i = 0; i < files.length; i++) {
+                    fileList.append('<div class="file-list-item">' + (i+1) + '. ' + files[i].name + '</div>');
+                }
+                
+                $('#myDropzone .dz-message').html(
+                    `Dipilih ${files.length} file<br>
+                     <span class="text-muted">Klik Upload untuk mengunggah</span>`
+                );
+            } else {
+                selectedFilesContainer.hide();
+                $('#myDropzone .dz-message').html(
+                    `<i class='bi bi-cloud-arrow-up' style='font-size: 2rem;'></i><br>
+                     Seret file ke sini atau klik untuk mengupload<br>
+                     <span class='text-muted'>(Format: JPG, PNG, JPEG)</span>`
+                );
+            }
+        });
+        
         // Inisialisasi Dropzone
         Dropzone.autoDiscover = false;
         
@@ -344,12 +405,12 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
             url: "admin2_sertifikat.php", // URL untuk upload
             paramName: "background_file", // Parameter name
             maxFilesize: 1, // MB
-            acceptedFiles: "image/*",
+            acceptedFiles: "image/jpg,image/jpeg,image/png",
             addRemoveLinks: true,
             autoProcessQueue: false, // Tidak otomatis upload
             parallelUploads: 5, // Bisa upload multiple file
             uploadMultiple: true, // Enable multiple file upload
-            dictDefaultMessage: "<i class='bi bi-cloud-arrow-up' style='font-size: 2rem;'></i><br>Seret file ke sini atau klik untuk mengupload<br><span class='text-muted'>(Format: JPG, PNG, JPEG, GIF)</span>",
+            dictDefaultMessage: "<i class='bi bi-cloud-arrow-up' style='font-size: 2rem;'></i><br>Seret file ke sini atau klik untuk mengupload<br><span class='text-muted'>(Format: JPG, PNG, JPEG)</span>",
             dictFileTooBig: "File terlalu besar ({{filesize}}MB). Maksimal {{maxFilesize}}MB.",
             dictInvalidFileType: "Format file tidak didukung.",
             dictResponseError: "Server merespon dengan kode {{statusCode}}.",
@@ -386,6 +447,23 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
                     alert("Error: " + message);
                     this.removeFile(file);
                 });
+                
+                // Ketika file ditambahkan
+                this.on("addedfile", function(file) {
+                    // Update tampilan daftar file
+                    const files = $('#background_file')[0].files;
+                    const fileList = $('#fileListContent');
+                    
+                    fileList.empty();
+                    
+                    if (files.length > 0) {
+                        $('#selectedFiles').show();
+                        
+                        for (let i = 0; i < files.length; i++) {
+                            fileList.append('<div class="file-list-item">' + (i+1) + '. ' + files[i].name + '</div>');
+                        }
+                    }
+                });
             }
         });
         
@@ -394,17 +472,6 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
             // Hanya trigger jika yang diklik bukan elemen dropzone internal
             if ($(e.target).hasClass('dropzone') || $(e.target).hasClass('dz-message')) {
                 $('#background_file').click();
-            }
-        });
-        
-        // Update tampilan dropzone ketika file dipilih
-        $('#background_file').change(function() {
-            if(this.files.length > 0) {
-                const dropzone = $('#myDropzone');
-                dropzone.find('.dz-message').html(
-                    `Dipilih ${this.files.length} file<br>
-                     <span class="text-muted">Klik Upload untuk mengunggah</span>`
-                );
             }
         });
     });
