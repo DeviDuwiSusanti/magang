@@ -1,9 +1,10 @@
-<?php
+<?php 
 include "../functions.php";
 
 $id_user_ini = $_GET["id_user_ini"];
 $id_pengajuan = $_GET["id_pengajuan"];
 
+// Ambil data user & pengajuan
 $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.* 
                     FROM tb_profile_user pu
                     JOIN tb_pengajuan p ON pu.id_pengajuan = p.id_pengajuan
@@ -12,9 +13,9 @@ $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.*
                     JOIN tb_bidang b ON p.id_bidang = b.id_bidang
                     WHERE pu.id_user = $id_user_ini")[0];
 
+// Validasi background
 $id_instansi = query("SELECT id_instansi FROM tb_pengajuan WHERE id_pengajuan = '$id_pengajuan' ")[0];
 $id_instansi_ini = $id_instansi["id_instansi"];
-
 $background = query("SELECT * FROM tb_sertifikat_background 
                     WHERE id_instansi = '$id_instansi_ini' AND background_active = '1' AND status_active = '1'")[0];
 
@@ -74,14 +75,15 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     }
 
     body {
-      font-family: "cambria", serif;
+      font-family: "Cambria", serif;
       margin: 0;
-      padding: 20px;
+      padding: 0; /* Jangan gunakan padding di body */
       background-image: url('<?= $background['path_file'] ?>');
       background-color: white;
       background-size: cover;
-      background-position: center;
+      background-position: top center;
       background-repeat: no-repeat;
+      background-attachment: fixed; /* Mencegah background bergeser saat print */
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       min-height: 100vh;
@@ -95,7 +97,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
         print-color-adjust: exact !important;
       }
       .content {
-        background-color: rgba(255, 255, 255, 0.4) !important;
+        background-color: transparent;
       }
     }
 
@@ -142,7 +144,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     .signature {
       margin-top: 40px;
       text-align: right;
-      padding-right: 100px;
+      padding-right: 50px;
     }
 
     .signature img {
@@ -155,12 +157,14 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     }
 
     .content {
+      padding-top: 50px;
       margin-top: 20px;
-      padding: 30px;
       border-radius: 10px;
       max-width: 900px;
-      margin: 20px auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-left: auto;
+      margin-right: auto;
+      /* background-color: rgba(255, 255, 255, 0.1);  */
+      background-color: transparent;
     }
 
     .predikat {
