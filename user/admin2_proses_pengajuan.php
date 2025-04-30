@@ -36,7 +36,7 @@ include '../assets/phpmailer/src/Exception.php';
 include '../assets/phpmailer/src/SMTP.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id_pembimbing = mysqli_real_escape_string($conn, $_POST["id_pembimbing"]);   
+    $id_pembimbing = mysqli_real_escape_string($conn, $_POST["id_pembimbing"]);
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["id_pengajuan"]);
     $status = $_POST["status"];
 
@@ -56,27 +56,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $periode_mulai = date("d F Y", strtotime($row['tanggal_mulai']));
         $periode_selesai = date("d F Y", strtotime($row['tanggal_selesai']));
 
-        // Ambil data user
-        $query_user = "SELECT nama_user, email
-                    FROM tb_user 
-                    JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user
-                    WHERE tb_user.id_user = '$id_user'";
-        $result_user = mysqli_query($conn, $query_user);
+        // Dapatkan semua anggota kelompok berdasarkan id_pengajuan
+        $query_anggota = "SELECT pu.nama_user, u.email
+                         FROM tb_profile_user pu
+                         JOIN tb_user u ON pu.id_user = u.id_user
+                         WHERE pu.id_pengajuan = '$id_pengajuan'";
+        $result_anggota = mysqli_query($conn, $query_anggota);
+        
+        $anggota_kelompok = [];
+        while ($row_anggota = mysqli_fetch_assoc($result_anggota)) {
+            $anggota_kelompok[] = [
+                'nama' => $row_anggota['nama_user'],
+                'email' => $row_anggota['email']
+            ];
+        }
 
-        if ($result_user && $row_user = mysqli_fetch_assoc($result_user)) {
-            $nama_pelamar = $row_user['nama_user'];
-            $email = $row_user['email'];
+        $email_pengirim = 'moneyuang25@gmail.com';
+        $nama_pengirim = 'Diskominfo Sidoarjo';
+        $salam = salamBerdasarkanWaktu();
+        $email_sent = false;
 
-            if ($email) {
-                $email_pengirim = 'moneyuang25@gmail.com';
-                $nama_pengirim = 'Diskominfo Sidoarjo';
-                $email_penerima = $email;
-                $salam = salamBerdasarkanWaktu();
+        if ($status === 'terima') {
+            $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2', id_pembimbing = '$id_pembimbing' WHERE id_pengajuan = '$id_pengajuan'";
 
-                if ($status === 'terima') {
-                    $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2', id_pembimbing = '$id_pembimbing' WHERE id_pengajuan = '$id_pengajuan'";
+            if (mysqli_query($conn, $sql_update)) {
+                // Kirim email ke semua anggota kelompok
+                foreach ($anggota_kelompok as $anggota) {
+                    $nama_pelamar = $anggota['nama'];
+                    $email = $anggota['email'];
 
-                    if (mysqli_query($conn, $sql_update)) {
+                    if ($email) {
                         $subject = 'Pemberitahuan Penerimaan Magang';
                         $message = "
                             <p>{$salam} <strong>{$nama_pelamar}</strong>,</p>
@@ -93,14 +102,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <br>
                             <p>Hormat kami,<br><strong>{$nama_pengirim}</strong><br>Diskominfo Sidoarjo</p>
                         ";
-                        kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, $message);
+                        $email_sent = kirimEmail($email_pengirim, $nama_pengirim, $email, $subject, $message, false);
                     }
+                }
 
-                } elseif ($status === 'tolak') {
-                    $alasan = mysqli_real_escape_string($conn, $_POST["alasan_tolak"]);
-                    $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '3', alasan_tolak = '$alasan' WHERE id_pengajuan = '$id_pengajuan'";
+                // Ambil data pembimbing
+                $query_pembimbing = "SELECT nama_user, email
+                                FROM tb_user 
+                                JOIN tb_profile_user ON tb_user.id_user = tb_profile_user.id_user
+                                WHERE tb_user.id_user = '$id_pembimbing'";
+                $result_pembimbing = mysqli_query($conn, $query_pembimbing);
 
-                    if (mysqli_query($conn, $sql_update)) {
+                if ($result_pembimbing && $row_pembimbing = mysqli_fetch_assoc($result_pembimbing)) {
+                    $nama_pembimbing = $row_pembimbing['nama_user'];
+                    $email_pembimbing = $row_pembimbing['email'];
+
+                    if ($email_pembimbing) {
+                        // Buat daftar nama anggota kelompok untuk email pembimbing
+                        $list_anggota = "";
+                        foreach ($anggota_kelompok as $index => $anggota) {
+                            $list_anggota .= "<li>👤 <strong>Nama Mahasiswa " . ($index + 1) . ":</strong> {$anggota['nama']}</li>";
+                        }
+
+                        $subject_pembimbing = 'Informasi Mahasiswa Bimbingan Magang';
+                        $message_pembimbing = "
+                            <p>{$salam} <strong>{$nama_pembimbing}</strong>,</p>
+                            <p>Anda telah ditunjuk sebagai <strong>pembimbing</strong> bagi " . 
+                            (count($anggota_kelompok) > 1 ? "kelompok" : "peserta") . " magang berikut:</p>
+                                <ul>
+                                {$list_anggota}
+                                <li>📍 <strong>Instansi:</strong> {$nama_instansi}</li>
+                                <li>📑 <strong>Bidang:</strong> {$bidang_magang}</li>
+                                <li>📆 <strong>Periode:</strong> {$periode_mulai} - {$periode_selesai}</li>
+                                </ul>
+                            <p>Silakan pantau kemajuan " . (count($anggota_kelompok) > 1 ? "kelompok" : "mahasiswa") . " melalui dashboard Anda.</p>
+                            <br>
+                            <p>Hormat kami,<br><strong>{$nama_pengirim}</strong><br>Diskominfo Sidoarjo</p>
+                            ";
+                        kirimEmail($email_pengirim, $nama_pengirim, $email_pembimbing, $subject_pembimbing, $message_pembimbing, $email_sent);
+                    }
+                }
+            }
+        } elseif ($status === 'tolak') {
+            $alasan = mysqli_real_escape_string($conn, $_POST["alasan_tolak"]);
+            $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '3', alasan_tolak = '$alasan' WHERE id_pengajuan = '$id_pengajuan'";
+
+            if (mysqli_query($conn, $sql_update)) {
+                // Kirim email ke semua anggota kelompok
+                foreach ($anggota_kelompok as $anggota) {
+                    $nama_pelamar = $anggota['nama'];
+                    $email = $anggota['email'];
+
+                    if ($email) {
                         $subject = 'Pemberitahuan Penolakan Magang';
                         $message = "
                             <p>{$salam} <strong>{$nama_pelamar}</strong>,</p>
@@ -111,16 +164,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <br>
                             <p>Hormat kami,<br><strong>{$nama_pengirim}</strong><br>Diskominfo Sidoarjo</p>
                         ";
-                        kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, $message);
+                        $email_sent = kirimEmail($email_pengirim, $nama_pengirim, $email, $subject, $message, $email_sent);
                     }
                 }
             }
         }
+
+        if ($email_sent) {
+            echo "<script>
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Status pengajuan dan email berhasil dikirim ke semua anggota kelompok!',
+                    icon: 'success'
+                }).then(() => {
+                    window.location.href = 'pengajuan.php';
+                });
+            </script>";
+        }
     }
 }
 
-// Fungsi kirim email
-function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, $message) {
+// Fungsi kirim email yang dimodifikasi dengan parameter $show_alert
+function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, $message, $show_alert = true)
+{
     $mail = new PHPMailer();
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
@@ -136,7 +202,9 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
     $mail->Subject = $subject;
     $mail->Body = $message;
 
-    if ($mail->send()) {
+    $result = $mail->send();
+    
+    if ($result && $show_alert) {
         echo "<script>
             Swal.fire({
                 title: 'Berhasil!',
@@ -146,7 +214,7 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
                 window.location.href = 'pengajuan.php';
             });
         </script>";
-    } else {
+    } elseif (!$result && $show_alert) {
         echo "<script>
             Swal.fire({
                 title: 'Gagal!',
@@ -157,9 +225,12 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
             });
         </script>";
     }
+    
+    return $result;
 }
 
-function salamBerdasarkanWaktu() {
+function salamBerdasarkanWaktu()
+{
     date_default_timezone_set('Asia/Jakarta');
     $jam = date("H");
     if ($jam < 11) return "Selamat pagi";
