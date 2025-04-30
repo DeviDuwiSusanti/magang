@@ -71,7 +71,8 @@
                             <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Logbook" 
                             data-steps='[{"step":"Jika status pengajuan Kamu sudah berlangsung, maka Kamu bisa unggah Logbook Kegiatan Harian."}, 
                             {"step":"Masuk ke dashboard user, dan klik Isi logbook", "img":"../assets/img/tentang/dashboard2.png"},
-                            {"step":"Klik Tambah Logbook.", "img":"../assets/img/tentang/logbook.png"}]'>Lihat</button>
+                            {"step":"Klik Tambah Logbook.", "img":"../assets/img/tentang/logbook.png"},
+                            {"step":"Kamu hanya bisa cetak jika logbook Kamu sudah diverifikasi semua oleh pembimbing magang Kamu.", "img":"../assets/img/tentang/logbook2.png"}]'>Lihat</button>
                         </div>
 
                         <!-- Unggah Laporan Akhir -->
@@ -83,7 +84,8 @@
                                 </div>
                             </div>
                             <button class="button contact__card-button" data-bs-toggle="modal" data-bs-target="#tutorialModal" data-title="Unggah Laporan Akhir" 
-                            data-steps='[{"step":"Masuk ke dashboard user, dan klik laporan akhir", "img":"../assets/img/tentang/dashboard2.png"}, 
+                            data-steps='[{"step":"Menu laporan akhir hanya akan muncul ketika status pengajuan kalian sudah selesai"},
+                            {"step":"Masuk ke dashboard user, dan klik laporan akhir", "img":"../assets/img/tentang/dashboard2.png"}, 
                             {"step":"Klik Tambah Laporan Akhir.", "img":"../assets/img/tentang/laprak.png"}]'>Lihat</button>
                         </div>
 
@@ -99,7 +101,7 @@
                             data-steps='[{"step":"Jika magang Kamu sudah selesai, maka kamu bisa cek sertifikat dan nilai."}, 
                             {"step":"Masuk ke dashboard user, dan klik Sertifikat dan Nilai", "img":"../assets/img/tentang/dashboard2.png"},
                             {"step":"Kamu akan diarahkan ke halaman Histori.", "img":"../assets/img/tentang/histori.png"},
-                            {"step":"Klik icon Cetak Sertifikat atau Nilai."},
+                            {"step":"Klik icon Cetak Sertifikat atau Nilai. Jika icon cetak nilai masih abu-abu, artinya nilai kamu belum tersedia."},
                             {"step":"Jika sertifikat atau nilai belum tersedia, artinya admin instansi belum menggunggah sertifikat dan nilai Kamu. Jadi bersabar yaa."}]'>Lihat</button>
                         </div>
                     </div>
