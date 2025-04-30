@@ -35,8 +35,7 @@ $sql = "SELECT d.*, p.nama_user FROM tb_dokumen d
         JOIN tb_profile_user p ON d.id_user = p.id_user
         WHERE d.jenis_dokumen = '3' 
         AND d.id_pengajuan = '$id_pengajuan' 
-        AND d.status_active IN (1, 2)";
-
+        AND d.status_active = 1";
 
 // Jika user adalah anggota, hanya bisa melihat laporannya sendiri
 if ($anggota) {
@@ -49,7 +48,7 @@ $sql_cek_laporan = "SELECT COUNT(*) as jumlah FROM tb_dokumen
                     WHERE id_user = '$id_user' 
                     AND id_pengajuan = '$id_pengajuan'
                     AND jenis_dokumen = '3'
-                    AND status_active IN (1, 2)";
+                    AND status_active = 1";
 $result_cek_laporan = mysqli_query($conn, $sql_cek_laporan);
 $data_cek = mysqli_fetch_assoc($result_cek_laporan);
 $laporan_terunggah = $data_cek['jumlah'] > 0;
@@ -105,25 +104,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['laporan_akhir'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
-    $id_dokumen = $_POST['id_dokumen'];
-
-    // Ambil status dokumen berdasarkan id_dokumen
-    $query_status = "SELECT status_active FROM tb_dokumen WHERE id_dokumen = '$id_dokumen'";
-    $result_status = mysqli_query($conn, $query_status);
-    $row_status = mysqli_fetch_assoc($result_status);
-    $status_active = $row_status['status_active'];
-
-    // Cek jika status dokumen = 2 (tidak boleh hapus)
-    if ($status_active == 2) {
-        echo "<script>
-            Swal.fire({
-                icon: 'error',
-                title: 'Laporan tidak dapat dihapus karena statusnya tidak bisa dihapus!',
-            });
-        </script>";
-        exit;
-    }
-
     $id_dokumen = $_POST['id_dokumen'];
 
     // Ambil data file berdasarkan id_dokumen
@@ -212,14 +192,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
                     </td>
                     <td class="text-center"><?= htmlspecialchars($row2['nama_user'] ?? 'Tidak diketahui') ?></td>
                     <td class="text-center">
-                        <?php if ($row2['id_user'] == $id_user && $row2['status_active'] != 2): ?>
+                        <?php if ($row2['id_user'] == $id_user): ?>
                         <form method="POST" class="hapus-dokumen-form">
                             <input type="hidden" name="id_dokumen" value="<?= $row2['id_dokumen'] ?>">
                             <input type="hidden" name="hapus_laporan" value="1">
                             <button type="button" class="btn btn-danger btn-sm hapus-btn" onclick="konfirmasiHapus(event, this.form)">
-    <i class="bi bi-trash"></i>
-</button>
-
+                                <i class="bi bi-trash"></i>
+                            </button>
                         </form>
                         <?php else: ?>
                         <button class="btn btn-secondary btn-sm" disabled>
@@ -239,7 +218,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['hapus_laporan'])) {
     </div>
   </div>
 </div>
-
 
 <!-- Modal Upload -->
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">

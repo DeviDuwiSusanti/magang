@@ -110,16 +110,28 @@ $no = 1;
                                                     <h5 class="modal-title" id="printOptionsLabel">Pilihan Cetak</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <div class="modal-body text-center">
-                                                    <!-- Tombol Cetak Sertifikat -->
-                                                    <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2" target="_blank">
-                                                        <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
-                                                    </a>
+                                                <div class="modal-body">
+                                                    <!-- Catatan Cetak -->
+                                                    <div class="alert alert-info mb-4">
+                                                        <h6 class="fw-bold">Catatan Dan Tips Cetak Nilai Dan Sertifikat</h6><br>
+                                                        <ol class="mb-0 ps-3">
+                                                            <li><strong>CTRL + P</strong> untuk cetak</li>
+                                                            <li>Jika background tidak muncul, checklist bagian option <strong>(✓) Background graphics</strong></li>
+                                                            <li>Jika ingin rapi pilih <strong>Odd Pages Only</strong> di bagian Pages</li>
+                                                        </ol>
+                                                    </div>
                                                     
-                                                    <!-- Tombol Cetak Nilai -->
-                                                    <a href="user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2" target="_blank">
-                                                        <i class="bi bi-file-text me-2"></i>Cetak Nilai
-                                                    </a>
+                                                    <div class="text-center">
+                                                        <!-- Tombol Cetak Sertifikat -->
+                                                        <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2" target="_blank">
+                                                            <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
+                                                        </a>
+                                                        
+                                                        <!-- Tombol Cetak Nilai -->
+                                                        <a href="user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2" target="_blank">
+                                                            <i class="bi bi-file-text me-2"></i>Cetak Nilai
+                                                        </a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
