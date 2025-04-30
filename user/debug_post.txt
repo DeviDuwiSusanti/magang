@@ -1,7 +1,7 @@
 Array
 (
-    [pengajuan_id] => 
+    [pengajuan_id] => 2025022602
     [tanggal_pelaksanaan] => 2025-04-30
-    [jam_pelaksanaan] => 13:30
+    [jam_pelaksanaan] => 09:15
     [link_zoom] => https://zoom.us/j/1234567890?pwd=ABC123XYZ
 )

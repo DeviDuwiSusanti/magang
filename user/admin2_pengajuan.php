@@ -209,7 +209,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                         : 'Tambah Informasi Wawancara';
                                     ?>
                                     <button type="button"
-                                        class="btn <?= $btn_class ?> btn-sm me-2"
+                                        class="btn <?= $btn_class ?> btn-sm me-2 zoom-btn"
                                         data-bs-toggle="modal"
                                         data-bs-target="#zoomModal"
                                         data-pengajuan-id="<?= $id_pengajuan ?>"
@@ -391,7 +391,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
             placeholder: "Pilih Pembimbing",
             allowClear: true,
             width: '100%',
-            minimumResultsForSearch: 0,
+            minimumResultsForSearch: 0
         });
     });
 
@@ -452,17 +452,19 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
         let submitButton = document.getElementById("submitButton");
         let zoomInfo = document.getElementById("zoomInfo");
 
-        if (zoomInfo) {
-            zoomInfo.style.display = "none";
-        }
+        $('#zoomModal').on('shown.bs.modal', function(event) {
+            let button = event.relatedTarget;
+            if (button) {
+                let idPengajuan = button.getAttribute('data-pengajuan-id');
+                document.getElementById('pengajuan_id_zoom').value = idPengajuan;
+            }
 
-        $('#zoomModal').on('hidden.bs.modal', function() {
             if (zoomInfo) {
                 zoomInfo.style.display = "none";
             }
         });
 
-        $('#zoomModal').on('shown.bs.modal', function() {
+        $('#zoomModal').on('hidden.bs.modal', function() {
             if (zoomInfo) {
                 zoomInfo.style.display = "none";
             }

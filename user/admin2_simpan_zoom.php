@@ -1,4 +1,7 @@
 <?php
+error_log(print_r($_POST, true)); // Ini akan menulis ke error log server
+file_put_contents('debug_post.txt', print_r($_POST, true)); // Ini akan membuat file debug
+
 include "../layout/sidebarUser.php";
 include "function.php";
 
