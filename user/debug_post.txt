@@ -1,7 +1,0 @@
-Array
-(
-    [pengajuan_id] => 2025043001
-    [tanggal_pelaksanaan] => 2025-04-30
-    [jam_pelaksanaan] => 12:15
-    [link_zoom] => https://meet.google.com/hvd-xrwh-bzg
-)
