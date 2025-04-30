@@ -96,7 +96,6 @@ include "functions.php";
                         <a href="lowongan.php" style="text-decoration: none; font-weight: bold; color: #007BFF;">Lihat Selengkapnya →</a>
                     </div>
                 </div>
-
                 <br><br><br>
                 <h2 class="section__title" style="text-align: center" data-aos="fade-up">Gabung Bersama Kami</h2>
                 <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
@@ -104,9 +103,14 @@ include "functions.php";
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper">
                     <?php
-                        $instansi = "SELECT * FROM tb_instansi";
-                        $query = mysqli_query($conn, $instansi);
-                        while ($row = mysqli_fetch_assoc($query)){
+                    $instansi = "SELECT * FROM tb_instansi";
+                    $query = mysqli_query($conn, $instansi);
+                    while ($row = mysqli_fetch_assoc($query)){
+                        // Cek jumlah kata dalam nama instansi
+                        $jumlah_kata = str_word_count($row['nama_panjang']);
+                        
+                        // Hanya proses jika nama instansi lebih dari 1 kata
+                        if ($jumlah_kata > 1) {
                             $pemagang_aktif = getPemagangAktif2($conn, $row['id_instansi']);
                             $nama_instansi = $row['nama_panjang'];
                             $kata_pertama = explode(' ', $nama_instansi)[0]; // Pecah string dan ambil kata pertama
@@ -115,24 +119,24 @@ include "functions.php";
                             $query2 = mysqli_query($conn, $sql2);
                             $row2 = mysqli_fetch_assoc($query2);
                             $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
-                            if ($jumlah_lowongan !=0){?>
-                                <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;"
-                                onclick="showDeskripsiInstansi(`<?= !empty($row['deskripsi_instansi']) ? addslashes($row['deskripsi_instansi']) : 'Belum ada deskripsi.' ?>`)">
-                                        <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                                        <div class="popular__data">
-                                            <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
-                                            <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
-                                            <br>
-                                            <p class="popular__description">
-                                                <i class="bx bx-briefcase"></i> <?= $jumlah_lowongan ?> Lowongan <br />
-                                                <i class="bx bxs-group"></i> <?= $pemagang_aktif ?> Pemagang Aktif
-                                            </p>
-                                        </div>
-                                </article>
-                            <?php
-                            }
+                    ?>
+                            <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;"
+                            data-deskripsi="<?= htmlspecialchars($row['deskripsi_instansi'] ?? 'Belum ada deskripsi.') ?>">
+                                <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
+                                <div class="popular__data">
+                                    <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
+                                    <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
+                                    <br>
+                                    <p class="popular__description">
+                                        <i class="bx bx-briefcase"></i> <?= $jumlah_lowongan ?> Lowongan <br />
+                                        <i class="bx bxs-group"></i> <?= $pemagang_aktif ?> Pemagang Aktif
+                                    </p>
+                                </div>
+                            </article>
+                    <?php
                         }
-                        ?>
+                    }
+                    ?>
                     </div>
 
                     <div class="swiper-button-next">
@@ -156,11 +160,16 @@ include "functions.php";
 
 <!-- Modal Deskripsi Instansi-->
 <script>
-    function showDeskripsiInstansi(deskripsi) {
-        document.getElementById('modalDeskripsiInstansi').innerHTML = deskripsi;
+    document.querySelectorAll('.popular__card').forEach(card => {
+    card.addEventListener('click', function() {
+        const deskripsi = this.dataset.deskripsi;
+        const modalBody = document.getElementById('modalDeskripsiInstansi');
+        modalBody.innerHTML = deskripsi.replace(/\n/g, '<br>');
+        
         var modal = new bootstrap.Modal(document.getElementById('instansiModal'));
         modal.show();
-    }
+    });
+});
 </script>
 
 <div class="modal fade" id="instansiModal" tabindex="-1" aria-labelledby="instansiModalLabel" aria-hidden="true">
