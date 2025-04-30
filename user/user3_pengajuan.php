@@ -461,7 +461,7 @@ $jenis_pengajuan_options = json_decode($row_jenis['jenis2_pengajuan'], true) ?? 
                                             </div>
                                         </div>
 
-                                        <button type="submit" name="update_pengajuan" class="btn btn-success"><i class="bi bi-save me-1"></i> Update</button>
+                                        <button type="submit" name="update_pengajuan" class="btn btn-success"><i class="bi bi-arrow-repeat me-1"></i> Update</button>
                                     </div>
                                 </form>
                             </div>
@@ -644,25 +644,27 @@ document.addEventListener("DOMContentLoaded", function() {
     const bidang = document.getElementById("bidang");
     let maxKuota = 0;
     
+    // Inisialisasi elemen
     if (jumlahAnggotaInput) {
         jumlahAnggotaInput.disabled = true;
-        jumlahAnggotaContainer.style.display = "block"; // Selalu tampilkan
+        jumlahAnggotaContainer.style.display = "block";
     }
 
     if (step2) step2.style.display = "none";
 
+    // Event listener untuk perubahan jenis pengajuan (kelompok/pribadi)
     if (kelompokPribadi) {
         kelompokPribadi.addEventListener("change", function() {
             if (this.value === "Kelompok") {
                 if (jumlahAnggotaInput) {
-                    jumlahAnggotaInput.disabled = false; // Enable jika kelompok
+                    jumlahAnggotaInput.disabled = false;
                 }
                 if (nextButton) nextButton.style.display = "inline-block";
                 if (submitButton) submitButton.style.display = "none";
             } else {
                 if (jumlahAnggotaInput) {
-                    jumlahAnggotaInput.disabled = true; // Disable jika bukan kelompok
-                    jumlahAnggotaInput.value = ""; // Kosongkan nilai
+                    jumlahAnggotaInput.disabled = true;
+                    jumlahAnggotaInput.value = "";
                 }
                 if (step2) step2.style.display = "none";
                 if (nextButton) nextButton.style.display = "none";
@@ -671,12 +673,14 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Event listener untuk perubahan bidang
     if (bidang) {
         bidang.addEventListener("change", function() {
             maxKuota = parseInt(this.options[this.selectedIndex].getAttribute("data-kuota")) || 0;
         });
     }
 
+    // Fungsi untuk menampilkan pesan error
     function showError(input, message) {
         let existingError = input.parentNode.querySelector(".error-message");
         if (existingError) {
@@ -689,6 +693,7 @@ document.addEventListener("DOMContentLoaded", function() {
         input.parentNode.appendChild(error);
     }
 
+    // Fungsi untuk menghapus pesan error
     function clearError(input) {
         const error = input.parentNode.querySelector(".error-message");
         if (error) {
@@ -696,11 +701,19 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Validasi format email
+    function validateEmailFormat(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Validasi step 1 form
     function validateStep1(formId) {
         let isValid = true;
         const form = document.getElementById(formId);
         if (!form) return false;
 
+        // Daftar field yang wajib diisi
         const fields = [
             { id: "instansi", message: "Pilih instansi yang dituju!" },
             { id: "bidang", message: "Pilih bidang yang dipilih!" },
@@ -709,14 +722,14 @@ document.addEventListener("DOMContentLoaded", function() {
             { id: "tanggal_selesai", message: "Pilih tanggal selesai!" }
         ];
 
-        // Hanya tambahkan validasi kelompok_pribadi jika form adalah pengajuanForm
+        // Tambahkan validasi kelompok_pribadi hanya untuk form pengajuan baru
         if (formId === "pengajuanForm") {
             fields.push({ id: "kelompok_pribadi", message: "Pilih personil!" });
         }
 
+        // Validasi setiap field
         fields.forEach(field => {
             const inputElement = form.querySelector(`#${field.id}`);
-            console.log(`Validasi field: ${field.id}, Nilai:`, inputElement ? inputElement.value : "Tidak ditemukan");
             if (!inputElement || !inputElement.value.trim()) {
                 if (inputElement) showError(inputElement, field.message);
                 isValid = false;
@@ -725,7 +738,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
-        // Validasi jumlah anggota hanya untuk pengajuanForm
+        // Validasi khusus untuk jumlah anggota (hanya form pengajuan baru)
         if (formId === "pengajuanForm" && kelompokPribadi && jumlahAnggotaInput) {
             const jumlahAnggota = parseInt(jumlahAnggotaInput.value) || 0;
             if (kelompokPribadi.value === "Kelompok") {
@@ -744,7 +757,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // Validasi file upload
-        const otherFields = [
+        const fileFields = [
             { id: "ktp", message: "Upload KTP dalam format PDF!" },
             { id: "cv", message: "Upload CV dalam format PDF!" },
             { id: "proposal", message: "Upload proposal dalam format PDF!" }
@@ -753,13 +766,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const maxFileSize = 1 * 1024 * 1024; // 1 MB
         const allowedMimeTypes = ["application/pdf"];
 
-        otherFields.forEach(({ id }) => {
+        fileFields.forEach(({ id, message }) => {
             const inputElement = document.getElementById(id);
             if (!inputElement) return;
 
             const file = inputElement.files?.[0];
             if (formId === "pengajuanForm" && !file) {
-                showError(inputElement, "File wajib diunggah!");
+                showError(inputElement, message);
                 isValid = false;
             } else if (file) {
                 if (file.size > maxFileSize) {
@@ -774,35 +787,45 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
-        console.log(`Validasi form ${formId} selesai. Hasil:`, isValid ? "Berhasil" : "Gagal");
-     
         return isValid;
     }
 
-    // Validasi email anggota melalui AJAX
-    async function checkEmail(emailInput) {
+    // Fungsi untuk memeriksa ketersediaan email via AJAX
+    function checkEmail(emailInput) {
         const email = emailInput.value.trim();
         if (email === "") return;
 
-        try {
-            const response = await fetch("cek.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `email=${email}`
-            });
-            const result = await response.text();
+        // Validasi format email terlebih dahulu
+        if (!validateEmailFormat(email)) {
+            showError(emailInput, "Format email tidak valid!");
+            return;
+        }
+
+        // Cek ke server
+        fetch("cek.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `email=${encodeURIComponent(email)}`
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(result => {
             if (result === "exists") {
                 showError(emailInput, "Email sudah digunakan!");
-                return false;
             } else {
                 clearError(emailInput);
-                return true;
             }
-        } catch (error) {
+        })
+        .catch(error => {
             console.error("Error checking email:", error);
-        }
+        });
     }
 
+    // Validasi data anggota
     function validateAnggota() {
         let isValid = true;
         const emails = new Set();
@@ -814,6 +837,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const email = anggota.querySelector("input[name='anggota_email[]']");
             const nik = anggota.querySelector("input[name='anggota_nik[]']");
 
+            // Validasi nama
             if (!nama.value.trim()) {
                 showError(nama, "Nama harus diisi!");
                 isValid = false;
@@ -824,17 +848,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 clearError(nama);
             }
 
+            // Validasi email
             if (!email.value.trim()) {
                 showError(email, "Email harus diisi!");
+                isValid = false;
+            } else if (!validateEmailFormat(email.value)) {
+                showError(email, "Format email tidak valid!");
                 isValid = false;
             } else if (emails.has(email.value)) {
                 showError(email, "Email sudah digunakan!");
                 isValid = false;
             } else {
                 emails.add(email.value);
-                checkEmail(email);
+                // Tidak memanggil checkEmail() di sini karena async
+                // Error akan ditampilkan via onblur handler
             }
 
+            // Validasi NIK
             if (!nik.value.trim()) {
                 showError(nik, "NIK wajib diisi!");
                 isValid = false;
@@ -845,39 +875,44 @@ document.addEventListener("DOMContentLoaded", function() {
                 clearError(nik);
             }
 
-             // Validasi Pendidikan (NIM/NISN)
+            // Validasi Pendidikan (NIM/NISN)
             const isUniversity = <?= strlen($id_studi) == 7 ? 'true' : 'false' ?>;
 
             if (isUniversity) {
                 const nim = anggota.querySelector("input[name='anggota_nim[]']");
-                // University validation - NIM
                 if (!nim.value.trim()) {
-                            showError(nim, `NIM wajib diisi!`);
-                            isValid = false;
-                        } else if (!/^\d{12}$/.test(nim.value)) {
-                            showError(nim, `NIM anggota harus 12 digit angka!`);
-                            isValid = false;
-                        } else {
-                            clearError(nim);
-                        }
-
+                    showError(nim, `NIM wajib diisi!`);
+                    isValid = false;
+                } else if (!/^\d{12}$/.test(nim.value)) {
+                    showError(nim, `NIM anggota harus 12 digit angka!`);
+                    isValid = false;
+                } else {
+                    clearError(nim);
+                }
             } else {
                 const nisn = anggota.querySelector("input[name='anggota_nisn[]']");
                 if (!nisn.value.trim()) {
-                            showError(nisn, `NISN anggota wajib diisi!`);
-                            isValid = false;
-                        } else if (!/^\d{10}$/.test(nisn.value)) {
-                            showError(nisn, `NISN anggota harus 10 digit angka!`);
-                            isValid = false;
-                        } else {
-                            clearError(nisn);
-                        }
-            }     
+                    showError(nisn, `NISN anggota wajib diisi!`);
+                    isValid = false;
+                } else if (!/^\d{10}$/.test(nisn.value)) {
+                    showError(nisn, `NISN anggota harus 10 digit angka!`);
+                    isValid = false;
+                } else {
+                    clearError(nisn);
+                }
+            }
         });
+
+        // Periksa apakah ada error email yang sudah ditampilkan
+        const emailErrors = document.querySelectorAll('.anggota-email + .error-message');
+        if (emailErrors.length > 0) {
+            isValid = false;
+        }
 
         return isValid;
     }
 
+    // Fungsi untuk kembali ke step sebelumnya
     function prevStep() {
         if (step2) step2.style.display = "none";
         if (step1) step1.style.display = "block";
@@ -886,6 +921,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (anggotaContainer) anggotaContainer.innerHTML = "";
     }
 
+    // Fungsi untuk lanjut ke step berikutnya
     function nextStep(event) {
         event.preventDefault();
         if (!validateStep1("pengajuanForm")) return;
@@ -921,6 +957,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (submitButton) submitButton.style.display = "inline-block";
     }
 
+    // Event listener untuk form pengajuan
     const pengajuanForm = document.getElementById("pengajuanForm");
     if (pengajuanForm) {
         pengajuanForm.addEventListener("submit", function(event) {
@@ -930,19 +967,17 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Event listener untuk form edit pengajuan
     const editForm = document.getElementById("editPengajuanForm");
     if (editForm) {
         editForm.addEventListener("submit", function(event) {
-            console.log("Validasi form editPengajuanForm dimulai");
             if (!validateStep1("editPengajuanForm")) {
-                console.log("Validasi gagal, form tidak di-submit");
                 event.preventDefault();
-            } else {
-                console.log("Validasi berhasil, form akan di-submit");
             }
         });
     }
 
+    // Ekspos fungsi ke global scope untuk digunakan di inline event handlers
     window.nextStep = nextStep;
     window.prevStep = prevStep;
     window.checkEmail = checkEmail;
