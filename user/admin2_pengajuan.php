@@ -274,17 +274,21 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     </div>
 </div>
 
-
 <!-- Modal untuk Proses Pengajuan -->
 <div class="modal fade" id="aksiModal" tabindex="-1" aria-labelledby="aksiModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form id="formAksiPengajuan">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="aksiModalLabel">Proses Pengajuan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            <div class="modal-header">
+                <h5 class="modal-title" id="aksiModalLabel">Proses Pengajuan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info align-items-center" role="alert" id="prosesInfo" style="display: none;">
+                    <div>
+                        <strong>Harap Tunggu!</strong> Sistem sedang mengirimkan notifikasi email. Proses ini mungkin membutuhkan waktu beberapa detik. Jangan tutup atau reload halaman sampai proses selesai.
+                    </div>
                 </div>
-                <div class="modal-body">
+                <form id="formAksiPengajuan">
                     <input type="hidden" name="id_pengajuan" id="id_pengajuan">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="status" id="radioTerima" value="terima">
@@ -320,11 +324,11 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                         <label for="alasan_tolak" class="form-label">Alasan Penolakan</label>
                         <textarea class="form-control" id="alasan_tolak" name="alasan_tolak" rows="3" placeholder="Tuliskan alasan penolakan..."></textarea>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Kirim</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="submit" class="btn btn-primary">Kirim</button>
+            </div>
             </form>
         </div>
     </div>
@@ -388,51 +392,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
             allowClear: true,
             width: '100%',
             minimumResultsForSearch: 0,
-            templateResult: function(data) {
-                if (!data.id) {
-                    return data.text;
-                }
-                var bidang = $(data.element).data('nama-bidang');
-                var namaUser = data.text.split(' - ')[0];
-                return $(
-                    '<span>' + namaUser + ' <span class="badge bg-primary ms-1">' + bidang + '</span></span>'
-                );
-            },
-            templateSelection: function(data) {
-                if (!data.id) {
-                    return data.text;
-                }
-                var bidang = $(data.element).data('nama-bidang');
-                var namaUser = data.text.split(' - ')[0];
-                return $(
-                    '<span>' + namaUser + ' <span class="badge bg-primary ms-1">' + bidang + '</span></span>'
-                );
-            },
-            escapeMarkup: function(markup) {
-                return markup;
-            }
         });
-    });
-
-
-    $('#zoomModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var pengajuanId = button.data('pengajuan-id'); // ambil data dari tombol
-
-        $('#pengajuan_id_zoom').val(pengajuanId); // set ke hidden input
-
-        // Sekarang panggil AJAX buat ambil pembimbing
-        fetch('ambil_pembimbing.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'pengajuan_id=' + pengajuanId
-            })
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('pembimbing').innerHTML = '<option value="">-- Pilih Pembimbing --</option>' + data;
-            });
     });
 
     // ========== Fungsi untuk mengirim pengingat lengkapi dokumen ==========
@@ -582,8 +542,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
             });
         }
     });
-
-
 
     // ========== Inisialisasi tooltip secara global ==========
     document.addEventListener('DOMContentLoaded', function() {
@@ -890,7 +848,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
         }
     });
 
-
     // ========== Event handler untuk tombol proses pengajuan ==========
     document.addEventListener("DOMContentLoaded", function() {
         const modal = document.getElementById("aksiModal");
@@ -902,10 +859,28 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
         const alasanContainer = document.getElementById("alasanTolakContainer");
         const infoResume = document.getElementById("infoResumePengajuan");
         const pembimbingContainer = document.getElementById("pembimbingContainer"); // Tambahkan ini
+        const prosesInfo = document.getElementById("prosesInfo");
+
+        if (prosesInfo) {
+            prosesInfo.style.display = "none";
+        }
 
         // Variabel untuk menyimpan data yang akan digunakan di submit
         let sisaKuota = 0;
         let jumlahPelamar = 0;
+
+        $('#aksiModal').on('hidden.bs.modal', function() {
+            if (prosesInfo) {
+                prosesInfo.style.display = "none";
+            }
+            form.reset();
+        });
+
+        $('#aksiModal').on('shown.bs.modal', function() {
+            if (zoomInfo) {
+                prosesInfo.style.display = "none";
+            }
+        });
 
         document.querySelectorAll(".aksi-btn").forEach(button => {
             button.addEventListener("click", function() {
@@ -931,6 +906,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                 form.reset();
                 alasanContainer.style.display = "none";
                 infoResume.style.display = "none";
+                pembimbingContainer.style.display = "none";
                 idInput.value = id;
 
                 pembimbingContainer.style.display = "none";
@@ -944,7 +920,8 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
 
         // Fungsi untuk memuat data pembimbing
         function loadPembimbing(idPengajuan) {
-            fetch(`ambil_pembimbing.php?id_pengajuan=${idPengajuan}`)
+            if (prosesInfo) prosesInfo.style.display = "block";
+            fetch(`admin2_proses_pengajuan.php?get_pembimbing=true&id_pengajuan=${idPengajuan}`)
                 .then(response => response.json())
                 .then(data => {
                     const select = document.getElementById('pembimbing');
@@ -956,9 +933,11 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                         option.textContent = pembimbing.nama_pembimbing;
                         select.appendChild(option);
                     });
+                    if (prosesInfo) prosesInfo.style.display = "none";
                 })
                 .catch(error => {
                     console.error('Error loading pembimbing:', error);
+                    if (prosesInfo) prosesInfo.style.display = "none";
                 });
         }
 
@@ -975,75 +954,82 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
             pembimbingContainer.style.display = "block";
         });
 
-        // Submit form
-        form.addEventListener("submit", function(e) {
-            e.preventDefault();
+        if (form) {
+            form.addEventListener("submit", function(e) {
+                e.preventDefault();
 
-            const id_pengajuan = idInput.value;
-            const status = form.querySelector("input[name='status']:checked")?.value;
-            const alasan = alasanTolak.value.trim();
-            const pembimbing = document.getElementById('pembimbing')?.value;
+                const id_pengajuan = idInput.value;
+                const status = form.querySelector("input[name='status']:checked")?.value;
+                const alasan = alasanTolak.value.trim();
+                const pembimbing = document.getElementById('pembimbing')?.value;
 
-            if (!status) {
-                Swal.fire("Pilihan Wajib!", "Silakan pilih menerima atau menolak pengajuan.", "warning");
-                return;
-            }
-
-            if (status === "tolak" && alasan === "") {
-                Swal.fire("Alasan Wajib!", "Silakan isi alasan penolakan.", "warning");
-                return;
-            }
-
-            if (status === "terima" && jumlahPelamar > sisaKuota) {
-                Swal.fire("Kuota Tidak Cukup!", "Jumlah pelamar melebihi kuota yang tersedia.", "error");
-                return;
-            }
-
-            if (status === "terima" && !pembimbing) {
-                Swal.fire("Pembimbing Wajib!", "Silakan pilih pembimbing untuk pengajuan ini.", "warning");
-                return;
-            }
-
-            Swal.fire({
-                title: "Konfirmasi",
-                text: `Anda yakin ingin ${status === 'terima' ? 'menerima' : 'menolak'} pengajuan ini?`,
-                icon: "question",
-                showCancelButton: true,
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Ya, Lanjutkan",
-                cancelButtonText: "Batal"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const formData = new FormData();
-                    formData.append('id_pengajuan', id_pengajuan);
-                    formData.append('status', status);
-                    if (status === "tolak") {
-                        formData.append('alasan_tolak', alasan);
-                    } else {
-                        formData.append('id_pembimbing', pembimbing);
-                    }
-
-                    fetch("admin2_proses_pengajuan.php", {
-                            method: "POST",
-                            body: formData
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error("Network response was not ok");
-                            }
-                            return response.text();
-                        })
-                        .then(data => {
-                            Swal.fire("Sukses!", "Pengajuan berhasil diproses dan email terkirim.", "success").then(() => {
-                                location.reload();
-                            });
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                            Swal.fire("Gagal!", "Terjadi kesalahan saat mengirim.", "error");
-                        });
+                if (!status) {
+                    Swal.fire("Pilihan Wajib!", "Silakan pilih menerima atau menolak pengajuan.", "warning");
+                    return;
                 }
+
+                if (status === "tolak" && alasan === "") {
+                    Swal.fire("Alasan Wajib!", "Silakan isi alasan penolakan.", "warning");
+                    return;
+                }
+
+                if (status === "terima" && jumlahPelamar > sisaKuota) {
+                    Swal.fire("Kuota Tidak Cukup!", "Jumlah pelamar melebihi kuota yang tersedia.", "error");
+                    return;
+                }
+
+                if (status === "terima" && !pembimbing) {
+                    Swal.fire("Pembimbing Wajib!", "Silakan pilih pembimbing untuk pengajuan ini.", "warning");
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Konfirmasi",
+                    text: `Anda yakin ingin ${status === 'terima' ? 'menerima' : 'menolak'} pengajuan ini?`,
+                    icon: "question",
+                    showCancelButton: true,
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Lanjutkan",
+                    cancelButtonText: "Batal"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (prosesInfo) {
+                            prosesInfo.style.display = "block";
+                        }
+
+                        const formData = new FormData();
+                        formData.append('id_pengajuan', id_pengajuan);
+                        formData.append('status', status);
+                        if (status === "tolak") {
+                            formData.append('alasan_tolak', alasan);
+                        } else {
+                            formData.append('id_pembimbing', pembimbing);
+                        }
+
+                        fetch("admin2_proses_pengajuan.php", {
+                                method: "POST",
+                                body: formData
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error("Network response was not ok");
+                                }
+                                return response.text();
+                            })
+                            .then(data => {
+                                if (prosesInfo) prosesInfo.style.display = "none";
+                                Swal.fire("Sukses!", "Pengajuan berhasil diproses dan email terkirim.", "success").then(() => {
+                                    location.reload();
+                                });
+                            })
+                            .catch(error => {
+                                console.error("Error:", error);
+                                if (prosesInfo) prosesInfo.style.display = "none";
+                                Swal.fire("Gagal!", "Terjadi kesalahan saat mengirim.", "error");
+                            });
+                    }
+                });
             });
-        });
+        }
     });
 </script>
