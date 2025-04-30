@@ -77,7 +77,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $email_sent = false;
 
         if ($status === 'terima') {
-            $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2', id_pembimbing = '$id_pembimbing' WHERE id_pengajuan = '$id_pengajuan'";
+            $tanggal_sekarang = date("Y-m-d");
+            $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2', id_pembimbing = '$id_pembimbing', tanggal_diterima = '$tanggal_sekarang' WHERE id_pengajuan = '$id_pengajuan'";
 
             if (mysqli_query($conn, $sql_update)) {
                 // Kirim email ke semua anggota kelompok
