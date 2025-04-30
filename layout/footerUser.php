@@ -26,7 +26,7 @@ $email_super = mysqli_fetch_assoc(mysqli_query($conn, "SELECT email from tb_user
                   <ul class="footer__links space-y-2">
                   <h3 class="footer__title text-xl font-semibold mb-4">Peserta</h3>
                             <li>
-                            <a href="#" class="footer__link text-gray-400 hover:text-white">Home</a>
+                            <a href="beranda.php" class="footer__link text-gray-400 hover:text-white">Home</a>
                             </li>
                             <li>
                             <a href="lowongan.php" class="footer__link text-gray-400 hover:text-white">Cari Lowongan</a>

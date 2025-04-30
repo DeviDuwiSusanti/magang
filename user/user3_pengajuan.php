@@ -461,7 +461,7 @@ $jenis_pengajuan_options = json_decode($row_jenis['jenis2_pengajuan'], true) ?? 
                                             </div>
                                         </div>
 
-                                        <button type="submit" name="update_pengajuan" class="btn btn-success"><i class="bi bi-save me-1"></i> Update</button>
+                                        <button type="submit" name="update_pengajuan" class="btn btn-success"><i class="bi bi-arrow-repeat me-1"></i> Update</button>
                                     </div>
                                 </form>
                             </div>
