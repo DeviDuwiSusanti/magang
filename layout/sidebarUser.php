@@ -125,7 +125,7 @@ if (isset($_SESSION['email'])) {
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="super1_pendidikan.php" class="sidebar-link text-decoration-none">
+                        <a href="pendidikan_user.php" class="sidebar-link text-decoration-none">
                             <i class="bi bi-mortarboard"></i>
                             <span>Pendidikan</span>
                         </a>
@@ -201,7 +201,7 @@ if (isset($_SESSION['email'])) {
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="super1_pendidikan.php" class="sidebar-link text-decoration-none">
+                        <a href="pendidikan_user.php" class="sidebar-link text-decoration-none">
                             <i class="bi bi-mortarboard"></i>
                             <span>Pendidikan</span>
                         </a>

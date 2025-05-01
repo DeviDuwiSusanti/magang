@@ -90,7 +90,7 @@ foreach ($perguruan_tinggi as $kampus) {
             z-index: 9999 !important;
         }
     </style>
-    <main>
+    <main class="main-content p-3">
         <div class="container-fluid px-4">
             <h1 class="mt-4">Halaman Daftar Sekolah Dan Perguruan Tinggi</h1>
             <ol class="breadcrumb mb-4">

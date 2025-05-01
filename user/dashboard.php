@@ -147,10 +147,10 @@ endif;
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
-                            <h5 class="card-title">Daftar Pendidikan</h5>
+                            <h5 class="card-title">Pendidikan User</h5>
                             <h2 class="card-text text-primary"><?= $pendidikan_1["total"] ?></h2>
                             <!-- <p class="text-muted">lihat Dan Tambahkan Daftar Asal Sekolah Atau Universitas Pengguna</p> -->
-                            <a href="super1_pendidikan.php" class="btn btn-primary mt-3 detail">View Details</a>
+                            <a href="pendidikan_user.php" class="btn btn-primary mt-3 detail">View Details</a>
                         </div>
                     </div>
                 </div>
