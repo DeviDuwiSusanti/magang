@@ -4,29 +4,18 @@ include "functions.php";
 include "update_status.php";
 
 $id_instansi = $_SESSION['id_instansi'];
+$id_admin = $_SESSION['id_user'];
 $no = 1;
 
 // Query untuk data utama pengajuan
 $sql = "SELECT  
-            pu.nama_user,
-            b.nama_bidang,
-            b.kuota_bidang,
-            b.id_bidang,
-            COALESCE(pa.jumlah_pemagang_aktif, 0) AS jumlah_pemagang_aktif,
-            u.email,
-            p.jenis_pengajuan, 
-            p.jumlah_pelamar, 
-            p.tanggal_mulai, 
-            p.tanggal_selesai, 
-            p.id_pengajuan, 
-            p.id_user, 
-            p.status_pengajuan, 
-            p.status_active, 
-            p.tanggal_zoom, 
-            p.pengingat_dokumen
+            pu.nama_user, b.nama_bidang, b.kuota_bidang, b.id_bidang, i.nama_panjang,
+            COALESCE(pa.jumlah_pemagang_aktif, 0) AS jumlah_pemagang_aktif, u.email, p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai,
+            p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.tanggal_zoom, p.pengingat_dokumen, p.dokumen_lengkap
         FROM tb_pengajuan AS p
         INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
         INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+        INNER JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi
         INNER JOIN tb_user AS u ON p.id_user = u.id_user
         LEFT JOIN (
             SELECT id_bidang, SUM(jumlah_pelamar) AS jumlah_pemagang_aktif
@@ -85,6 +74,17 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
 
     $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokumen'])) {
+    $id_pengajuan = intval($_POST['id_pengajuan']);
+
+    // Query update langsung
+    $query = "UPDATE tb_pengajuan SET dokumen_lengkap = 1, change_by = $id_admin WHERE id_pengajuan = $id_pengajuan";
+    // bisa di update juga untuk pengingat_dokumen menjadi = 1
+    $result = mysqli_query($conn, $query);
+    exit;
+}
+
 ?>
 
 <!-- PDF.js -->
@@ -107,14 +107,13 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama User</th>
+                            <th>Nama Pengaju</th>
                             <th>Nama Bidang</th>
-                            <th>Jenis Pengajuan</th>
+                            <th>Detail Pengajuan</th>
                             <th>Calon Pelamar</th>
-                            <th>Periode</th>
-                            <th>Durasi</th>
                             <th>Tanggal Wawancara</th>
                             <th style="text-align: center;">Status</th>
+                            <th style="text-align: center;">Dokumen Lengkap</th>
                             <th style="width: 200px; text-align: center">Aksi</th>
                         </tr>
                     </thead>
@@ -127,6 +126,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                             $bidang = $row['nama_bidang'];
                             $id_bidang = $row['id_bidang'];
                             $jenis_pengajuan = $row['jenis_pengajuan'];
+                            $dokumen_lengkap = $row['dokumen_lengkap'];
 
                             $tanggal_mulai = new DateTime($row['tanggal_mulai']);
                             $tanggal_selesai = new DateTime($row['tanggal_selesai']);
@@ -141,8 +141,15 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                 <td><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($row['nama_user']) ?></td>
                                 <td><?= htmlspecialchars($row['nama_bidang']) ?></td>
-                                <td><?= htmlspecialchars($row['jenis_pengajuan']) ?></td>
-                                <td>
+                                <!-- <td><?= htmlspecialchars($row['jenis_pengajuan']) ?></td> -->
+                                <td class="text-center align-middle">
+                                    <button type="button" class="btn btn-sm btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalDetail<?= $row['id_pengajuan']; ?>">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                </td>
+                                <td class="text-center align-middle">
                                     <a href="#" class="show-detail" title="Lihat Detail"
                                         data-detail='<?= isset($nama_pengaju[$id_pengajuan])
                                                             ? json_encode(explode(', ', $nama_pengaju[$id_pengajuan]))
@@ -151,20 +158,6 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                             ? count(explode(', ', $nama_pengaju[$id_pengajuan]))
                                             : 0 ?>
                                     </a>
-                                </td>
-                                <td>
-                                    <?php if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])): ?>
-                                        <?= formatTanggalLengkapIndonesia($row['tanggal_mulai']) ?> - <?= formatTanggalLengkapIndonesia($row['tanggal_selesai']) ?>
-                                    <?php else: ?>
-                                        Periode Tidak Diketahui
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])): ?>
-                                        <?= hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']) ?>
-                                    <?php else: ?>
-                                        Durasi Tidak Diketahui
-                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center align-middle"><?= $row['tanggal_zoom'] ? htmlspecialchars(formatTanggalLengkapIndonesia($row['tanggal_zoom'])) : '-' ?></td>
                                 <td class="text-center align-middle">
@@ -179,12 +172,26 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                         $status = 'Wawancara Dikirim';
                                         $badgeClass = 'badge bg-info'; // biru muda
                                     } elseif ($row['status_pengajuan'] == 2 && $row['tanggal_mulai'] > date('Y-m-d')) {
-                                        $status = 'Diterima & Cek Dokumen';
+                                        $status = 'Diterima';
                                         $badgeClass = 'badge bg-success'; // merah
                                     }
 
                                     echo "<span class='$badgeClass'>$status</span>";
                                     ?>
+                                </td>
+                                <td class="text-center align-middle" id="dokumen-cell-<?= $id_pengajuan ?>">
+                                    <?php if ($dokumen_lengkap == 1): ?>
+                                        <span class="badge bg-success">Dokumen Lengkap</span>
+                                    <?php else: ?>
+                                        <div class="form-check d-flex justify-content-center">
+                                            <input class="form-check-input dokumen-checkbox"
+                                                type="checkbox"
+                                                value=""
+                                                data-id-pengajuan="<?= $id_pengajuan ?>"
+                                                data-status-pengajuan="<?= $status_pengajuan ?>"
+                                                style="width: 1.2em; height: 1.2em;">
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-center align-middle">
                                     <!-- Tombol lihat dokumen -->
@@ -240,6 +247,30 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
                                     </button>
                                 </td>
                             </tr>
+
+                            <!-- Modal Detail Pengajuan -->
+                            <div class="modal fade" id="modalDetail<?= $row['id_pengajuan']; ?>" tabindex="-1" aria-labelledby="detailModalLabel<?= $row['id_pengajuan']; ?>" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="detailModalLabel<?= $row['id_pengajuan']; ?>">Detail Pengajuan</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- nama pengaju -->
+                                            <p><strong>Nama Pengaju:</strong> <?= htmlspecialchars($row['nama_user'] ?? "Tidak Diketahui"); ?></p>
+                                            <p><strong>Instansi:</strong> <?= htmlspecialchars($row['nama_panjang'] ?? "Tidak Diketahui"); ?></p>
+                                            <p><strong>Bidang:</strong> <?= htmlspecialchars($row['nama_bidang'] ?? "Tidak Diketahui"); ?></p>
+                                            <p><strong>Jenis Pengajuan:</strong> <?= htmlspecialchars($row['jenis_pengajuan'] ?? "Tidak Diketahui"); ?></p>
+                                            <p><strong>Durasi:</strong> <?= isset($row['tanggal_mulai'], $row['tanggal_selesai']) ? hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']) : "Tidak Diketahui"; ?></p>
+                                            <p><strong>Periode Magang:</strong> <?= isset($row['tanggal_mulai'], $row['tanggal_selesai']) ? formatPeriode($row['tanggal_mulai'], $row['tanggal_selesai']) : "Tidak Diketahui"; ?></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
@@ -384,6 +415,58 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
 <script src="../assets/js/validasi.js"></script>
 
 <script>
+    // ========== Validasi Checkbox Dokumen ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dokumen-checkbox').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const pengajuanId = this.getAttribute('data-id-pengajuan');
+                const statusPengajuan = this.getAttribute('data-status-pengajuan');
+                const cell = document.getElementById('dokumen-cell-' + pengajuanId);
+
+                if (statusPengajuan != '2') {
+                    this.checked = false; // kembalikan centang
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Belum Bisa Diverifikasi',
+                        text: 'Verifikasi dokumen hanya bisa dilakukan setelah pengajuan diterima.'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: 'Apakah Anda yakin dokumen persyaratan sudah lengkap?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Lengkap',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const formData = new FormData();
+                        formData.append('aksi_verifikasi_dokumen', '1');
+                        formData.append('id_pengajuan', pengajuanId);
+
+                        fetch('', {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(res => res.text())
+                            .then(response => {
+                                cell.innerHTML = `<span class="badge bg-success">Dokumen Lengkap</span>`;
+                                Swal.fire('Sukses', 'Dokumen berhasil diverifikasi.', 'success');
+                            })
+                            .catch(err => {
+                                console.error('Error:', err);
+                                Swal.fire('Gagal', 'Terjadi kesalahan saat memverifikasi.', 'error');
+                            });
+                    } else {
+                        this.checked = false;
+                    }
+                });
+            });
+        });
+    });
+
     // ========== Inisialisasi Select2 pada Modal Zoom ==========
     $('#zoomModal').on('shown.bs.modal', function() {
         $('#pembimbing').select2({
