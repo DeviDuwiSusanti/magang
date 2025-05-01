@@ -80,6 +80,7 @@
 </style>
 
 
+<div class="main-content p-3">
 <div class="container-fluid px-4">
     <h1 class="mt-4">Halaman Daftar Instansi</h1>
 </div>
@@ -288,7 +289,7 @@
         </div>
     </div>
 </div>
-
+</div>
 
 
 

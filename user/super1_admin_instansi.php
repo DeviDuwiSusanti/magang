@@ -61,7 +61,7 @@
 </style>
 
 
-<main>
+<main class="main-content p-3">
     <div class="container-fluid px-4">
         <h1 class="mt-4">Halaman Daftar Calon Admin Instansi</h1>
     </div>
