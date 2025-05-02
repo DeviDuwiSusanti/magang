@@ -180,18 +180,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 </html>
 
 <script>
-    // Saat halaman selesai dimuat
-    // window.addEventListener('load', () => {
-    //     const loader = document.querySelector('.loader');
-    //     if (loader) {
-    //         loader.classList.add("hidden");
-
-    //         loader.addEventListener('transitionend', () => {
-    //             loader.remove(); // Hilangkan loader dari DOM setelah animasi selesai
-    //         });
-    //     }
-    // });
-
     // Saat form dikirim
     document.getElementById('login-form')?.addEventListener('submit', function() {
         let loader = document.querySelector('.loader');

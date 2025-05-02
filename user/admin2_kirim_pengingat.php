@@ -21,6 +21,8 @@ $sql = "
     JOIN tb_instansi i ON p.id_instansi = i.id_instansi
     WHERE p.status_pengajuan = 2
     AND (p.pengingat_dokumen = 0 OR p.penolakan_otomatis = 0)
+    AND p.tanggal_diterima IS NOT NULL
+    AND p.status_active = 1
 ";
 
 $result = mysqli_query($conn, $sql);

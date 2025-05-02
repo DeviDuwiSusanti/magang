@@ -75,6 +75,7 @@ while ($row3 = mysqli_fetch_assoc($result3)) {
     $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
 }
 
+// Query untuk verifikasi dokumen   
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokumen'])) {
     $id_pengajuan = intval($_POST['id_pengajuan']);
 
@@ -106,14 +107,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                 <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>No</th>
-                            <th>Nama Pengaju</th>
-                            <th>Nama Bidang</th>
-                            <th>Detail Pengajuan</th>
-                            <th>Calon Pelamar</th>
-                            <th>Tanggal Wawancara</th>
-                            <th style="text-align: center;">Status</th>
-                            <th style="text-align: center;">Dokumen Lengkap</th>
+                            <th class="text-center">No</th>
+                            <th class="text-center">Nama Pengaju</th>
+                            <th class="text-center">Nama Bidang</th>
+                            <th class="text-center">Detail Pengajuan</th>
+                            <th class="text-center">Calon Pelamar</th>
+                            <th class="text-center">Tanggal Wawancara</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Dokumen Lengkap</th>
                             <th style="width: 200px; text-align: center">Aksi</th>
                         </tr>
                     </thead>
@@ -130,8 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
 
                             $tanggal_mulai = new DateTime($row['tanggal_mulai']);
                             $tanggal_selesai = new DateTime($row['tanggal_selesai']);
-                            $durasi_magang = $tanggal_mulai->diff($tanggal_selesai)->m +
-                                ($tanggal_mulai->diff($tanggal_selesai)->y * 12);
+                            $durasi_magang = hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']);
 
                             $kuota_bidang = $row['kuota_bidang'];
                             $jumlah_pemagang_aktif = $row['jumlah_pemagang_aktif'];
@@ -226,7 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                     </button>
                                     <!-- Tombol Proses Pengajuan -->
                                     <?php
-                                    $bisaProses = (!empty($tanggal_zoom) && $tanggal_zoom !== '0000-00-00' && $tanggal_zoom < $today);
+                                    $bisaProses = (!empty($tanggal_zoom) && $tanggal_zoom !== '0000-00-00' && $tanggal_zoom < $today && $dokumen_lengkap != 1);
                                     $btnClass = $bisaProses ? 'btn-success' : 'btn-secondary';
                                     $disabled = $bisaProses ? '' : 'disabled';
                                     ?>
@@ -453,7 +453,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                             .then(res => res.text())
                             .then(response => {
                                 cell.innerHTML = `<span class="badge bg-success">Dokumen Lengkap</span>`;
-                                Swal.fire('Sukses', 'Dokumen berhasil diverifikasi.', 'success');
+                                Swal.fire('Sukses', 'Dokumen berhasil diverifikasi.', 'success')
+                                    .then((result) => {
+                                        if (result.isConfirmed || result.dismiss === Swal.DismissReason.timer || result.dismiss === Swal.DismissReason.backdrop) {
+                                            window.location.reload();
+                                        }
+                                    });
                             })
                             .catch(err => {
                                 console.error('Error:', err);
