@@ -1,7 +1,7 @@
 <?php
 function getBidangInstansi($conn, $limit = NULL) {
     // Query dasar dengan pengurutan berdasarkan create_date terbaru
-    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date 
+    $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date, tb_bidang.change_date AS bidang_change_date 
             FROM tb_bidang, tb_instansi 
             WHERE tb_bidang.status_active = '1' AND tb_bidang.kuota_bidang != 0 
             AND tb_bidang.id_instansi = tb_instansi.id_instansi
@@ -45,4 +45,13 @@ function getPemagangAktif2($conn, $id_instansi) {
         return 0;
     }
 
+}
+
+function formatTanggalIndonesia($tanggal) {
+    $bulan = [
+        "Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    $dateObj = DateTime::createFromFormat('Y-m-d', substr($tanggal, 0, 10));
+    return $dateObj ? $dateObj->format('d') . ' ' . $bulan[(int)$dateObj->format('m') - 1] . ' ' . $dateObj->format('Y') : "Format Tidak Valid";
 }
