@@ -29,7 +29,7 @@ include "functions.php";
     if (isset($_GET['id_bidang'])) {
         $id_bidang = $_GET['id_bidang'];
 
-        $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = tb_bidang.id_instansi";
+        $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date, tb_bidang.change_date AS bidang_change_date FROM tb_bidang, tb_instansi WHERE tb_bidang.id_bidang = '$id_bidang' AND tb_instansi.id_instansi = tb_bidang.id_instansi";
         $query = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($query);
         $pemagang_aktif = getPemagangAktif1($conn, $row['id_instansi'], $row['id_bidang']);
@@ -122,6 +122,16 @@ include "functions.php";
                                             <span class="sidebar-item-value"><?= date('d-F-Y', strtotime($row['bidang_create_date'])) ?></span>
                                         </div>
                                     </div>
+                                     <?php
+                                        if ($row['bidang_change_date'] != NULL):?>
+                                        <div class="sidebar-item">
+                                            <i class="bx bx-time"></i>
+                                            <div>
+                                                <span class="sidebar-item-label">Diupdate pada</span>
+                                                <span class="sidebar-item-value"><?= formatTanggalIndonesia($row['bidang_change_date']) ?></span>
+                                            </div>
+                                        </div>
+                                     <?php endif; ?>
                                 </div>
 
                                 <div class="sidebar-card">
