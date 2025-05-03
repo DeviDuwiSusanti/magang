@@ -119,7 +119,7 @@ include "functions.php";
                                         <i class="bx bx-calendar"></i>
                                         <div>
                                             <span class="sidebar-item-label">Dibuat pada</span>
-                                            <span class="sidebar-item-value"><?= date('d-F-Y', strtotime($row['bidang_create_date'])) ?></span>
+                                            <span class="sidebar-item-value"><?= formatTanggalIndonesia($row['bidang_create_date']) ?></span>
                                         </div>
                                     </div>
                                      <?php
