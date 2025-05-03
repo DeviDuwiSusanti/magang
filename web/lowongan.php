@@ -117,7 +117,11 @@ include "functions.php";
                                 <span class="icon" style="margin-right: 5px;">&#128101;</span> Pemagang Aktif: 
                                 <span class="total-pendaftar"><?= $pemagang_aktif ?></span><br>
                                 <span class="icon" style="margin-right: 5px;">&#128197;</span> Dibuat pada: 
-                                <span class="creation-date"> <?= $row['create_date'] ?> </span>
+                                <span class="creation-date"> <?= formatTanggalIndonesia($row['bidang_create_date']) ?> </span>
+                                <?php if ($row['bidang_change_date'] != NULL): ?>
+                                    <br><span class="icon" style="margin-right: 5px;">&#128340;</span> Diupdate pada: 
+                                    <span class="creation-date"> <?= formatTanggalIndonesia($row['bidang_change_date']) ?> </span>
+                                <?php endif; ?>
                             </p>
                             <!-- Tombol buat liat detail lowongan -->
                             <a href="detaillow.php?id_bidang=<?= $row['id_bidang'] ?>">
