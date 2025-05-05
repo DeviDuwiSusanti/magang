@@ -105,6 +105,12 @@ $row2 = mysqli_fetch_assoc($query2);
                                         ?>
                                     </td>
                                 </tr>
+                                <?php if($level == '4') { ?>
+                                    <tr>
+                                        <td><i class="bi bi-gender-ambiguous"></i> <strong>Jabatan</strong></td>
+                                        <td><?= ($row2['jabatan'] == "") ? 'Jabatan Belum DIatur' : $row2["jabatan"] ; ?></td>
+                                    </tr>
+                                <?php } ?>
                                 <tr>
                                     <td><i class="bi bi-gender-ambiguous"></i> <strong>Jenis Kelamin</strong></td>
                                     <td>
@@ -198,7 +204,7 @@ if (isset($_POST['update_profil'])) {
             </div>
             <div class="modal-body">
                 <form action="" class="editForm" method="POST" enctype="multipart/form-data">
-                <?php if($level == '1' || $level == '2' || $level == '4') { ?>
+                <?php if($level == '1' || $level == '2') { ?>
                 <!-- Nama Lengkap -->
                 <div class="mb-3">
                     <label for="nama" class="form-label">Nama Lengkap</label>
@@ -231,6 +237,30 @@ if (isset($_POST['update_profil'])) {
                             <small class="text-danger" id="nik-error"></small>
                         </div>
                     </div>
+                <?php } else if($level == '4') { ?>
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="nama" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" data-error-id="nama-error" id="nama" name="nama" value="<?= $dataLama['nama_user'] ?>">
+                            <small class="text-danger" id="nama-error"></small>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="tempat_lahir" class="form-label">Jabatan</label>
+                            <input type="text" class="form-control" data-error-jabatan="jabatan-error" id="jabatan" name="jabatan" value="<?= $dataLama['jabatan'] ?>">
+                            <small class="text-danger" id="jabatan-error"></small>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="nik" class="form-label">NIK</label>
+                            <input type="text" maxlength="16" class="form-control" data-error-id="nik-error" id="nik" name="nik" value="<?= $dataLama['nik'] ?>">
+                        <small class="text-danger" id="nik-error"></small>
+                    </div>
+                    <div class="mb-3 col-6">
+                        <label for="nik" class="form-label">NIP</label>
+                        <input type="text" maxlength="18" class="form-control" data-error-id="nik-error" id="nip" name="nip" value="<?= $dataLama['nip'] ?>">
+                        <small class="text-danger" id="nik-error"></small>
+                    </div>
+                </div>
+
                 <?php } ?>
                     <div class="row">
                         <div class="mb-3 col-6">
