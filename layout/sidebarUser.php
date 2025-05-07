@@ -145,7 +145,7 @@ if (isset($_SESSION['email'])) {
 
 
                 <!-- ======================== level 2 admin instansi ========================= -->
-                <?php if ($level == "2") : ?>
+                <?php if ($level == "2" && !empty($row['id_instansi'])) : ?>
                     <li class="sidebar-item">
                         <a href="admin2_instansi.php" class="sidebar-link">
                             <i class="bi bi-buildings"></i>
