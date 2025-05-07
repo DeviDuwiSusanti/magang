@@ -228,79 +228,94 @@ function isKetua($id_user)
 
 // =========================================================== SUPER ADMIN LEVEL (1) ========================================================
 
-// ============================= PENDIDIKAN SUPER ADMIN =========================
 function generateIdPendidikan_universitas($nama_pendidikan, $fakultas, $jurusan)
 {
     global $conn;
 
-    // 1. Cek apakah kombinasi data sudah ada
+    // 1. Cek apakah kombinasi sudah ada (untuk universitas saja)
     $query = "SELECT id_pendidikan, status_active FROM tb_pendidikan 
-                WHERE nama_pendidikan = '$nama_pendidikan' 
-                AND fakultas = '$fakultas' 
-                AND jurusan = '$jurusan'";
+              WHERE nama_pendidikan = '$nama_pendidikan' 
+              AND fakultas = '$fakultas' 
+              AND jurusan = '$jurusan'
+              AND LENGTH(id_pendidikan) = 7";
     $result = mysqli_query($conn, $query);
+
     if (mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
-        if ($row["status_active"] == 0) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return ($row["status_active"] == 0) ? 0 : 1;
     }
 
-    // 2. Generate kode nama pendidikan (3 digit pertama)
+    // 2. Tentukan kode nama_pendidikan (3 digit pertama) khusus untuk universitas
     $query_nama = "SELECT DISTINCT LEFT(id_pendidikan, 3) as kode 
-                    FROM tb_pendidikan 
-                    WHERE nama_pendidikan = '$nama_pendidikan' 
-                    AND LENGTH(id_pendidikan) = 7 
-                    LIMIT 1";
+                   FROM tb_pendidikan 
+                   WHERE nama_pendidikan = '$nama_pendidikan' 
+                   AND LENGTH(id_pendidikan) = 7 
+                   LIMIT 1";
     $result_nama = mysqli_query($conn, $query_nama);
+
     if (mysqli_num_rows($result_nama) > 0) {
+        // Sudah ada universitas dengan nama ini → pakai kode yang sama
         $row = mysqli_fetch_assoc($result_nama);
         $kode_nama = $row['kode'];
     } else {
-        // Jika nama pendidikan baru, buat kode baru
-        $query_max = "SELECT MAX(CAST(LEFT(id_pendidikan, 3) AS UNSIGNED)) as max_kode 
-                        FROM tb_pendidikan 
-                        WHERE LENGTH(id_pendidikan) = 7";
-        $result_max = mysqli_query($conn, $query_max);
-        $row_max = mysqli_fetch_assoc($result_max);
-        $next_kode = ($row_max['max_kode'] ?? 0) + 1;
-        $kode_nama = str_pad($next_kode, 3, '0', STR_PAD_LEFT);
+        // Cari kode baru khusus universitas (abaikan sekolah)
+        $query_used = "SELECT DISTINCT LEFT(id_pendidikan, 3) as kode 
+                       FROM tb_pendidikan 
+                       WHERE LENGTH(id_pendidikan) = 7";
+        $result_used = mysqli_query($conn, $query_used);
+
+        $used_kode_set = [];
+        while ($row = mysqli_fetch_assoc($result_used)) {
+            $used_kode_set[] = $row['kode'];
+        }
+
+        // Cari kode 001–999 yang belum dipakai
+        for ($i = 1; $i <= 999; $i++) {
+            $kode_coba = str_pad($i, 3, '0', STR_PAD_LEFT);
+            if (!in_array($kode_coba, $used_kode_set)) {
+                $kode_nama = $kode_coba;
+                break;
+            }
+        }
+
+        if (!isset($kode_nama)) {
+            $kode_nama = '999'; // fallback terakhir
+        }
     }
 
-    // 3. Generate kode fakultas (2 digit)
+    // 3. Tentukan kode fakultas (2 digit)
     $query_fakultas = "SELECT DISTINCT SUBSTRING(id_pendidikan, 4, 2) as kode 
-                        FROM tb_pendidikan 
-                        WHERE LEFT(id_pendidikan, 3) = '$kode_nama' 
-                        AND fakultas = '$fakultas' 
-                        LIMIT 1";
+                       FROM tb_pendidikan 
+                       WHERE LEFT(id_pendidikan, 3) = '$kode_nama' 
+                       AND fakultas = '$fakultas'
+                       AND LENGTH(id_pendidikan) = 7
+                       LIMIT 1";
     $result_fakultas = mysqli_query($conn, $query_fakultas);
 
     if (mysqli_num_rows($result_fakultas) > 0) {
-        // Jika fakultas sudah ada, gunakan kode yang sama
         $row_fak = mysqli_fetch_assoc($result_fakultas);
         $kode_fakultas = $row_fak['kode'];
     } else {
-        // Jika fakultas baru, buat kode baru
         $query_max_fak = "SELECT MAX(CAST(SUBSTRING(id_pendidikan, 4, 2) AS UNSIGNED)) as max_kode 
-                            FROM tb_pendidikan 
-                            WHERE LEFT(id_pendidikan, 3) = '$kode_nama'";
+                          FROM tb_pendidikan 
+                          WHERE LEFT(id_pendidikan, 3) = '$kode_nama'
+                          AND LENGTH(id_pendidikan) = 7";
         $result_max_fak = mysqli_query($conn, $query_max_fak);
         $row_max_fak = mysqli_fetch_assoc($result_max_fak);
         $next_kode_fak = ($row_max_fak['max_kode'] ?? 0) + 1;
         $kode_fakultas = str_pad($next_kode_fak, 2, '0', STR_PAD_LEFT);
     }
 
-    // 4. Generate kode jurusan (2 digit terakhir)
+    // 4. Tentukan kode jurusan (2 digit terakhir)
     $query_jurusan = "SELECT MAX(CAST(RIGHT(id_pendidikan, 2) AS UNSIGNED)) as max_kode 
-                        FROM tb_pendidikan 
-                        WHERE LEFT(id_pendidikan, 5) = '$kode_nama$kode_fakultas'";
-
+                      FROM tb_pendidikan 
+                      WHERE LEFT(id_pendidikan, 5) = '$kode_nama$kode_fakultas'
+                      AND LENGTH(id_pendidikan) = 7";
     $result_jurusan = mysqli_query($conn, $query_jurusan);
     $row_jurusan = mysqli_fetch_assoc($result_jurusan);
     $next_kode_jur = ($row_jurusan['max_kode'] ?? 0) + 1;
     $kode_jurusan = str_pad($next_kode_jur, 2, '0', STR_PAD_LEFT);
+
     return $kode_nama . $kode_fakultas . $kode_jurusan;
 }
 
