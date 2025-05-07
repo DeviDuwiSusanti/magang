@@ -695,6 +695,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
     $tempat_lahir = $POST['tempat_lahir'];
     $tanggal_lahir = $POST['tanggal_lahir'];
     $jenis_kelamin = $POST['jenis_kelamin'];
+    $jabatan = $POST["jabatan"];
     $nik = $POST['nik'];
     $nip = $POST['nip'];
     $telepone = $POST['telepon'];
@@ -762,6 +763,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         nip = '$nip',
         nim = '$nim',
         nisn = '$nisn',
+        jabatan = '$jabatan',
         id_pendidikan = '$id_pendidikan',
         telepone_user = '$telepone',
         alamat_user = '$alamat_user',

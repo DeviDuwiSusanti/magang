@@ -31,26 +31,8 @@ body {
         Temukan jawaban atas pertanyaan umum atau hubungi kami jika memerlukan bantuan lebih lanjut.
     </p>
 
-    <div class="accordion mb-4" id="faqAccordion">
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Bagaimana cara menghubungi tim dukungan?
-                </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                    Anda dapat menghubungi tim dukungan melalui email yang tertera di bawah halaman ini.
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="card p-4 mb-4">
         <h1><i class="bi bi-envelope"></i> Hubungi Kami</h1>
-        <p>
-            Jika Anda tidak menemukan jawaban yang Anda cari di FAQ, silakan kirim pesan kepada tim dukungan kami.
-        </p>
         <div>
             Silahkan hubungi email di bawah ini<br><br>
             <a href="mailto:<?= htmlspecialchars($email_super['email']) ?>" class="text-gray-400 hover:text-white"><?= htmlspecialchars($email_super['email']) ?></a><br/>
