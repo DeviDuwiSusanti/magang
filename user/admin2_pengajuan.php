@@ -20,7 +20,7 @@ $sql = "SELECT
         LEFT JOIN (
             SELECT id_bidang, SUM(jumlah_pelamar) AS jumlah_pemagang_aktif
             FROM tb_pengajuan
-            WHERE status_pengajuan IN (2, 4)
+            WHERE status_pengajuan = '4'
             GROUP BY id_bidang
         ) AS pa ON b.id_bidang = pa.id_bidang
         WHERE p.id_instansi = '$id_instansi'

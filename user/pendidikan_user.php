@@ -9,18 +9,18 @@ $no = 1;
 if (isset($_GET["id_pendidikan_ini"])) {
     $id_pendidikan_ini = $_GET["id_pendidikan_ini"];
     if (hapus_pendidikan_super_admin($id_pendidikan_ini, $id_user)) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data Pendidikan Berhasil", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Hapus Data Pendidikan Berhasil", "pendidikan_user.php"); </script>
     <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data Pendidikan Gagal", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Hapus Data Pendidikan Gagal", "pendidikan_user.php"); </script>
     <?php }
 }
 
 
 if(isset($_POST["edit_pendidikan"])) {
     if(edit_pendidikan($_POST) > 0) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data Pendidikan Berhasil", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data Pendidikan Berhasil", "pendidikan_user.php"); </script>
     <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data Pendidikan Gagal", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data Pendidikan Gagal", "pendidikan_user.php"); </script>
     <?php }
 }
 
@@ -28,13 +28,13 @@ if (isset($_POST["tambah_sekolah"])) {
     $result = tambah_data_sekolah($_POST);
 
     if ($result == 404) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "pendidikan_user.php"); </script>
     <?php } elseif ($result == 405) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "pendidikan_user.php"); </script>
     <?php } elseif ($result > 0) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Sekolah Berhasil", "pendidikan_user.php"); </script>
     <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Sekolah Gagal, Silahkan Cek Lagi", "pendidikan_user.php"); </script>
     <?php }
 }
 
@@ -43,13 +43,13 @@ if (isset($_POST["tambah_universitas"])) {
     $result = tambah_data_universitas($_POST);
 
     if ($result == 404) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database, Tetapi Tidak Aktif", "pendidikan_user.php"); </script>
     <?php } elseif ($result == 405) { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Data Sudah Ada Di Dalam Database", "pendidikan_user.php"); </script>
     <?php } elseif ($result > 0) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Perguruan Tinggi Berhasil", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data Perguruan Tinggi Berhasil", "pendidikan_user.php"); </script>
     <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Perguruan Tinggi Gagal, Silahkan Cek Lagi", "super1_pendidikan.php"); </script>
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data Perguruan Tinggi Gagal, Silahkan Cek Lagi", "pendidikan_user.php"); </script>
     <?php }
 }
 
@@ -166,9 +166,8 @@ foreach ($perguruan_tinggi as $kampus) {
                 </div>
                 <div class="modal-body">
                     <form id="formEditPendidikan" action="" method="POST">
-                        <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                         <input type="hidden" name="id_pendidikan" id="id_pendidikan_edit">
-                        <input type="hidden" name="id_user" id="id_user_edit">
+                        <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
                         <div class="mb-3">
                             <label for="nama_pendidikan_edit" class="form-label">Nama Sekolah / Universitas</label>
                             <input type="text" class="form-control" id="nama_pendidikan_edit" name="nama_pendidikan">
@@ -214,7 +213,7 @@ foreach ($perguruan_tinggi as $kampus) {
                         <select class="form-control select2" id="nama_sekolah" name="nama_sekolah" required>
                             <option value="">Pilih Sekolah</option>
                             <?php
-                            $sekolah = query("SELECT DISTINCT nama_pendidikan FROM tb_pendidikan WHERE fakultas IS NULL");
+                            $sekolah = query("SELECT DISTINCT nama_pendidikan FROM tb_pendidikan WHERE (fakultas IS NULL OR fakultas = '')");
                             foreach ($sekolah as $s) : ?>
                                 <option value="<?= $s['nama_pendidikan'] ?>"><?= $s['nama_pendidikan'] ?></option>
                             <?php endforeach; ?>
@@ -261,7 +260,7 @@ foreach ($perguruan_tinggi as $kampus) {
                             <select class="form-control select2" id="nama_universitas" name="nama_universitas" required>
                                 <option value="">Pilih Universitas</option>
                                 <?php
-                                $universitas = query("SELECT DISTINCT nama_pendidikan FROM tb_pendidikan WHERE fakultas IS NOT NULL");
+                                $universitas = query("SELECT DISTINCT nama_pendidikan FROM tb_pendidikan WHERE (fakultas IS NOT NULL AND fakultas != '')");
                                 foreach ($universitas as $u) : ?>
                                     <option value="<?= $u['nama_pendidikan'] ?>"><?= $u['nama_pendidikan'] ?></option>
                                 <?php endforeach; ?>
@@ -326,7 +325,7 @@ foreach ($perguruan_tinggi as $kampus) {
                 document.getElementById('fakultas_edit').value = fakultas;
                 document.getElementById('jurusan_edit').value = jurusan;
                 document.getElementById('alamat_pendidikan_edit').value = alamat;
-                document.getElementById('id_user_edit').value = user;
+                // document.getElementById('id_user_edit').value = user;
 
                 // Tampilkan atau sembunyikan fakultas
                 var fakultasGroup = document.getElementById('fakultas_group');
