@@ -528,11 +528,11 @@ function validateTambahPembimbing() {
   }
 
   const telepon = document.getElementById("telepone_pembimbing").value.trim();
-  if (telepon !== "" && !/^[0-9]{11,12}$/.test(telepon)) {
+  if (telepon !== "" && !/^[0-9]{11,13}$/.test(telepon)) {
     showError(
       "edit_telepone_pembimbing",
       "telepone_error",
-      "Nomor telepon harus terdiri dari 11-12 digit angka."
+      "Nomor telepon harus terdiri dari 11-13 digit angka."
     );
     isValid = false;
   }
@@ -627,11 +627,11 @@ function validateEditPembimbing() {
   const telepon = document
     .getElementById("edit_telepone_pembimbing")
     .value.trim();
-  if (telepon !== "" && !/^[0-9]{11,12}$/.test(telepon)) {
+  if (telepon !== "" && !/^[0-9]{11,13}$/.test(telepon)) {
     showError(
       "edit_telepone_pembimbing",
       "edit_telepone_error",
-      "Nomor telepon harus terdiri dari 11-12 digit angka."
+      "Nomor telepon harus terdiri dari 11-13 digit angka."
     );
     isValid = false;
   }
@@ -645,7 +645,7 @@ function validateEditPembimbing() {
   return isValid;
 }
 
-// Fungsi validasi input informasi zoom
+// ====================== Fungsi validasi input informasi zoom ======================
 function validateZoomForm() {
   let isValid = true;
 
@@ -657,7 +657,6 @@ function validateZoomForm() {
   // Ambil nilai
   const tanggal = document.getElementById("tanggal_pelaksanaan").value.trim();
   const jam = document.getElementById("jam_pelaksanaan").value.trim();
-  // const pembimbing = document.getElementById("pembimbing").value.trim();
   const linkZoom = document.getElementById("link_zoom").value.trim();
 
   // Validasi Tanggal
@@ -679,16 +678,6 @@ function validateZoomForm() {
     );
     isValid = false;
   }
-
-  // // Validasi Pembimbing
-  // if (pembimbing === "") {
-  //   showError(
-  //     "pembimbing",
-  //     "pembimbing_error",
-  //     "Pilih pembimbing terlebih dahulu."
-  //   );
-  //   isValid = false;
-  // }
 
   // Validasi Link Meeting (Zoom atau Gmeet)
   if (linkZoom === "") {

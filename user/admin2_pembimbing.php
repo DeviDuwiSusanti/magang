@@ -7,17 +7,10 @@ $instansi = mysqli_fetch_assoc($query_instansi);
 $id_instansi_admin = $instansi["id_instansi"];
 $id_instansi = $_SESSION["id_instansi"];
 
-// Query untuk mendapatkan daftar bidang
+// Query untuk mendapatkan daftar pembimbing beserta informasi bidang dan instansi terkait
 $bidang = "SELECT 
-            pu.id_user AS id_pembimbing, 
-            pu.nama_user AS nama_pembimbing, 
-            pu.nik AS nik_pembimbing, 
-            u.email AS email_pembimbing,
-            pu.nip, 
-            pu.jabatan, 
-            pu.telepone_user AS telepone_pembimbing, 
-            b.nama_bidang,
-            b.id_bidang
+            pu.id_user AS id_pembimbing, pu.nama_user AS nama_pembimbing, pu.nik AS nik_pembimbing, u.email AS email_pembimbing,
+            pu.nip, pu.jabatan, pu.telepone_user AS telepone_pembimbing, b.nama_bidang,b.id_bidang
         FROM tb_profile_user AS pu
         JOIN tb_bidang AS b
             ON pu.id_bidang = b.id_bidang
@@ -33,9 +26,16 @@ $bidang = "SELECT
 $query = mysqli_query($conn, $bidang);
 $bidang_list = mysqli_fetch_all($query, MYSQLI_ASSOC);
 
+// Query untuk mendapatkan semua bidang berdasarkan instansi (aktif dan non-aktif)
 $list_bidang = query("SELECT * FROM tb_bidang 
                     WHERE id_instansi = '$id_instansi'
-                    AND (status_active = '1' OR status_active = '0')");
+                    AND status_active = '1'");
+
+// Query untuk menghitung jumlah bidang yang dimiliki oleh instansi
+$query_cek_bidang = "SELECT COUNT(*) AS jumlah_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi' AND status_active = '1'";
+$query_jumlah_bidang = mysqli_query($conn, $query_cek_bidang);
+$jumlah_bidang = mysqli_fetch_assoc($query_jumlah_bidang);
+$instansi_punya_bidang = ($jumlah_bidang["jumlah_bidang"] > 0);
 
 $no = 1;
 
@@ -327,16 +327,14 @@ while ($row = mysqli_fetch_assoc($pembimbing_result)) {
 <script src="../assets/js/validasi.js"></script>
 
 <script>
-// Tangkap event saat modal edit ditampilkan
-document.getElementById('editPembimbingModal').addEventListener('show.bs.modal', function(event) {
-    const button = event.relatedTarget;
-    const emailLama = button.getAttribute('data-email_pembimbing');
-    document.getElementById('edit_email_lama').value = emailLama;
-    document.getElementById('edit_email').value = emailLama;
-});
-</script>
+    // Tangkap event saat modal edit ditampilkan
+    document.getElementById('editPembimbingModal').addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const emailLama = button.getAttribute('data-email_pembimbing');
+        document.getElementById('edit_email_lama').value = emailLama;
+        document.getElementById('edit_email').value = emailLama;
+    });
 
-<script>
     $('#editPembimbingModal').on('shown.bs.modal', function() {
         $('#edit_bidang').select2({
             dropdownParent: $('#editPembimbingModal'),
@@ -417,6 +415,7 @@ document.getElementById('editPembimbingModal').addEventListener('show.bs.modal',
         }
     });
 
+    // Event listener untuk tombol edit
     document.addEventListener("DOMContentLoaded", function() {
         const editButtons = document.querySelectorAll(".editPembimbingBtn");
 
@@ -434,6 +433,7 @@ document.getElementById('editPembimbingModal').addEventListener('show.bs.modal',
         });
     });
 
+    // Event listener untuk tooltip 
     document.addEventListener('DOMContentLoaded', function() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
         tooltipTriggerList.map(function(tooltipTriggerEl) {
@@ -472,14 +472,52 @@ document.getElementById('editPembimbingModal').addEventListener('show.bs.modal',
             }]
         });
 
-        // Tambahkan tombol ke samping search
-        var tombol = '<button type="button" class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#tambahPembimbingModal" title="Tambah Pembimbing"><i class="bi bi-plus-circle-fill"></i></button>';
-        $('.dataTables_filter').append(tombol);
+        // Ambil variabel dari PHP
+        var instansiHasBidang = <?php echo json_encode($instansi_punya_bidang); ?>;
 
-        // Inisialisasi tooltip untuk tombol yang baru ditambahkan
+        // Buat tombol Tambah Pembimbing
+        var tombolHtml;
+        if (instansiHasBidang) {
+            // Jika instansi punya bidang, sertakan atribut data-bs-toggle dan data-bs-target
+            tombolHtml = `
+                <button type="button" class="btn btn-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#tambahPembimbingModal" title="Tambah Pembimbing">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </button>
+            `;
+        } else {
+            // Jika instansi tidak punya bidang, jangan sertakan atribut modal
+            tombolHtml = `
+                <button type="button" class="btn btn-primary btn-sm ms-2" title="Tambah Pembimbing">
+                    <i class="bi bi-plus-circle-fill"></i>
+                </button>
+            `;
+        }
+
+        // Buat objek jQuery dari HTML string
+        var $tombol = $(tombolHtml);
+
+        // Tambahkan tombol ke elemen DataTables filter
+        $('.dataTables_filter').append($tombol);
+        $tombol.on('click', function(e) {
+            // Jika instansiHasBidang tidak ada bidang (false)
+            if (!instansiHasBidang) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tidak Ada Bidang',
+                    text: 'Anda harus menambahkan bidang terlebih dahulu sebelum menambahkan pembimbing.',
+                    confirmButtonText: 'OK'
+                });
+            }
+            // Jika instansiHasBidang true, tombol memiliki atribut modal,
+            // dan Bootstrap akan otomatis menampilkan modal.
+        });
+
+        // Inisialisasi tooltip untuk semua elemen yang memiliki atribut 'title'
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
         tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
+
     });
 </script>

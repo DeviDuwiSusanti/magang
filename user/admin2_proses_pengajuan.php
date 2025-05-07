@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                          JOIN tb_user u ON pu.id_user = u.id_user
                          WHERE pu.id_pengajuan = '$id_pengajuan'";
         $result_anggota = mysqli_query($conn, $query_anggota);
-        
+
         $anggota_kelompok = [];
         while ($row_anggota = mysqli_fetch_assoc($result_anggota)) {
             $anggota_kelompok[] = [
@@ -128,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $subject_pembimbing = 'Informasi Mahasiswa Bimbingan Magang';
                         $message_pembimbing = "
                             <p>{$salam} <strong>{$nama_pembimbing}</strong>,</p>
-                            <p>Anda telah ditunjuk sebagai <strong>pembimbing</strong> bagi " . 
+                            <p>Anda telah ditunjuk sebagai <strong>pembimbing</strong> bagi " .
                             (count($anggota_kelompok) > 1 ? "kelompok" : "peserta") . " magang berikut:</p>
                                 <ul>
                                 {$list_anggota}
@@ -149,6 +149,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '3', alasan_tolak = '$alasan' WHERE id_pengajuan = '$id_pengajuan'";
 
             if (mysqli_query($conn, $sql_update)) {
+                // Kosongkan id_pengajuan di profile user
+                $sql_update_profile = "UPDATE tb_profile_user SET id_pengajuan = NULL WHERE id_pengajuan = '$id_pengajuan'";
+                mysqli_query($conn, $sql_update_profile);
                 // Kirim email ke semua anggota kelompok
                 foreach ($anggota_kelompok as $anggota) {
                     $nama_pelamar = $anggota['nama'];
@@ -204,7 +207,7 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
     $mail->Body = $message;
 
     $result = $mail->send();
-    
+
     if ($result && $show_alert) {
         echo "<script>
             Swal.fire({
@@ -226,7 +229,7 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
             });
         </script>";
     }
-    
+
     return $result;
 }
 
@@ -239,4 +242,3 @@ function salamBerdasarkanWaktu()
     if ($jam < 19) return "Selamat sore";
     return "Selamat malam";
 }
-?>
