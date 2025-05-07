@@ -376,7 +376,7 @@ function tambah_data_sekolah($POST)
         return 405;
     }
 
-    $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_sekolah', '$jurusan_sekolah', '$alamat_pendidikan', '$id_user')";
+    $query = "INSERT INTO tb_pendidikan (id_pendidikan, nama_pendidikan, fakultas, jurusan, alamat_pendidikan, create_by) VALUES ('$id_pendidikan', '$nama_sekolah', NULL, '$jurusan_sekolah', '$alamat_pendidikan', '$id_user')";
     if (mysqli_query($conn, $query)) {
         return mysqli_affected_rows($conn);
     } else {
@@ -427,19 +427,34 @@ function hapus_pendidikan_super_admin($id_pendidikan, $id_user)
 function edit_pendidikan($POST)
 {
     global $conn;
-    $id_pendidikan = $POST["id_pendidikan"];
-    $id_user = $POST["id_user"];
-    $nama_pendidikan = $POST["nama_pendidikan"];
-    $fakultas = $POST["fakultas"];
-    $jurusan = $POST["jurusan"];
-    $alamat_pendidikan = $POST["alamat_pendidikan"];
-    $query = mysqli_query($conn, "UPDATE tb_pendidikan SET nama_pendidikan = '$nama_pendidikan', fakultas = '$fakultas', jurusan = '$jurusan', alamat_pendidikan = '$alamat_pendidikan', change_by = '$id_user' WHERE id_pendidikan = '$id_pendidikan'");
+    $id_pendidikan = mysqli_real_escape_string($conn, $POST["id_pendidikan"]);
+    $id_user = mysqli_real_escape_string($conn, $POST["id_user"]);
+    $nama_pendidikan = mysqli_real_escape_string($conn, $POST["nama_pendidikan"]);
+    $fakultas_edit = trim($POST["fakultas"]);
+    $jurusan = mysqli_real_escape_string($conn, $POST["jurusan"]);
+    $alamat_pendidikan = mysqli_real_escape_string($conn, $POST["alamat_pendidikan"]);
+
+    if ($fakultas_edit === "") {
+        $fakultas_sql = "NULL"; 
+    } else {
+        $fakultas_sql = "'" . mysqli_real_escape_string($conn, $fakultas_edit) . "'";
+    }
+
+    $query = mysqli_query($conn, "UPDATE tb_pendidikan 
+        SET nama_pendidikan = '$nama_pendidikan', 
+            fakultas = $fakultas_sql, 
+            jurusan = '$jurusan', 
+            alamat_pendidikan = '$alamat_pendidikan', 
+            change_by = '$id_user' 
+        WHERE id_pendidikan = '$id_pendidikan'");
+
     if ($query) {
         return mysqli_affected_rows($conn);
     } else {
         return 0;
     }
 }
+
 // ============================== END OF PENDIDIKAN IN SUPER ADMIN ================================
 
 
