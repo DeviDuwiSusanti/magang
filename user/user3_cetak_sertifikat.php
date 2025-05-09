@@ -203,7 +203,12 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= formatText($sertifikat["jenis_pengajuan"]) ?> pada <?= formatText($sertifikat["nama_panjang"]) ?> di Bidang <?= formatText($sertifikat["nama_bidang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>.</p>
+    <p>Telah melaksanakan <?= formatText($sertifikat["jenis_pengajuan"]) ?> pada <?= formatText($sertifikat["nama_panjang"]) ?> di Bidang <?= formatText($sertifikat["nama_bidang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
+    <?php if($sertifikat["tanggal_extend"] != "") {  ?>
+    , Dan Perpanjangan Waktu Hingga <?= formatTanggal($sertifikat["tanggal_extend"]) ?>
+    <?php } else { ?>
+    .
+    <?php }?></p>
 
     <?php
     $rata = $sertifikat["rata_rata"];

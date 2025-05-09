@@ -3,7 +3,7 @@ include '../layout/sidebarUser.php';
 include "functions.php";
 
 // Hanya tampilkan pengajuan yang sudah selesai (status 5)
-$pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' 
+$pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan, tanggal_selesai, tanggal_extend FROM tb_pengajuan WHERE id_pembimbing = '$id_user' 
                     AND (status_pengajuan = '5' OR status_pengajuan = '2' OR status_pengajuan = '4' )");
 $daftar_anggota = [];
 $pendidikan_user = null;
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["update"])) {
         <script>
             alert_berhasil_gagal_super_admin("error", "Gagal !!", "Update Nilai Gagal", "pembimbing4.php");
         </script>
-        <?php }
+    <?php }
 }
 
 // Proses verifikasi logbook yang dipilih
@@ -58,13 +58,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["verify_logbooks"])) {
         <script>
             alert_berhasil_gagal_super_admin("warning", "Peringatan !!", "Tidak ada logbook yang dipilih", "pembimbing4.php");
         </script>
-<?php }
+    <?php }
+}
+
+// Proses perpanjangan waktu
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["extend"])) {
+    $id_pengajuan = $_POST["id_pengajuan"];
+    $new_end_date = $_POST["new_end_date"];
+    
+    $query = "UPDATE tb_pengajuan SET tanggal_extend = '$new_end_date', change_by = '$id_user', change_date = NOW() 
+              WHERE id_pengajuan = '$id_pengajuan'";
+    
+    if (mysqli_query($conn, $query)) { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Perpanjangan waktu berhasil disimpan", "pembimbing4.php");
+        </script>
+    <?php } else { ?>
+        <script>
+            alert_berhasil_gagal_super_admin("error", "Gagal !!", "Terjadi kesalahan saat menyimpan perpanjangan waktu", "pembimbing4.php");
+        </script>
+    <?php }
 }
 
 if (!empty($pengajuan)) {
     $pengajuan_user = $pengajuan[0]["id_pengajuan"];
     $user_id = $pengajuan[0]["id_user"];
     $status_pengajuan = $pengajuan[0]["status_pengajuan"];
+    $tanggal_selesai = $pengajuan[0]["tanggal_selesai"];
+    $tanggal_extend = $pengajuan[0]["tanggal_extend"];
 
     // Ambil ID pendidikan
     $id_pendidikan_data = query("SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$user_id'");
@@ -85,6 +106,26 @@ if (!empty($pengajuan)) {
                             WHERE pu.id_pengajuan = '$pengajuan_user' AND pu.status_active = '1'");
 }
 
+// Cek apakah perlu menampilkan tombol perpanjangan
+$show_extend_button = false;
+$show_extend_info = false;
+
+if (!empty($tanggal_selesai) && $status_pengajuan != '5') {
+    $current_date = new DateTime();
+    $end_date = new DateTime($tanggal_selesai);
+    $interval = $current_date->diff($end_date);
+    
+    // Tampilkan tombol jika kurang dari 1 bulan sisa waktu dan belum lewat
+    if ($interval->m < 1 && $interval->invert == 0) {
+        $show_extend_button = true;
+    }
+    
+    // Tampilkan info perpanjangan jika ada tanggal extend
+    if (!empty($tanggal_extend)) {
+        $show_extend_info = true;
+    }
+}
+
 $no = 1;
 ?>
 
@@ -98,6 +139,45 @@ $no = 1;
 
     <?php if (!empty($daftar_anggota)) : ?>
         <div class="container mt-5">
+            <!-- Tombol Perpanjangan Waktu (jika diperlukan) -->
+            <?php if (($show_extend_button || $show_extend_info) && $status_pengajuan != '5'): ?>
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Perpanjangan Waktu Magang</h5>
+                    </div>
+                    <div class="card-body">
+                        <?php if ($show_extend_info): ?>
+                            <div class="alert alert-info">
+                                <h5><i class="bi bi-info-circle-fill"></i> Informasi Perpanjangan Waktu</h5>
+                                <p class="mb-2">Tanggal selesai magang sebelumnya: <strong><?= date('d F Y', strtotime($tanggal_selesai)) ?></strong></p>
+                                <p class="mb-2">Tanggal perpanjangan magang: <strong><?= date('d F Y', strtotime($tanggal_extend)) ?></strong></p>
+                                <button class="btn btn-warning btn-sm editExtendBtn"
+                                        data-id_pengajuan="<?= $pengajuan_user ?>"
+                                        data-tanggal_selesai="<?= $tanggal_selesai ?>"
+                                        data-tanggal_extend="<?= $tanggal_extend ?>"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#extendModal">
+                                    <i class="bi bi-pencil"></i> Edit Perpanjangan
+                                </button>
+                            </div>
+                        <?php elseif ($show_extend_button): ?>
+                            <div class="alert alert-warning">
+                                <h5><i class="bi bi-exclamation-triangle-fill"></i> Kelompok Magang Ini Sebentar Lagi Akan Berakhir</h5>
+                                <p class="mb-2">Waktu magang akan berakhir pada <strong><?= date('d F Y', strtotime($tanggal_selesai)) ?></strong></p>
+                                <p class="mb-2">Anda dapat memperpanjang waktu magang jika diperlukan.</p>
+                                <button class="btn btn-primary btn-sm addExtendBtn"
+                                        data-id_pengajuan="<?= $pengajuan_user ?>"
+                                        data-tanggal_selesai="<?= $tanggal_selesai ?>"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#extendModal">
+                                    <i class="bi bi-calendar-plus"></i> Tambah Perpanjangan Waktu
+                                </button>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="card shadow-lg">
                 <div class="card-body">
                     <table id="table_anggota" class="table table-striped table-bordered align-middle text-center">
@@ -346,6 +426,39 @@ $no = 1;
     </div>
 </div>
 
+<!-- Modal untuk Perpanjangan Waktu -->
+<div class="modal fade" id="extendModal" tabindex="-1" aria-labelledby="extendModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="extendForm" method="POST">
+            <input type="hidden" id="extend_id_pengajuan" name="id_pengajuan">
+            <input type="hidden" name="extend" value="1">
+            
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="extendModalLabel">Perpanjangan Waktu Magang</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p>Tanggal selesai magang sebelumnya: <strong id="current_end_date"></strong></p>
+                        <?php if (!empty($tanggal_extend)): ?>
+                            <p>Tanggal perpanjangan saat ini: <strong id="current_extend_date"></strong></p>
+                        <?php endif; ?>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_end_date" class="form-label">Tanggal Selesai Baru</label>
+                        <input type="date" class="form-control" id="new_end_date" name="new_end_date" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <?php include "../layout/footerDashboard.php"; ?>
 
 <script>
@@ -381,7 +494,7 @@ $no = 1;
             $('#nilai_id_user').val(idUser);
         });
 
-        // View Nilai Modal - Ganti dengan ini
+        // View Nilai Modal
         $('.viewNilai').click(function() {
             const idNilai = $(this).data('id_nilai');
             $.ajax({
@@ -397,7 +510,7 @@ $no = 1;
             });
         });
 
-        // Edit Nilai Modal - Ganti dengan ini
+        // Edit Nilai Modal
         $('.editNilai').click(function() {
             const idNilai = $(this).data('id_nilai');
             $.ajax({
@@ -429,6 +542,57 @@ $no = 1;
                 },
                 success: function(response) {
                     $('#logbookContent').html(response);
+                }
+            });
+        });
+
+        // Untuk Tambah Perpanjangan Modal
+        $('.addExtendBtn').click(function() {
+            const idPengajuan = $(this).data('id_pengajuan');
+            const tanggalSelesai = $(this).data('tanggal_selesai');
+            
+            $('#extend_id_pengajuan').val(idPengajuan);
+            $('#current_end_date').text(formatDate(tanggalSelesai));
+            $('#new_end_date').attr('min', tanggalSelesai);
+            $('#new_end_date').val('');
+        });
+
+        // Untuk Edit Perpanjangan Modal
+        $('.editExtendBtn').click(function() {
+            const idPengajuan = $(this).data('id_pengajuan');
+            const tanggalSelesai = $(this).data('tanggal_selesai');
+            const tanggalExtend = $(this).data('tanggal_extend');
+            
+            $('#extend_id_pengajuan').val(idPengajuan);
+            $('#current_end_date').text(formatDate(tanggalSelesai));
+            $('#current_extend_date').text(formatDate(tanggalExtend));
+            $('#new_end_date').attr('min', tanggalSelesai);
+            $('#new_end_date').val(tanggalExtend);
+        });
+
+        // Format tanggal untuk tampilan
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        // Handle form submission dengan SweetAlert
+        $('#extendForm').submit(function(e) {
+            e.preventDefault();
+            
+            Swal.fire({
+                title: 'Konfirmasi Perpanjangan',
+                text: "Anda yakin ingin memperpanjang waktu magang untuk kelompok ini?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Perpanjang',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit form jika dikonfirmasi
+                    this.submit();
                 }
             });
         });

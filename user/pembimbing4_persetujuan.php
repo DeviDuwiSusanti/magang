@@ -118,6 +118,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $sudah_memberikan_persetujuan = query("SELECT COUNT(*) as total FROM tb_persetujuan_pembimbing 
                                                             WHERE id_pengajuan = '".$p["id_pengajuan"]."' 
                                                             AND id_pembimbing = '$id_user'")[0]['total'] > 0;
+                        
+                        $today = date('Y-m-d');
+                        $tanggal_zoom = $p["tanggal_zoom"] ?? null;
+                        $wawancara_sudah_berlalu = $tanggal_zoom && ($today > $tanggal_zoom);
                     ?>
                     
                     <div class="modal fade" id="detailModal<?= $p['id_pengajuan'] ?>" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
@@ -168,60 +172,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </div>
                                     </div>
                                     
-                                    <div class="alert alert-info">
-                                        <i class="bi bi-info-circle-fill"></i> Silakan lakukan wawancara terlebih dahulu via Zoom sesuai jadwal sebelum memberikan persetujuan.
-                                    </div>
+                                    <?php if (!$tanggal_zoom) : ?>
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-info-circle-fill"></i> Menunggu Jadwal Wawancara Melalui Zoom Atau Meeting
+                                        </div>
+                                    <?php elseif (!$wawancara_sudah_berlalu) : ?>
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-info-circle-fill"></i> Jadwal Wawancara via Zoom Atau Meeting Pada Tanggal <?= date('d F Y', strtotime($tanggal_zoom)) ?>
+                                        </div>
+                                    <?php else : ?>
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-info-circle-fill"></i> Wawancara via Zoom Atau Meeting sudah dilakukan
+                                        </div>
+                                    <?php endif; ?>
                                     
                                     <?php if (!$sudah_memberikan_persetujuan) : ?>
-                                        <form method="POST" id="persetujuanForm<?= $p['id_pengajuan'] ?>">
-                                            <input type="hidden" name="id_pengajuan" value="<?= $p["id_pengajuan"] ?>">
-                                            <input type="hidden" name="id_user_magang" value="<?= $p["id_user"] ?>">
-                                            
-                                            <div class="text-center mt-4">
-                                                <?php 
-                                                    $today = date('Y-m-d');
-                                                    $tanggal_zoom = $p["tanggal_zoom"] ?? null;
-                                                    $disable_buttons = (!$tanggal_zoom || $today <= $tanggal_zoom);
-                                                ?>
+                                        <?php if ($tanggal_zoom && $wawancara_sudah_berlalu) : ?>
+                                            <form method="POST" id="persetujuanForm<?= $p['id_pengajuan'] ?>">
+                                                <input type="hidden" name="id_pengajuan" value="<?= $p["id_pengajuan"] ?>">
+                                                <input type="hidden" name="id_user_magang" value="<?= $p["id_user"] ?>">
                                                 
-                                                <button type="button" class="btn btn-success btn-lg mx-2" 
-                                                        id="btnBersedia<?= $p['id_pengajuan'] ?>" 
-                                                        <?= $disable_buttons ? 'disabled' : '' ?>
-                                                        onclick="confirmPersetujuan('bersedia', <?= $p['id_pengajuan'] ?>)">
-                                                    <i class="bi bi-check-circle"></i> Bersedia
-                                                </button>
+                                                <div class="text-center mt-4">
+                                                    <button type="button" class="btn btn-success btn-lg mx-2" 
+                                                            id="btnBersedia<?= $p['id_pengajuan'] ?>"
+                                                            onclick="confirmPersetujuan('bersedia', <?= $p['id_pengajuan'] ?>)">
+                                                        <i class="bi bi-check-circle"></i> Bersedia
+                                                    </button>
+                                                    
+                                                    <button type="button" class="btn btn-danger btn-lg mx-2" 
+                                                            id="btnTidakBersedia<?= $p['id_pengajuan'] ?>"
+                                                            onclick="showAlasanForm(<?= $p['id_pengajuan'] ?>)">
+                                                        <i class="bi bi-x-circle"></i> Tidak Bersedia
+                                                    </button>
+                                                </div>
                                                 
-                                                <button type="button" class="btn btn-danger btn-lg mx-2" 
-                                                        id="btnTidakBersedia<?= $p['id_pengajuan'] ?>" 
-                                                        <?= $disable_buttons ? 'disabled' : '' ?>
-                                                        onclick="showAlasanForm(<?= $p['id_pengajuan'] ?>)">
-                                                    <i class="bi bi-x-circle"></i> Tidak Bersedia
-                                                </button>
-                                                
-                                                <?php if ($disable_buttons && $tanggal_zoom) : ?>
-                                                    <div class="mt-3 text-muted">
-                                                        Tombol akan aktif setelah tanggal <?= date('d F Y', strtotime($tanggal_zoom)) ?>
+                                                <div id="alasanForm<?= $p['id_pengajuan'] ?>" class="mt-4" style="display:none;">
+                                                    <div class="form-group">
+                                                        <label for="alasan<?= $p['id_pengajuan'] ?>" class="form-label">Alasan Penolakan</label>
+                                                        <textarea class="form-control" id="alasan<?= $p['id_pengajuan'] ?>" name="alasan" rows="3" required></textarea>
                                                     </div>
-                                                <?php endif; ?>
-                                            </div>
-                                            
-                                            <div id="alasanForm<?= $p['id_pengajuan'] ?>" class="mt-4" style="display:none;">
-                                                <div class="form-group">
-                                                    <label for="alasan<?= $p['id_pengajuan'] ?>" class="form-label">Alasan Penolakan</label>
-                                                    <textarea class="form-control" id="alasan<?= $p['id_pengajuan'] ?>" name="alasan" rows="3" required></textarea>
+                                                    <div class="text-center mt-3">
+                                                        <button type="button" class="btn btn-secondary me-2" onclick="hideAlasanForm(<?= $p['id_pengajuan'] ?>)">
+                                                            Batal
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger" onclick="confirmPersetujuan('tidak_bersedia', <?= $p['id_pengajuan'] ?>)">
+                                                            <i class="bi bi-send"></i> Kirim Penolakan
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="text-center mt-3">
-                                                    <button type="button" class="btn btn-secondary me-2" onclick="hideAlasanForm(<?= $p['id_pengajuan'] ?>)">
-                                                        Batal
-                                                    </button>
-                                                    <button type="button" class="btn btn-danger" onclick="confirmPersetujuan('tidak_bersedia', <?= $p['id_pengajuan'] ?>)">
-                                                        <i class="bi bi-send"></i> Kirim Penolakan
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <input type="hidden" name="action" id="actionInput<?= $p['id_pengajuan'] ?>">
-                                        </form>
+                                                
+                                                <input type="hidden" name="action" id="actionInput<?= $p['id_pengajuan'] ?>">
+                                            </form>
+                                        <?php endif; ?>
                                     <?php else : ?>
                                         <div class="alert alert-success text-center">
                                             <i class="bi bi-check-circle-fill"></i> Anda sudah memberikan persetujuan untuk pengajuan ini.
@@ -294,26 +296,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         document.getElementById('btnTidakBersedia' + id_pengajuan).disabled = false;
         document.getElementById('alasan' + id_pengajuan).value = '';
     }
-    
-    // Cek tanggal setiap hari untuk semua pengajuan
-    function checkTanggalZoom() {
-        <?php foreach ($pengajuan as $p) : ?>
-            const tanggalZoom<?= $p['id_pengajuan'] ?> = "<?= $p["tanggal_zoom"] ?? '' ?>";
-            if (tanggalZoom<?= $p['id_pengajuan'] ?>) {
-                const today = new Date().toISOString().split('T')[0];
-                if (today > tanggalZoom<?= $p['id_pengajuan'] ?>) {
-                    if (document.getElementById('btnBersedia<?= $p['id_pengajuan'] ?>')) {
-                        document.getElementById('btnBersedia<?= $p['id_pengajuan'] ?>').disabled = false;
-                        document.getElementById('btnTidakBersedia<?= $p['id_pengajuan'] ?>').disabled = false;
-                    }
-                }
-            }
-        <?php endforeach; ?>
-    }
-    
-    // Jalankan pengecekan saat halaman dimuat
-    checkTanggalZoom();
-    
-    // Jalankan pengecekan setiap 1 jam (opsional)
-    setInterval(checkTanggalZoom, 3600000);
 </script>

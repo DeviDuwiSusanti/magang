@@ -483,7 +483,7 @@ function inputPengajuan($POST, $FILES, $id_user){
         $query4 = mysqli_query($conn, $sql4);
         // query proposal
         $id_dokumen_proposal = generateIdDokumen($conn, $id_pengajuan);
-        $sql5 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_proposal', '$proposal[name]', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
+        $sql5 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_proposal', '$proposal[name]', '1', '$proposal[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
         $query5 = mysqli_query($conn, $sql5);
         // query update id_pengajuan user
         $sql6 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
@@ -536,7 +536,10 @@ function updatePengajuan($POST, $FILES, $id_user){
         $id_dokumenKTP = $dokumen[0]['id_dokumen'];
         $ktpData = uploadFileUser($FILES['ktp'], $id_pengajuan);
         if ($ktpData) {
-            $sql_updateKTP = "UPDATE tb_dokumen SET file_path = '$ktpData[path]', change_by = '$id_user' WHERE id_dokumen = '$id_dokumenKTP' AND id_pengajuan = '$id_pengajuan'";
+            $sql_updateKTP = "UPDATE tb_dokumen SET 
+            nama_dokumen = '$ktpData[name]', 
+            file_path = '$ktpData[path]', 
+            change_by = '$id_user' WHERE id_dokumen = '$id_dokumenKTP' AND id_pengajuan = '$id_pengajuan'";
             $updateKTP = mysqli_query($conn, $sql_updateKTP);
         }
     }
@@ -547,7 +550,10 @@ function updatePengajuan($POST, $FILES, $id_user){
         $id_dokumenCV = $dokumen[1]['id_dokumen'];
         $cvData = uploadFileUser($FILES['cv'], $id_pengajuan);
         if ($cvData) {
-            $sql_updateCV = "UPDATE tb_dokumen SET file_path = '$cvData[path]', change_by = '$id_user' WHERE id_dokumen = '$id_dokumenCV' AND id_pengajuan = '$id_pengajuan'";
+            $sql_updateCV = "UPDATE tb_dokumen SET 
+            nama_dokumen = '$cvData[name]', 
+            file_path = '$cvData[path]', 
+            change_by = '$id_user' WHERE id_dokumen = '$id_dokumenCV' AND id_pengajuan = '$id_pengajuan'";
             $updateCV = mysqli_query($conn, $sql_updateCV);
         }
     } 
@@ -557,7 +563,10 @@ function updatePengajuan($POST, $FILES, $id_user){
         $id_dokumenProposal = $dokumen[2]['id_dokumen'];
         $proposalData = uploadFileUser($FILES['proposal'], $id_pengajuan);
         if ($proposalData) {
-            $sql_updateProposal = "UPDATE tb_dokumen SET file_path = '$proposalData[path]', change_by = '$id_user' WHERE id_dokumen = '$id_dokumenProposal' AND id_pengajuan = '$id_pengajuan'";
+            $sql_updateProposal = "UPDATE tb_dokumen SET 
+            nama_dokumen = '$proposalData[name]', 
+            file_path = '$proposalData[path]', 
+            change_by = '$id_user' WHERE id_dokumen = '$id_dokumenProposal' AND id_pengajuan = '$id_pengajuan'";
             $updateProposal = mysqli_query($conn, $sql_updateProposal);
         }
     } 
@@ -695,6 +704,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
     $tempat_lahir = $POST['tempat_lahir'];
     $tanggal_lahir = $POST['tanggal_lahir'];
     $jenis_kelamin = $POST['jenis_kelamin'];
+    $jabatan = $POST["jabatan"];
     $nik = $POST['nik'];
     $nip = $POST['nip'];
     $telepone = $POST['telepon'];
@@ -762,6 +772,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         nip = '$nip',
         nim = '$nim',
         nisn = '$nisn',
+        jabatan = '$jabatan',
         id_pendidikan = '$id_pendidikan',
         telepone_user = '$telepone',
         alamat_user = '$alamat_user',

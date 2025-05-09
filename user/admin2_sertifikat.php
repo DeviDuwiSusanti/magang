@@ -245,7 +245,8 @@ $backgrounds = query("SELECT * FROM tb_sertifikat_background WHERE id_instansi =
     <div class="container-fluid px-4">
         <h1 class="mt-4">Kelola Background Sertifikat</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">Upload dan kelola background untuk sertifikat</li>
+            <li class="breadcrumb-item active">Upload Dan Aktifkan Background Sertifikat</li>
+            <li class="breadcrumb-item active">Tombol Aktifkan Berada Di Sebelah Kiri Tombol Hapus</li>
         </ol>
         
         <!-- Link back to Signature Page -->

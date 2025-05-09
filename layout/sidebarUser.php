@@ -125,7 +125,7 @@ if (isset($_SESSION['email'])) {
                     </li>
 
                     <li class="sidebar-item">
-                        <a href="super1_pendidikan.php" class="sidebar-link text-decoration-none">
+                        <a href="pendidikan_user.php" class="sidebar-link text-decoration-none">
                             <i class="bi bi-mortarboard"></i>
                             <span>Pendidikan</span>
                         </a>
@@ -145,7 +145,7 @@ if (isset($_SESSION['email'])) {
 
 
                 <!-- ======================== level 2 admin instansi ========================= -->
-                <?php if ($level == "2") : ?>
+                <?php if ($level == "2" && !empty($row['id_instansi'])) : ?>
                     <li class="sidebar-item">
                         <a href="admin2_instansi.php" class="sidebar-link">
                             <i class="bi bi-buildings"></i>
@@ -201,7 +201,7 @@ if (isset($_SESSION['email'])) {
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="super1_pendidikan.php" class="sidebar-link text-decoration-none">
+                        <a href="pendidikan_user.php" class="sidebar-link text-decoration-none">
                             <i class="bi bi-mortarboard"></i>
                             <span>Pendidikan</span>
                         </a>

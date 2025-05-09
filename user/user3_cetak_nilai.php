@@ -200,8 +200,13 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       <td>: <?= toTitleCase($sertifikat["nama_bidang"]) ?></td>
     </tr>
     <tr>
-      <td class="uppercase">Periode Magang</td>
-      <td>: <?= $tanggal_mulai ?> - <?= $tanggal_selesai ?></td>
+      <?php if ($sertifikat["tanggal_extend"] != "") { ?>
+        <td class="uppercase">Periode Magang</td>
+        <td>: <?= $tanggal_mulai ?> - <?= formatTanggal($sertifikat["tanggal_extend"]) ?></td>
+      <?php } else { ?>
+        <td class="uppercase">Periode Magang</td>
+        <td>: <?= $tanggal_mulai ?> - <?= $tanggal_selesai ?></td>
+      <?php } ?>
     </tr>
   </table>
 

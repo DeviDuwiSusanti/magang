@@ -92,7 +92,7 @@ if (isset($_POST["edit_data_user"])) {
 
 
 
-<main>
+<main class="main-content p-3">
     <div class="container-fluid px-4">
         <h1 class="mt-4">Halaman Daftar User</h1>
         <ol class="breadcrumb mb-4">
