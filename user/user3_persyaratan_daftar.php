@@ -102,9 +102,13 @@ $result = $stmt->get_result();
                 <td>
                   <?php if ($row['id_user'] == $id_user): ?>
                     <form method="POST" class="hapus-dokumen-form">
+                    <form method="POST" class="hapus-dokumen-form">
                         <input type="hidden" name="id_dokumen" value="<?= $row['id_dokumen'] ?>">
                         <input type="hidden" name="hapus_laporan" value="1">
-                        <button type="button" class="btn btn-danger btn-sm hapus-btn">
+                        <button type="button" class="btn btn-danger btn-sm hapus-btn" 
+                            <?= (isset($row['jenis_dokumen']) && $row['jenis_dokumen'] == 1) || 
+                                (isset($row['status_pengajuan']) && $row['status_pengajuan'] == 4) 
+                                ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : '' ?>>
                             <i class="bi bi-trash"></i>
                         </button>
                     </form>
@@ -121,8 +125,8 @@ $result = $stmt->get_result();
         </div>
 
         <!-- Tombol Unggah Baru di dalam modal -->
-        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#unggahModal">
-          <i class="bi bi-upload"></i> Unggah Persyaratan Baru
+        <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#unggahModal"
+            <?= $status_pengajuan == 4 ? 'disabled' : '' ?>> <i class="bi bi-upload"></i> Unggah Persyaratan Baru
         </button>
       </div>
     </div>

@@ -108,7 +108,7 @@ $query = mysqli_query($conn, $sql);
                             <?php
                             $status_pengajuan = $row['status_pengajuan'];
 
-                           if ($status_pengajuan == 2): ?>
+                            if ($status_pengajuan == 2 || $status_pengajuan == 4): ?>
                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#daftarDokumenModal" title="Unggah Dokumen">
                                 <i class="bi bi-upload"></i></button>
                             <?php endif; ?>
