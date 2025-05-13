@@ -2,7 +2,7 @@
 include '../layout/sidebarUser.php';
 include "functions.php";
 
-// Hanya tampilkan pengajuan yang sudah selesai (status 5)
+
 $pengajuan = query("SELECT id_pengajuan, id_user, status_pengajuan, tanggal_selesai, tanggal_extend FROM tb_pengajuan WHERE id_pembimbing = '$id_user' 
                     AND (status_pengajuan = '5' OR status_pengajuan = '2' OR status_pengajuan = '4' )");
 $daftar_anggota = [];
@@ -115,10 +115,12 @@ if (!empty($tanggal_selesai) && $status_pengajuan != '5') {
     $end_date = new DateTime($tanggal_selesai);
     $interval = $current_date->diff($end_date);
     
-    // Tampilkan tombol jika kurang dari 1 bulan sisa waktu dan belum lewat
-    if ($interval->m < 1 && $interval->invert == 0) {
+    // Tampilkan tombol jika kurang dari 2 minggu sisa waktu dan belum lewat
+    if ($end_date > $current_date && $interval->days < 14) {
         $show_extend_button = true;
     }
+
+
     
     // Tampilkan info perpanjangan jika ada tanggal extend
     if (!empty($tanggal_extend)) {
@@ -139,45 +141,6 @@ $no = 1;
 
     <?php if (!empty($daftar_anggota)) : ?>
         <div class="container mt-5">
-            <!-- Tombol Perpanjangan Waktu (jika diperlukan) -->
-            <?php if (($show_extend_button || $show_extend_info) && $status_pengajuan != '5'): ?>
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Perpanjangan Waktu Magang</h5>
-                    </div>
-                    <div class="card-body">
-                        <?php if ($show_extend_info): ?>
-                            <div class="alert alert-info">
-                                <h5><i class="bi bi-info-circle-fill"></i> Informasi Perpanjangan Waktu</h5>
-                                <p class="mb-2">Tanggal selesai magang sebelumnya: <strong><?= date('d F Y', strtotime($tanggal_selesai)) ?></strong></p>
-                                <p class="mb-2">Tanggal perpanjangan magang: <strong><?= date('d F Y', strtotime($tanggal_extend)) ?></strong></p>
-                                <button class="btn btn-warning btn-sm editExtendBtn"
-                                        data-id_pengajuan="<?= $pengajuan_user ?>"
-                                        data-tanggal_selesai="<?= $tanggal_selesai ?>"
-                                        data-tanggal_extend="<?= $tanggal_extend ?>"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#extendModal">
-                                    <i class="bi bi-pencil"></i> Edit Perpanjangan
-                                </button>
-                            </div>
-                        <?php elseif ($show_extend_button): ?>
-                            <div class="alert alert-warning">
-                                <h5><i class="bi bi-exclamation-triangle-fill"></i> Kelompok Magang Ini Sebentar Lagi Akan Berakhir</h5>
-                                <p class="mb-2">Waktu magang akan berakhir pada <strong><?= date('d F Y', strtotime($tanggal_selesai)) ?></strong></p>
-                                <p class="mb-2">Anda dapat memperpanjang waktu magang jika diperlukan.</p>
-                                <button class="btn btn-primary btn-sm addExtendBtn"
-                                        data-id_pengajuan="<?= $pengajuan_user ?>"
-                                        data-tanggal_selesai="<?= $tanggal_selesai ?>"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#extendModal">
-                                    <i class="bi bi-calendar-plus"></i> Tambah Perpanjangan Waktu
-                                </button>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            <?php endif; ?>
-
             <div class="card shadow-lg">
                 <div class="card-body">
                     <table id="table_anggota" class="table table-striped table-bordered align-middle text-center">
@@ -286,6 +249,45 @@ $no = 1;
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
+                        
+                        <tfoot>
+                            <tr>
+                                <td colspan="9" class="text-start">
+                                    <?php if (($show_extend_button || $show_extend_info) && $status_pengajuan != '5'): ?>
+                                        <div class="alert <?= $show_extend_info ? 'alert-info' : 'alert-warning' ?> mt-3">
+                                            <?php if ($show_extend_info): ?>
+                                                <h5><i class="bi bi-info-circle-fill"></i> Informasi Perpanjangan</h5>
+                                                <p class="mb-1">Tanggal selesai sebelumnya: <strong><?= date('d F Y', strtotime($tanggal_selesai)) ?></strong></p>
+                                                <p class="mb-1">Tanggal perpanjangan: <strong><?= date('d F Y', strtotime($tanggal_extend)) ?></strong></p>
+                                                <button class="btn btn-warning btn-sm editExtendBtn"
+                                                    data-id_pengajuan="<?= $pengajuan_user ?>"
+                                                    data-tanggal_selesai="<?= $tanggal_selesai ?>"
+                                                    data-tanggal_extend="<?= $tanggal_extend ?>"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#extendModal">
+                                                    <i class="bi bi-pencil"></i> Edit Perpanjangan
+                                                </button>
+                                            <?php elseif ($show_extend_button): ?>
+                                                <h5><i class="bi bi-hourglass-split"></i> Waktu Magang Hampir Habis</h5>
+                                                <p class="mb-1">Magang berakhir: <strong><?= date('d F Y', strtotime($tanggal_selesai)) ?></strong></p>
+                                                <button class="btn btn-primary btn-sm addExtendBtn"
+                                                    data-id_pengajuan="<?= $pengajuan_user ?>"
+                                                    data-tanggal_selesai="<?= $tanggal_selesai ?>"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#extendModal">
+                                                    <i class="bi bi-calendar-plus"></i> Perpanjang Waktu
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="alert alert-info mt-3">
+                                            <i class="bi bi-info-circle-fill"></i> Waktu selesai magang: <strong><?= date('d F Y', strtotime($tanggal_selesai)) ?></strong>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        </tfoot>
+
                     </table>
                 </div>
             </div>
