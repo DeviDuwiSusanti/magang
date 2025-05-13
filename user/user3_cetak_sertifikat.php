@@ -96,6 +96,9 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
+      .no-print {
+        display: none !important;
+      }
       .content {
         background-color: transparent;
       }
@@ -177,6 +180,10 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
 <body>
   <div class="content">
+    <div class="no-print" style="background: #fff8c4; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px;">
+        <strong>⚠️ Penting:</strong> Saat mencetak, centang opsi <strong>"Background graphics"</strong> agar sertifikat tampil lengkap.
+    </div>
+
     <h1>SERTIFIKAT</h1>
     <h3>HASIL PRAKTIK MAGANG</h3>
     <p class="center">Nomor: 500.5.7.10/239/438.5.14/2025</p>
@@ -240,10 +247,9 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
   <script>
     window.onload = function() {
-      if (window.location.href.indexOf('print') > -1) {
-        window.print();
-      }
-    }
+      window.print();
+    };
   </script>
+
 </body>
 </html>

@@ -130,14 +130,14 @@ $no = 1;
                                                     
                                                     <div class="text-center">
                                                         <!-- Tombol Cetak Sertifikat -->
-                                                        <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2" target="_blank">
+                                                        <button class="btn btn-primary m-2" onclick="cetaksertif('user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>')">
                                                             <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
-                                                        </a>
-                                                        
+                                                        </button>
+
                                                         <!-- Tombol Cetak Nilai -->
-                                                        <a href="user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2" target="_blank">
+                                                        <button class="btn btn-success m-2" onclick="cetakPopup('user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>')">
                                                             <i class="bi bi-file-text me-2"></i>Cetak Nilai
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -243,4 +243,26 @@ $no = 1;
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function cetaksertif(url) {
+    Swal.fire({
+        title: 'Pastikan!',
+        html: 'Sebelum mencetak, aktifkan <b>Background graphics</b> di opsi cetak.',
+        icon: 'info',
+        confirmButtonText: 'Lanjutkan Cetak'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const cetakWindow = window.open(url, '_blank', 'width=800,height=600');
+            cetakWindow.focus();
+        }
+    });
+}
+</script>
+
+<script>
+    function cetakPopup() {
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+</script>
 <?php include "../layout/footerDashboard.php"; ?>

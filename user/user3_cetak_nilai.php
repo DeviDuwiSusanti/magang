@@ -275,3 +275,8 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 </html>
 
 <script src="../assets//js/alert.js"></script>
+ <script>
+    window.onload = function() {
+      window.print();
+    };
+  </script>
