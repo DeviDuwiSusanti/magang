@@ -56,6 +56,7 @@ $sql3 = "SELECT
         FROM tb_dokumen AS d
         JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
         WHERE p.id_instansi = '$id_instansi'
+        AND d.status_active = '1'
         GROUP BY d.id_pengajuan, d.id_user
     ";
 
@@ -988,7 +989,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                 // Isi elemen resume
                 document.getElementById("resumeBidang").textContent = bidang;
                 document.getElementById("resumeJenis").textContent = jenis;
-                document.getElementById("resumeDurasi").textContent = durasi + " bulan";
+                document.getElementById("resumeDurasi").textContent = durasi;
                 document.getElementById("resumeKuotaTersisa").textContent = sisaKuota + " orang";
                 document.getElementById("resumeJumlahPelamar").textContent = jumlahPelamar + " orang";
 
