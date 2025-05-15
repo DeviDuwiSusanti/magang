@@ -56,7 +56,7 @@
                             {"step":"Kamu akan diarahkan ke halaman Dashboard, lalu klik Pengajuan.", "img":"../assets/img/tentang/dashboardUser.png"}, 
                             {"step":"Klik Tambah Pengajuan, dan isi form yang tersedia.", "img":"../assets/img/tentang/daftarPengajuan.png"}, 
                             {"step":"Instansi akan mengirimkan link zoom via email untuk wawancara pendaftaran Kamu"},
-                            {"step":"Jika status setelah melakukan wawancara Kamu diterima, maka Kamu bisa mengunggah dokumen persyaratan lainnya, agar Kamu benar-benar resmi diterima", "img":"../assets/img/tentang/unggahPrasyarat.png"},
+                            {"step":"Jika status setelah melakukan wawancara Kamu diterima, maka Kamu bisa mengunggah dokumen persyaratan lainnya, agar Kamu benar-benar resmi diterima", "img":"../assets/img/tentang/unggahPersyaratan.png"},
                             {"step":"Jika selama tenggat waktu yang ditentukan, Kamu tidak melengkapi dokumen persyaratan, maka Kamu akan dianggap batal mengajukan magang"}]'>Lihat</button>
                         </div>
 

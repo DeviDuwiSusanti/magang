@@ -230,7 +230,8 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
                         <div class="mb-3" style="flex: 1;">
                             <label for="tanggal" class="form-label">Tanggal</label>
                             <input type="date" class="form-control" id="tanggal" name="tanggal"
-                            min="<?= $rowTanggal['tanggal_mulai'] ?>" max="<?= $rowTanggal['tanggal_selesai'] ?>">
+                            min="<?= $rowTanggal['tanggal_mulai'] ?>" 
+                            max="<?= ($rowTanggal['tanggal_extend'] != NULL) ? $rowTanggal['tanggal_extend'] : $rowTanggal['tanggal_selesai'] ?>">
                         </div>
                         <div class="mb-3" style="flex: 1;">
                             <label for="jam_mulai" class="form-label">Jam Mulai</label>
@@ -290,9 +291,16 @@ $rowTanggal = mysqli_fetch_assoc($queryTanggal);
             <div class="modal-body">
                 <form action="" id="form_editLogbook" method="POST" enctype="multipart/form-data">
                     <div class="d-flex gap-4">
-                        <div class="mb-3" style="flex: 1;">
+                       <div class="mb-3" style="flex: 1;">
                             <label for="edit_tanggal" class="form-label">Tanggal</label>
-                            <input type="date" class="form-control" id="edit_tanggal" name="tanggal" value="<?= $dataLama['tanggal_logbook'] ?>">
+                            <input type="date" class="form-control" id="edit_tanggal" name="tanggal" 
+                                   value="<?= $dataLama['tanggal_logbook'] ?>"
+                                   min="<?= $rowTanggal['tanggal_mulai'] ?>"
+                                   <?php if ($rowTanggal['tanggal_extend'] != NULL): ?>
+                                       max="<?= $rowTanggal['tanggal_extend'] ?>"
+                                   <?php else: ?>
+                                       max="<?= $rowTanggal['tanggal_selesai'] ?>"
+                                   <?php endif; ?>>
                         </div>
                         <div class="mb-3" style="flex: 1;">
                             <label for="jam_mulai" class="form-label">Jam Mulai</label>

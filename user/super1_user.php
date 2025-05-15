@@ -258,7 +258,7 @@ if (isset($_POST["edit_data_user"])) {
                     <div class="mb-3">
                         <label for="gambar" class="form-label">Upload Foto</label>
                         <div class="image-preview" id="imagePreviewTambah">
-                            <img src="../assets/img/user/avatar.png" id="previewImageTambah" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
+                            <img src="../assets/img/avatar1.png" id="previewImageTambah" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="file" class="form-control" id="gambar" name="gambar_user" accept="image/*" onchange="validateFileTambah()">
                     </div>
@@ -315,7 +315,7 @@ if (isset($_POST["edit_data_user"])) {
                     <div class="mb-3">
                         <label for="edit_gambar" class="form-label">Upload Foto</label>
                         <div class="image-preview" id="imagePreviewEdit">
-                            <img src="../assets/img/user/avatar.png" id="previewImageEdit" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
+                            <img src="../assets/img/avatar1.png" id="previewImageEdit" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
                         <input type="hidden" name="gambar_lama" id="gambar_lama">
                         <input type="file" class="form-control" id="edit_gambar" name="gambar_user" accept="image/*" onchange="validateFileEdit()">

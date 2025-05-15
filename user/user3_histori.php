@@ -86,7 +86,14 @@ $no = 1;
                         <td class="text-center"><?= $no++ ?></td>
                         <td><?= htmlspecialchars($data['nama_panjang']) ?></td>
                         <td><?= htmlspecialchars($data['nama_bidang']) ?></td>
-                        <td><?= hitungDurasi($data['tanggal_mulai'], $data['tanggal_selesai']) ?></td> 
+                        <td><?php 
+                            if (!empty($detail['tanggal_extend'])) {
+                                echo hitungDurasi($detail['tanggal_mulai'], $detail['tanggal_extend']) ;
+                            } else {
+                                echo hitungDurasi($detail['tanggal_mulai'], $detail['tanggal_selesai']);
+                            }
+                            ?>
+                        </td> 
                         <!-- Kolom Aksi -->
                         <td class="text-center">
                             <div class="d-flex gap-1 justify-content-center flex-wrap">
@@ -123,14 +130,14 @@ $no = 1;
                                                     
                                                     <div class="text-center">
                                                         <!-- Tombol Cetak Sertifikat -->
-                                                        <a href="user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-primary m-2" target="_blank">
+                                                        <button class="btn btn-primary m-2" onclick="cetaksertif('user3_cetak_sertifikat.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>')">
                                                             <i class="bi bi-file-earmark-text me-2"></i>Cetak Sertifikat
-                                                        </a>
-                                                        
+                                                        </button>
+
                                                         <!-- Tombol Cetak Nilai -->
-                                                        <a href="user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>" class="btn btn-success m-2" target="_blank">
+                                                        <button class="btn btn-success m-2" onclick="cetakPopup('user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>')">
                                                             <i class="bi bi-file-text me-2"></i>Cetak Nilai
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -177,7 +184,7 @@ $no = 1;
                     
                     <!-- Modal Detail -->
                     <div class="modal fade" id="modalDetail<?= $data['id_pengajuan']; ?>" tabindex="-1" 
-                         aria-labelledby="modalDetailLabel<?= $data['id_pengajuan']; ?>" aria-hidden="true">
+                        aria-labelledby="modalDetailLabel<?= $data['id_pengajuan']; ?>" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -185,21 +192,36 @@ $no = 1;
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                <img src="../assets/img/logo_kab_sidoarjo.png" 
-                                    class="mb-3" 
-                                    alt="Profile Picture" 
-                                    style="width: 100px; height: 100px;">
+                                    <img src="../assets/img/logo_kab_sidoarjo.png" 
+                                        class="mb-3" 
+                                        alt="Profile Picture" 
+                                        style="width: 100px; height: 100px;">
                                     <h4 class="card-title"><?= isset($detail['nama_panjang']) ? $detail['nama_panjang'] : 'Tidak Diketahui' ?></h4>
                                     <hr>
                                     <p><strong>Instansi:</strong> <?= htmlspecialchars($detail['nama_panjang'] ?? "Tidak Diketahui") ?></p>
                                     <p><strong>Bidang:</strong> <?= htmlspecialchars($detail['nama_bidang'] ?? "Tidak Diketahui") ?></p>
                                     <p><strong>Jenis Pengajuan:</strong> <?= htmlspecialchars($detail['jenis_pengajuan'] ?? "Tidak Diketahui") ?></p>
                                     <p><strong>Status Lamaran:</strong> <?= isset($detail['status_pengajuan']) ? getStatusText($detail['status_pengajuan']) : "Tidak Diketahui" ?></p>
-                                    <p><strong>Durasi:</strong> <?= isset($detail['tanggal_mulai'], $detail['tanggal_selesai']) ? hitungDurasi($detail['tanggal_mulai'], $detail['tanggal_selesai']) : "Tidak Diketahui" ?></p>
-                                    <p><strong>Periode Magang:</strong> <?= isset($detail['tanggal_mulai'], $detail['tanggal_selesai']) ? formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']) : "Tidak Diketahui" ?></p>
+                                    <p><strong>Durasi:</strong> 
+                                        <?php 
+                                        if (!empty($detail['tanggal_extend'])) {
+                                            echo hitungDurasi($detail['tanggal_mulai'], $detail['tanggal_extend']) ;
+                                        } else {
+                                            echo hitungDurasi($detail['tanggal_mulai'], $detail['tanggal_selesai']);
+                                        }
+                                        ?>
+                                    </p>
+                                    <p><strong>Periode Magang:</strong> 
+                                        <?php 
+                                        if (!empty($detail['tanggal_extend'])) {
+                                            echo formatPeriode($detail['tanggal_mulai'], $detail['tanggal_extend']);
+                                        } else {
+                                            echo formatPeriode($detail['tanggal_mulai'], $detail['tanggal_selesai']);
+                                        }
+                                        ?>
+                                    </p>
                                 </div>
 
-                                <!-- Tombol Aksi dalam Modal -->
                                 <div class="modal-footer flex-column align-items-start">
                                     <div class="d-flex justify-content-end w-100 mt-2">
                                         <button type="button" class="btn btn-danger btn-sm px-3" data-bs-dismiss="modal">Tutup</button>
@@ -221,4 +243,26 @@ $no = 1;
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function cetaksertif(url) {
+    Swal.fire({
+        title: 'Pastikan!',
+        html: 'Sebelum mencetak, aktifkan <b>Background graphics</b> di opsi cetak.',
+        icon: 'info',
+        confirmButtonText: 'Lanjutkan Cetak'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const cetakWindow = window.open(url, '_blank', 'width=800,height=600');
+            cetakWindow.focus();
+        }
+    });
+}
+</script>
+
+<script>
+    function cetakPopup() {
+        window.open(url, '_blank', 'width=800,height=600');
+    }
+</script>
 <?php include "../layout/footerDashboard.php"; ?>

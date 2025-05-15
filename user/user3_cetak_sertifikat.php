@@ -96,6 +96,9 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
+      .no-print {
+        display: none !important;
+      }
       .content {
         background-color: transparent;
       }
@@ -177,6 +180,10 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
 <body>
   <div class="content">
+    <div class="no-print" style="background: #fff8c4; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px;">
+        <strong>⚠️ Penting:</strong> Saat mencetak, centang opsi <strong>"Background graphics"</strong> agar sertifikat tampil lengkap.
+    </div>
+
     <h1>SERTIFIKAT</h1>
     <h3>HASIL PRAKTIK MAGANG</h3>
     <p class="center">Nomor: 500.5.7.10/239/438.5.14/2025</p>
@@ -203,7 +210,12 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= formatText($sertifikat["jenis_pengajuan"]) ?> pada <?= formatText($sertifikat["nama_panjang"]) ?> di Bidang <?= formatText($sertifikat["nama_bidang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>.</p>
+    <p>Telah melaksanakan <?= formatText($sertifikat["jenis_pengajuan"]) ?> pada <?= formatText($sertifikat["nama_panjang"]) ?> di Bidang <?= formatText($sertifikat["nama_bidang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
+    <?php if($sertifikat["tanggal_extend"] != "") {  ?>
+    , Dan Perpanjangan Waktu Hingga <?= formatTanggal($sertifikat["tanggal_extend"]) ?>
+    <?php } else { ?>
+    .
+    <?php }?></p>
 
     <?php
     $rata = $sertifikat["rata_rata"];
@@ -235,10 +247,9 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
   <script>
     window.onload = function() {
-      if (window.location.href.indexOf('print') > -1) {
-        window.print();
-      }
-    }
+      window.print();
+    };
   </script>
+
 </body>
 </html>
