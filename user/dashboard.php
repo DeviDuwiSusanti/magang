@@ -94,19 +94,29 @@ if ($level == 4) :
     $id_bidang_ini = $id_bidang["id_bidang"];
     $pengajuan_bidang = query("SELECT * FROM tb_pengajuan WHERE id_bidang = '$id_bidang_ini' AND status_pengajuan = '1' AND status_active = '1'");
     $persetujuan_pembimbing = count($pengajuan_bidang);
-    
-    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
-    if (!empty($pengajuan)) {
-        $pengajuan_user = $pengajuan[0]["id_pengajuan"];
 
-        // Pindahkan ini ke dalam if agar tidak error saat kosong
-        $daftar_anggota = query("SELECT * FROM tb_profile_user, tb_user WHERE tb_profile_user.id_user = tb_user.id_user AND tb_profile_user.id_pengajuan = '$pengajuan_user' AND tb_profile_user.status_active = '1'");
+    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
+    
+    $daftar_anggota = []; // array untuk menampung semua peserta magang
+
+    if (!empty($pengajuan)) {
+        foreach ($pengajuan as $pj) {
+            $id_pengajuan = $pj["id_pengajuan"];
+            $anggota = query("SELECT * FROM tb_profile_user 
+                                JOIN tb_user ON tb_profile_user.id_user = tb_user.id_user 
+                                WHERE tb_profile_user.id_pengajuan = '$id_pengajuan' 
+                                AND tb_profile_user.status_active = '1'");
+            if (!empty($anggota)) {
+                $daftar_anggota = array_merge($daftar_anggota, $anggota);
+            }
+        }
+
         $daftar_peserta_magang = count($daftar_anggota);
     } else {
-        // Bisa di-set ke 0 jika ingin tetap aman
         $daftar_peserta_magang = 0;
     }
 endif;
+
 
 ?>
 

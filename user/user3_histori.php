@@ -135,7 +135,7 @@ $no = 1;
                                                         </button>
 
                                                         <!-- Tombol Cetak Nilai -->
-                                                        <button class="btn btn-success m-2" onclick="cetakPopup('user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>')">
+                                                        <button class="btn btn-success m-2" onclick="cetaksertif('user3_cetak_nilai.php?id_user_ini=<?= $id_user ?>&id_pengajuan=<?= $data['id_pengajuan'] ?>')">
                                                             <i class="bi bi-file-text me-2"></i>Cetak Nilai
                                                         </button>
                                                     </div>
@@ -258,11 +258,5 @@ function cetaksertif(url) {
         }
     });
 }
-</script>
-
-<script>
-    function cetakPopup() {
-        window.open(url, '_blank', 'width=800,height=600');
-    }
 </script>
 <?php include "../layout/footerDashboard.php"; ?>

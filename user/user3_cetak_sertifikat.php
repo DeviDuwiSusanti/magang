@@ -4,6 +4,37 @@ include "../functions.php";
 $id_user_ini = $_GET["id_user_ini"];
 $id_pengajuan = $_GET["id_pengajuan"];
 
+// Validasi kelengkapan profil user
+$profile_check = query("SELECT pu.*, p.nama_pendidikan
+                       FROM tb_profile_user pu
+                       LEFT JOIN tb_pendidikan p ON pu.id_pendidikan = p.id_pendidikan
+                       WHERE pu.id_user = $id_user_ini")[0];
+
+// Cek field yang wajib diisi
+if (empty($profile_check['nama_user']) || 
+    empty($profile_check['tempat_lahir']) || 
+    empty($profile_check['tanggal_lahir']) || 
+    (empty($profile_check['nim']) && empty($profile_check['nisn'])) || 
+    empty($profile_check['nama_pendidikan'])) {
+    
+    echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+    echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: "warning",
+                title: "Profil Belum Lengkap",
+                text: "Silahkan lengkapi profil terlebih dahulu sebelum mencetak sertifikat",
+                confirmButtonText: "OK"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "profil.php";
+                }
+            });
+        });
+    </script>';
+    exit();
+}
+
 // Ambil data user & pengajuan
 $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.* 
                     FROM tb_profile_user pu
@@ -145,10 +176,12 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     }
 
     .signature {
-      margin-top: 40px;
-      text-align: right;
-      padding-right: 50px;
+      margin-top: 25px;
+      float: right; /* Geser elemen ke kanan */
+      text-align: left; /* Isi teks tetap rata kiri */
+      width: 200px; /* Atur lebar agar tidak terlalu panjang */
     }
+
 
     .signature img {
       height: 80px;
@@ -166,7 +199,6 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       max-width: 900px;
       margin-left: auto;
       margin-right: auto;
-      /* background-color: rgba(255, 255, 255, 0.1);  */
       background-color: transparent;
     }
 
