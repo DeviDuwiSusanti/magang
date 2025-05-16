@@ -158,8 +158,10 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       text-align: center;
     }
     .signature {
-      margin-top: 40px;
-      text-align: right;
+      margin-top: 25px;
+      float: right; /* Geser elemen ke kanan */
+      text-align: left; /* Isi teks tetap rata kiri */
+      width: 200px; /* Atur lebar agar tidak terlalu panjang */
     }
     .uppercase {
       text-transform: uppercase;
