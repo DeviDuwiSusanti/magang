@@ -12,10 +12,11 @@ $query_mulai = "UPDATE tb_pengajuan
 mysqli_query($conn, $query_mulai);
 
 // 2. Ubah status_pengajuan dari 'Berlangsung' (4) ke 'Selesai' (5) jika tanggal selesai <= hari ini
+// Menggunakan COALESCE() untuk mempertimbangkan tanggal_extend jika ada
 $query_selesai = "UPDATE tb_pengajuan 
                   SET status_pengajuan = 5 
                   WHERE status_pengajuan = 4 
-                  AND tanggal_selesai <= '$tanggal_sekarang'";
+                  AND COALESCE(tanggal_extend, tanggal_selesai) <= '$tanggal_sekarang'";
 
 mysqli_query($conn, $query_selesai);
 

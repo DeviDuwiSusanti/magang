@@ -805,8 +805,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                 const downloadBtn = document.createElement('a');
                 downloadBtn.href = pdfUrl;
                 downloadBtn.download = fileName;
-                downloadBtn.className = 'btn btn-sm btn-outline-secondary mt-3';
-                downloadBtn.textContent = 'Unduh PDF';
+                downloadBtn.className = 'btn btn-sm btn-primary mt-3';
+                downloadBtn.innerHTML = '<i class="bi bi-download me-2"></i> Unduh PDF';
 
                 // Create page info
                 const pageInfo = document.createElement('div');
