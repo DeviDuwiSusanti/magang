@@ -229,7 +229,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
         <td><?= formatText($sertifikat["tempat_lahir"]) ?>, <?= $tanggal_lahir ?></td>
       </tr>
       <tr>
-        <td><?= empty($pendidikan["fakultas"]) ? "Sekolah" : "Universitas" ?></td>
+        <td><?= empty($pendidikan["fakultas"]) ? "Sekolah" : "Perguruan Tinggi" ?></td>
         <td><?= formatText($pendidikan["nama_pendidikan"]) ?></td>
       </tr>
       <tr>
