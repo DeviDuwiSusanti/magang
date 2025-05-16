@@ -337,9 +337,9 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
         });
 
         // Modal Tambah Summernote
-        $('#tambahBidangModal').on('shown.bs.modal', function () {
+        $('#tambahBidangModal').on('shown.bs.modal', function() {
             // Hapus dulu jika ada, lalu buat ulang
-            $('#kriteria, #dokumen').each(function () {
+            $('#kriteria, #dokumen').each(function() {
                 if (!$(this).hasClass('note-editor')) {
                     $(this).summernote({
                         placeholder: 'Tulis di sini...',
@@ -349,14 +349,14 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
             });
         });
 
-        $('#tambahBidangModal').on('hidden.bs.modal', function () {
+        $('#tambahBidangModal').on('hidden.bs.modal', function() {
             $('#kriteria, #dokumen').summernote('destroy');
         });
 
         // Modal Edit Summernote
-        $('#editBidangModal').on('shown.bs.modal', function () {
+        $('#editBidangModal').on('shown.bs.modal', function() {
             // Hapus dulu jika ada, lalu buat ulang
-            $('#kriteria, #dokumen').each(function () {
+            $('#kriteria, #dokumen').each(function() {
                 if (!$(this).hasClass('note-editor')) {
                     $(this).summernote({
                         placeholder: 'Tulis di sini...',
@@ -366,7 +366,7 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
             });
         });
 
-        $('#editBidangModal').on('hidden.bs.modal', function () {
+        $('#editBidangModal').on('hidden.bs.modal', function() {
             $('#kriteria, #dokumen').summernote('destroy');
         });
 
