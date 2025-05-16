@@ -1,3 +1,6 @@
+/*===================================================================================
+                          Fungsi untuk menampilkan error
+===================================================================================*/
 // Fungsi untuk menampilkan error
 function showError(inputId, errorId, message) {
   const inputElement = document.getElementById(inputId);
@@ -10,7 +13,9 @@ function showError(inputId, errorId, message) {
   }
 }
 
-// Fungsi untuk menghapus error ketika user mulai mengetik
+/*===================================================================================
+                          Fungsi untuk menghapus error
+===================================================================================*/
 function clearError(event) {
   const input = event.target;
   const errorId = input.dataset.errorId;
@@ -21,7 +26,9 @@ function clearError(event) {
   }
 }
 
-// Fungsi untuk mengambil value, handle summernote juga
+/*===================================================================================
+                          Fungsi untuk mengambil value
+===================================================================================*/
 function getValue(id) {
   const element = document.getElementById(id);
   if (element.classList.contains("summernote")) {
@@ -41,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Tambahkan ini untuk Summernote
-  i; // Clear error kalau user edit di Summernote
+  i;
   if (typeof $ !== "undefined" && typeof $.fn.summernote !== "undefined") {
     $(".summernote").on(
       "summernote.change",
@@ -56,140 +63,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-function validateEditForm() {
-  let isValid = true;
-
-  // Reset semua pesan error sebelum validasi baru
-  document
-    .querySelectorAll(".text-danger")
-    .forEach((el) => (el.textContent = ""));
-
-  // Validasi Nama
-  const nama = document.getElementById("nama").value.trim();
-  if (nama === "") {
-    showError("nama", "nama_error", "Nama tidak boleh kosong.");
-    isValid = false;
-  } else if (!/^[a-zA-Z\s.,'-]+$/.test(nama)) {
-    showError(
-      "nama",
-      "nama_error",
-      "Nama hanya boleh berisi huruf, spasi, dan simbol ('-)."
-    );
-    isValid = false;
-  }
-
-  // Validasi Tempat Lahir
-  const tempatLahir = document.getElementById("tempat_lahir").value.trim();
-  if (tempatLahir === "") {
-    showError(
-      "tempat_lahir",
-      "tempat_lahir_error",
-      "Tempat lahir tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!/^[a-zA-Z\s'-]+$/.test(tempatLahir)) {
-    showError(
-      "tempat_lahir",
-      "tempat_lahir_error",
-      "Tempat lahir hanya boleh berisi huruf, spasi, dan simbol ('-)."
-    );
-    isValid = false;
-  }
-
-  // Validasi Tanggal Lahir
-  const tanggalLahir = document.getElementById("tanggal_lahir").value.trim();
-  if (tanggalLahir === "") {
-    showError(
-      "tanggal_lahir",
-      "tanggal_lahir_error",
-      "Tanggal lahir tidak boleh kosong."
-    );
-    isValid = false;
-  }
-
-  // Validasi Telepon
-  const telepon = document.getElementById("no_telepone").value.trim();
-  if (telepon === "") {
-    showError(
-      "no_telepone",
-      "telepon_error",
-      "Nomor telepon tidak boleh kosong."
-    );
-    isValid = false;
-  } else if (!/^\d{12,15}$/.test(telepon)) {
-    showError(
-      "no_telepone",
-      "telepon_error",
-      "Telepon harus berisi angka (12-15 digit)."
-    );
-    isValid = false;
-  }
-
-  // Validasi Nama Bidang (opsional, hanya jika elemen ada)
-  const NimInput = document.getElementById("nim");
-  if (NimInput) {
-    const Nim = NimInput.value.trim();
-
-    if (Nim === "") {
-      showError("nim", "nim_error", "NIM/NISN tidak boleh kosong.");
-      isValid = false;
-    } else if (!/^(?:\d{10}|\d{12})$/.test(Nim)) {
-      showError(
-        "nim",
-        "nim_error",
-        "NIM/NISN harus terdiri dari 10 digit untuk NISN atau 12 digit untuk NIM."
-      );
-      isValid = false;
-    }
-  }
-
-  // Validasi Alamat
-  const alamat = document.getElementById("alamat").value.trim();
-  if (alamat === "") {
-    showError("alamat", "alamat_error", "Alamat tidak boleh kosong.");
-    isValid = false;
-  }
-
-  // Validasi Gambar
-  const gambarInput = document.getElementById("image");
-  const gambar = gambarInput.files[0];
-  if (gambar) {
-    if (gambar.size > 1048576) {
-      showError(
-        "image",
-        "image_error",
-        "Ukuran gambar tidak boleh lebih dari 1MB."
-      );
-      isValid = false;
-    }
-    if (!gambar.type.match("image.*")) {
-      showError(
-        "image",
-        "image_error",
-        "File yang diupload harus berupa gambar."
-      );
-      isValid = false;
-    }
-  }
-
-  return isValid; // Form hanya dikirim jika valid
-}
-
-// // Tangkap form yang akan divalidasi
-// const form = document.querySelector("#editForm"); // Sesuaikan selector ini dengan form Anda
-
-// // Tambahkan event listener untuk event submit
-// form.addEventListener("submit", function (event) {
-//   // Panggil fungsi validasi
-//   const isValid = validateEditForm();
-
-//   // Jika validasi gagal, hentikan submit form
-//   if (!isValid) {
-//     event.preventDefault(); // Mencegah form dari pengiriman
-//   }
-// });
-
-//  Validasi inputan edit instansi
+/*===================================================================================
+                          Validasi Form Edit Instansi
+===================================================================================*/
 function validateEditInstansi() {
   let isValid = true;
 
@@ -197,6 +73,7 @@ function validateEditInstansi() {
     .querySelectorAll(".text-danger")
     .forEach((el) => (el.textContent = ""));
 
+  // validasi input nama panjang instansi
   const namaPanjang = document.getElementById("nama_panjang").value.trim();
   if (namaPanjang === "") {
     showError(
@@ -207,6 +84,7 @@ function validateEditInstansi() {
     isValid = false;
   }
 
+  // validasi input nama pendek instansi
   const namaPendek = document.getElementById("nama_pendek").value.trim();
   if (namaPendek === "") {
     showError(
@@ -217,6 +95,7 @@ function validateEditInstansi() {
     isValid = false;
   }
 
+  // validasi input deskripsi instansi
   const deskripsiInstansi = document
     .getElementById("deskripsi_instansi")
     .value.trim();
@@ -229,6 +108,7 @@ function validateEditInstansi() {
     isValid = false;
   }
 
+  // validasi input alamat instansi
   const alamatInstansi = document
     .getElementById("alamat_instansi")
     .value.trim();
@@ -241,25 +121,43 @@ function validateEditInstansi() {
     isValid = false;
   }
 
+  // validasi input telepon instansi
+  const phoneRegex = /^[0-9\s\+\-\.\(\)]+$/;
+
   const teleponInstansi = document
     .getElementById("telepone_instansi")
     .value.trim();
-  if (teleponInstansi === "") {
+
+  const cleanValue = teleponInstansi.replace(/(<([^>]+)>)/gi, "").trim();
+
+  if (cleanValue === "") {
     showError(
       "telepone_instansi",
       "telepone_instansi_error",
       "Nomor telepon tidak boleh kosong."
     );
     isValid = false;
-  } else if (!/^[0-9]{10,15}$/.test(teleponInstansi)) {
+  } else if (!phoneRegex.test(cleanValue)) {
     showError(
       "telepone_instansi",
       "telepone_instansi_error",
-      "Nomor telepon harus berisi 10-15 digit angka."
+      "Nomor telepon hanya boleh berisi angka, spasi, tanda hubung (-), titik (.), atau tanda kurung."
     );
     isValid = false;
+  } else {
+    const numericOnly = cleanValue.replace(/\D/g, "");
+
+    if (numericOnly.length < 8 || numericOnly.length > 15) {
+      showError(
+        "telepone_instansi",
+        "telepone_instansi_error",
+        "Nomor telepon harus terdiri dari 8 - 15 digit angka."
+      );
+      isValid = false;
+    }
   }
 
+  // Validasi gambar instansi
   const gambarInput = document.getElementById("gambar_instansi_edit");
   const gambar = gambarInput.files[0];
   if (gambar) {
@@ -284,15 +182,17 @@ function validateEditInstansi() {
   return isValid;
 }
 
-// Fungsi validasi input tambah bidang
+/*===================================================================================
+                          Validasi Form Tambah Bidang
+===================================================================================*/
 function validateTambahBidang() {
   let isValid = true;
 
-  // Reset pesan error sebelumnya
   document
     .querySelectorAll(".text-danger")
     .forEach((el) => (el.textContent = ""));
 
+  // validasi input nama bidang
   const namaBidang = document.getElementById("nama_bidang").value.trim();
   if (namaBidang === "") {
     showError(
@@ -302,7 +202,6 @@ function validateTambahBidang() {
     );
     isValid = false;
   } else {
-    // Cek existing nama bidang dengan case-insensitive
     const namaBidangLower = namaBidang.toLowerCase();
     const existingLower = existingNamaBidang.map((nama) => nama.toLowerCase());
 
@@ -316,6 +215,7 @@ function validateTambahBidang() {
     }
   }
 
+  // validasi input deskripsi bidang
   const deskripsi = document.getElementById("deskripsi").value.trim();
   if (deskripsi === "") {
     showError(
@@ -326,21 +226,23 @@ function validateTambahBidang() {
     isValid = false;
   }
 
+  // validasi input kriteria bidang
   const kriteria = document.getElementById("kriteria").value.trim();
   if (kriteria === "") {
     showError("kriteria", "kriteria_error", "Kriteria tidak boleh kosong.");
     isValid = false;
   }
 
+  // validasi input kuota bidang
   const kuota = document.getElementById("kuota").value.trim();
-  if (kuota === "") {
-    showError("kuota", "kuota_error", "Kuota tidak boleh kosong.");
-    isValid = false;
-  } else if (isNaN(kuota) || parseInt(kuota) <= 0) {
-    showError("kuota", "kuota_error", "Kuota harus berupa angka positif.");
-    isValid = false;
+  if (kuota !== "") {
+    if (isNaN(kuota) || parseInt(kuota) <= 0) {
+      showError("kuota", "kuota_error", "Kuota harus berupa angka positif.");
+      isValid = false;
+    }
   }
 
+  // validasi input dokumen bidang
   const dokumen = document.getElementById("dokumen").value.trim();
   if (dokumen === "") {
     showError(
@@ -354,17 +256,21 @@ function validateTambahBidang() {
   return isValid;
 }
 
-// Fungsi validasi input edit bidang
+/*===================================================================================
+                          Validasi Form Edit Bidang
+===================================================================================*/
 function validateEditBidang() {
   let isValid = true;
 
-  // Reset pesan error sebelumnya
   document
     .querySelectorAll(".text-danger")
     .forEach((el) => (el.textContent = ""));
 
+  // validasi input nama bidang
   const namaBidang = document.getElementById("edit_nama_bidang").value.trim();
-  const oldNamaBidang = document.getElementById("edit_bidang_lama").value.trim();
+  const oldNamaBidang = document
+    .getElementById("edit_bidang_lama")
+    .value.trim();
 
   if (namaBidang === "") {
     showError(
@@ -374,13 +280,10 @@ function validateEditBidang() {
     );
     isValid = false;
   } else if (namaBidang !== oldNamaBidang) {
-    // Cek existing nama bidang dengan case-insensitive hanya jika nama bidang diubah
     const namaBidangLower = namaBidang.toLowerCase();
     const existingLower = existingNamaBidang.map((bidang) =>
       bidang.toLowerCase()
     );
-
-    // Cek apakah nama bidang sudah ada
     if (existingLower.includes(namaBidangLower)) {
       Swal.fire({
         icon: "error",
@@ -391,6 +294,7 @@ function validateEditBidang() {
     }
   }
 
+  // validasi input deskripsi bidang
   const deskripsi = document.getElementById("edit_deskripsi").value.trim();
   if (deskripsi === "") {
     showError(
@@ -401,6 +305,7 @@ function validateEditBidang() {
     isValid = false;
   }
 
+  // validasi input kriteria bidang
   const kriteria = document.getElementById("edit_kriteria").value.trim();
   if (kriteria === "") {
     showError(
@@ -411,6 +316,7 @@ function validateEditBidang() {
     isValid = false;
   }
 
+  // validasi input kuota bidang
   const kuota = document.getElementById("edit_kuota").value.trim();
   if (kuota === "") {
     showError("edit_kuota", "edit_kuota_error", "Kuota tidak boleh kosong.");
@@ -424,6 +330,7 @@ function validateEditBidang() {
     isValid = false;
   }
 
+  // validasi input dokumen bidang
   const dokumen = document.getElementById("edit_dokumen").value.trim();
   if (dokumen === "") {
     showError(
@@ -437,16 +344,17 @@ function validateEditBidang() {
   return isValid;
 }
 
-// Fungsi validasi input tambah pembimbing
+/*===================================================================================
+                          Validasi Form Tambah Pembimbing
+===================================================================================*/
 function validateTambahPembimbing() {
   let isValid = true;
 
-  // Reset pesan error sebelumnya
   document
     .querySelectorAll(".text-danger")
     .forEach((el) => (el.textContent = ""));
 
-  // Validasi Nama
+  // validasi input nama pembimbing
   const nama = document.getElementById("nama_pembimbing").value.trim();
   if (nama === "") {
     showError(
@@ -464,6 +372,7 @@ function validateTambahPembimbing() {
     isValid = false;
   }
 
+  // validasi input email pembimbing
   const email = document.getElementById("email").value.trim();
 
   if (email === "") {
@@ -473,15 +382,10 @@ function validateTambahPembimbing() {
     showError("email", "email_error", "Format email tidak valid.");
     isValid = false;
   } else {
-    // Cek existing email dengan case-insensitive
     const emailPembimbing = email.toLowerCase();
-
-    // Menggunakan data yang dikirim dari PHP (existingDataPembimbing)
     const existingLower = existingDataPembimbing.map((pembimbing) =>
       pembimbing.email.toLowerCase()
     );
-
-    // Cek apakah email sudah ada
     if (existingLower.includes(emailPembimbing)) {
       Swal.fire({
         icon: "error",
@@ -492,6 +396,7 @@ function validateTambahPembimbing() {
     }
   }
 
+  // validasi input NIK pembimbing
   const nik = document.getElementById("nik_pembimbing").value.trim();
   if (nik !== "" && !/^[0-9]{16}$/.test(nik)) {
     showError(
@@ -500,26 +405,16 @@ function validateTambahPembimbing() {
       "NIK harus terdiri dari 16 digit angka."
     );
     isValid = false;
-    // showError(
-    //   "nik_pembimbing",
-    //   "nik_pembimbing_error",
-    //   "NIK tidak boleh kosong."
-    // );
-    // isValid = false;
   }
 
+  // validasi input NIP pembimbing
   const nip = document.getElementById("nip").value.trim();
   if (nip !== "" && !/^[0-9]{18}$/.test(nip)) {
     showError("nip", "nip_error", "NIP harus terdiri dari 18 digit angka.");
     isValid = false;
   }
 
-  // const jabatan = document.getElementById("jabatan").value.trim();
-  // if (jabatan === "") {
-  //   showError("jabatan", "jabatan_error", "Jabatan tidak boleh kosong.");
-  //   isValid = false;
-  // }
-
+  // validasi input jenis kelamin pembimbing
   const genderL = document.getElementById("gender_l").checked;
   const genderP = document.getElementById("gender_p").checked;
   if (!genderL && !genderP) {
@@ -527,6 +422,7 @@ function validateTambahPembimbing() {
     isValid = false;
   }
 
+  // validasi input telepon pembimbing
   const telepon = document.getElementById("telepone_pembimbing").value.trim();
   if (telepon !== "" && !/^[0-9]{11,13}$/.test(telepon)) {
     showError(
@@ -537,6 +433,7 @@ function validateTambahPembimbing() {
     isValid = false;
   }
 
+  // validasi input bidang pembimbing
   const bidang = document.getElementById("id_bidang").value;
   if (bidang === "") {
     showError("id_bidang", "bidang_error", "Bidang harus dipilih.");
@@ -546,16 +443,17 @@ function validateTambahPembimbing() {
   return isValid;
 }
 
-// Fungsi validasi input edit pembimbing
+/*===================================================================================
+                          Validasi Form Edit Pembimbing
+===================================================================================*/
 function validateEditPembimbing() {
   let isValid = true;
 
-  // Reset pesan error sebelumnya
   document
     .querySelectorAll(".text-danger")
     .forEach((el) => (el.textContent = ""));
 
-  // Validasi Nama
+  // validasi input nama pembimbing
   const nama = document.getElementById("edit_nama_pembimbing").value.trim();
   if (nama === "") {
     showError(
@@ -573,6 +471,7 @@ function validateEditPembimbing() {
     isValid = false;
   }
 
+  // validasi input email pembimbing
   const email = document.getElementById("edit_email").value.trim();
   const oldEmail = document.getElementById("edit_email_lama").value.trim();
 
@@ -583,7 +482,6 @@ function validateEditPembimbing() {
     showError("edit_email", "edit_email_error", "Format email tidak valid.");
     isValid = false;
   } else if (email.toLowerCase() !== oldEmail.toLowerCase()) {
-    // Hanya cek jika email berubah (case-insensitive)
     const existingEmails = existingDataPembimbing
       .filter((p) => p.email.toLowerCase() !== oldEmail.toLowerCase())
       .map((p) => p.email.toLowerCase());
@@ -594,6 +492,7 @@ function validateEditPembimbing() {
     }
   }
 
+  // validasi input NIK pembimbing
   const nik = document.getElementById("edit_nik_pembimbing").value.trim();
   if (nik !== "" && !/^[0-9]{16}$/.test(nik)) {
     showError(
@@ -604,6 +503,7 @@ function validateEditPembimbing() {
     isValid = false;
   }
 
+  // validasi input NIP pembimbing
   const nip = document.getElementById("edit_nip").value.trim();
   if (nip !== "" && !/^[0-9]{18}$/.test(nip)) {
     showError(
@@ -614,16 +514,7 @@ function validateEditPembimbing() {
     isValid = false;
   }
 
-  // const jabatan = document.getElementById("edit_jabatan").value.trim();
-  // if (jabatan === "") {
-  //   showError(
-  //     "edit_jabatan",
-  //     "edit_jabatan_error",
-  //     "Jabatan tidak boleh kosong."
-  //   );
-  //   isValid = false;
-  // }
-
+  // validasi input jenis kelamin pembimbing
   const telepon = document
     .getElementById("edit_telepone_pembimbing")
     .value.trim();
@@ -636,6 +527,7 @@ function validateEditPembimbing() {
     isValid = false;
   }
 
+  // validasi input bidang pembimbing
   const bidang = document.getElementById("edit_bidang").value;
   if (bidang === "") {
     showError("edit_bidang", "edit_bidang_error", "Bidang harus dipilih.");
@@ -645,21 +537,22 @@ function validateEditPembimbing() {
   return isValid;
 }
 
-// ====================== Fungsi validasi input informasi zoom ======================
+/*===================================================================================
+                          Validasi Form Zoom
+===================================================================================*/
 function validateZoomForm() {
   let isValid = true;
 
-  // Reset pesan error
   document
     .querySelectorAll(".text-danger")
     .forEach((el) => (el.textContent = ""));
 
-  // Ambil nilai
+  // Ambil nilai input dari form Zoom
   const tanggal = document.getElementById("tanggal_pelaksanaan").value.trim();
   const jam = document.getElementById("jam_pelaksanaan").value.trim();
   const linkZoom = document.getElementById("link_zoom").value.trim();
 
-  // Validasi Tanggal
+  // Validasi Tanggal Pelaksanaan
   if (tanggal === "") {
     showError(
       "tanggal_pelaksanaan",
@@ -669,7 +562,7 @@ function validateZoomForm() {
     isValid = false;
   }
 
-  // Validasi Jam
+  // Validasi Jam Pelaksanaan
   if (jam === "") {
     showError(
       "jam_pelaksanaan",

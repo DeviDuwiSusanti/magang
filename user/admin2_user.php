@@ -138,7 +138,11 @@ $result = mysqli_query($conn, $sql);
                     previous: "Sebelumnya",
                     next: "Berikutnya"
                 }
-            }
+            },
+            columnDefs: [{
+                targets: [3, 4, 5, 6, 7],
+                orderable: false
+            }]
         });
     });
 </script>

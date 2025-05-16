@@ -164,7 +164,7 @@ if (!is_array($jenis2_pengajuan)) {
         <div class="table-responsive-sm">
             <div class="datatable_header mb-2"></div>
             <div class="bungkus-2 datatable-scrollable">
-                <table id="myTable" class="table table-striped table-bordered table-hover">
+                <table id="myTable" class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th class="text-center">No</th>
@@ -327,7 +327,11 @@ if (!is_array($jenis2_pengajuan)) {
                     previous: "Sebelumnya",
                     next: "Berikutnya"
                 }
-            }
+            },
+            columnDefs: [{
+                targets: [2],
+                orderable: false
+            }]
         });
         const tambahJenisPengajuan = `
         <button type="button" class="btn btn-primary btn-sm ms-2" 

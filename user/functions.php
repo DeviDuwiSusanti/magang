@@ -904,5 +904,122 @@ function generateId_persetujuan($id_pembimbing) {
 }
 
 
+/* 
+=============================================================================
+                        FUNGSI BAGIAN ADMIN INSTANSI
+=============================================================================
+*/
+// Fungsi untuk mengambil data pengajuan berdasarkan id_instansi
+function getDataPengajuanByInstansi($conn, $id_instansi) {
+    $sql = "SELECT  
+                pu.nama_user, b.nama_bidang, b.kuota_bidang, b.id_bidang, i.nama_panjang,
+                COALESCE(pa.jumlah_pemagang_aktif, 0) AS jumlah_pemagang_aktif, 
+                u.email, p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai,
+                p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, 
+                p.status_active, p.tanggal_zoom, p.pengingat_dokumen, p.dokumen_lengkap
+            FROM tb_pengajuan AS p
+            INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
+            INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
+            INNER JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi
+            INNER JOIN tb_user AS u ON p.id_user = u.id_user
+            LEFT JOIN (
+                SELECT id_bidang, SUM(jumlah_pelamar) AS jumlah_pemagang_aktif
+                FROM tb_pengajuan
+                WHERE status_pengajuan IN ('2', '4')
+                GROUP BY id_bidang
+            ) AS pa ON b.id_bidang = pa.id_bidang
+            WHERE p.id_instansi = ?
+            AND p.status_active = '1'
+            AND p.status_pengajuan IN ('1', '2')
+            ORDER BY p.id_pengajuan ASC";
 
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) return [];
+
+    mysqli_stmt_bind_param($stmt, "s", $id_instansi);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $data = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data[] = $row;
+    }
+
+    mysqli_stmt_close($stmt);
+    return $data;
+}
+
+// Fungsi untuk mengambil data nama pelamar berdasarkan id_instansi
+function getNamaPelamarByPengajuan($conn, $id_instansi) {
+    $sql = "SELECT 
+                p.id_pengajuan, 
+                GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
+            FROM tb_pengajuan AS p
+            JOIN tb_profile_user AS pu ON p.id_pengajuan = pu.id_pengajuan
+            WHERE p.id_instansi = ?
+            GROUP BY p.id_pengajuan
+            ORDER BY p.id_pengajuan DESC";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Error preparing statement: " . mysqli_error($conn));
+    }
+
+    mysqli_stmt_bind_param($stmt, "s", $id_instansi);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $nama_pelamar = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $nama_pelamar[$row['id_pengajuan']] = $row['daftar_nama'];
+    }
+
+    mysqli_stmt_close($stmt);
+
+    return $nama_pelamar;
+}
+
+// Fungsi untuk mengambil data dokumen berdasarkan id_instansi
+function getDokumenByInstansi($conn, $id_instansi) {
+    $sql = "SELECT 
+                d.id_pengajuan, 
+                d.id_user, 
+                GROUP_CONCAT(CONCAT(d.nama_dokumen, '|', d.file_path) SEPARATOR '||') AS daftar_dokumen
+            FROM tb_dokumen AS d
+            JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
+            WHERE p.id_instansi = ?
+              AND d.status_active = '1'
+            GROUP BY d.id_pengajuan, d.id_user";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    if (!$stmt) {
+        die("Error preparing statement: " . mysqli_error($conn));
+    }
+
+    mysqli_stmt_bind_param($stmt, "s", $id_instansi);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $daftar_dokumen = [];
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $id_user = $row['id_user'];
+        $id_pengajuan = $row['id_pengajuan'];
+        $dokumen_raw = explode('||', $row['daftar_dokumen']);
+
+        $dokumen_list = [];
+        foreach ($dokumen_raw as $item) {
+            // Cek apakah format item benar (memiliki separator '|')
+            if (strpos($item, '|') !== false) {
+                list($nama, $path) = explode('|', $item);
+                $dokumen_list[] = ['nama' => $nama, 'path' => $path];
+            }
+        }
+
+        $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
+    }
+
+    mysqli_stmt_close($stmt);
+    return $daftar_dokumen;
+}
 ?>

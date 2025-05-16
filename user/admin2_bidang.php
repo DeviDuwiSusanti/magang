@@ -158,6 +158,7 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
                         <div class="col-md-6 mb-3">
                             <label for="kuota" class="form-label">Kuota</label>
                             <input type="number" class="form-control" data-error-id="kuota_error" id="kuota" name="kuota" placeholder="Masukkan kuota bidang">
+                            <small class="text-muted">*Biarkan kosong jika tidak membuka lowongan</small> <br>
                             <small class="text-danger" id="kuota_error"></small>
                         </div>
                     </div>

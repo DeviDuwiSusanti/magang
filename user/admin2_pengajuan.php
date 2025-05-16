@@ -5,76 +5,16 @@ include "update_status.php";
 
 $id_instansi = $_SESSION['id_instansi'];
 $id_admin = $_SESSION['id_user'];
-$no = 1;
 
-// Query untuk data utama pengajuan
-$sql = "SELECT  
-            pu.nama_user, b.nama_bidang, b.kuota_bidang, b.id_bidang, i.nama_panjang,
-            COALESCE(pa.jumlah_pemagang_aktif, 0) AS jumlah_pemagang_aktif, u.email, p.jenis_pengajuan, p.jumlah_pelamar, p.tanggal_mulai,
-            p.tanggal_selesai, p.id_pengajuan, p.id_user, p.status_pengajuan, p.status_active, p.tanggal_zoom, p.pengingat_dokumen, p.dokumen_lengkap
-        FROM tb_pengajuan AS p
-        INNER JOIN tb_profile_user AS pu ON p.id_user = pu.id_user
-        INNER JOIN tb_bidang AS b ON p.id_bidang = b.id_bidang
-        INNER JOIN tb_instansi AS i ON p.id_instansi = i.id_instansi
-        INNER JOIN tb_user AS u ON p.id_user = u.id_user
-        LEFT JOIN (
-            SELECT id_bidang, SUM(jumlah_pelamar) AS jumlah_pemagang_aktif
-            FROM tb_pengajuan
-            WHERE status_pengajuan = '4'
-            GROUP BY id_bidang
-        ) AS pa ON b.id_bidang = pa.id_bidang
-        WHERE p.id_instansi = '$id_instansi'
-        AND p.status_active = '1'
-        AND p.status_pengajuan IN ('1', '2')
-        ORDER BY p.id_pengajuan ASC
-    ";
-$result = mysqli_query($conn, $sql);
+// Query untuk data pengajuan
+$data_pengajuan = getDataPengajuanByInstansi($conn, $id_instansi);
 
 // Query untuk daftar nama pengaju
-$sql2 = "SELECT 
-            p.id_pengajuan, 
-            GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
-        FROM tb_pengajuan AS p
-        JOIN tb_profile_user AS pu ON p.id_pengajuan = pu.id_pengajuan
-        WHERE p.id_instansi = '$id_instansi'
-        GROUP BY p.id_pengajuan
-        ORDER BY p.id_pengajuan DESC
-    ";
-
-$nama_pengaju = [];
-$result2 = mysqli_query($conn, $sql2);
-while ($row2 = mysqli_fetch_assoc($result2)) {
-    $nama_pengaju[$row2['id_pengajuan']] = $row2['daftar_nama'];
-}
+$nama_pengaju = getNamaPelamarByPengajuan($conn, $id_instansi);
 $json_nama_pengaju = json_encode($nama_pengaju);
 
 // Query untuk daftar dokumen
-$sql3 = "SELECT 
-            d.id_pengajuan, 
-            d.id_user, 
-            GROUP_CONCAT(CONCAT(d.nama_dokumen, '|', d.file_path) SEPARATOR '||') AS daftar_dokumen
-        FROM tb_dokumen AS d
-        JOIN tb_pengajuan AS p ON d.id_pengajuan = p.id_pengajuan
-        WHERE p.id_instansi = '$id_instansi'
-        AND d.status_active = '1'
-        GROUP BY d.id_pengajuan, d.id_user
-    ";
-
-$daftar_dokumen = [];
-$result3 = mysqli_query($conn, $sql3);
-while ($row3 = mysqli_fetch_assoc($result3)) {
-    $id_user = $row3['id_user'];
-    $id_pengajuan = $row3['id_pengajuan'];
-    $dokumen_raw = explode('||', $row3['daftar_dokumen']);
-
-    $dokumen_list = [];
-    foreach ($dokumen_raw as $item) {
-        list($nama, $path) = explode('|', $item);
-        $dokumen_list[] = ['nama' => $nama, 'path' => $path];
-    }
-
-    $daftar_dokumen[$id_user][$id_pengajuan] = $dokumen_list;
-}
+$daftar_dokumen = getDokumenByInstansi($conn, $id_instansi);
 
 // Query untuk verifikasi dokumen   
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokumen'])) {
@@ -82,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
 
     // Query update langsung
     $query = "UPDATE tb_pengajuan SET dokumen_lengkap = 1, change_by = $id_admin WHERE id_pengajuan = $id_pengajuan";
-    // bisa di update juga untuk pengingat_dokumen menjadi = 1
     $result = mysqli_query($conn, $query);
     exit;
 }
@@ -121,7 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                     </thead>
 
                     <tbody>
-                        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                        <?php $no = 1;
+                        foreach ($data_pengajuan as $row): ?>
                             <?php
                             $id_pengajuan = $row['id_pengajuan'];
                             $status_pengajuan = $row['status_pengajuan'];
@@ -129,20 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                             $id_bidang = $row['id_bidang'];
                             $jenis_pengajuan = $row['jenis_pengajuan'];
                             $dokumen_lengkap = $row['dokumen_lengkap'];
-
                             $tanggal_mulai = new DateTime($row['tanggal_mulai']);
                             $tanggal_selesai = new DateTime($row['tanggal_selesai']);
                             $durasi_magang = hitungDurasi($row['tanggal_mulai'], $row['tanggal_selesai']);
-
                             $kuota_bidang = $row['kuota_bidang'];
                             $jumlah_pemagang_aktif = $row['jumlah_pemagang_aktif'];
                             $jumlah_pelamar = $row['jumlah_pelamar'];
                             ?>
+
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($row['nama_user']) ?></td>
                                 <td><?= htmlspecialchars($row['nama_bidang']) ?></td>
-                                <!-- <td><?= htmlspecialchars($row['jenis_pengajuan']) ?></td> -->
+
+                                <!-- Tombol Detail -->
                                 <td class="text-center align-middle">
                                     <button type="button" class="btn btn-sm btn-warning"
                                         data-bs-toggle="modal"
@@ -150,6 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                         <i class="bi bi-info-circle"></i>
                                     </button>
                                 </td>
+
+                                <!-- Jumlah Pelamar -->
                                 <td class="text-center align-middle">
                                     <a href="#" class="show-detail" title="Lihat Detail"
                                         data-detail='<?= isset($nama_pengaju[$id_pengajuan])
@@ -160,26 +102,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                             : 0 ?>
                                     </a>
                                 </td>
-                                <td class="text-center align-middle"><?= $row['tanggal_zoom'] ? htmlspecialchars(formatTanggalLengkapIndonesia($row['tanggal_zoom'])) : '-' ?></td>
+
+                                <!-- Tanggal Zoom -->
+                                <td class="text-center align-middle">
+                                    <?= $row['tanggal_zoom'] ? htmlspecialchars(formatTanggalLengkapIndonesia($row['tanggal_zoom'])) : '-' ?>
+                                </td>
+
+                                <!-- Status Pengajuan -->
                                 <td class="text-center align-middle">
                                     <?php
                                     $status = '';
                                     $badgeClass = '';
-
                                     if ($row['status_pengajuan'] == 1 && is_null($row['tanggal_zoom'])) {
                                         $status = 'Belum Ditanggapi';
-                                        $badgeClass = 'badge bg-secondary'; // kuning
+                                        $badgeClass = 'badge bg-secondary';
                                     } elseif ($row['status_pengajuan'] == 1 && !is_null($row['tanggal_zoom'])) {
                                         $status = 'Wawancara Dikirim';
-                                        $badgeClass = 'badge bg-info'; // biru muda
+                                        $badgeClass = 'badge bg-info';
                                     } elseif ($row['status_pengajuan'] == 2 && $row['tanggal_mulai'] > date('Y-m-d')) {
                                         $status = 'Diterima';
-                                        $badgeClass = 'badge bg-success'; // merah
+                                        $badgeClass = 'badge bg-success';
                                     }
-
                                     echo "<span class='$badgeClass'>$status</span>";
                                     ?>
                                 </td>
+
+                                <!-- Dokumen Lengkap -->
                                 <td class="text-center align-middle" id="dokumen-cell-<?= $id_pengajuan ?>">
                                     <?php if ($dokumen_lengkap == 1): ?>
                                         <span class="badge bg-success">Dokumen Lengkap</span>
@@ -194,8 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                         </div>
                                     <?php endif; ?>
                                 </td>
+
+                                <!-- Aksi -->
                                 <td class="text-center align-middle">
-                                    <!-- Tombol lihat dokumen -->
                                     <a href="#"
                                         class="show-doc btn btn-sm btn-primary me-2"
                                         title="Lihat Dokumen"
@@ -205,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                                     ), ENT_QUOTES, "UTF-8") ?>'>
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
-                                    <!-- Tombol Zoom -->
+
                                     <?php
                                     $today = date('Y-m-d');
                                     $tanggal_zoom = $row['tanggal_zoom'];
@@ -225,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                         title="<?= $title ?>">
                                         <i class="bi bi-zoom-in"></i>
                                     </button>
-                                    <!-- Tombol Proses Pengajuan -->
+
                                     <?php
                                     $bisaProses = (!empty($tanggal_zoom) && $tanggal_zoom !== '0000-00-00' && $tanggal_zoom < $today && $dokumen_lengkap != 1);
                                     $btnClass = $bisaProses ? 'btn-success' : 'btn-secondary';
@@ -258,7 +207,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <!-- nama pengaju -->
                                             <p><strong>Nama Pengaju:</strong> <?= htmlspecialchars($row['nama_user'] ?? "Tidak Diketahui"); ?></p>
                                             <p><strong>Instansi:</strong> <?= htmlspecialchars($row['nama_panjang'] ?? "Tidak Diketahui"); ?></p>
                                             <p><strong>Bidang:</strong> <?= htmlspecialchars($row['nama_bidang'] ?? "Tidak Diketahui"); ?></p>
@@ -272,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                     </div>
                                 </div>
                             </div>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

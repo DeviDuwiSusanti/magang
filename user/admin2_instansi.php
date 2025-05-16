@@ -115,7 +115,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="telepone_instansi" class="form-label">Telepon</label>
-                            <input type="text" class="form-control" data-error-id="telepone_instansi_error" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon" value="<?= $instansi["telepone_instansi"] ?>">
+                            <input type="text" class="form-control" data-error-id="telepone_instansi_error"
+                                id="telepone_instansi" name="telepone_instansi"
+                                placeholder="(021) 12345678 atau 0812-1234-5678"
+                                value="<?= $instansi["telepone_instansi"] ?>">
                             <small class="text-danger" id="telepone_instansi_error"></small>
                         </div>
                     </div>
@@ -180,9 +183,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         }
     }
 
-    // Event listener untuk input telepon
     document.getElementById("telepone_instansi").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, ""); // Hanya izinkan angka
+        // Izinkan angka, spasi, tanda kurung, titik, strip, plus
+        this.value = this.value.replace(/[^0-9\s\$\-\+\.\(\)]/g, "");
 
         const maxLength = 15;
         if (this.value.length > maxLength) {
