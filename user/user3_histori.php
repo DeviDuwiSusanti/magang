@@ -253,8 +253,8 @@ function cetaksertif(url) {
         confirmButtonText: 'Lanjutkan Cetak'
     }).then((result) => {
         if (result.isConfirmed) {
-            const cetakWindow = window.open(url, '_blank', 'width=800,height=600');
-            cetakWindow.focus();
+            // Buka URL di tab baru
+            window.open(url, '_blank');
         }
     });
 }
