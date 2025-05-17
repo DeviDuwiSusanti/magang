@@ -880,7 +880,8 @@ function pembimbing_input_nilai($data) {
     $id_pengajuan = mysqli_real_escape_string($conn, $data['id_pengajuan']);
     $id_user = mysqli_real_escape_string($conn, $data['id_user']);
     $create_by = mysqli_real_escape_string($conn, $data['create_by']);
-
+    $id_bidang = mysqli_real_escape_string($conn, $data['id_bidang']);
+    $bidang_keahlian = mysqli_real_escape_string($conn, $data['bidang_keahlian']);
     $kehadiran = mysqli_real_escape_string($conn, $data['kehadiran']);
     $disiplin = mysqli_real_escape_string($conn, $data['disiplin']);
     $tanggung_jawab = mysqli_real_escape_string($conn, $data['tanggung_jawab']);
@@ -888,14 +889,19 @@ function pembimbing_input_nilai($data) {
     $kerjasama = mysqli_real_escape_string($conn, $data['kerjasama']);
     $teknologi_informasi = mysqli_real_escape_string($conn, $data['teknologi_informasi']);
     $catatan = mysqli_real_escape_string($conn, $data['catatan']);
-
+    
     $id_nilai = generateId_nilai($id_pengajuan);
     $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
+    
+    // Generate URL untuk QR Code
+    $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+    $url_qr = $base_url . "/verify_nilai.php?id=" . $id_nilai;
+
 
     $query = "INSERT INTO tb_nilai (
-        id_nilai, id_pengajuan, id_user, kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi, rata_rata, catatan, create_by
+        id_nilai, id_pengajuan, id_user, id_bidang, bidang_keahlian, kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi, rata_rata, catatan, url_qr, create_by
     ) VALUES (
-        '$id_nilai', '$id_pengajuan', '$id_user', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas', '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$create_by'
+        '$id_nilai', '$id_pengajuan', '$id_user', '$id_bidang', '$bidang_keahlian', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas', '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$url_qr', '$create_by'
     )";
 
     if(mysqli_query($conn, $query)) {
@@ -911,7 +917,8 @@ function pembimbing_update_nilai($data) {
     global $conn;
     
     $id_nilai = mysqli_real_escape_string($conn, $data['id_nilai']);
-    
+    $change_by = mysqli_real_escape_string($conn, $data['change_by']);
+    $bidang_keahlian = mysqli_real_escape_string($conn, $data['bidang_keahlian']);
     $kehadiran = mysqli_real_escape_string($conn, $data['kehadiran']);
     $disiplin = mysqli_real_escape_string($conn, $data['disiplin']);
     $tanggung_jawab = mysqli_real_escape_string($conn, $data['tanggung_jawab']);
@@ -924,6 +931,7 @@ function pembimbing_update_nilai($data) {
     
     // Update data ke database
     $query = "UPDATE tb_nilai SET 
+                bidang_keahlian = '$bidang_keahlian',
                 kehadiran = '$kehadiran', 
                 disiplin = '$disiplin', 
                 tanggung_jawab = '$tanggung_jawab', 
@@ -932,6 +940,7 @@ function pembimbing_update_nilai($data) {
                 teknologi_informasi = '$teknologi_informasi', 
                 rata_rata = '$rata_rata', 
                 catatan = '$catatan'
+                change_by = '$change_by',
                 WHERE id_nilai = '$id_nilai'";
     
     return mysqli_query($conn, $query);
