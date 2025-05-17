@@ -318,9 +318,11 @@ endif;
                     inputAbsensi($_FILES, $id_pengajuan, $id_user);
                 }
                 ?>
-                <?php if (($ketua || $anggota) && $level == "3") :
-                        $tanggal_sekarang = date('Y-m-d');  
-                        $sqlAbsen = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM tb_absensi WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND tanggal_absensi = '$tanggal_sekarang'"));
+                <?php 
+                if (ISSET($status_pengajuan)):
+                    if (($ketua || $anggota) && $level == "3" && $status_pengajuan == '4') :
+                            $tanggal_sekarang = date('Y-m-d');  
+                            $sqlAbsen = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM tb_absensi WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND tanggal_absensi = '$tanggal_sekarang'"));
                     ?>
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="card shadow-sm border-0">
@@ -507,6 +509,7 @@ endif;
                         });
                     </script>
                 <?php endif; ?>
+            <?php endif; ?>
   
             <!-- ============== pembimbing ========== -->
             <?php if ($level == 4) : ?>
