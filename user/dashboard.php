@@ -1,5 +1,6 @@
-<?php include '../layout/sidebarUser.php';
-
+<?php 
+include '../layout/sidebarUser.php';
+include "functions.php";
 
 // ===================== super admin ======================
 $instansi_1 = query("SELECT COUNT(*) AS total FROM tb_instansi WHERE status_active = 1")[0];
@@ -311,36 +312,57 @@ endif;
                     </div>
                 <?php endif; ?>
 
-                <!-- Card 5 -->
-                <?php if (($ketua || $anggota) && $level == "3") : ?>
+                <!-- Card 5 /ABSENSI -->
+                <?php
+                if (ISSET($_POST['input_absen'])){
+                    inputAbsensi($_FILES, $id_pengajuan, $id_user);
+                }
+                ?>
+                <?php if (($ketua || $anggota) && $level == "3") :
+                        $tanggal_sekarang = date('Y-m-d');  
+                        $sqlAbsen = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM tb_absensi WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND tanggal_absensi = '$tanggal_sekarang'"));
+                    ?>
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="card shadow-sm border-0">
                             <div class="card-body">
-                                <h5 class="card-title">Absensi</h5>
+                                <h5 class="card-title">Absensi</h5><p></p>
                                 <!-- Smaller date text -->
                                 <p class="text-muted mb-1" style="font-size: 0.9rem;">
-                                    <?= date('d M Y') ?> <!-- Current date like "12 Mei 2025" -->
+                                    <?= formatTanggalLengkapIndonesia(date('Y-m-d')) ?> <!-- Current date like "12 Mei 2025" -->
                                 </p>
                                 
                                 <!-- Time display section -->
                                 <div class="d-flex justify-content-between">
-                                    <span class="text-muted">waktu datang :</span>
-                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= $absensi_data['check_in'] ?? '-' ?></span>
+                                    <span class="text-muted">Datang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_datang']) ? date('H:i', strtotime($sqlAbsen['jam_datang'])) : '-' ?></span>
                                     <span class="mx-2">|</span>
-                                    <span class="text-muted">waktu pulang :</span>
-                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= $absensi_data['check_out'] ?? '-' ?></span>
+                                    <span class="text-muted">Pulang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_pulang']) ? date('H:i', strtotime($sqlAbsen['jam_pulang'])) : '-' ?></span>
                                 </div>
-                                
+                                <br>
                                 <!-- Upload Photo Button -->
-                               <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
-                                    <i class="fas fa-camera me-2"></i>Upload Foto
-                                </button>
-                                
+                                <?php 
+                                if (!$sqlAbsen): ?>
+                                    <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+                                        <i class="fas fa-camera me-2"></i>Lakukan Absensi
+                                    </button>
+                                <?php else:
+                                    if  ($sqlAbsen['jam_pulang'] == NULL): ?>
+                                        <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+                                            <i class="fas fa-camera me-2"></i>Lakukan Absensi
+                                        </button>
+                                    <?php else:?>
+                                        <button type="button" class="btn btn-primary mt-3 detail">
+                                            <i class="fas fa-camera me-2"></i>Absen Selesai
+                                        </button>
+                                    <?php endif;?>  
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
 
-                <div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
+                    <!-- MODAL ABSENSI  -->
+                    <div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary text-white">
@@ -350,7 +372,7 @@ endif;
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="process_absensi.php" method="post" enctype="multipart/form-data">
+                                    <form id="absensiForm" action="" method="post" enctype="multipart/form-data">
                                         <!-- Tampilan Hari, Tanggal, dan Jam -->
                                         <div class="mb-3">
                                             <label class="form-label fw-bold">Waktu Absensi:</label>
@@ -365,15 +387,22 @@ endif;
                                         <!-- Input Foto -->
                                         <div class="mb-3">
                                             <label for="absensiFoto" class="form-label fw-bold">Pilih Foto:</label>
-                                            <input class="form-control" type="file" id="absensiFoto" name="absensi_foto" accept="image/*" required>
-                                            <small class="text-muted">Format: JPG, PNG (Maks. 5MB)</small>
+                                            <input class="form-control" type="file" id="absensiFoto" name="absensi_foto" accept="image/*" onchange="previewImage(this)">
+                                            <small class="text-muted">Format: JPG, PNG, JPEG (Maks. 1MB)</small>
+                                            <div id="fileError" class="invalid-feedback" style="display: none; color: red;"></div>
                                         </div>
-                                        
+                
+                                        <!-- Image Preview Container -->
+                                        <div class="mb-3 text-center" id="imagePreviewContainer" style="display: none;">
+                                            <img id="imagePreview" src="#" alt="Preview Gambar" class="img-thumbnail mt-2" style="max-height: 200px;">
+                                        </div>  
+
+
                                         <div class="d-grid gap-2">
-                                            <button type="submit" class="btn btn-danger">
-                                                <i class="fas fa-upload me-2"></i>Upload Foto
+                                            <button type="submit" name="input_absen" class="btn btn-primary">
+                                                <i class="fas fa-upload me-2"></i>Kirim
                                             </button>
-                                        </div>
+                                        </div>  
                                     </form>
                                 </div>
                             </div>
@@ -408,6 +437,73 @@ endif;
                         // Hentikan interval saat modal ditutup
                         document.getElementById('uploadFotoModal').addEventListener('hidden.bs.modal', function() {
                             clearInterval(this.waktuInterval);
+                        });
+                    </script>
+
+                    <!-- Preview image -->
+                    <script>
+                        function previewImage(input) {
+                            const previewContainer = document.getElementById('imagePreviewContainer');
+                            const previewImage = document.getElementById('imagePreview');
+                            const file = input.files[0];
+                            
+                            if (file) {
+                                const reader = new FileReader();
+                                
+                                reader.onload = function(e) {
+                                    previewImage.src = e.target.result;
+                                    previewContainer.style.display = 'block';
+                                }
+                                
+                                reader.readAsDataURL(file);
+                            }
+                        }
+
+                        function removePreview() {
+                            const previewContainer = document.getElementById('imagePreviewContainer');
+                            const fileInput = document.getElementById('absensiFoto');
+                            
+                            fileInput.value = ''; // Clear the file input
+                            previewContainer.style.display = 'none'; // Hide the preview container
+                        }
+                    
+                    </script>
+
+                    <!-- Validasi absensi -->
+                    <script>
+                        function showError(input, message) {
+                            const fileError = document.getElementById('fileError');
+                            input.value = '';
+                            input.classList.add('is-invalid');
+                            fileError.textContent = message;
+                            fileError.style.display = 'block';
+                        }
+
+                        // Form submission validation
+                        document.getElementById('absensiForm').addEventListener('submit', function(e) {
+                            const fileInput = document.getElementById('absensiFoto');
+                            const file = fileInput.files[0];
+                            
+                            if (!file) {
+                                e.preventDefault();
+                                showError(fileInput, 'Foto absensi harus diisi');
+                                return;
+                            }
+                            
+                            // Validate file type
+                            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                            if (!validTypes.includes(file.type)) {
+                                e.preventDefault();
+                                showError(fileInput, 'Format file harus JPG, PNG, atau JPEG');
+                                return;
+                            }
+                            
+                            // Validate file size
+                            if (file.size > 1048576) {
+                                e.preventDefault();
+                                showError(fileInput, 'Ukuran file tidak boleh lebih dari 1MB');
+                                return;
+                            }
                         });
                     </script>
                 <?php endif; ?>
