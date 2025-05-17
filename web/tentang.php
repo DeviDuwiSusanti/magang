@@ -32,7 +32,7 @@
                 <div class="contact__content">
                     <div class="contact__data">
                         <span class="section__subtitle">Butuh Bantuan?</span>
-                        <h2 class="section__title">Jangan khawatir!</h2>
+                        <h2 class="section__title">Jangan khawatir Ya!</h2>
                         <p class="contact__description">
                             Jika Kamu menghadapi kendala dalam mencari program magang atau memerlukan panduan lebih lanjut,
                             kami menyediakan informasi lengkap di platform ini untuk membantu Kamu. Eksplor semua fitur dan
