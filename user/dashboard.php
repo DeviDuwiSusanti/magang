@@ -332,9 +332,143 @@ endif;
                                 </div>
                                 
                                 <!-- Upload Photo Button -->
-                               <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
-                                    <i class="fas fa-camera me-2"></i>Upload Foto
-                                </button>
+                              <!-- Upload Photo Button -->
+<button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+    <i class="fas fa-camera me-2"></i>Upload Foto
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="position: static;">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="uploadFotoModalLabel">
+                    <i class="fas fa-cloud-upload-alt me-2"></i>Upload Foto Absensi
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="process_absensi.php" method="post" enctype="multipart/form-data">
+                    <!-- Date & Time Display -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Waktu Absensi:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            <input type="text" class="form-control fw-bold text-primary" id="currentDateTime" name="waktu_absensi" readonly>
+                        </div>
+                    </div>
+                    
+                    <!-- File Input -->
+                    <div class="mb-3">
+                        <label for="absensiFoto" class="form-label fw-bold">Pilih Foto:</label>
+                        <input class="form-control" type="file" id="absensiFoto" name="absensi_foto" accept="image/*" required>
+                        <div class="form-text">Format: JPG, PNG, JPEG (Maks. 5MB)</div>
+                    </div>
+                    
+                    <!-- Image Preview -->
+                    <div class="mb-3 d-none" id="previewContainer">
+                        <label class="form-label fw-bold">Pratinjau:</label>
+                        <img id="imagePreview" src="#" alt="Preview" class="img-thumbnail d-block mx-auto" style="max-height: 200px;">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload me-1"></i> Upload
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Fix for modal vibration */
+    .modal {
+        overflow-y: auto !important;
+        padding-right: 0 !important;
+        pointer-events: none;
+    }
+    
+    .modal-dialog {
+        pointer-events: auto;
+    }
+    
+    .modal-content {
+        border: none;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Fix for backdrop */
+    .modal-backdrop.show {
+        opacity: 0.5 !important;
+    }
+    
+    /* Disable focus styles that may cause jumping */
+    .modal *:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+</style>
+
+<script>
+    // Function to update date and time
+    function updateDateTime() {
+        const now = new Date();
+        const options = { 
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        };
+        document.getElementById('currentDateTime').value = now.toLocaleDateString('id-ID', options);
+    }
+    
+    // Initialize when modal opens
+    document.getElementById('uploadFotoModal').addEventListener('show.bs.modal', function() {
+        updateDateTime();
+        // Update every second
+        this.timeInterval = setInterval(updateDateTime, 1000);
+        
+        // Additional fixes to prevent vibration
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = '0';
+    });
+    
+    // Clear interval when modal closes
+    document.getElementById('uploadFotoModal').addEventListener('hidden.bs.modal', function() {
+        clearInterval(this.timeInterval);
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    });
+    
+    // Image preview functionality
+    document.getElementById('absensiFoto').addEventListener('change', function() {
+        const file = this.files[0];
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                previewContainer.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.classList.add('d-none');
+        }
+    });
+    
+    // Fix for focus issues in modal
+    if (typeof jQuery !== 'undefined') {
+        jQuery(document).off('focusin.modal');
+    }
+</script>
                             </div>
                         </div>
                     </div>
