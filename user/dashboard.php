@@ -297,22 +297,70 @@ endif;
             }
             ?>
 
-            <!-- Card 4 -->
-            <?php if (($ketua || $anggota) && $level == "3") : ?>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Histori</h5>
-                            <h2 class="card-text text-danger"><?= $total_histori ?: 0 ?></h2>
-                            <p class="text-muted">Jumlah Kegiatan</p>
-                            <a href="user3_histori.php" class="btn btn-danger mt-3 detail">View Details</a>
+                <!-- Card 4 -->
+                <?php if (($ketua || $anggota) && $level == "3") : ?>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Histori</h5>
+                                <h2 class="card-text text-danger"><?= $total_histori ?: 0 ?></h2>
+                                <p class="text-muted">Jumlah Kegiatan</p>
+                                <a href="user3_histori.php" class="btn btn-danger mt-3 detail">View Details</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
 
+                <!-- Card 5 -->
+                <?php if (($ketua || $anggota) && $level == "3") : ?>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Absensi</h5>
+                                <!-- Smaller date text -->
+                                <p class="text-muted mb-1" style="font-size: 0.9rem;">
+                                    <?= date('d M Y') ?> <!-- Current date like "12 Mei 2025" -->
+                                </p>
+                                
+                                <!-- Time display section -->
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">waktu datang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= $absensi_data['check_in'] ?? '-' ?></span>
+                                    <span class="mx-2">|</span>
+                                    <span class="text-muted">waktu pulang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= $absensi_data['check_out'] ?? '-' ?></span>
+                                </div>
+                                
+                                <!-- Upload Photo Button -->
+                               <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+                                    <i class="fas fa-camera me-2"></i>Upload Foto
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-
+                    <!-- Modal for Photo Upload (same as before) -->
+                    <div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="uploadFotoModalLabel">Upload Foto Absensi</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="process_absensi.php" method="post" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="absensiFoto" class="form-label">Pilih Foto</label>
+                                            <input class="form-control" type="file" id="absensiFoto" name="absensi_foto" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-danger">Upload</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+  
             <!-- ============== pembimbing ========== -->
             <?php if ($level == 4) : ?>
                 <!-- Card 1 -->
