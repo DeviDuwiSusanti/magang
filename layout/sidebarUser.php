@@ -298,6 +298,13 @@ if (isset($_SESSION['email'])) {
                             <span>Peserta Magang</span>
                         </a>
                     </li>
+                    <!-- Daftar Absesnsi Peserta Magang -->
+                    <li class="sidebar-item">
+                        <a href="pembimbing4_absensi.php" class="sidebar-link">
+                            <i class="bi bi-emoji-frown"></i>
+                            <span>Absesnsi Peserta</span>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
 

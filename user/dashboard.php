@@ -96,13 +96,13 @@ if ($level == 4) :
     $pengajuan_bidang = query("SELECT * FROM tb_pengajuan WHERE id_bidang = '$id_bidang_ini' AND status_pengajuan = '1' AND status_active = '1'");
     $persetujuan_pembimbing = count($pengajuan_bidang);
 
-    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
+    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5') AND status_active = '1'");
     
     $daftar_anggota = []; // array untuk menampung semua peserta magang
 
     if (!empty($pengajuan)) {
         foreach ($pengajuan as $pj) {
-            $id_pengajuan = $pj["id_pengajuan"];
+            $id_pengajuan = $pj["id_pengajuan"];    
             $anggota = query("SELECT * FROM tb_profile_user 
                                 JOIN tb_user ON tb_profile_user.id_user = tb_user.id_user 
                                 WHERE tb_profile_user.id_pengajuan = '$id_pengajuan' 
@@ -116,7 +116,25 @@ if ($level == 4) :
     } else {
         $daftar_peserta_magang = 0;
     }
+
+
+$total_absensi = 0;
+$daftar_absensi = [];
+
+if (!empty($daftar_anggota)) {
+    foreach ($daftar_anggota as $anggota) {
+        $id_peserta = $anggota["id_user"];
+        
+        $absensi_peserta = query("SELECT * FROM tb_absensi WHERE id_user = '$id_peserta'");
+        $jumlah_absensi = count($absensi_peserta);
+
+        $total_absensi += $jumlah_absensi;
+        $daftar_absensi[$id_peserta] = $jumlah_absensi;
+    }
+}
 endif;
+
+
 
 
 ?>
@@ -531,6 +549,16 @@ endif;
                             <h2 class="card-text text-success"><?= $daftar_peserta_magang ?></h2>
                             <p class="text-muted"><?= $daftar_peserta_magang ?> Peserta Magang</p>
                             <a href="pembimbing4.php" class="btn btn-success mt-3 detail">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Absensi Peserta Magang</h5>
+                            <h2 class="card-text text-warning"><?= $total_absensi?></h2>
+                            <p class="text-muted"><?= $total_absensi ?> Absesnsi Peserta Magang</p>
+                            <a href="pembimbing4_absensi.php" class="btn btn-warning mt-3 detail">View Details</a>
                         </div>
                     </div>
                 </div>
