@@ -1,3 +1,30 @@
+<?php 
+  include "../functions.php";
+
+ $id_nilai = $_GET["id"];
+
+// Ambil semua informasi dari tb_nilai dan tb_bidang
+$info = query("SELECT * FROM tb_nilai n 
+                JOIN tb_bidang b ON n.id_bidang = b.id_bidang 
+                WHERE id_nilai = '$id_nilai'")[0];
+
+// Ambil ID pengajuan
+$id_pengajuan = $info["id_pengajuan"];
+
+// Ambil ID instansi dari pengajuan
+$data_instansi = query("SELECT p.id_instansi 
+                        FROM tb_pengajuan p 
+                        JOIN tb_nilai n ON p.id_pengajuan = n.id_pengajuan 
+                        WHERE p.id_pengajuan = '$id_pengajuan'")[0];
+
+$id_instansi = $data_instansi["id_instansi"];
+
+// Ambil data instansi
+$instansi = query("SELECT * FROM tb_instansi 
+                   WHERE id_instansi = '$id_instansi'")[0];
+
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -48,17 +75,15 @@
   <div class="info">
     <p><strong>Jenis:</strong> Surat Keluar</p>
     <p><strong>No. Surat:</strong> 900/1046/438.5.14/2025</p>
-    <p><strong>Tanggal Surat:</strong> 2025-05-15</p>
-    <p><strong>Tujuan:</strong> - </p>
-    <p><strong>Perihal:</strong> SPL 2 APRIL 2025</p>
-    <p><strong>Pembuat:</strong> DINAS KOMUNIKASI DAN INFORMATIKA - SONNY ADITYA DARMA</p>
-    <p><strong>Dibuat Pada:</strong> 2025-05-15 09:07:25</p>
-    <p><strong>Disetujui:</strong> MUHAMMAD WILDAN, SS</p>
-    <p><strong>Disetujui Pada:</strong> 2025-05-15 11:41:17</p>
+    <p><strong>Tanggal Surat:</strong> <?= $info["tanggal_approve"] ?></p>
+    <p><strong>Pembuat:</strong> <?= $instansi["nama_panjang"] ?> - <?= $info["nama_bidang"] ?></p>
+    <p><strong>Dibuat Pada:</strong> <?= $info["created_date"] ?></p>
+    <p><strong>Disetujui:</strong> <?= $info["nama_pejabat"] ?>, <?= $info["pangkat_pejabat"] ?></p>
+    <p><strong>Disetujui Pada:</strong> <?= $info["tanggal_approve"] ?></p>
   </div>
   <div class="buttons">
-    <a href="#" target="_blank">Lihat Berkas</a>
-    <a href="#" download>Unduh Berkas</a>
+    <a href="user3_cetak_sertifikat.php" target="_blank">Lihat Sertifikat</a>
+    <a href="user3_cetak_nilai.php" target="_blank">Lihat Nilai</a>
   </div>
 </div>
 

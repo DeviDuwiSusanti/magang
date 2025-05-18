@@ -895,7 +895,7 @@ function pembimbing_input_nilai($data) {
     
     // Generate URL untuk QR Code
     $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-    $url_qr = $base_url . "/verify_nilai.php?id=" . $id_nilai;
+    $url_qr = $base_url . "/magang/user/view_link_qr.php?id=" . $id_nilai;
 
 
     $query = "INSERT INTO tb_nilai (
