@@ -177,7 +177,7 @@ function register($POST)
 
     if (strlen($pendidikan) === 7) {
         $nim = $POST['nim'];
-        $nisn = NULL; 
+        $nisn = NULL;
     } else {
         $nisn = $POST['nisn'];
         $nim = NULL;
@@ -450,7 +450,7 @@ function edit_pendidikan($POST)
     $alamat_pendidikan = mysqli_real_escape_string($conn, $POST["alamat_pendidikan"]);
 
     if ($fakultas_edit === "") {
-        $fakultas_sql = "NULL"; 
+        $fakultas_sql = "NULL";
     } else {
         $fakultas_sql = "'" . mysqli_real_escape_string($conn, $fakultas_edit) . "'";
     }
@@ -734,6 +734,9 @@ function generate_super_admin($POST)
 // ========================================= ADMIN INSTANSI LEVEL(2) ================================================
 
 // =============================== BIDANG ADMIN INSTANSI =================================
+function to_nullable($value) {
+    return !empty($value) ? "'" . mysqli_real_escape_string($GLOBALS['conn'], $value) . "'" : 'NULL';
+}
 
 function generateIdBidang($conn, $id_instansi)
 {
@@ -743,15 +746,15 @@ function generateIdBidang($conn, $id_instansi)
     $row_bidang = mysqli_fetch_assoc($result_bidang);
 
     if ($row_bidang) {
-        // Ambil 2 digit terakhir dari ID Bidang terakhir
-        $last_counter = intval(substr($row_bidang['id_bidang'], -2));
+        // Ambil 3 digit terakhir dari ID Bidang terakhir
+        $last_counter = intval(substr($row_bidang['id_bidang'], -3));
         $new_counter = $last_counter + 1; // Tambah 1
     } else {
         $new_counter = 1; // Jika belum ada bidang, mulai dari 01
     }
 
-    // Format nomor urut menjadi dua digit (01, 02, 03, ...)
-    $nomorUrut = str_pad($new_counter, 2, "0", STR_PAD_LEFT);
+    // Format nomor urut menjadi dua digit (001, 002, 003, ...)
+    $nomorUrut = str_pad($new_counter, 3, "0", STR_PAD_LEFT);
 
     // Gabungkan ID Instansi dengan nomor urut baru
     return $id_instansi . $nomorUrut;
@@ -777,6 +780,105 @@ function generateIdPembimbing($conn, $id_bidang)
 
     // Gabungkan ID Bidang dengan nomor urut baru
     return $id_bidang . $nomorUrut;
+}
+
+function rekam_ulang_bidang($conn, $postData, $id_user_editor)
+{
+    // Ambil id_bidang_lama dari POST
+    $id_bidang_lama = $postData['id_bidang'] ?? null;
+
+    if (!$id_bidang_lama) {
+        return ['status' => 'error', 'message' => 'ID Bidang tidak ditemukan'];
+    }
+
+    // 1. Ambil data bidang lama untuk ambil instansi
+    $query = "SELECT * FROM tb_bidang WHERE id_bidang = '$id_bidang_lama'";
+    $result = mysqli_query($conn, $query);
+
+    if (!$row = mysqli_fetch_assoc($result)) {
+        return ['status' => 'error', 'message' => 'Bidang tidak ditemukan'];
+    }
+
+    // 2. Dapatkan ID Instansi dari ID Bidang Lama
+    $id_instansi = substr($id_bidang_lama, 0, strlen($id_bidang_lama) - 3); // INST001 → INST
+
+    // 3. Generate ID Bidang Baru
+    $id_bidang_baru = generateIdBidang($conn, $id_instansi);
+
+    // 4. Ambil data dari $_POST untuk di-insert
+    $nama_bidang = mysqli_real_escape_string($conn, $postData['nama_bidang']);
+    $nama_pejabat = to_nullable($postData['edit_nama_pejabat']);
+    $pangkat = to_nullable($postData['edit_pangkat']);
+    $nip = to_nullable($postData['edit_nip']);
+    $deskripsi_bidang = mysqli_real_escape_string($conn, $postData['deskripsi']);
+    $kriteria_bidang = mysqli_real_escape_string($conn, $postData['kriteria']);
+    $kuota_bidang = mysqli_real_escape_string($conn, $postData['kuota']);
+    $id_instansi = mysqli_real_escape_string($conn, $postData['edit_id_instansi']);
+    $dokumen_persyaratan = mysqli_real_escape_string($conn, $postData['dokumen']);
+
+    // 5. Insert Ulang Bidang dengan data dari form + status_active = 1
+    $insert_query = "INSERT INTO tb_bidang (
+                        id_bidang, nama_bidang, pejabat_bidang, pangkat_pejabat, nip_pejabat, deskripsi_bidang, kriteria_bidang,
+                        kuota_bidang, id_instansi, dokumen_persyaratan, change_by, change_date, status_active
+                    ) VALUES (
+                        '$id_bidang_baru',
+                        '$nama_bidang',
+                        $nama_pejabat,
+                        $pangkat,
+                        $nip,
+                        '$deskripsi_bidang',
+                        '$kriteria_bidang',
+                        '$kuota_bidang',
+                        '$id_instansi',
+                        '$dokumen_persyaratan',
+                        '$id_user_editor',
+                        NOW(),
+                        1
+                    )";
+
+    if (!mysqli_query($conn, $insert_query)) {
+        return ['status' => 'error', 'message' => 'Gagal insert bidang baru: ' . mysqli_error($conn)];
+    }
+
+    // 6. Update tb_pengajuan agar menggunakan id_bidang_baru jika masih pakai id_bidang_lama
+    $update_pengajuan = "UPDATE tb_pengajuan SET 
+                        id_bidang = '$id_bidang_baru'
+                      WHERE id_bidang = '$id_bidang_lama'";
+    if (!mysqli_query($conn, $update_pengajuan)) {
+        return ['status' => 'warning', 'message' => 'Bidang baru dibuat, tapi gagal update referensi di tb_pengajuan'];
+    }
+
+    // 7. Ambil semua pembimbing lama
+    $pembimbing_query = "SELECT * FROM tb_profile_user WHERE id_bidang = '$id_bidang_lama'";
+    $pembimbing_result = mysqli_query($conn, $pembimbing_query);
+
+    while ($pembimbing = mysqli_fetch_assoc($pembimbing_result)) {
+        // Generate ID Pembimbing Baru berdasarkan id_bidang_baru
+        $id_pembimbing_baru = generateIdPembimbing($conn, $id_bidang_baru);
+
+        // Update tb_profile_user
+        $update_profile = "UPDATE tb_profile_user SET 
+                            id_user = '$id_pembimbing_baru',
+                            id_bidang = '$id_bidang_baru'
+                            WHERE id_user = '" . $pembimbing['id_user'] . "' AND status_active = 1";
+        if (!mysqli_query($conn, $update_profile)) {
+            return ['status' => 'warning', 'message' => 'Gagal update profile user: ' . mysqli_error($conn)];
+        }
+
+        // Update tb_user
+        $update_user = "UPDATE tb_user SET id_user = '$id_pembimbing_baru' WHERE id_user = '" . $pembimbing['id_user'] . "' AND status_active = 1";
+        if (!mysqli_query($conn, $update_user)) {
+            return ['status' => 'warning', 'message' => 'Gagal update tb_user: ' . mysqli_error($conn)];
+        }
+    }
+
+    // 8. Nonaktifkan bidang lama
+    $deactivate_query = "UPDATE tb_bidang SET status_active = 0, change_by = '$id_user_editor' WHERE id_bidang = '$id_bidang_lama'";
+    if (!mysqli_query($conn, $deactivate_query)) {
+        return ['status' => 'warning', 'message' => 'Bidang baru dibuat, tapi gagal nonaktifkan versi lama'];
+    }
+
+    return ['status' => 'success', 'new_id' => $id_bidang_baru];
 }
 
 function edit_profile($POST_edit)
@@ -841,13 +943,16 @@ function tambah_bidang($POST)
     $id_user = $POST["id_user"];
     $id_instansi = $POST["id_instansi"];
     $nama_bidang = $POST["nama_bidang"];
+    $nama_pejabat = to_nullable($POST["nama_pejabat"]);
+    $pangkat = to_nullable($POST["pangkat"]);
+    $nip_pejabat = to_nullable($POST["nip"]);
     $deskripsi_bidang = $POST["deskripsi"];
     $kriteria = $POST["kriteria"];
     $kuota = $POST["kuota"];
     $dokumen_prasyarat = $POST["dokumen"];
 
-    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_persyaratan, create_by)
-            VALUES ('$id_bidang','$nama_bidang', '$deskripsi_bidang', '$kriteria', '$kuota', '$id_instansi', '$dokumen_prasyarat', '$id_user')";
+    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, pejabat_bidang, pangkat_pejabat, nip_pejabat, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_persyaratan, create_by)
+            VALUES ('$id_bidang','$nama_bidang', $nama_pejabat, $pangkat, $nip_pejabat, '$deskripsi_bidang', '$kriteria', '$kuota', '$id_instansi', '$dokumen_prasyarat', '$id_user')";
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
 }
