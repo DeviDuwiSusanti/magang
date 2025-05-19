@@ -930,6 +930,7 @@ function getDataPengajuanByInstansi($conn, $id_instansi) {
             ) AS pa ON b.id_bidang = pa.id_bidang
             WHERE p.id_instansi = ?
             AND p.status_active = '1'
+            AND b.status_active = '1'
             AND p.status_pengajuan IN ('1', '2')
             ORDER BY p.id_pengajuan ASC";
 

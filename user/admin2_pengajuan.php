@@ -116,9 +116,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                     if ($row['status_pengajuan'] == 1 && is_null($row['tanggal_zoom'])) {
                                         $status = 'Belum Ditanggapi';
                                         $badgeClass = 'badge bg-secondary';
-                                    } elseif ($row['status_pengajuan'] == 1 && !is_null($row['tanggal_zoom'])) {
+                                    } elseif ($row['status_pengajuan'] == 1 && !is_null($row['tanggal_zoom']) && $row['tanggal_zoom'] > date('Y-m-d')) {
                                         $status = 'Wawancara Dikirim';
                                         $badgeClass = 'badge bg-info';
+                                    } elseif ($row['status_pengajuan'] == 1 && $row['tanggal_zoom'] < date('Y-m-d')) {
+                                        $status = 'Menunggu Keputusan';
+                                        $badgeClass = 'badge bg-warning';
                                     } elseif ($row['status_pengajuan'] == 2 && $row['tanggal_mulai'] > date('Y-m-d')) {
                                         $status = 'Diterima';
                                         $badgeClass = 'badge bg-success';
@@ -819,12 +822,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
 
                 if (pdfDocument.numPages > 1) {
                     const prevBtn = document.createElement('button');
-                    prevBtn.className = 'btn btn-sm btn-outline-primary';
+                    prevBtn.className = 'btn btn-sm btn-primary';
                     prevBtn.textContent = 'Halaman Sebelumnya';
                     prevBtn.disabled = true;
 
                     const nextBtn = document.createElement('button');
-                    nextBtn.className = 'btn btn-sm btn-outline-primary';
+                    nextBtn.className = 'btn btn-sm btn-primary';
                     nextBtn.textContent = 'Halaman Berikutnya';
 
                     let currentPage = 1;
