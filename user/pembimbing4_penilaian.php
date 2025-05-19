@@ -67,6 +67,10 @@ if (isset($_GET['id_nilai'])) {
                         <td><strong><?= number_format($nilai['rata_rata'], 2) ?></strong></td>
                         <td><strong><?= get_kategori_nilai($nilai['rata_rata']) ?></strong></td>
                     </tr>
+                    <tr class="table-primary">
+                        <td><strong>Bidang Keahlian</strong></td>
+                        <td colspan="2" class="text-center"><strong><?= $nilai["bidang_keahlian"] ?></strong></td>
+                    </tr>
                 </table>
                 
                 <div class="mb-3">
