@@ -3,7 +3,7 @@ include '../layout/sidebarUser.php';
 include "functions.php";
 
 // Get all pengajuan being supervised by this pembimbing
-$pengajuan_list = query("SELECT id_pengajuan, id_user, status_pengajuan, tanggal_selesai, tanggal_extend 
+$pengajuan_list = query("SELECT id_pengajuan, id_instansi, id_bidang, id_user, status_pengajuan, tanggal_selesai, tanggal_extend 
                          FROM tb_pengajuan 
                          WHERE id_pembimbing = '$id_user' 
                          AND (status_pengajuan = '5' OR status_pengajuan = '2' OR status_pengajuan = '4')");
@@ -273,6 +273,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="hidden" id="nilai_id_user" name="id_user">
             <input type="hidden" name="upload" value="1">
             <input type="hidden" name="create_by" value="<?= $id_user ?>">
+            <input type="hidden" name="id_bidang" id="id_bidang" value="<?= $pengajuan_list[0]["id_bidang"] ?>">
+            <input type="hidden" name="id_instansi" id="id_instansi" value=" <?= $pengajuan_list[0]["id_instansi"] ?>">
 
             <div class="modal-content">
                 <div class="modal-header">
@@ -313,7 +315,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <input type="number" class="form-control" name="teknologi_informasi" min="0" max="100" required>
                         </div>
                     </div>
-
+                    <div class="row">
+                        <div class="col-3"><label class="form-label">Bidang Keahlian</label></div>
+                        <div class="col-7"><input type="text" name="bidang_keahlian" id="bidang_keahlian" class="form-control" required></div>
+                    </div><br><br>
                     <div class="mb-3">
                         <label class="form-label">Catatan/Komentar</label>
                         <textarea class="form-control" name="catatan" rows="3"></textarea>
@@ -353,6 +358,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form id="editNilaiForm" method="POST">
             <input type="hidden" id="edit_id_nilai" name="id_nilai">
             <input type="hidden" name="update" value="1">
+            <input type="hidden" name="change_by" id="change_by" value="<?= $id_user ?>">
 
             <div class="modal-content">
                 <div class="modal-header">

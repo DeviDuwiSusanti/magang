@@ -4,18 +4,16 @@ include "../layout/sidebarUser.php";
 $id_instansi_ini = $_SESSION["id_instansi"];
 
 if(isset($_POST["submit_approve"])) {
-    $result = approve_nilai($_POST) ;
-    if($result === 404) { ?>
-        <script>alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tanda Tangan Tidak Boleh Kosong", "admin2_tanda_tangan.php")</script>
-    <?php } else if ($result > 0) { ?>
+    $result = approve_nilai($_POST);
+    if($result > 0) { ?>
         <script>
-            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilian", "admin2_tanda_tangan.php")
+            alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Admin Berhasil Menyetujui Penilaian", "admin2_tanda_tangan.php")
         </script>
     <?php } else { ?>
         <script>
             alert_berhasil_gagal_super_admin("error", "Gagal !!", "Admin Gagal Menyetujui Penilaian", "admin2_tanda_tangan.php")
         </script>
-<?php }
+    <?php }
 }
 
 // Get all nilai that need approval (where tanda_tangan_admin is null)
@@ -25,23 +23,26 @@ $nilai_need_approval = query("SELECT n.*, p.id_instansi, pu.nama_user, pu.gambar
                             FROM tb_nilai n
                             JOIN tb_profile_user pu ON n.id_user = pu.id_user
                             JOIN tb_pengajuan p ON n.id_pengajuan = p.id_pengajuan
-                            WHERE n.tanda_tangan_admin IS NULL AND p.id_instansi = '$id_instansi_ini'");
+                            WHERE n.tanggal_approve IS NULL AND p.id_instansi = '$id_instansi_ini'");
 
 $no = 1;
 ?>
 
 <style>
-    .signature-pad {
-        background-color: #f8f9fa;
-        width: 100%;
-    }
-
-    .signature-pad canvas {
-        width: 100%;
-        height: 200px;
-        touch-action: none;
-    }
+.qr-wrapper {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #fff;
+}
 </style>
+
+
 
 <div class="main-content p-3">
     <div class="container-fluid px-4">
@@ -69,7 +70,7 @@ $no = 1;
                                 <th>Peserta</th>
                                 <th>Rata-rata Nilai</th>
                                 <th>Detail Nilai</th>
-                                <th>Tanda Tangan</th>
+                                <th>QR Code Verifikasi</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -96,21 +97,25 @@ $no = 1;
                                         </button>
                                     </td>
                                     <td>
-                                        <div id="signature-pad-<?= $nilai['id_nilai'] ?>" class="signature-pad border rounded">
-                                            <canvas width="100%" height="100"></canvas>
-                                        </div>
-                                        <div class="mt-2">
-                                            <button type="button" class="btn btn-sm btn-danger clearSignature" data-id="<?= $nilai['id_nilai'] ?>">
-                                                Hapus Tanda Tangan
-                                            </button>
+                                        <div class="text-center">
+                                            <div class="qr-wrapper mx-auto mb-1" id="qr-container-<?= $nilai['id_nilai'] ?>"></div>
+                                            <small class="text-muted d-block"><a href="<?= $nilai["url_qr"] ?>"><i class="bi bi-eye"></i></a></small>
+                                            <div class="mt-2">
+                                                <button type="button" class="btn btn-sm btn-primary downloadQR" 
+                                                    data-id="<?= $nilai['id_nilai'] ?>"
+                                                    data-url="<?= $nilai['url_qr'] ?>">
+                                                    <i class="bi bi-download"></i> Download
+                                                </button>
+                                            </div>
                                         </div>
                                     </td>
+
+
                                     <td>
                                         <form method="POST">
                                             <input type="hidden" name="id_admin_approve" value="<?= $id_user ?>">
                                             <input type="hidden" name="id_nilai" value="<?= $nilai['id_nilai'] ?>">
-                                            <input type="hidden" name="tanda_tangan_admin" id="signature-data-<?= $nilai['id_nilai'] ?>">
-                                            <button type="submit" name="submit_approve" class="btn btn-success btn-sm" onclick="return handleSubmit(<?= $nilai['id_nilai'] ?>)">
+                                            <button type="submit" name="submit_approve" class="btn btn-success btn-sm">
                                                 <i class="bi bi-check-circle"></i> Setujui
                                             </button>
                                         </form>
@@ -151,11 +156,12 @@ $no = 1;
     </div>
 </div>
 
-<!-- Script untuk Signature Pad -->
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<!-- QR Code Library -->
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#table_nilai').DataTable({
             paging: true,
             searching: true,
@@ -175,37 +181,8 @@ $no = 1;
             }
         });
 
-        // Initialize signature pads for each row
-        let signaturePads = {};
-        $('.signature-pad').each(function() {
-            const id = $(this).attr('id').split('-')[2];
-            const canvas = this.querySelector('canvas');
-            signaturePads[id] = new SignaturePad(canvas, {
-                backgroundColor: 'rgb(248, 249, 250)',
-                penColor: 'rgb(0, 0, 0)'
-            });
-
-            // Handle resize
-            function resizeCanvas() {
-                const ratio = Math.max(window.devicePixelRatio || 1, 1);
-                canvas.width = canvas.offsetWidth * ratio;
-                canvas.height = canvas.offsetHeight * ratio;
-                canvas.getContext("2d").scale(ratio, ratio);
-                signaturePads[id].clear();
-            }
-
-            window.addEventListener("resize", resizeCanvas);
-            resizeCanvas();
-        });
-
-        // Clear signature buttons
-        $('.clearSignature').click(function() {
-            const id = $(this).data('id');
-            signaturePads[id].clear();
-        });
-
         // View Nilai Modal
-        $('.viewNilai').click(function() {
+        $('.viewNilai').click(function () {
             const idNilai = $(this).data('id_nilai');
             $.ajax({
                 url: 'pembimbing4_penilaian.php',
@@ -213,20 +190,45 @@ $no = 1;
                 data: {
                     id_nilai: idNilai
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#viewNilaiContent').html(response);
                 }
             });
         });
-
-        window.handleSubmit = function(id) {
-            const pad = signaturePads[id];
-            if (pad.isEmpty()) {
-                alert("Tanda tangan tidak boleh kosong!");
-                return false;
-            }
-            document.getElementById("signature-data-" + id).value = pad.toDataURL();
-            return true;
-        }
     });
+
+    // Generate QR Codes and enable download after all elements are loaded
+    window.onload = function () {
+        document.querySelectorAll('.downloadQR').forEach(function (button) {
+            const idNilai = button.dataset.id;
+            const url = button.dataset.url;
+
+            if (url && idNilai) {
+                const container = document.getElementById("qr-container-" + idNilai);
+                if (container) {
+                    container.innerHTML = '';
+                    new QRCode(container, {
+                    text: url,
+                    width: 160,
+                    height: 160,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                }
+            }
+
+            // Download QR Code
+            button.addEventListener('click', function () {
+                const qrElement = document.getElementById("qr-container-" + idNilai);
+                html2canvas(qrElement).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'qr-verifikasi-' + idNilai + '.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            });
+        });
+    };
 </script>

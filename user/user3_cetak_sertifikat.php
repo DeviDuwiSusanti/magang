@@ -1,5 +1,6 @@
 <?php 
 include "../functions.php";
+include "functions.php";
 
 $id_user_ini = $_GET["id_user_ini"];
 $id_pengajuan = $_GET["id_pengajuan"];
@@ -85,13 +86,15 @@ function formatTanggal($date) {
     return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
 }
 
-function formatText($string) {
-    return ucwords(strtolower($string));
-}
-
 $tanggal_mulai = formatTanggal($sertifikat["tanggal_mulai"]);
 $tanggal_selesai = formatTanggal($sertifikat["tanggal_selesai"]);
 $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
+
+$nomor_sertifikat = $sertifikat["nomor_nilai"];
+$kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -218,19 +221,19 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
     <h1>SERTIFIKAT</h1>
     <h3>HASIL PRAKTIK MAGANG</h3>
-    <p class="center">Nomor: 500.5.7.10/239/438.5.14/2025</p>
+    <p class="center">Nomor: <?= $kode_surat ?></p>
 
     <p>Diberikan kepada:</p>
-    <h2><?= formatText($sertifikat["nama_user"]) ?></h2>
+    <h2><?= ($sertifikat["nama_user"]) ?></h2>
 
     <table class="no-border">
       <tr>
         <td width="30%">Tempat, Tanggal Lahir</td>
-        <td><?= formatText($sertifikat["tempat_lahir"]) ?>, <?= $tanggal_lahir ?></td>
+        <td><?= ($sertifikat["tempat_lahir"]) ?>, <?= $tanggal_lahir ?></td>
       </tr>
       <tr>
         <td><?= empty($pendidikan["fakultas"]) ? "Sekolah" : "Perguruan Tinggi" ?></td>
-        <td><?= formatText($pendidikan["nama_pendidikan"]) ?></td>
+        <td><?= ($pendidikan["nama_pendidikan"]) ?></td>
       </tr>
       <tr>
         <td><?= empty($pendidikan["fakultas"]) ? "Nomor Induk Sekolah Nasional" : "Nomor Induk Mahasiswa" ?></td>
@@ -238,11 +241,11 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       </tr>
       <tr>
         <td>Bidang Keahlian</td>
-        <td><?= formatText($sertifikat["nama_bidang"]) ?></td>
+        <td><?= ($sertifikat["nama_bidang"]) ?></td>
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= formatText($sertifikat["jenis_pengajuan"]) ?> pada <?= formatText($sertifikat["nama_panjang"]) ?> di Bidang <?= formatText($sertifikat["nama_bidang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
+    <p>Telah melaksanakan <?= ($sertifikat["jenis_pengajuan"]) ?> pada <?= ($sertifikat["nama_panjang"]) ?> di Bidang <?= ($sertifikat["nama_bidang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
     <?php if($sertifikat["tanggal_extend"] != "") {  ?>
     , Dan Perpanjangan Waktu Hingga <?= formatTanggal($sertifikat["tanggal_extend"]) ?>
     <?php } else { ?>
@@ -267,13 +270,14 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     </div>
 
     <div class="signature">
-      <p>Pembimbing Magang</p>
-      <p><?= formatText($sertifikat["nama_panjang"]) ?></p>
-      <?php if (!empty($sertifikat["tanda_tangan_admin"])) : ?>
-        <img src="<?= $sertifikat['tanda_tangan_admin'] ?>" alt="TTD">
-      <?php endif; ?>
-      <p><strong><?= !empty($admin_instansi) ? formatText($admin_instansi["nama_user"]) : '-' ?></strong></p>
-      <p>NIP. <?= !empty($admin_instansi) ? $admin_instansi["nip"] : '-' ?></p>
+      <p>Kepala <?= $sertifikat["nama_bidang"] ?></p>
+      <p><?= $sertifikat["nama_panjang"] ?></p>
+      <?php if (!empty($sertifikat["url_qr"])) : ?>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=150x150" alt="QR Code">
+<?php endif; ?>
+
+      <p><strong><?= $sertifikat["nama_pejabat"] ?></strong></p>
+      <p>NIP. <?= $sertifikat["nip_pejabat"] ?></p>
     </div>
   </div>
 

@@ -1,5 +1,6 @@
-<?php include '../layout/sidebarUser.php';
-
+<?php 
+include '../layout/sidebarUser.php';
+include "functions.php";
 
 // ===================== super admin ======================
 $instansi_1 = query("SELECT COUNT(*) AS total FROM tb_instansi WHERE status_active = 1")[0];
@@ -95,13 +96,13 @@ if ($level == 4) :
     $pengajuan_bidang = query("SELECT * FROM tb_pengajuan WHERE id_bidang = '$id_bidang_ini' AND status_pengajuan = '1' AND status_active = '1'");
     $persetujuan_pembimbing = count($pengajuan_bidang);
 
-    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5')");
+    $pengajuan = query("SELECT id_pengajuan FROM tb_pengajuan WHERE id_pembimbing = '$id_user' AND (status_pengajuan = '2' OR status_pengajuan = '4' OR status_pengajuan = '5') AND status_active = '1'");
     
     $daftar_anggota = []; // array untuk menampung semua peserta magang
 
     if (!empty($pengajuan)) {
         foreach ($pengajuan as $pj) {
-            $id_pengajuan = $pj["id_pengajuan"];
+            $id_pengajuan = $pj["id_pengajuan"];    
             $anggota = query("SELECT * FROM tb_profile_user 
                                 JOIN tb_user ON tb_profile_user.id_user = tb_user.id_user 
                                 WHERE tb_profile_user.id_pengajuan = '$id_pengajuan' 
@@ -115,7 +116,25 @@ if ($level == 4) :
     } else {
         $daftar_peserta_magang = 0;
     }
+
+
+$total_absensi = 0;
+$daftar_absensi = [];
+
+if (!empty($daftar_anggota)) {
+    foreach ($daftar_anggota as $anggota) {
+        $id_peserta = $anggota["id_user"];
+        
+        $absensi_peserta = query("SELECT * FROM tb_absensi WHERE id_user = '$id_peserta'");
+        $jumlah_absensi = count($absensi_peserta);
+
+        $total_absensi += $jumlah_absensi;
+        $daftar_absensi[$id_peserta] = $jumlah_absensi;
+    }
+}
 endif;
+
+
 
 
 ?>
@@ -297,22 +316,219 @@ endif;
             }
             ?>
 
-            <!-- Card 4 -->
-            <?php if (($ketua || $anggota) && $level == "3") : ?>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Histori</h5>
-                            <h2 class="card-text text-danger"><?= $total_histori ?: 0 ?></h2>
-                            <p class="text-muted">Jumlah Kegiatan</p>
-                            <a href="user3_histori.php" class="btn btn-danger mt-3 detail">View Details</a>
+                <!-- Card 4 -->
+                <?php if (($ketua || $anggota) && $level == "3") : ?>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Histori</h5>
+                                <h2 class="card-text text-danger"><?= $total_histori ?: 0 ?></h2>
+                                <p class="text-muted">Jumlah Kegiatan</p>
+                                <a href="user3_histori.php" class="btn btn-danger mt-3 detail">View Details</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endif; ?>
+
+                <!-- Card 5 /ABSENSI -->
+                <?php
+                if (ISSET($_POST['input_absen'])){
+                    inputAbsensi($_FILES, $id_pengajuan, $id_user);
+                }
+                ?>
+                <?php 
+                if (ISSET($status_pengajuan)):
+                    if (($ketua || $anggota) && $level == "3" && $status_pengajuan == '4') :
+                            $tanggal_sekarang = date('Y-m-d');  
+                            $sqlAbsen = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM tb_absensi WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND tanggal_absensi = '$tanggal_sekarang'"));
+                    ?>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Absensi</h5><p></p>
+                                <!-- Smaller date text -->
+                                <p class="text-muted mb-1" style="font-size: 0.9rem;">
+                                    <?= formatTanggalLengkapIndonesia(date('Y-m-d')) ?> <!-- Current date like "12 Mei 2025" -->
+                                </p>
+                                
+                                <!-- Time display section -->
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Datang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_datang']) ? date('H:i', strtotime($sqlAbsen['jam_datang'])) : '-' ?></span>
+                                    <span class="mx-2">|</span>
+                                    <span class="text-muted">Pulang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_pulang']) ? date('H:i', strtotime($sqlAbsen['jam_pulang'])) : '-' ?></span>
+                                </div>
+                                <br>
+                                <!-- Upload Photo Button -->
+                                <?php 
+                                if (!$sqlAbsen): ?>
+                                    <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+                                        <i class="fas fa-camera me-2"></i>Lakukan Absensi
+                                    </button>
+                                <?php else:
+                                    if  ($sqlAbsen['jam_pulang'] == NULL): ?>
+                                        <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+                                            <i class="fas fa-camera me-2"></i>Lakukan Absensi
+                                        </button>
+                                    <?php else:?>
+                                        <button type="button" class="btn btn-primary mt-3 detail">
+                                            <i class="fas fa-camera me-2"></i>Absen Selesai
+                                        </button>
+                                    <?php endif;?>  
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MODAL ABSENSI  -->
+                    <div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title" id="uploadFotoModalLabel">
+                                        <i class="fas fa-camera me-2"></i>Upload Foto Absensi
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="absensiForm" action="" method="post" enctype="multipart/form-data">
+                                        <!-- Tampilan Hari, Tanggal, dan Jam -->
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Waktu Absensi:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-primary text-white">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </span>
+                                                <input type="text" class="form-control fw-bold" id="waktuAbsensi" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Input Foto -->
+                                        <div class="mb-3">
+                                            <label for="absensiFoto" class="form-label fw-bold">Pilih Foto:</label>
+                                            <input class="form-control" type="file" id="absensiFoto" name="absensi_foto" accept="image/*" onchange="previewImage(this)">
+                                            <small class="text-muted">Format: JPG, PNG, JPEG (Maks. 1MB)</small>
+                                            <div id="fileError" class="invalid-feedback" style="display: none; color: red;"></div>
+                                        </div>
+                
+                                        <!-- Image Preview Container -->
+                                        <div class="mb-3 text-center" id="imagePreviewContainer" style="display: none;">
+                                            <img id="imagePreview" src="#" alt="Preview Gambar" class="img-thumbnail mt-2" style="max-height: 200px;">
+                                        </div>  
+
+
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" name="input_absen" class="btn btn-primary">
+                                                <i class="fas fa-upload me-2"></i>Kirim
+                                            </button>
+                                        </div>  
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Fungsi untuk menampilkan waktu dalam format Indonesia
+                        function updateWaktuAbsensi() {
+                            const sekarang = new Date();
+                            const options = {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: false
+                            };
+                            
+                            document.getElementById('waktuAbsensi').value = sekarang.toLocaleDateString('id-ID', options);
+                        }
+
+                        // Update waktu saat modal dibuka
+                        document.getElementById('uploadFotoModal').addEventListener('show.bs.modal', function() {
+                            updateWaktuAbsensi();
+                            // Update setiap detik
+                            this.waktuInterval = setInterval(updateWaktuAbsensi, 1000);
+                        });
+
+                        // Hentikan interval saat modal ditutup
+                        document.getElementById('uploadFotoModal').addEventListener('hidden.bs.modal', function() {
+                            clearInterval(this.waktuInterval);
+                        });
+                    </script>
+
+                    <!-- Preview image -->
+                    <script>
+                        function previewImage(input) {
+                            const previewContainer = document.getElementById('imagePreviewContainer');
+                            const previewImage = document.getElementById('imagePreview');
+                            const file = input.files[0];
+                            
+                            if (file) {
+                                const reader = new FileReader();
+                                
+                                reader.onload = function(e) {
+                                    previewImage.src = e.target.result;
+                                    previewContainer.style.display = 'block';
+                                }
+                                
+                                reader.readAsDataURL(file);
+                            }
+                        }
+
+                        function removePreview() {
+                            const previewContainer = document.getElementById('imagePreviewContainer');
+                            const fileInput = document.getElementById('absensiFoto');
+                            
+                            fileInput.value = ''; // Clear the file input
+                            previewContainer.style.display = 'none'; // Hide the preview container
+                        }
+                    
+                    </script>
+
+                    <!-- Validasi absensi -->
+                    <script>
+                        function showError(input, message) {
+                            const fileError = document.getElementById('fileError');
+                            input.value = '';
+                            input.classList.add('is-invalid');
+                            fileError.textContent = message;
+                            fileError.style.display = 'block';
+                        }
+
+                        // Form submission validation
+                        document.getElementById('absensiForm').addEventListener('submit', function(e) {
+                            const fileInput = document.getElementById('absensiFoto');
+                            const file = fileInput.files[0];
+                            
+                            if (!file) {
+                                e.preventDefault();
+                                showError(fileInput, 'Foto absensi harus diisi');
+                                return;
+                            }
+                            
+                            // Validate file type
+                            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+                            if (!validTypes.includes(file.type)) {
+                                e.preventDefault();
+                                showError(fileInput, 'Format file harus JPG, PNG, atau JPEG');
+                                return;
+                            }
+                            
+                            // Validate file size
+                            if (file.size > 1048576) {
+                                e.preventDefault();
+                                showError(fileInput, 'Ukuran file tidak boleh lebih dari 1MB');
+                                return;
+                            }
+                        });
+                    </script>
+                <?php endif; ?>
             <?php endif; ?>
-
-
-
+  
             <!-- ============== pembimbing ========== -->
             <?php if ($level == 4) : ?>
                 <!-- Card 1 -->
@@ -333,6 +549,16 @@ endif;
                             <h2 class="card-text text-success"><?= $daftar_peserta_magang ?></h2>
                             <p class="text-muted"><?= $daftar_peserta_magang ?> Peserta Magang</p>
                             <a href="pembimbing4.php" class="btn btn-success mt-3 detail">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="card-title">Absensi Peserta Magang</h5>
+                            <h2 class="card-text text-warning"><?= $total_absensi?></h2>
+                            <p class="text-muted"><?= $total_absensi ?> Absesnsi Peserta Magang</p>
+                            <a href="pembimbing4_absensi.php" class="btn btn-warning mt-3 detail">View Details</a>
                         </div>
                     </div>
                 </div>

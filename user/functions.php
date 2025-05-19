@@ -319,9 +319,9 @@ function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
      // Buat folder user jika belum ada
      $user_folder = '../assets/img/logbook/' . $id_user . '/';
      if (!file_exists($user_folder)) {
-         mkdir($user_folder, 0777, true);
-     }
-     
+        mkdir($user_folder, 0777, true);
+    }
+
      // Upload foto ke folder user
     $uploadedFoto = uploadFoto($FILES['gambar_kegiatan'], $user_folder);
     $target_file = $uploadedFoto['path'];
@@ -695,7 +695,68 @@ function hapusAnggota($id_user, $id_pengajuan){
     }   
 }
 
+// =============== ABSENSI ======================
+function generateIdAbsensi($conn, $id_user) {
+    // Ambil counter terbesar untuk id_user ini
+    $sql_max = "SELECT MAX(CAST(SUBSTRING(id_absensi, -3) AS UNSIGNED)) as max_counter 
+                FROM tb_absensi 
+                WHERE id_user = '$id_user'";
+    $result = mysqli_query($conn, $sql_max);
+    
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+    
+    $row = mysqli_fetch_assoc($result);
+    
+    // Jika belum ada data, mulai dari 1, else tambah 1 ke counter terbesar
+    $counter = ($row['max_counter'] === null) ? 1 : $row['max_counter'] + 1;
+    $counter = str_pad($counter, 3, '0', STR_PAD_LEFT); // Format 3 digit dengan leading zero
 
+    // Gabungkan id_user (14 digit) dengan counter (3 digit)
+    $id_absensi = $id_user . $counter;
+
+    return $id_absensi;
+}
+
+function inputAbsensi($FILES, $id_pengajuan, $id_user) {
+    global $conn;
+
+    $tanggal_sekarang = date('Y-m-d'); 
+    $jam_sekarang = date('H:i:s'); 
+
+    // Buat folder user jika belum ada
+    $absen_folder = '../assets/img/absensi/' . $id_pengajuan . '/';
+    if (!file_exists($absen_folder)) {
+        mkdir($absen_folder, 0777, true);
+    }
+
+     // Upload foto ke folder user
+    $uploadedFoto = uploadFoto($FILES['absensi_foto'], $absen_folder);
+    $target_file = $uploadedFoto['path'];
+
+    $cek_absen = mysqli_query($conn, "SELECT id_user, id_pengajuan, tanggal_absensi FROM tb_absensi WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' AND tanggal_absensi = '$tanggal_sekarang'");
+    $absen = mysqli_fetch_assoc($cek_absen);
+
+    if ($absen == NULL){
+        // generate id_absensi
+        $id_absensi = generateIdAbsensi($conn, $id_user);
+        $absen_masuk = mysqli_query($conn, "INSERT INTO tb_absensi (id_absensi, id_user, id_pengajuan, tanggal_absensi, foto_datang, jam_datang, create_by, create_date)
+            VALUES ('$id_absensi', '$id_user', '$id_pengajuan', '$tanggal_sekarang', '$target_file', '$jam_sekarang', '$id_user', NOW())");
+        if ($absen_masuk){
+            showAlert('Berhasil!', 'Berhasil Absen Masuk Untuk Hari Ini, Jangan Lupa Untuk Absen Pulang Yaa', 'success', "dashboard.php");
+            exit();
+        }
+    } else{
+        $sql_id_absensi = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id_absensi FROM tb_absensi WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' AND tanggal_absensi = '$tanggal_sekarang'"));
+        $id_absensi = $sql_id_absensi['id_absensi'];
+        $absen_pulang = mysqli_query($conn, "UPDATE tb_absensi SET foto_pulang = '$target_file', jam_pulang = '$jam_sekarang', change_by = '$id_user', change_date = NOW() WHERE id_absensi = '$id_absensi'");
+        if ($absen_pulang){
+            showAlert('Berhasil!', 'Berhasil Absen Pulang Untuk Hari Ini, Jangan Lupa Untuk Absen Besok Yaa', 'success', "dashboard.php");
+            exit();
+        }
+    }
+}
 
 // ================= PROFILE ==============
 function updateProfile($POST, $FILES, $id_user, $dataLama){
@@ -795,8 +856,6 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
 
 
 
-
-
 // =========================== pembimbing ========================
 function generateId_nilai($id_pengajuan) {
     global $conn;
@@ -818,10 +877,13 @@ function generateId_nilai($id_pengajuan) {
 
 function pembimbing_input_nilai($data) {
     global $conn;
+    
     $id_pengajuan = mysqli_real_escape_string($conn, $data['id_pengajuan']);
     $id_user = mysqli_real_escape_string($conn, $data['id_user']);
     $create_by = mysqli_real_escape_string($conn, $data['create_by']);
-
+    $id_bidang = mysqli_real_escape_string($conn, $data['id_bidang']);
+    $id_instansi = mysqli_real_escape_string($conn, $data['id_instansi']);
+    $bidang_keahlian = mysqli_real_escape_string($conn, $data['bidang_keahlian']);
     $kehadiran = mysqli_real_escape_string($conn, $data['kehadiran']);
     $disiplin = mysqli_real_escape_string($conn, $data['disiplin']);
     $tanggung_jawab = mysqli_real_escape_string($conn, $data['tanggung_jawab']);
@@ -831,15 +893,49 @@ function pembimbing_input_nilai($data) {
     $catatan = mysqli_real_escape_string($conn, $data['catatan']);
 
     $id_nilai = generateId_nilai($id_pengajuan);
+
+    // Ambil bulan sekarang
+    $bulan = date('m');
+    
+    // Ambil nomor urut terakhir dari instansi tersebut di bulan ini
+    $query = "SELECT nomor_nilai FROM tb_nilai 
+              WHERE id_instansi = '$id_instansi' 
+              AND LEFT(nomor_nilai, 2) = '$bulan' 
+              ORDER BY nomor_nilai DESC 
+              LIMIT 1";
+
+    $result = mysqli_query($conn, $query);
+    if ($row = mysqli_fetch_assoc($result)) {
+        // Ambil 3 digit terakhir, konversi ke int, tambah 1
+        $last_number = (int)substr($row['nomor_nilai'], 2, 3);
+        $next_number = $last_number + 1;
+    } else {
+        // Belum ada entri untuk bulan ini dan instansi ini
+        $next_number = 1;
+    }
+
+    // Format nomor nilai: 2 digit bulan + 3 digit counter
+    $nomor_nilai = str_pad($bulan, 2, '0', STR_PAD_LEFT) . str_pad($next_number, 3, '0', STR_PAD_LEFT);
+
+    // Hitung rata-rata
     $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
 
+    // Generate URL untuk QR Code
+    $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
+    $url_qr = $base_url . "/magang/user/view_link_qr.php?id=" . $id_nilai;
+
+    // Simpan ke database
     $query = "INSERT INTO tb_nilai (
-        id_nilai, id_pengajuan, id_user, kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi, rata_rata, catatan, create_by
+        id_nilai, id_pengajuan, id_user, id_bidang, id_instansi, nomor_nilai, bidang_keahlian,
+        kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi,
+        rata_rata, catatan, url_qr, create_by
     ) VALUES (
-        '$id_nilai', '$id_pengajuan', '$id_user', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas', '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$create_by'
+        '$id_nilai', '$id_pengajuan', '$id_user', '$id_bidang', '$id_instansi', '$nomor_nilai',
+        '$bidang_keahlian', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas',
+        '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$url_qr', '$create_by'
     )";
 
-    if(mysqli_query($conn, $query)) {
+    if (mysqli_query($conn, $query)) {
         return mysqli_affected_rows($conn);
     } else {
         return 0;
@@ -848,11 +944,13 @@ function pembimbing_input_nilai($data) {
 
 
 
+
 function pembimbing_update_nilai($data) {
     global $conn;
     
     $id_nilai = mysqli_real_escape_string($conn, $data['id_nilai']);
-    
+    $change_by = mysqli_real_escape_string($conn, $data['change_by']);
+    $bidang_keahlian = mysqli_real_escape_string($conn, $data['bidang_keahlian']);
     $kehadiran = mysqli_real_escape_string($conn, $data['kehadiran']);
     $disiplin = mysqli_real_escape_string($conn, $data['disiplin']);
     $tanggung_jawab = mysqli_real_escape_string($conn, $data['tanggung_jawab']);
@@ -865,6 +963,7 @@ function pembimbing_update_nilai($data) {
     
     // Update data ke database
     $query = "UPDATE tb_nilai SET 
+                bidang_keahlian = '$bidang_keahlian',
                 kehadiran = '$kehadiran', 
                 disiplin = '$disiplin', 
                 tanggung_jawab = '$tanggung_jawab', 
@@ -873,6 +972,7 @@ function pembimbing_update_nilai($data) {
                 teknologi_informasi = '$teknologi_informasi', 
                 rata_rata = '$rata_rata', 
                 catatan = '$catatan'
+                change_by = '$change_by',
                 WHERE id_nilai = '$id_nilai'";
     
     return mysqli_query($conn, $query);
@@ -1023,4 +1123,30 @@ function getDokumenByInstansi($conn, $id_instansi) {
     mysqli_stmt_close($stmt);
     return $daftar_dokumen;
 }
+
+
+
+
+
+
+// pembuatan nomor sertifikat
+function generateKodeSurat($no_urut, $id_instansi) {
+    $tahun = date('Y');
+
+    // Format ID instansi jadi xxx.xx.xx.xx
+    $id_str = str_pad($id_instansi, 9, '0', STR_PAD_LEFT);
+    $id_formatted = substr($id_str, 0, 3) . '.' .
+                    substr($id_str, 3, 2) . '.' .
+                    substr($id_str, 5, 2) . '.' .
+                    substr($id_str, 7, 2);
+    // Gabungkan semuanya ke dalam format akhir
+    $kode = "404.14.5.4/{$no_urut}/{$id_formatted}/{$tahun}";
+    return $kode;
+}
+
+
+
+
+
+
 ?>

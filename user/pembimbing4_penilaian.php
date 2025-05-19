@@ -119,6 +119,11 @@ if (isset($_GET['id_nilai'])) {
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-3"><label class="form-label">Bidang Keahlian</label></div>
+                <div class="col-7"><input type="text" name="bidang_keahlian" id="bidang_keahlian" class="form-control" required value="<?= $nilai["bidang_keahlian"] ?>"></div>
+            </div><br><br>
+
             <div class="mb-3">
                 <label class="form-label">Catatan/Komentar</label>
                 <textarea class="form-control" name="catatan" rows="3"><?= $nilai['catatan'] ?></textarea>
