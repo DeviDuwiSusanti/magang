@@ -876,6 +876,12 @@ function rekam_ulang_bidang($conn, $postData, $id_user_editor)
         if (!mysqli_query($conn, $update_pengajuan)) {
             return ['status' => 'warning', 'message' => 'Gagal update tb_pengajuan: ' . mysqli_error($conn)];
         }
+
+        // Update tb_persetujuan_pembimbing
+        $update_persetujuan = "UPDATE tb_persetujuan_pembimbing SET id_pembimbing = '$id_pembimbing_baru' WHERE id_pembimbing = '" . $pembimbing['id_user'] . "'";
+        if (!mysqli_query($conn, $update_persetujuan)) {
+            return ['status' => 'warning', 'message' => 'Gagal update tb_persetujuan_pembimbing: ' . mysqli_error($conn)];
+        }
     }
 
     // 8. Nonaktifkan bidang lama
