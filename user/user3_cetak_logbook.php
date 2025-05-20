@@ -20,7 +20,6 @@ $sql_check = "SELECT COUNT(*) as unverified_count FROM tb_logbook
 $query_check = mysqli_query($conn, $sql_check);
 $row_check = mysqli_fetch_assoc($query_check);
 
-
 if($row_check['unverified_count'] > 0) {
     showAlert('Peringatan!', 'Masih ada logbook yang belum diverifikasi oleh Pembimbing.', 'warning', "user3_logbook.php");
     exit();
@@ -34,6 +33,9 @@ $sql = "SELECT * FROM tb_pengajuan p JOIN tb_instansi i ON p.id_instansi = i.id_
 $query = mysqli_query($conn, $sql);
 $row = mysqli_fetch_assoc($query);
 
+// akses pembimbing
+$sql_pembimbing = mysqli_query($conn, "SELECT nama_user, nip FROM tb_profile_user WHERE id_user = '$row[id_pembimbing]'");
+$pembimbing = mysqli_fetch_assoc($sql_pembimbing);
 ?>
 
 <!DOCTYPE html>
@@ -116,35 +118,61 @@ $row = mysqli_fetch_assoc($query);
 
         /* Pastikan gambar dalam tabel memiliki ukuran tetap */
         .table img {
-            width: 150px;  /* Sesuaikan dengan ukuran yang diinginkan */
-            height: 100px; /* Pastikan semua gambar memiliki tinggi yang sama */
-            object-fit: cover; /* Memastikan gambar tetap rapi dalam ukuran yang ditentukan */
-            border: 1px solid #ddd; /* Opsional, agar tampak lebih rapi */
+            width: 150px;
+            height: 100px;
+            object-fit: cover;
+            border: 1px solid #ddd;
             padding: 3px;
         }
 
         /* Aturan untuk cetak */
         @media print {
             .no-print {
-                display: none; /* Sembunyikan tombol cetak saat dicetak */
+                display: none;
             }
             .table img {
-                width: 120px; /* Atur ukuran gambar saat dicetak */
+                width: 120px;
                 height: 90px;
             }
+            tr {
+                page-break-inside: avoid;
+            }
+            .table {
+                page-break-inside: avoid;
+            }
+            body {
+                margin: 0;
+                padding: 10px;
+                font-size: 12px;
+            }
+            .table td, .table th {
+                padding: 4px;
+            }
+            .ttd-section {
+                page-break-inside: avoid;
+                margin-top: 20px;
+            }
+        }
+
+        .ttd-section {
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        
+        .ttd-container {
+            text-align: center;
+            width: 300px;
         }
     </style>
 </head>
 
-<!-- Di bagian paling bawah sebelum </body> -->
 <script>
-// Jalankan print otomatis saat halaman selesai dimuat
 window.onload = function() {
-    // Jika diakses langsung (bukan dari iframe), tampilkan tombol cetak
     if (window === window.top) {
         document.querySelector('.no-print').style.display = 'block';
     } else {
-        // Jika diakses dari iframe, langsung print
         setTimeout(() => {
             window.print();
         }, 500);
@@ -153,7 +181,7 @@ window.onload = function() {
 </script>
 <body>
     <div class="header">
-        <h2>LOGBOOK</h2>
+        <h2>Logbook <?= $row['jenis_pengajuan'] ?></h2>
     </div>
 
     <div class="filter-info">
@@ -169,7 +197,7 @@ window.onload = function() {
                 <td><?= $row['nama_pendidikan'] ?></td>
             </tr>
             <tr>
-                <td><strong>Instansi Magang</strong></td>
+                <td><strong>Instansi</strong></td>
                 <td>:</td>
                 <td><?= $row['nama_panjang'] ?> Sidoarjo</td>
             </tr>
@@ -210,12 +238,12 @@ window.onload = function() {
             ?>
                 <tr>
                     <td style="text-align: center;"><?= $no ?></td>
-                    <td style="text-align: left;"><?= formatTanggalLengkapIndonesia($row2['tanggal_logbook']) ?></td>
+                    <td style="text-align: left;"><?= date('d/m/Y', strtotime($row2['tanggal_logbook'])) ?></td>
                     <td style="text-align: left;"><?= $row2['kegiatan_logbook'] ?></td>
                     <td style="text-align: left;"><?= $row2['keterangan_logbook'] ?></td>
                     <td><?= date('H:i', strtotime($row2['jam_mulai'])) ?> - <?= date('H:i', strtotime($row2['jam_selesai'])) ?></td>
-                    <td style="text-align: left;"><img src="<?= $row2['foto_kegiatan'] ?>" alt="Gambar kegiatan"></td>
-                    <td style="text-align: left;"><img src="<?= $row2['tanda_tangan'] ?>" alt="TTD"></td>
+                    <td><img src="<?= $row2['foto_kegiatan'] ?>" alt="Gambar kegiatan"></td>
+                    <td><img src="<?= $row2['tanda_tangan'] ?>" alt="TTD"></td>
                 </tr>
             <?php
                 $no++;
@@ -230,18 +258,18 @@ window.onload = function() {
         </tfoot>
     </table>
 
-    <div class="no-print">
-        <button onclick="window.print()">Cetak Logbook</button>
-    </div>
-
-    <div style="width: 100%; display: flex; justify-content: flex-end; margin-top: 50px;">
-        <div style="text-align: center; width: 300px;">
+    <div class="ttd-section">
+        <div class="ttd-container">
             <p>Sidoarjo, <?= formatTanggalLengkapIndonesia(date('Y-m-d')) ?></p>
             <p><strong>Pembimbing Magang</strong></p>
             <br><br><br><br>
-            <p><strong>(...................................)</strong></p>
+            <p><?= $pembimbing['nama_user'] ?></p>
+            <p>(NIP. <?= $pembimbing['nip'] ?>)</p>
         </div>
     </div>
-</body>
 
+    <div class="no-print">
+        <button onclick="window.print()">Cetak Logbook</button>
+    </div>
+</body>
 </html>
