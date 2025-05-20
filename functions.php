@@ -818,7 +818,7 @@ function rekam_ulang_bidang($conn, $postData, $id_user_editor)
 
     // 5. Insert Ulang Bidang dengan data dari form + status_active = 1
     $insert_query = "INSERT INTO tb_bidang (
-                        id_bidang, nama_bidang, pejabat_bidang, pangkat_pejabat, nip_pejabat, deskripsi_bidang, kriteria_bidang,
+                        id_bidang, nama_bidang, nama_pejabat, pangkat_pejabat, nip_pejabat, deskripsi_bidang, kriteria_bidang,
                         kuota_bidang, id_instansi, dokumen_persyaratan, change_by, change_date, status_active
                     ) VALUES (
                         '$id_bidang_baru',
@@ -957,7 +957,7 @@ function tambah_bidang($POST)
     $kuota = $POST["kuota"];
     $dokumen_prasyarat = $POST["dokumen"];
 
-    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, pejabat_bidang, pangkat_pejabat, nip_pejabat, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_persyaratan, create_by)
+    $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, nama_pejabat, pangkat_pejabat, nip_pejabat, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_persyaratan, create_by)
             VALUES ('$id_bidang','$nama_bidang', $nama_pejabat, $pangkat, $nip_pejabat, '$deskripsi_bidang', '$kriteria', '$kuota', '$id_instansi', '$dokumen_prasyarat', '$id_user')";
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
