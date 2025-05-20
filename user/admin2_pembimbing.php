@@ -20,6 +20,7 @@ $bidang = "SELECT
             ON pu.id_user = u.id_user
         WHERE pu.status_active = '1'
         AND u.status_active = '1'
+        AND b.status_active = '1'
         AND i.id_instansi = '$id_instansi_admin'
         ORDER BY b.id_bidang ASC";
 
@@ -355,65 +356,34 @@ while ($row = mysqli_fetch_assoc($pembimbing_result)) {
         });
     });
 
-    // Event listener untuk nik
-    document.getElementById("nik_pembimbing").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, "");
+    // Array konfigurasi input fields
+    const inputConfigs = [
+        { id: 'nik_pembimbing', maxLength: 16, allow: /\D/g },
+        { id: 'edit_nik_pembimbing', maxLength: 16, allow: /\D/g },
+        { id: 'nip', maxLength: 18, allow: /\D/g },
+        { id: 'edit_nip', maxLength: 18, allow: /\D/g },
+        { id: 'telepone_pembimbing', maxLength: 13, allow: /\D/g },
+        { id: 'edit_telepone_pembimbing', maxLength: 13, allow: /\D/g }
+    ];
 
-        const maxLength = 16;
-        if (this.value.length > maxLength) {
-            this.value = this.value.slice(0, maxLength);
-        }
-    })
+    // Fungsi umum untuk semua input
+    function setInputHandler(config) {
+        const el = document.getElementById(config.id);
+        if (!el) return;
 
-    // Event listener untuk nik edit
-    document.getElementById("edit_nik_pembimbing").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, "");
+        el.addEventListener("input", function(e) {
+            // Hapus karakter non-digit
+            this.value = this.value.replace(config.allow, "");
 
-        const maxLength = 16;
-        if (this.value.length > maxLength) {
-            this.value = this.value.slice(0, maxLength);
-        }
-    })
+            // Batasi panjang
+            if (this.value.length > config.maxLength) {
+                this.value = this.value.slice(0, config.maxLength);
+            }
+        });
+    }
 
-    // Event listener untuk nip
-    document.getElementById("nip").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, "");
-
-        const maxLength = 18;
-        if (this.value.length > maxLength) {
-            this.value = this.value.slice(0, maxLength);
-        }
-    })
-
-    // Event listener untuk nip edit
-    document.getElementById("edit_nip").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, "");
-
-        const maxLength = 18;
-        if (this.value.length > maxLength) {
-            this.value = this.value.slice(0, maxLength);
-        }
-    })
-
-    // Event listener untuk telepon
-    document.getElementById("telepone_pembimbing").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, "");
-
-        const maxLength = 13;
-        if (this.value.length > maxLength) {
-            this.value = this.value.slice(0, maxLength);
-        }
-    })
-
-    // Event listener untuk telepon edit
-    document.getElementById("edit_telepone_pembimbing").addEventListener("input", function(e) {
-        this.value = this.value.replace(/\D/g, "");
-
-        const maxLength = 13;
-        if (this.value.length > maxLength) {
-            this.value = this.value.slice(0, maxLength);
-        }
-    });
+    // Terapkan ke semua input
+    inputConfigs.forEach(setInputHandler);
 
     // Event listener untuk tombol edit
     document.addEventListener("DOMContentLoaded", function() {

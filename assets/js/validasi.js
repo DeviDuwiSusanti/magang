@@ -215,6 +215,13 @@ function validateTambahBidang() {
     }
   }
 
+  // validasi input NIP pejabat
+  const nip = document.getElementById("nip").value.trim();
+  if (nip !== "" && !/^[0-9]{18}$/.test(nip)) {
+    showError("nip", "nip_error", "NIP harus terdiri dari 18 digit angka.");
+    isValid = false;
+  }
+
   // validasi input deskripsi bidang
   const deskripsi = document.getElementById("deskripsi").value.trim();
   if (deskripsi === "") {
@@ -292,6 +299,13 @@ function validateEditBidang() {
       });
       isValid = false;
     }
+  }
+
+  // validasi input NIP pejabat
+  const nip = document.getElementById("edit_nip").value.trim();
+  if (nip !== "" && !/^[0-9]{18}$/.test(nip)) {
+    showError("edit_nip", "edit_nip_error", "NIP harus terdiri dari 18 digit angka.");
+    isValid = false;
   }
 
   // validasi input deskripsi bidang

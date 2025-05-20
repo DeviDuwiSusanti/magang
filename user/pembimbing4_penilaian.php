@@ -6,10 +6,11 @@ if (isset($_GET['id_nilai'])) {
     $id_nilai = $_GET['id_nilai'];
     $action = isset($_GET['action']) ? $_GET['action'] : 'view'; // Default action adalah view
     
-    $nilai = query("SELECT n.*, pu.nama_user, pu.gambar_user, 
+    $nilai = query("SELECT n.*, pu.nama_user, pu.gambar_user, b.nama_pejabat,
                     a.nama_user as nama_admin, a.gambar_user as gambar_admin
                     FROM tb_nilai n
                     JOIN tb_profile_user pu ON n.id_user = pu.id_user
+                    JOIN tb_bidang b ON n.id_bidang = b.id_bidang
                     LEFT JOIN tb_profile_user a ON n.id_admin_approve = a.id_user
                     WHERE n.id_nilai = '$id_nilai'")[0];
     
@@ -67,6 +68,10 @@ if (isset($_GET['id_nilai'])) {
                         <td><strong><?= number_format($nilai['rata_rata'], 2) ?></strong></td>
                         <td><strong><?= get_kategori_nilai($nilai['rata_rata']) ?></strong></td>
                     </tr>
+                    <tr class="table-primary">
+                        <td><strong>Bidang Keahlian</strong></td>
+                        <td colspan="2" class="text-center"><strong><?= $nilai["bidang_keahlian"] ?></strong></td>
+                    </tr>
                 </table>
                 
                 <div class="mb-3">
@@ -76,11 +81,12 @@ if (isset($_GET['id_nilai'])) {
 
                 <?php if ($nilai['status_approve'] == 1) : ?>
                     <div class="alert alert-success">
-                        <strong>Disetujui oleh:</strong> <?= $nilai['nama_admin'] ?>
+                        <strong>Disetujui oleh:</strong> <?= $nilai['nama_pejabat'] ?>
                         <br><strong>Tanggal:</strong> <?= date('d-m-Y H:i', strtotime($nilai['tanggal_approve'])) ?>
-                        <div class="mt-2">
-                            <img src="<?= $nilai['tanda_tangan_admin'] ?>" alt="Tanda Tangan Admin" style="max-width: 200px;">
-                        </div>
+                        <div><?php if (!empty($nilai["url_qr"])) : ?>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($nilai['url_qr']) ?>&size=150x150" alt="QR Code">
+<?php endif; ?></div>
+
                     </div>
                 <?php endif; ?>
             </div>
