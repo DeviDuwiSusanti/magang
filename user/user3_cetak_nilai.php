@@ -10,7 +10,7 @@ $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.*
                     JOIN tb_pengajuan p ON pu.id_pengajuan = p.id_pengajuan
                     JOIN tb_nilai n ON p.id_pengajuan = n.id_pengajuan AND n.id_user = pu.id_user
                     JOIN tb_instansi i ON p.id_instansi = i.id_instansi
-                    JOIN tb_bidang b ON p.id_bidang = b.id_bidang
+                    JOIN tb_bidang b ON n.id_bidang = b.id_bidang
                     WHERE pu.id_user = $id_user_ini")[0];
 
 // Validasi kelengkapan data diri
