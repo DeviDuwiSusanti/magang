@@ -870,6 +870,12 @@ function rekam_ulang_bidang($conn, $postData, $id_user_editor)
         if (!mysqli_query($conn, $update_user)) {
             return ['status' => 'warning', 'message' => 'Gagal update tb_user: ' . mysqli_error($conn)];
         }
+
+        // Update tb_pengajuan
+        $update_pengajuan = "UPDATE tb_pengajuan SET id_pembimbing = '$id_pembimbing_baru' WHERE id_pembimbing = '" . $pembimbing['id_user'] . "'";
+        if (!mysqli_query($conn, $update_pengajuan)) {
+            return ['status' => 'warning', 'message' => 'Gagal update tb_pengajuan: ' . mysqli_error($conn)];
+        }
     }
 
     // 8. Nonaktifkan bidang lama

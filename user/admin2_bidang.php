@@ -1,7 +1,7 @@
 <?php include '../layout/sidebarUser.php';
 
 $id_instansi = $_SESSION['id_instansi'];
-$bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidang, b.kuota_bidang, b.kriteria_bidang, b.dokumen_persyaratan, b.pejabat_bidang, b.pangkat_pejabat, b.nip_pejabat,
+$bidang = "SELECT b.id_bidang, b.nama_bidang, b.status_active, b.deskripsi_bidang, b.kuota_bidang, b.kriteria_bidang, b.dokumen_persyaratan, b.nama_pejabat, b.pangkat_pejabat, b.nip_pejabat,
                   i.id_instansi, i.nama_panjang, 
                   pu.id_user 
             FROM tb_bidang AS b
@@ -106,9 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                         <i class="bi bi-info-circle"></i>
                                     </button>
                                 </td>
-                                <!-- <td><?= $bd["pejabat_bidang"] ?? "Belum diisi" ?></td> -->
-                                <!-- <td><?= $bd["pangkat_pejabat"] ?? "Belum diisi" ?></td>
-                                <td><?= $bd["nip_pejabat"] ?? "Belum diisi" ?></td> -->
                                 <td data-bs-toggle="tooltip" data-bs-placement="top" title="<?= htmlspecialchars($bd['deskripsi_bidang']) ?>">
                                     <?= substr(htmlspecialchars($bd['deskripsi_bidang']), 0, 100) ?>...
                                 </td>
@@ -120,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                         data-bs-toggle="modal" data-bs-target="#editBidangModal"
                                         data-id_bidang="<?= $bd['id_bidang'] ?>"
                                         data-nama_bidang="<?= $bd['nama_bidang'] ?>"
-                                        data-nama_pejabat="<?= $bd['pejabat_bidang'] ?>"
+                                        data-nama_pejabat="<?= $bd['nama_pejabat'] ?>"
                                         data-pangkat_pejabat="<?= $bd['pangkat_pejabat'] ?>"
                                         data-nip_pejabat="<?= $bd['nip_pejabat'] ?>"
                                         data-deskripsi="<?= $bd['deskripsi_bidang'] ?>"
