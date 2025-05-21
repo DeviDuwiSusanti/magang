@@ -119,7 +119,7 @@ $kode_surat = generateKodeSurat($nomor_nilai, $id_instansi);
       <p><strong>Tanggal Surat:</strong> <?= $info["tanggal_approve"] ?></p>
       <p><strong>Pembuat:</strong> <?= $instansi["nama_panjang"] ?> - <?= $info["nama_bidang"] ?></p>
       <p><strong>Dibuat Pada:</strong> <?= $info["created_date"] ?></p>
-      <p><strong>Disetujui:</strong> <?= $info["nama_pejabat"] ?>, <?= $info["pangkat_pejabat"] ?></p>
+      <p><strong>Disetujui:</strong> <?= $info["nama_pejabat"] ?></p>
       <p><strong>Disetujui Pada:</strong> <?= $info["tanggal_approve"] ?></p>
     </div>
     <div class="buttons">
