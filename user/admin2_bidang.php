@@ -84,8 +84,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                             <th>No</th>
                             <th>Nama Bidang</th>
                             <th>Kepala Bidang</th>
-                            <!-- <th>Pangkat</th>
-                            <th>NIP Pejabat</th> -->
                             <th>Deskripsi</th>
                             <th>Kriteria</th>
                             <th>Kuota</th>
@@ -141,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <p><strong>Kepala Bidang:</strong> <?= htmlspecialchars($bd['pejabat_bidang'] ?? "Tidak Diketahui"); ?></p>
+                                            <p><strong>Kepala Bidang:</strong> <?= htmlspecialchars($bd['nama_pejabat'] ?? "Tidak Diketahui"); ?></p>
                                             <p><strong>Pangkat:</strong> <?= htmlspecialchars($bd['pangkat_pejabat'] ?? "Tidak Diketahui"); ?></p>
                                             <p><strong>NIP Pejabat:</strong> <?= htmlspecialchars($bd['nip_pejabat'] ?? "Tidak Diketahui"); ?></p>
                                         </div>
@@ -463,7 +461,6 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
                     if ($textarea.length && !$textarea.data('summernote')) {
                         $textarea.summernote(summernoteConfig);
 
-                        // Gunakan setTimeout untuk memastikan DOM Summernote sudah siap
                         setTimeout(() => {
                             const $editable = $textarea.next('.note-editor').find('.note-editable');
                             if ($editable.length) {
@@ -471,7 +468,7 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
                             } else {
                                 console.warn(`Editable area not found for ${selector}`);
                             }
-                        }, 100); // Beri jeda kecil agar DOM Summernote sudah dimuat
+                        }, 100);
                     }
                 });
             });

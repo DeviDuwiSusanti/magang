@@ -332,16 +332,11 @@ function validateEditBidang() {
 
   // validasi input kuota bidang
   const kuota = document.getElementById("edit_kuota").value.trim();
-  if (kuota === "") {
-    showError("edit_kuota", "edit_kuota_error", "Kuota tidak boleh kosong.");
-    isValid = false;
-  } else if (isNaN(kuota) || parseInt(kuota) <= 0) {
-    showError(
-      "edit_kuota",
-      "edit_kuota_error",
-      "Kuota harus berupa angka positif."
-    );
-    isValid = false;
+  if (kuota !== "") {
+    if (isNaN(kuota) || parseInt(kuota) <= 0) {
+      showError("edit_kuota", "edit_kuota_error", "Kuota harus berupa angka positif.");
+      isValid = false;
+    }
   }
 
   // validasi input dokumen bidang

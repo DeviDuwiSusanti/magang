@@ -3,7 +3,8 @@
 
 use Dom\Mysql;
 
-function generateIdDokumen($conn, $id_pengajuan) {
+function generateIdDokumen($conn, $id_pengajuan)
+{
     $query = "SELECT MAX(CAST(SUBSTRING(id_dokumen, -2) AS UNSIGNED)) AS max_nomor 
                FROM tb_dokumen 
                WHERE id_dokumen LIKE '$id_pengajuan%'";
@@ -16,7 +17,8 @@ function generateIdDokumen($conn, $id_pengajuan) {
     return $id_pengajuan . $nomorUrut;
 }
 
-function generateIdAnggota($conn, $id_user) {
+function generateIdAnggota($conn, $id_user)
+{
     // Ambil dua digit terakhir dari id_user
     $lastTwoDigits = (int)substr($id_user, -2);
 
@@ -42,7 +44,8 @@ function generateIdAnggota($conn, $id_user) {
     return $newId;
 }
 
-function uploadFileUser($file, $id_pengajuan) {
+function uploadFileUser($file, $id_pengajuan)
+{
 
     $target_dir = "../assets/doc/$id_pengajuan/";
 
@@ -63,9 +66,10 @@ function uploadFileUser($file, $id_pengajuan) {
     ];
 }
 
-function uploadFoto($file, $target_dir) {
+function uploadFoto($file, $target_dir)
+{
     $target_file = rtrim($target_dir, '/') . '/' . basename($file["name"]); // Pastikan path selalu benar
-    
+
     // Pindahkan file ke folder tujuan
     if (move_uploaded_file($file["tmp_name"], $target_file)) {
         return [
@@ -76,7 +80,8 @@ function uploadFoto($file, $target_dir) {
     return null; // Jika gagal upload
 }
 
-function deleteOldDocument($id_dokumen) {
+function deleteOldDocument($id_dokumen)
+{
     global $conn;
     // Ambil file lama dari database
     $query = "SELECT file_path FROM tb_dokumen 
@@ -89,7 +94,8 @@ function deleteOldDocument($id_dokumen) {
     }
 }
 
-function deleteGambarLogbook($id_logbook){
+function deleteGambarLogbook($id_logbook)
+{
     global $conn;
     // Ambil file lama dari database
     $query = "SELECT foto_kegiatan FROM tb_logbook 
@@ -102,7 +108,8 @@ function deleteGambarLogbook($id_logbook){
     }
 }
 
-function deleteGambarUser($id_user){
+function deleteGambarUser($id_user)
+{
     global $conn;
     // Ambil file lama dari database
     $query = "SELECT gambar_user FROM tb_profile_user 
@@ -115,7 +122,8 @@ function deleteGambarUser($id_user){
     }
 }
 
-function hapusFolderPengajuan($id_pengajuan) {
+function hapusFolderPengajuan($id_pengajuan)
+{
     $folder = "../assets/doc/$id_pengajuan/";
 
     // Cek apakah folder ada
@@ -139,7 +147,8 @@ function hapusFolderPengajuan($id_pengajuan) {
     }
 }
 
-function cekEmail($email) {
+function cekEmail($email)
+{
     global $conn;
     $email = mysqli_real_escape_string($conn, $email);
     $query = "SELECT * FROM tb_user WHERE email = '$email'";
@@ -148,7 +157,8 @@ function cekEmail($email) {
     return mysqli_num_rows($result) > 0;
 }
 
-function getStatusText($status) {
+function getStatusText($status)
+{
     $statusList = [
         1 => "Diajukan",
         2 => "Diterima",
@@ -159,7 +169,8 @@ function getStatusText($status) {
     return $statusList[$status] ?? "Tidak Diketahui";
 }
 
-function getKategoriText($kategori) {
+function getKategoriText($kategori)
+{
     $kategoriList = [
         1 => "Identitas",
         2 => "Prasyarat",
@@ -169,7 +180,8 @@ function getKategoriText($kategori) {
     return $kategoriList[$kategori] ?? "Tidak Diketahui";
 }
 
-function showAlert($title, $text, $icon, $redirect = null) {
+function showAlert($title, $text, $icon, $redirect = null)
+{
     echo "<script>
         document.addEventListener('DOMContentLoaded', function() {
             Swal.fire({
@@ -187,7 +199,8 @@ function showAlert($title, $text, $icon, $redirect = null) {
 }
 
 
-function confirmDeleteScript() {
+function confirmDeleteScript()
+{
     echo "<script>
         function confirmDelete(url, dataName = 'data ini') {
             Swal.fire({
@@ -209,16 +222,17 @@ function confirmDeleteScript() {
 }
 
 // Fungsi untuk menghitung durasi dalam bulan dan minggu
-function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
+function hitungDurasi($tanggal_mulai, $tanggal_selesai)
+{
     // Memeriksa apakah kedua tanggal tersedia
     if (!empty($tanggal_mulai) && !empty($tanggal_selesai)) {
         // Membuat objek DateTime dari tanggal mulai dan selesai
         $start_date = new DateTime($tanggal_mulai);
         $end_date = new DateTime($tanggal_selesai);
-        
+
         // Menghitung selisih antara kedua tanggal
         $interval = $start_date->diff($end_date);
-        
+
         // Mendapatkan jumlah bulan dan hari
         $bulan = $interval->m;
         $hari = $interval->d;
@@ -235,11 +249,21 @@ function hitungDurasi($tanggal_mulai, $tanggal_selesai) {
 
 
 // Fungsi untuk format tanggal Lengkap Indonesia
-function formatTanggalLengkapIndonesia($tanggal) {
+function formatTanggalLengkapIndonesia($tanggal)
+{
     $bulan = [
-        '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
-        '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
-        '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+        '01' => 'Januari',
+        '02' => 'Februari',
+        '03' => 'Maret',
+        '04' => 'April',
+        '05' => 'Mei',
+        '06' => 'Juni',
+        '07' => 'Juli',
+        '08' => 'Agustus',
+        '09' => 'September',
+        '10' => 'Oktober',
+        '11' => 'November',
+        '12' => 'Desember'
     ];
 
     $tanggal_obj = DateTime::createFromFormat('Y-m-d', $tanggal);
@@ -247,16 +271,29 @@ function formatTanggalLengkapIndonesia($tanggal) {
 }
 
 // Fungsi untuk format tanggal ke format Indonesia tanpa tahun
-function formatTanggalIndonesia($tanggal) {
+function formatTanggalIndonesia($tanggal)
+{
     $bulan = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember"
     ];
     $dateObj = DateTime::createFromFormat('Y-m-d', $tanggal);
     return $dateObj ? $dateObj->format('d') . ' ' . $bulan[(int)$dateObj->format('m') - 1] : "Format Tidak Valid";
 }
 
 // Fungsi untuk format periode (contoh: "1 Januari - 10 Desember 2024" atau "1 Desember 2023 - 10 Januari 2024")
-function formatPeriode($tanggal_mulai, $tanggal_selesai) {
+function formatPeriode($tanggal_mulai, $tanggal_selesai)
+{
     $start_date = DateTime::createFromFormat('Y-m-d', $tanggal_mulai);
     $end_date = DateTime::createFromFormat('Y-m-d', $tanggal_selesai);
 
@@ -271,7 +308,8 @@ function formatPeriode($tanggal_mulai, $tanggal_selesai) {
 }
 
 
-function cekStatusUser($id_user) {
+function cekStatusUser($id_user)
+{
     // Ambil dua digit terakhir dari id_user
     $dua_digit_terakhir = substr($id_user, -2);
 
@@ -281,7 +319,8 @@ function cekStatusUser($id_user) {
 
 
 // ============== LOGBOOK ==================
-function generateLogbookId($conn, $id_pengajuan) {
+function generateLogbookId($conn, $id_pengajuan)
+{
     // Ambil counter terbesar untuk id_pengajuan ini
     $sql_max = "SELECT MAX(CAST(SUBSTRING(id_logbook, -2) AS UNSIGNED)) as max_counter FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan'";
     $result = mysqli_query($conn, $sql_max);
@@ -294,7 +333,8 @@ function generateLogbookId($conn, $id_pengajuan) {
     return $id_logbook;
 }
 
-function getLogbook($conn, $id_pengajuan, $id_user) {
+function getLogbook($conn, $id_pengajuan, $id_user)
+{
     // Query untuk mengambil logbook
     $sql = "SELECT * FROM tb_logbook WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND (status_active = '1' OR status_active = '2')";
     $query = mysqli_query($conn, $sql);
@@ -307,7 +347,8 @@ function getLogbook($conn, $id_pengajuan, $id_user) {
     return $query;
 }
 
-function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
+function inputLogbook($POST, $FILES, $id_pengajuan, $id_user)
+{
     global $conn;
     $tanggal = $POST['tanggal'];
     $kegiatan = $POST['kegiatan'];
@@ -315,14 +356,14 @@ function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
     $jam_mulai = $POST['jam_mulai'];
     $jam_selesai = $POST['jam_selesai'];
     $ttd = $POST['ttd'];
-    
-     // Buat folder user jika belum ada
-     $user_folder = '../assets/img/logbook/' . $id_user . '/';
-     if (!file_exists($user_folder)) {
+
+    // Buat folder user jika belum ada
+    $user_folder = '../assets/img/logbook/' . $id_user . '/';
+    if (!file_exists($user_folder)) {
         mkdir($user_folder, 0777, true);
     }
 
-     // Upload foto ke folder user
+    // Upload foto ke folder user
     $uploadedFoto = uploadFoto($FILES['gambar_kegiatan'], $user_folder);
     $target_file = $uploadedFoto['path'];
 
@@ -337,14 +378,15 @@ function inputLogbook($POST, $FILES, $id_pengajuan, $id_user) {
         exit();
     } else {
         showAlert('Gagal!', 'Logbook gagal diinput. Silakan coba lagi.', 'error');
-    }       
+    }
 }
 
-function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
+function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row)
+{
     global $conn;
     // Inisialisasi foto_kegiatan (default: data lama)
     $foto_kegiatan = $row['foto_kegiatan'];
-    
+
     // Jika ada file baru diunggah
     if (!empty($FILES['gambar_kegiatan']['name'])) {
         deleteGambarLogbook($id_logbook);
@@ -369,10 +411,11 @@ function updateLogbook($POST, $FILES, $id_user, $id_logbook, $row){
         exit();
     } else {
         showAlert('Gagal!', 'Logbook gagal diupdate. Silakan coba lagi.', 'error');
-    }    
+    }
 }
 
-function hapusLogbook($id_user){
+function hapusLogbook($id_user)
+{
     global $conn;
     $id_logbook = $_GET['id_logbook_hapus'];
     $sql2 =  "UPDATE tb_logbook SET status_active = '0', change_by = '$id_user' WHERE id_logbook = '$id_logbook'";
@@ -383,11 +426,12 @@ function hapusLogbook($id_user){
         exit();
     } else {
         showAlert('Gagal!', 'Logbook gagal dihapus. Silakan coba lagi.', 'error');
-    }    
+    }
 }
 
 // ============== PENGAJUAN ==============
-function generateIdPengajuan($conn) {
+function generateIdPengajuan($conn)
+{
     // Ambil tanggal saat ini dalam format YYYYMMDD
     $tanggal = date("Ymd");
 
@@ -404,7 +448,8 @@ function generateIdPengajuan($conn) {
     return $tanggal . $nomorUrut;
 }
 
-function inputPengajuan($POST, $FILES, $id_user){
+function inputPengajuan($POST, $FILES, $id_user)
+{
     global $conn;
 
     $id_pengajuan = generateIdPengajuan($conn);
@@ -413,9 +458,9 @@ function inputPengajuan($POST, $FILES, $id_user){
     $id_instansi = $POST['id_instansi'];
     $id_bidang = $POST['id_bidang'];
     $jenis_pengajuan = $POST['jenis_pengajuan'];
-    if (isset($_POST['jumlah_anggota'])){
+    if (isset($_POST['jumlah_anggota'])) {
         $jumlah_pelamar = $POST['jumlah_anggota'];
-    }else{
+    } else {
         $jumlah_pelamar = 1;
     }
     $tanggal_mulai = $POST['tanggal_mulai']; // Contoh: 09/04/2025
@@ -430,25 +475,25 @@ function inputPengajuan($POST, $FILES, $id_user){
     $cv = uploadFileUser($FILES['cv'], $id_pengajuan);
     $proposal = uploadFileUser($FILES['proposal'], $id_pengajuan);
 
-    if (ISSET($POST['anggota_nama'])){
+    if (isset($POST['anggota_nama'])) {
         // Mengambil data anggota dari form Step 2
         $anggota_nama = $POST['anggota_nama'];
         $anggota_email = $POST['anggota_email'];
         $anggota_nik = $POST['anggota_nik'];
-        if (isset($POST['anggota_nisn'])){
+        if (isset($POST['anggota_nisn'])) {
             $anggota_nisn = $POST['anggota_nisn'];
             $anggota_nim = NULL;
-        } else if (isset($POST['anggota_nim'])){
+        } else if (isset($POST['anggota_nim'])) {
             $anggota_nisn = NULL;
             $anggota_nim = $POST['anggota_nim'];
         }
 
         foreach ($anggota_nama as $index => $nama) {
             $email = $anggota_email[$index];
-            if ($anggota_nisn == NULL){
+            if ($anggota_nisn == NULL) {
                 $nisn = NULL;
                 $nim = $anggota_nim[$index];
-            } else if ($anggota_nisn != NULL){
+            } else if ($anggota_nisn != NULL) {
                 $nim = NULL;
                 $nisn = $anggota_nisn[$index];
             }
@@ -459,10 +504,10 @@ function inputPengajuan($POST, $FILES, $id_user){
             $pendidikan = "SELECT id_pendidikan FROM tb_profile_user WHERE id_user = '$id_user'";
             $result = mysqli_query($conn, $pendidikan);
             $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
-        
+
             $sql_anggota1 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_userAnggota', '$nama', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
             $query_anggota1 = mysqli_query($conn, $sql_anggota1);
-            
+
             $sql_anggota2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_userAnggota', '$email', '3', '$id_user')";
             $query_anggota2 = mysqli_query($conn, $sql_anggota2);
         }
@@ -476,7 +521,7 @@ function inputPengajuan($POST, $FILES, $id_user){
     $query3 = mysqli_query($conn, $sql3);
 
 
-    if ($query2 && $query3){
+    if ($query2 && $query3) {
         // query cv
         $id_dokumen_cv = generateIdDokumen($conn, $id_pengajuan);
         $sql4 = "INSERT INTO tb_dokumen VALUES ('$id_dokumen_cv', '$cv[name]', '1', '$cv[path]', '$id_pengajuan', '$id_user', '1', '$id_user', NOW(), '', '')";
@@ -488,17 +533,18 @@ function inputPengajuan($POST, $FILES, $id_user){
         // query update id_pengajuan user
         $sql6 = "UPDATE tb_profile_user SET id_pengajuan = '$id_pengajuan' WHERE id_user = '$id_user'";
         $query6 = mysqli_query($conn, $sql6);
-}
-    if ($query2 && $query3 && $query4 && $query5 && $query6) {?>
+    }
+    if ($query2 && $query3 && $query4 && $query5 && $query6) { ?>
         <?php
         showAlert('Berhasil!', 'Yeayy, Pendaftaran Kamu Berhasil', 'success', "user3_statusPengajuan.php");
         exit();
     } else {
         showAlert('Gagal!', 'Yahh pendaftaran kamu gagal. Silakan coba lagi.', 'error');
-    }    
+    }
 }
 
-function updatePengajuan($POST, $FILES, $id_user){
+function updatePengajuan($POST, $FILES, $id_user)
+{
     global $conn;
     $id_user = $POST['id_user'];
     $id_pengajuan = $POST['id_pengajuan'];
@@ -556,7 +602,7 @@ function updatePengajuan($POST, $FILES, $id_user){
             change_by = '$id_user' WHERE id_dokumen = '$id_dokumenCV' AND id_pengajuan = '$id_pengajuan'";
             $updateCV = mysqli_query($conn, $sql_updateCV);
         }
-    } 
+    }
     // Proses update Proposal
     if (!empty($FILES['proposal']['name'])) {
         deleteOldDocument($dokumen[2]['id_dokumen']);
@@ -569,28 +615,29 @@ function updatePengajuan($POST, $FILES, $id_user){
             change_by = '$id_user' WHERE id_dokumen = '$id_dokumenProposal' AND id_pengajuan = '$id_pengajuan'";
             $updateProposal = mysqli_query($conn, $sql_updateProposal);
         }
-    } 
+    }
 
-     if ($query_update1){
+    if ($query_update1) {
         showAlert('Berhasil!', 'Pengajuan Berhasil Diupdate', 'success', "user3_statusPengajuan.php");
         exit();
-    }else{
+    } else {
         showAlert('Gagal!', 'Pengajuan gagal diupdate. Silakan coba lagi.', 'error');
-    }   
+    }
 }
 
-function hapusPengajuan($POST, $id_user, $id_pengajuan){
+function hapusPengajuan($POST, $id_user, $id_pengajuan)
+{
     global $conn;
     $alasan_hapus = $POST['alasan_hapus'];
 
     $sql_hapusPengajuan = "UPDATE tb_pengajuan SET alasan_hapus = '$alasan_hapus', status_active = '0', change_by = '$id_user' WHERE id_pengajuan = '$id_pengajuan'";
-    if (mysqli_query($conn, $sql_hapusPengajuan)){
+    if (mysqli_query($conn, $sql_hapusPengajuan)) {
         $sql2_hapusPengajuan = "UPDATE tb_profile_user SET id_pengajuan = NULL, change_by = '$id_user' WHERE id_user = '$id_user'";
         $result = mysqli_query($conn, $sql2_hapusPengajuan);
 
         $anggota = "SELECT * FROM tb_profile_user WHERE id_pengajuan = '$id_pengajuan' AND SUBSTRING(id_user, -2) <> '00'";
         $queryAnggota = mysqli_query($conn, $anggota);
-        while ($row = mysqli_fetch_assoc($queryAnggota)){
+        while ($row = mysqli_fetch_assoc($queryAnggota)) {
             $hapus_anggota1 = "UPDATE tb_profile_user SET status_active = '0', change_by = '$id_user' WHERE id_user = '$row[id_user]'";
             mysqli_query($conn, $hapus_anggota1);
             $hapus_anggota2 = "UPDATE tb_user SET status_active = '0', change_by = '$id_user' WHERE id_user = '$row[id_user]'";
@@ -600,14 +647,14 @@ function hapusPengajuan($POST, $id_user, $id_pengajuan){
         // 3. Hapus dokumen fisik terkait pengajuan
         $dokumen = "SELECT * FROM tb_dokumen WHERE id_pengajuan = '$id_pengajuan' AND jenis_dokumen = '1'";
         $queryDokumen  = mysqli_query($conn, $dokumen);
-        while ($row2 = mysqli_fetch_assoc($queryDokumen)){
+        while ($row2 = mysqli_fetch_assoc($queryDokumen)) {
             $id_dokumen = $row2['id_dokumen'];
             $hapus_dokumen = "UPDATE tb_dokumen SET status_active = '0', change_by = '$id_user' WHERE id_dokumen = '$id_dokumen'";
             mysqli_query($conn, $hapus_dokumen);
         }
         hapusFolderPengajuan($id_pengajuan);
-        
-        if ($result){?>
+
+        if ($result) { ?>
             <?php
             unset($_SESSION['id_pengajuan']);
             unset($_SESSION['status_pengajuan']);
@@ -618,42 +665,44 @@ function hapusPengajuan($POST, $id_user, $id_pengajuan){
 }
 
 // =========== ANGGOTA ===========
-function updateAnggota($POST, $id_user){
+function updateAnggota($POST, $id_user)
+{
     global $conn;
     $id_userUpdate = $POST['id_user'];
     $nama_anggota = $POST['nama_user'];
     $email = $POST['email'];
     $nik = $POST['nik'];
-    if (isset($_POST['nisn'])){
+    if (isset($_POST['nisn'])) {
         $nisn = $POST['nisn'];
         $nim = NULL;
-    }else{
+    } else {
         $nim = $POST['nim'];
         $nisn = NULL;
     }
 
     $sqlUpdate = "UPDATE tb_profile_user SET nama_user = '$nama_anggota', nik = '$nik', nisn = '$nisn', nim = '$nim', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
-    if (mysqli_query($conn, $sqlUpdate)){
+    if (mysqli_query($conn, $sqlUpdate)) {
         $sqlUpdate2 = "UPDATE tb_user SET email = '$email', change_by = '$id_user' WHERE id_user = '$id_userUpdate'";
     }
 
-    if (mysqli_query($conn, $sqlUpdate2)){
+    if (mysqli_query($conn, $sqlUpdate2)) {
         showAlert('Berhasil!', 'Data Anggota Berhasil Diupdate', 'success', "user3_statusPengajuan.php");
         exit();
-    }else{
+    } else {
         showAlert('Gagal!', 'Data anggota gagal diupdate. Silakan coba lagi.', 'error');
-    } 
+    }
 }
 
-function tambahAnggota($POST, $id_user, $id_pengajuan){
+function tambahAnggota($POST, $id_user, $id_pengajuan)
+{
     global $conn;
     $nama_anggota = $POST['nama_user'];
     $email = $POST['email'];
     $nik = $POST['nik'];
-    if (isset($_POST['nisn'])){
+    if (isset($_POST['nisn'])) {
         $nisn = $POST['nisn'];
         $nim = NULL;
-    }else{
+    } else {
         $nim = $POST['nim'];
         $nisn = NULL;
     }
@@ -664,18 +713,19 @@ function tambahAnggota($POST, $id_user, $id_pengajuan){
     $id_pendidikan = mysqli_fetch_assoc($result)['id_pendidikan'];
 
     $sqlTambah = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, id_pengajuan, id_pendidikan, create_by) VALUES ('$id_userAnggota', '$nama_anggota', '$nik', '$nisn', '$nim', '$id_pengajuan', '$id_pendidikan', '$id_user')";
-    if (mysqli_query($conn, $sqlTambah)){
+    if (mysqli_query($conn, $sqlTambah)) {
         $sqlTambah2 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_userAnggota', '$email', '3', '$id_user')";
-        if (mysqli_query($conn, $sqlTambah2)){
+        if (mysqli_query($conn, $sqlTambah2)) {
             showAlert('Berhasil!', 'Data Anggota Berhasil di tambah', 'success', "user3_statusPengajuan.php");
             exit();
-        }else{
+        } else {
             showAlert('Gagal!', 'Data anggota gagal di tambah. Silakan coba lagi.', 'error');
-        }   
+        }
     }
 }
 
-function hapusAnggota($id_user, $id_pengajuan){
+function hapusAnggota($id_user, $id_pengajuan)
+{
     global $conn;
     $id_userHapus = $_GET['id_userHapus'];
     $sql2 =  "UPDATE tb_user 
@@ -687,28 +737,29 @@ function hapusAnggota($id_user, $id_pengajuan){
             WHERE tb_user.id_user = '$id_userHapus' 
             AND tb_profile_user.id_pengajuan = '$id_pengajuan'";
 
-    if (mysqli_query($conn, $sql2)){
+    if (mysqli_query($conn, $sql2)) {
         showAlert('Berhasil!', 'Data Anggota Berhasil Dihapus', 'success', "user3_statusPengajuan.php");
         exit();
-    }else{
+    } else {
         showAlert('Gagal!', 'Data anggota gagal dihapus. Silakan coba lagi.', 'error');
-    }   
+    }
 }
 
 // =============== ABSENSI ======================
-function generateIdAbsensi($conn, $id_user) {
+function generateIdAbsensi($conn, $id_user)
+{
     // Ambil counter terbesar untuk id_user ini
     $sql_max = "SELECT MAX(CAST(SUBSTRING(id_absensi, -3) AS UNSIGNED)) as max_counter 
                 FROM tb_absensi 
                 WHERE id_user = '$id_user'";
     $result = mysqli_query($conn, $sql_max);
-    
+
     if (!$result) {
         die("Query failed: " . mysqli_error($conn));
     }
-    
+
     $row = mysqli_fetch_assoc($result);
-    
+
     // Jika belum ada data, mulai dari 1, else tambah 1 ke counter terbesar
     $counter = ($row['max_counter'] === null) ? 1 : $row['max_counter'] + 1;
     $counter = str_pad($counter, 3, '0', STR_PAD_LEFT); // Format 3 digit dengan leading zero
@@ -804,7 +855,8 @@ function inputAbsensi($postData, $id_pengajuan, $id_user) {
 }
 
 // ================= PROFILE ==============
-function updateProfile($POST, $FILES, $id_user, $dataLama){
+function updateProfile($POST, $FILES, $id_user, $dataLama)
+{
     global $conn;
     $nama_user = $POST['nama'];
     $tempat_lahir = $POST['tempat_lahir'];
@@ -828,7 +880,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         $jurusan = $POST['jurusan'];
         $nim = $POST['nim'];
         $nisn = NULL; // NISN not needed for universities
-        
+
         // Get education ID with faculty
         $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan 
                             WHERE nama_pendidikan = '$pendidikan[nama_pendidikan]' 
@@ -840,7 +892,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         $jurusan = $POST['jurusan'];
         $nisn = $POST['nisn'];
         $nim = NULL; // NIM not needed for schools
-        
+
         // Get education ID without faculty
         $query_pendidikan = "SELECT id_pendidikan FROM tb_pendidikan 
                             WHERE nama_pendidikan = '$pendidikan[nama_pendidikan]' 
@@ -858,7 +910,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         $image_name = time() . "_" . $FILES['image']['name'];
         $target_dir = "../assets/img/user/";
         $target_file = $target_dir . basename($image_name);
-        
+
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             $gambar_update = ", gambar_user = '$image_name'";
         } else {
@@ -884,7 +936,7 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         alamat_user = '$alamat_user',
         change_by = '$id_user'
         $gambar_update WHERE id_user = '$id_user'";
-    
+
     $query5 = mysqli_query($conn, $sql5);
 
     if ($query5) {
@@ -892,8 +944,8 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
         exit();
     } else {
         showAlert('Gagal!', 'Profil gagal diupdate. Silakan coba lagi.', 'error');
-    } 
-} 
+    }
+}
 
 
 
@@ -902,7 +954,8 @@ function updateProfile($POST, $FILES, $id_user, $dataLama){
 
 
 // =========================== pembimbing ========================
-function generateId_nilai($id_pengajuan) {
+function generateId_nilai($id_pengajuan)
+{
     global $conn;
     // Ambil ID nilai terbesar berdasarkan id_pengajuan
     $query = "SELECT id_nilai FROM tb_nilai WHERE id_pengajuan = '$id_pengajuan' ORDER BY id_nilai DESC LIMIT 1";
@@ -920,9 +973,10 @@ function generateId_nilai($id_pengajuan) {
     return $id_pengajuan . $newCounter;
 }
 
-function pembimbing_input_nilai($data) {
+function pembimbing_input_nilai($data)
+{
     global $conn;
-    
+
     $id_pengajuan = mysqli_real_escape_string($conn, $data['id_pengajuan']);
     $id_user = mysqli_real_escape_string($conn, $data['id_user']);
     $create_by = mysqli_real_escape_string($conn, $data['create_by']);
@@ -941,7 +995,7 @@ function pembimbing_input_nilai($data) {
 
     // Ambil bulan sekarang
     $bulan = date('m');
-    
+
     // Ambil nomor urut terakhir dari instansi tersebut di bulan ini
     $query = "SELECT nomor_nilai FROM tb_nilai 
               WHERE id_instansi = '$id_instansi' 
@@ -990,9 +1044,10 @@ function pembimbing_input_nilai($data) {
 
 
 
-function pembimbing_update_nilai($data) {
+function pembimbing_update_nilai($data)
+{
     global $conn;
-    
+
     $id_nilai = mysqli_real_escape_string($conn, $data['id_nilai']);
     $change_by = mysqli_real_escape_string($conn, $data['change_by']);
     $bidang_keahlian = mysqli_real_escape_string($conn, $data['bidang_keahlian']);
@@ -1005,7 +1060,7 @@ function pembimbing_update_nilai($data) {
     $catatan = mysqli_real_escape_string($conn, $data['catatan']);
 
     $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
-    
+
     // Update data ke database
     $query = "UPDATE tb_nilai SET 
                 bidang_keahlian = '$bidang_keahlian',
@@ -1019,11 +1074,12 @@ function pembimbing_update_nilai($data) {
                 catatan = '$catatan'
                 change_by = '$change_by',
                 WHERE id_nilai = '$id_nilai'";
-    
+
     return mysqli_query($conn, $query);
 }
 
-function update_logbook_seen($id_logbook, $id_pembimbing) {
+function update_logbook_seen($id_logbook, $id_pembimbing)
+{
     global $conn;
     $query = "UPDATE tb_logbook SET status_active = '2' WHERE id_logbook = '$id_logbook'";
     return mysqli_query($conn, $query);
@@ -1031,7 +1087,8 @@ function update_logbook_seen($id_logbook, $id_pembimbing) {
 
 
 
-function generateId_persetujuan($id_pembimbing) {
+function generateId_persetujuan($id_pembimbing)
+{
     global $conn;
 
     $query = "SELECT id_persetujuan FROM tb_persetujuan_pembimbing WHERE id_pembimbing = '$id_pembimbing' ORDER BY id_persetujuan DESC LIMIT 1";
@@ -1055,7 +1112,8 @@ function generateId_persetujuan($id_pembimbing) {
 =============================================================================
 */
 // Fungsi untuk mengambil data pengajuan berdasarkan id_instansi
-function getDataPengajuanByInstansi($conn, $id_instansi) {
+function getDataPengajuanByInstansi($conn, $id_instansi)
+{
     $sql = "SELECT  
                 pu.nama_user, b.nama_bidang, b.kuota_bidang, b.id_bidang, i.nama_panjang,
                 COALESCE(pa.jumlah_pemagang_aktif, 0) AS jumlah_pemagang_aktif, 
@@ -1096,7 +1154,8 @@ function getDataPengajuanByInstansi($conn, $id_instansi) {
 }
 
 // Fungsi untuk mengambil data nama pelamar berdasarkan id_instansi
-function getNamaPelamarByPengajuan($conn, $id_instansi) {
+function getNamaPelamarByPengajuan($conn, $id_instansi)
+{
     $sql = "SELECT 
                 p.id_pengajuan, 
                 GROUP_CONCAT(pu.nama_user SEPARATOR ', ') AS daftar_nama
@@ -1126,7 +1185,8 @@ function getNamaPelamarByPengajuan($conn, $id_instansi) {
 }
 
 // Fungsi untuk mengambil data dokumen berdasarkan id_instansi
-function getDokumenByInstansi($conn, $id_instansi) {
+function getDokumenByInstansi($conn, $id_instansi)
+{
     $sql = "SELECT 
                 d.id_pengajuan, 
                 d.id_user, 
@@ -1175,15 +1235,16 @@ function getDokumenByInstansi($conn, $id_instansi) {
 
 
 // pembuatan nomor sertifikat
-function generateKodeSurat($no_urut, $id_instansi) {
+function generateKodeSurat($no_urut, $id_instansi)
+{
     $tahun = date('Y');
 
     // Format ID instansi jadi xxx.xx.xx.xx
     $id_str = str_pad($id_instansi, 9, '0', STR_PAD_LEFT);
     $id_formatted = substr($id_str, 0, 3) . '.' .
-                    substr($id_str, 3, 2) . '.' .
-                    substr($id_str, 5, 2) . '.' .
-                    substr($id_str, 7, 2);
+        substr($id_str, 3, 2) . '.' .
+        substr($id_str, 5, 2) . '.' .
+        substr($id_str, 7, 2);
     // Gabungkan semuanya ke dalam format akhir
     $kode = "404.14.5.4/{$no_urut}/{$id_formatted}/{$tahun}";
     return $kode;
@@ -1194,4 +1255,4 @@ function generateKodeSurat($no_urut, $id_instansi) {
 
 
 
-?>
+            ?>
