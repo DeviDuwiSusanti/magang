@@ -330,243 +330,236 @@ endif;
                     </div>
                 <?php endif; ?>
 
-               <!-- Card 5 /ABSENSI -->
+                <!-- Card 5 /ABSENSI -->
                 <?php
                 if (isset($_POST['input_absen'])) {
-                    inputAbsensi($_POST, $id_pengajuan, $id_user); // Modified to use $_POST instead of $_FILES
+                    // Validate that photo_data exists
+                    if (!isset($_POST['photo_data']) || empty($_POST['photo_data'])) {
+                        showAlert('Error!', 'Foto absensi tidak valid', 'error', "dashboard.php");
+                        exit();
+                    }
+                    
+                    // Call the function with the correct parameters
+                    inputAbsensi($_POST, $id_pengajuan, $id_user);
                 }
                 ?>
                 <?php 
-                if (isset($status_pengajuan)):
+                if (ISSET($status_pengajuan)):
                     if (($ketua || $anggota) && $level == "3" && $status_pengajuan == '4') :
-                        $tanggal_sekarang = date('Y-m-d');  
-                        $sqlAbsen = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM tb_absensi WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND tanggal_absensi = '$tanggal_sekarang'"));
-                ?>
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card shadow-sm border-0">
-                        <div class="card-body">
-                            <h5 class="card-title">Absensi</h5><p></p>
-                            <!-- Smaller date text -->
-                            <p class="text-muted mb-1" style="font-size: 0.9rem;">
-                                <?= formatTanggalLengkapIndonesia(date('Y-m-d')) ?>
-                            </p>
-                            
-                            <!-- Time display section -->
-                            <div class="d-flex justify-content-between">
-                                <span class="text-muted">Datang :</span>
-                                <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_datang']) ? date('H:i', strtotime($sqlAbsen['jam_datang'])) : '-' ?></span>
-                                <span class="mx-2">|</span>
-                                <span class="text-muted">Pulang :</span>
-                                <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_pulang']) ? date('H:i', strtotime($sqlAbsen['jam_pulang'])) : '-' ?></span>
-                            </div>
-                            <br>
-                            <!-- Upload Photo Button -->
-                            <?php 
-                            if (!$sqlAbsen): ?>
-                                <button type="button" class="btn btn-primary mt-3 detail" onclick="setAbsenStatus('datang')" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
-                                    <i class="fas fa-camera me-2"></i>Absen Datang
-                                </button>
-                            <?php else:
-                                if ($sqlAbsen['jam_pulang'] == NULL): ?>
-                                    <button type="button" class="btn btn-danger mt-3 detail" onclick="setAbsenStatus('pulang')" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
-                                        <i class="fas fa-camera me-2"></i>Absen Pulang
+                            $tanggal_sekarang = date('Y-m-d');  
+                            $sqlAbsen = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM tb_absensi WHERE id_pengajuan = '$id_pengajuan' AND id_user = '$id_user' AND tanggal_absensi = '$tanggal_sekarang'"));
+                    ?>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body">
+                                <h5 class="card-title">Absensi</h5><p></p>
+                                <!-- Smaller date text -->
+                                <p class="text-muted mb-1" style="font-size: 0.9rem;">
+                                    <?= formatTanggalLengkapIndonesia(date('Y-m-d')) ?> <!-- Current date like "12 Mei 2025" -->
+                                </p>
+                                
+                                <!-- Time display section -->
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Datang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_datang']) ? date('H:i', strtotime($sqlAbsen['jam_datang'])) : '-' ?></span>
+                                    <span class="mx-2">|</span>
+                                    <span class="text-muted">Pulang :</span>
+                                    <span class="text-muted" style="display: inline-block; vertical-align: middle; height: 24px; line-height: 24px;"><?= !empty($sqlAbsen['jam_pulang']) ? date('H:i', strtotime($sqlAbsen['jam_pulang'])) : '-' ?></span>
+                                </div>
+                                <br>
+                                <!-- Upload Photo Button -->
+                                <?php 
+                                if (!$sqlAbsen): ?>
+                                    <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+                                        <i class="fas fa-camera me-2"></i>Lakukan Absensi
                                     </button>
-                                <?php else:?>
-                                    <button type="button" class="btn btn-success mt-3 detail" disabled>
-                                        <i class="fas fa-check me-2"></i>Absen Selesai
-                                    </button>
-                                <?php endif;?>  
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- MODAL ABSENSI -->
-                <div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title" id="uploadFotoModalLabel">
-                                    <i class="fas fa-camera me-2"></i>Ambil Foto Absensi
-                                </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="absensiForm" action="" method="post">
-                                    <input type="hidden" name="status_absen" id="statusAbsen">
-                                    <!-- Tampilan Hari, Tanggal, dan Jam -->
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Waktu Absensi:</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-primary text-white">
-                                                <i class="fas fa-calendar-alt"></i>
-                                            </span>
-                                            <input type="text" class="form-control fw-bold" id="waktuAbsensi" readonly>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Camera Capture -->
-                                    <div class="mb-3">
-                                        <label class="form-label fw-bold">Ambil Foto:</label>
-                                        <div class="camera-container border rounded p-1 text-center">
-                                            <video id="video" width="100%" autoplay playsinline style="display: none;"></video>
-                                            <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
-                                            <div id="startCamera" class="d-grid gap-2">
-                                                <button type="button" class="btn btn-primary" onclick="startCamera()">
-                                                    <i class="fas fa-camera me-2"></i>Buka Kamera
-                                                </button>
-                                            </div>
-                                            <div id="cameraControls" style="display: none;">
-                                                <button type="button" class="btn btn-success my-2" onclick="captureImage()">
-                                                    <i class="fas fa-camera me-2"></i>Ambil Foto
-                                                </button>
-                                                <button type="button" class="btn btn-danger" onclick="stopCamera()">
-                                                    <i class="fas fa-times me-2"></i>Tutup Kamera
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" id="photoData" name="photo_data">
-                                    </div>
-
-                                    <!-- Image Preview Container -->
-                                    <div class="mb-3 text-center" id="imagePreviewContainer" style="display: none;">
-                                        <img id="imagePreview" src="#" alt="Preview Gambar" class="img-thumbnail mt-2" style="max-height: 200px;">
-                                        <button type="button" class="btn btn-warning btn-sm mt-2" onclick="retakePhoto()">
-                                            <i class="fas fa-redo me-1"></i>Ambil Ulang
+                                <?php else:
+                                    if  ($sqlAbsen['jam_pulang'] == NULL): ?>
+                                        <button type="button" class="btn btn-primary mt-3 detail" data-bs-toggle="modal" data-bs-target="#uploadFotoModal">
+                                            <i class="fas fa-camera me-2"></i>Lakukan Absensi
                                         </button>
-                                    </div>  
-
-                                    <div class="d-grid gap-2">
-                                        <button type="submit" name="input_absen" class="btn btn-primary" id="submitBtn" disabled>
-                                            <i class="fas fa-upload me-2"></i>Kirim
+                                    <?php else:?>
+                                        <button type="button" class="btn btn-primary mt-3 detail">
+                                            <i class="fas fa-camera me-2"></i>Absen Selesai
                                         </button>
-                                    </div>  
-                                </form>
+                                    <?php endif;?>  
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <script>
-                let videoStream = null;
-                let absenStatus = 'datang';
+                   <!-- MODAL ABSENSI  -->
+                    <div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title" id="uploadFotoModalLabel">
+                                        <i class="fas fa-camera me-2"></i>Ambil Foto Absensi
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="absensiForm" action="" method="post" enctype="multipart/form-data">
+                                        <!-- Tampilan Hari, Tanggal, dan Jam -->
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Waktu Absensi:</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-primary text-white">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </span>
+                                                <input type="text" class="form-control fw-bold" id="waktuAbsensi" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Camera Capture -->
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Ambil Foto:</label>
+                                            <div class="camera-container border rounded p-1 text-center">
+                                                <video id="video" width="100%" autoplay playsinline style="display: none;"></video>
+                                                <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+                                                <div id="startCamera" class="d-grid gap-2">
+                                                    <button type="button" class="btn btn-primary" onclick="startCamera()">
+                                                        <i class="fas fa-camera me-2"></i>Buka Kamera
+                                                    </button>
+                                                </div>
+                                                <div id="cameraControls" style="display: none;">
+                                                    <button type="button" class="btn btn-success my-2" onclick="captureImage()">
+                                                        <i class="fas fa-camera me-2"></i>Ambil Foto
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" onclick="stopCamera()">
+                                                        <i class="fas fa-times me-2"></i>Tutup Kamera
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="photoData" name="photo_data">
+                                        </div>
 
-                function setAbsenStatus(status) {
-                    absenStatus = status;
-                    document.getElementById('statusAbsen').value = status;
-                    document.getElementById('uploadFotoModalLabel').innerHTML = 
-                        `<i class="fas fa-camera me-2"></i>Absen ${status === 'datang' ? 'Datang' : 'Pulang'}`;
-                }
+                                        <!-- Image Preview Container -->
+                                        <div class="mb-3 text-center" id="imagePreviewContainer" style="display: none;">
+                                            <img id="imagePreview" src="#" alt="Preview Gambar" class="img-thumbnail mt-2" style="max-height: 200px;">
+                                            <button type="button" class="btn btn-warning btn-sm mt-2" onclick="retakePhoto()">
+                                                <i class="fas fa-redo me-1"></i>Ambil Ulang
+                                            </button>
+                                        </div>  
 
-                function startCamera() {
-                    document.getElementById('startCamera').style.display = 'none';
-                    document.getElementById('video').style.display = 'block';
-                    document.getElementById('cameraControls').style.display = 'block';
-                    
-                    navigator.mediaDevices.getUserMedia({ 
-                        video: { 
-                            facingMode: 'user',
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 }
-                        }, 
-                        audio: false 
-                    })
-                    .then(function(stream) {
-                        videoStream = stream;
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" name="input_absen" class="btn btn-primary" id="submitBtn" disabled>
+                                                <i class="fas fa-upload me-2"></i>Kirim
+                                            </button>
+                                        </div>  
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                    let videoStream = null;
+
+                    function startCamera() {
+                        document.getElementById('startCamera').style.display = 'none';
+                        document.getElementById('video').style.display = 'block';
+                        document.getElementById('cameraControls').style.display = 'block';
+                        
+                        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+                            .then(function(stream) {
+                                videoStream = stream;
+                                const video = document.getElementById('video');
+                                video.srcObject = stream;
+                                video.play();
+                            })
+                            .catch(function(err) {
+                                console.error("Error accessing camera: ", err);
+                                alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin akses kamera.");
+                                stopCamera();
+                            });
+                    }
+
+                    function stopCamera() {
+                        if (videoStream) {
+                            videoStream.getTracks().forEach(track => track.stop());
+                            videoStream = null;
+                        }
+                        document.getElementById('video').style.display = 'none';
+                        document.getElementById('canvas').style.display = 'none';
+                        document.getElementById('cameraControls').style.display = 'none';
+                        document.getElementById('startCamera').style.display = 'block';
+                    }
+
+                    function captureImage() {
                         const video = document.getElementById('video');
-                        video.srcObject = stream;
-                        video.play();
-                    })
-                    .catch(function(err) {
-                        console.error("Error accessing camera: ", err);
-                        alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin akses kamera.");
-                        stopCamera();
+                        const canvas = document.getElementById('canvas');
+                        const context = canvas.getContext('2d');
+                        
+                        // Set canvas size to match video
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        
+                        // Draw video frame to canvas
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        // Convert to data URL and show preview
+                        const imageDataUrl = canvas.toDataURL('image/jpeg');
+                        document.getElementById('photoData').value = imageDataUrl;
+                        
+                        // Show preview
+                        document.getElementById('imagePreview').src = imageDataUrl;
+                        document.getElementById('imagePreviewContainer').style.display = 'block';
+                        document.getElementById('submitBtn').disabled = false;
+                        
+                        // Hide camera
+                        document.getElementById('video').style.display = 'none';
+                        document.getElementById('cameraControls').style.display = 'none';
+                    }
+
+                    function retakePhoto() {
+                        document.getElementById('imagePreviewContainer').style.display = 'none';
+                        document.getElementById('photoData').value = '';
+                        document.getElementById('submitBtn').disabled = true;
+                        startCamera();
+                    }
+
+                    // Update waktu absensi
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const now = new Date();
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                        document.getElementById('waktuAbsensi').value = now.toLocaleDateString('id-ID', options);
                     });
-                }
+                    </script>
+                    <script>
+                        // Fungsi untuk menampilkan waktu dalam format Indonesia
+                        function updateWaktuAbsensi() {
+                            const sekarang = new Date();
+                            const options = {
+                                weekday: 'long',
+                                day: 'numeric',
+                                month: 'long',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: false
+                            };
+                            
+                            document.getElementById('waktuAbsensi').value = sekarang.toLocaleDateString('id-ID', options);
+                        }
 
-                function stopCamera() {
-                    if (videoStream) {
-                        videoStream.getTracks().forEach(track => track.stop());
-                        videoStream = null;
-                    }
-                    document.getElementById('video').style.display = 'none';
-                    document.getElementById('canvas').style.display = 'none';
-                    document.getElementById('cameraControls').style.display = 'none';
-                    document.getElementById('startCamera').style.display = 'block';
-                }
+                        // Update waktu saat modal dibuka
+                        document.getElementById('uploadFotoModal').addEventListener('show.bs.modal', function() {
+                            updateWaktuAbsensi();
+                            // Update setiap detik
+                            this.waktuInterval = setInterval(updateWaktuAbsensi, 1000);
+                        });
 
-                function captureImage() {
-                    const video = document.getElementById('video');
-                    const canvas = document.getElementById('canvas');
-                    const context = canvas.getContext('2d');
-                    
-                    // Set canvas size to match video
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    
-                    // Draw video frame to canvas
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    
-                    // Convert to data URL and show preview
-                    const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8); // 0.8 quality compression
-                    document.getElementById('photoData').value = imageDataUrl;
-                    
-                    // Show preview
-                    document.getElementById('imagePreview').src = imageDataUrl;
-                    document.getElementById('imagePreviewContainer').style.display = 'block';
-                    document.getElementById('submitBtn').disabled = false;
-                    
-                    // Hide camera
-                    stopCamera();
-                }
+                        // Hentikan interval saat modal ditutup
+                        document.getElementById('uploadFotoModal').addEventListener('hidden.bs.modal', function() {
+                            clearInterval(this.waktuInterval);
+                        });
+                    </script>
 
-                function retakePhoto() {
-                    document.getElementById('imagePreviewContainer').style.display = 'none';
-                    document.getElementById('photoData').value = '';
-                    document.getElementById('submitBtn').disabled = true;
-                    startCamera();
-                }
-
-                // Update waktu absensi
-                function updateWaktuAbsensi() {
-                    const now = new Date();
-                    const options = { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric', 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        timeZone: 'Asia/Jakarta'
-                    };
-                    document.getElementById('waktuAbsensi').value = now.toLocaleDateString('id-ID', options);
-                }
-
-                // Update waktu saat modal dibuka
-                document.getElementById('uploadFotoModal').addEventListener('show.bs.modal', function() {
-                    updateWaktuAbsensi();
-                    this.waktuInterval = setInterval(updateWaktuAbsensi, 1000);
-                });
-
-                // Hentikan interval saat modal ditutup
-                document.getElementById('uploadFotoModal').addEventListener('hidden.bs.modal', function() {
-                    clearInterval(this.waktuInterval);
-                    stopCamera();
-                    document.getElementById('imagePreviewContainer').style.display = 'none';
-                    document.getElementById('photoData').value = '';
-                    document.getElementById('submitBtn').disabled = true;
-                });
-
-                // Handle form submission
-                document.getElementById('absensiForm').addEventListener('submit', function(e) {
-                    if (!document.getElementById('photoData').value) {
-                        e.preventDefault();
-                        alert('Silakan ambil foto terlebih dahulu');
-                    }
-                });
-                </script>
+                   
                 <?php endif; ?>
-                <?php endif; ?>
+            <?php endif; ?>
   
             <!-- ============== pembimbing ========== -->
             <?php if ($level == 4) : ?>
