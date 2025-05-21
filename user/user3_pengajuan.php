@@ -2,7 +2,7 @@
 
 // Ambil data instansi yang memiliki kuota
 $sql_instansi = "SELECT i.id_instansi, i.nama_panjang, SUM(b.kuota_bidang) AS total_kuota FROM tb_instansi i JOIN tb_bidang b ON i.id_instansi = b.id_instansi 
-                WHERE b.kuota_bidang > 0 GROUP BY i.id_instansi, i.nama_panjang ORDER BY total_kuota DESC";
+                WHERE b.kuota_bidang > 0 AND i.status_active = '1' AND b.status_active = '1' GROUP BY i.id_instansi, i.nama_panjang ORDER BY total_kuota DESC";
 $result_instansi = mysqli_query($conn, $sql_instansi);
 
 // ambil data pendaftar
