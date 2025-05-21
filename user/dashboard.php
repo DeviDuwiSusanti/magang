@@ -305,7 +305,7 @@ endif;
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card shadow-sm border-0">
                         <div class="card-body">
-                            <h5 class="card-title">Cek Sertifikat dan Nilai</h5>
+                            <h5 class="card-title">Sertifikat dan Nilai</h5>
                             <h2 class="card-text text-warning"><?= $total_nilai ?></h2>
                             <p class="text-muted">Tersedia</p>
                             <a href="user3_histori.php" class="btn btn-warning mt-3 detail">View Details</a>
