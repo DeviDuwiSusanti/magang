@@ -34,11 +34,12 @@ if (isset($_POST['tanggal']) && isset($_POST['id_user']) && isset($_POST['id_pen
     echo json_encode($response);
 }
 
+// akses bidang dari instansi
 if (isset($_POST["id_instansi"])) {
     $id_instansi = mysqli_real_escape_string($conn, $_POST["id_instansi"]);
 
     $sql = "SELECT id_bidang, nama_bidang, kuota_bidang FROM tb_bidang 
-            WHERE id_instansi = '$id_instansi' AND kuota_bidang > 0 
+            WHERE id_instansi = '$id_instansi' AND kuota_bidang > 0 AND status_active = '1'
             ORDER BY nama_bidang ASC";
     $result = mysqli_query($conn, $sql);
 
@@ -50,11 +51,12 @@ if (isset($_POST["id_instansi"])) {
     echo $options ?: '<option value="" disabled>Bidang tidak tersedia</option>';
 }
 
+// akses detail bidang
 if (isset($_POST["id_bidang"])) {
     $id_bidang = mysqli_real_escape_string($conn, $_POST["id_bidang"]);
 
     $sql = "SELECT * FROM tb_bidang b, tb_instansi i WHERE b.id_instansi = i.id_instansi
-            AND id_bidang = '$id_bidang'";
+            AND id_bidang = '$id_bidang' AND b.status_active = '1'";
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
