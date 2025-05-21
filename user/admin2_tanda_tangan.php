@@ -98,7 +98,11 @@ $no = 1;
                                     </td>
                                     <td>
                                         <div class="text-center">
-                                            <div class="qr-wrapper mx-auto mb-1" id="qr-container-<?= $nilai['id_nilai'] ?>"></div>
+                                            <div>
+                                                <?php if (!empty($nilai["url_qr"])) : ?>
+                                                <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($nilai['url_qr']) ?>&size=150x150" alt="QR Code">
+                                                <?php endif; ?>
+                                            </div>
                                             <small class="text-muted d-block"><a href="<?= $nilai["url_qr"] ?>"><i class="bi bi-eye"></i></a></small>
                                             <div class="mt-2">
                                                 <button type="button" class="btn btn-sm btn-primary downloadQR" 
