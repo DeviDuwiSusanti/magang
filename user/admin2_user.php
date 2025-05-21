@@ -51,7 +51,6 @@ $result = mysqli_query($conn, $sql);
                             <th>Nama User</th>
                             <th>Nama Bidang</th>
                             <th>Jenis Kegiatan</th>
-                            <!-- <th>Jumlah Pemagang</th> -->
                             <th>Periode</th>
                             <th>Durasi</th>
                             <th>Pembimbing</th>
@@ -65,7 +64,6 @@ $result = mysqli_query($conn, $sql);
                                 <td><?= $row["nama_user"] ?></td>
                                 <td><?= $row["nama_bidang"] ?></td>
                                 <td><?= $row["jenis_pengajuan"] ?></td>
-                                <!-- <td><?= $row["jumlah_pelamar"] ?></td> -->
                                 <td>
                                     <?php
                                     if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {

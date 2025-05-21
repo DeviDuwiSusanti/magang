@@ -176,7 +176,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                previewImage.src = e.target.result; // Tampilkan pratinjau gambar baru
+                previewImage.src = e.target.result;
                 previewContainer.style.display = "block";
             };
             reader.readAsDataURL(file);
