@@ -719,9 +719,16 @@ function generateIdAbsensi($conn, $id_user) {
     return $id_absensi;
 }
 
-function inputAbsensi($FILES, $id_pengajuan, $id_user) {
+function inputAbsensi($postData, $id_pengajuan, $id_user) {
     global $conn;
 
+    // First, validate the photo data
+    if (!isset($postData['photo_data']) || empty($postData['photo_data'])) {
+        showAlert('Error!', 'Foto absensi tidak valid', 'error', "dashboard.php");
+        exit();
+    }
+
+    $photoData = $postData['photo_data'];
     $tanggal_sekarang = date('Y-m-d'); 
     $jam_sekarang = date('H:i:s'); 
 
@@ -731,31 +738,69 @@ function inputAbsensi($FILES, $id_pengajuan, $id_user) {
         mkdir($absen_folder, 0777, true);
     }
 
-     // Upload foto ke folder user
-    $uploadedFoto = uploadFoto($FILES['absensi_foto'], $absen_folder);
-    $target_file = $uploadedFoto['path'];
+    // Process the base64 image data
+    $imageData = explode(',', $photoData);
+    if (count($imageData) < 2) {
+        showAlert('Error!', 'Format foto tidak valid', 'error', "dashboard.php");
+        exit();
+    }
 
-    $cek_absen = mysqli_query($conn, "SELECT id_user, id_pengajuan, tanggal_absensi FROM tb_absensi WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' AND tanggal_absensi = '$tanggal_sekarang'");
+    $imageData = $imageData[1]; // Get the actual base64 data part
+    $imageData = str_replace(' ', '+', $imageData);
+    $decodedImage = base64_decode($imageData);
+
+    // Verify the decoded image
+    if ($decodedImage === false) {
+        showAlert('Error!', 'Gagal memproses foto', 'error', "dashboard.php");
+        exit();
+    }
+
+    // Generate unique filename
+    $filename = 'absensi_' . $id_user . '_' . time() . '.jpg';
+    $target_file = $absen_folder . $filename;
+
+    // Save the image file
+    if (!file_put_contents($target_file, $decodedImage)) {
+        showAlert('Error!', 'Gagal menyimpan foto absensi', 'error', "dashboard.php");
+        exit();
+    }
+
+    $cek_absen = mysqli_query($conn, "SELECT id_user, id_pengajuan, tanggal_absensi FROM tb_absensi 
+                                     WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' 
+                                     AND tanggal_absensi = '$tanggal_sekarang'");
     $absen = mysqli_fetch_assoc($cek_absen);
 
-    if ($absen == NULL){
+    if ($absen == NULL) {
         // generate id_absensi
         $id_absensi = generateIdAbsensi($conn, $id_user);
-        $absen_masuk = mysqli_query($conn, "INSERT INTO tb_absensi (id_absensi, id_user, id_pengajuan, tanggal_absensi, foto_datang, jam_datang, create_by, create_date)
+        $absen_masuk = mysqli_query($conn, "INSERT INTO tb_absensi 
+            (id_absensi, id_user, id_pengajuan, tanggal_absensi, foto_datang, jam_datang, create_by, create_date)
             VALUES ('$id_absensi', '$id_user', '$id_pengajuan', '$tanggal_sekarang', '$target_file', '$jam_sekarang', '$id_user', NOW())");
-        if ($absen_masuk){
+        
+        if ($absen_masuk) {
             showAlert('Berhasil!', 'Berhasil Absen Masuk Untuk Hari Ini, Jangan Lupa Untuk Absen Pulang Yaa', 'success', "dashboard.php");
             exit();
         }
-    } else{
-        $sql_id_absensi = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id_absensi FROM tb_absensi WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' AND tanggal_absensi = '$tanggal_sekarang'"));
+    } else {
+        $sql_id_absensi = mysqli_fetch_assoc(mysqli_query($conn, "SELECT id_absensi FROM tb_absensi 
+                                WHERE id_user = '$id_user' AND id_pengajuan = '$id_pengajuan' 
+                                AND tanggal_absensi = '$tanggal_sekarang'"));
         $id_absensi = $sql_id_absensi['id_absensi'];
-        $absen_pulang = mysqli_query($conn, "UPDATE tb_absensi SET foto_pulang = '$target_file', jam_pulang = '$jam_sekarang', change_by = '$id_user', change_date = NOW() WHERE id_absensi = '$id_absensi'");
-        if ($absen_pulang){
+        
+        $absen_pulang = mysqli_query($conn, "UPDATE tb_absensi 
+            SET foto_pulang = '$target_file', jam_pulang = '$jam_sekarang', 
+            change_by = '$id_user', change_date = NOW() 
+            WHERE id_absensi = '$id_absensi'");
+            
+        if ($absen_pulang) {
             showAlert('Berhasil!', 'Berhasil Absen Pulang Untuk Hari Ini, Jangan Lupa Untuk Absen Besok Yaa', 'success', "dashboard.php");
             exit();
         }
     }
+    
+    // If we reach here, something went wrong
+    showAlert('Error!', 'Gagal melakukan absensi', 'error', "dashboard.php");
+    exit();
 }
 
 // ================= PROFILE ==============
