@@ -332,8 +332,15 @@ endif;
 
                 <!-- Card 5 /ABSENSI -->
                 <?php
-                if (ISSET($_POST['input_absen'])){
-                    inputAbsensi($_FILES, $id_pengajuan, $id_user);
+                if (isset($_POST['input_absen'])) {
+                    // Validate that photo_data exists
+                    if (!isset($_POST['photo_data']) || empty($_POST['photo_data'])) {
+                        showAlert('Error!', 'Foto absensi tidak valid', 'error', "dashboard.php");
+                        exit();
+                    }
+                    
+                    // Call the function with the correct parameters
+                    inputAbsensi($_POST, $id_pengajuan, $id_user);
                 }
                 ?>
                 <?php 
@@ -550,72 +557,7 @@ endif;
                         });
                     </script>
 
-                    <!-- Preview image -->
-                    <script>
-                        function previewImage(input) {
-                            const previewContainer = document.getElementById('imagePreviewContainer');
-                            const previewImage = document.getElementById('imagePreview');
-                            const file = input.files[0];
-                            
-                            if (file) {
-                                const reader = new FileReader();
-                                
-                                reader.onload = function(e) {
-                                    previewImage.src = e.target.result;
-                                    previewContainer.style.display = 'block';
-                                }
-                                
-                                reader.readAsDataURL(file);
-                            }
-                        }
-
-                        function removePreview() {
-                            const previewContainer = document.getElementById('imagePreviewContainer');
-                            const fileInput = document.getElementById('absensiFoto');
-                            
-                            fileInput.value = ''; // Clear the file input
-                            previewContainer.style.display = 'none'; // Hide the preview container
-                        }
-                    
-                    </script>
-
-                    <!-- Validasi absensi -->
-                    <script>
-                        function showError(input, message) {
-                            const fileError = document.getElementById('fileError');
-                            input.value = '';
-                            input.classList.add('is-invalid');
-                            fileError.textContent = message;
-                            fileError.style.display = 'block';
-                        }
-
-                        // Form submission validation
-                        document.getElementById('absensiForm').addEventListener('submit', function(e) {
-                            const fileInput = document.getElementById('absensiFoto');
-                            const file = fileInput.files[0];
-                            
-                            if (!file) {
-                                e.preventDefault();
-                                showError(fileInput, 'Foto absensi harus diisi');
-                                return;
-                            }
-                            
-                            // Validate file type
-                            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-                            if (!validTypes.includes(file.type)) {
-                                e.preventDefault();
-                                showError(fileInput, 'Format file harus JPG, PNG, atau JPEG');
-                                return;
-                            }
-                            
-                            // Validate file size
-                            if (file.size > 1048576) {
-                                e.preventDefault();
-                                showError(fileInput, 'Ukuran file tidak boleh lebih dari 1MB');
-                                return;
-                            }
-                        });
-                    </script>
+                   
                 <?php endif; ?>
             <?php endif; ?>
   
