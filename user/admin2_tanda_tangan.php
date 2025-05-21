@@ -100,7 +100,7 @@ $no = 1;
                                         <div class="text-center">
                                             <div>
                                                 <?php if (!empty($nilai["url_qr"])) : ?>
-                                                <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($nilai['url_qr']) ?>&size=150x150" alt="QR Code">
+                                                <img style="height: auto; width: 100px;" src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($nilai['url_qr']) ?>&size=350x350" alt="QR Code">
                                                 <?php endif; ?>
                                             </div>
                                             <small class="text-muted d-block"><a href="<?= $nilai["url_qr"] ?>"><i class="bi bi-eye"></i></a></small>
