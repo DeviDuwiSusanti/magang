@@ -381,13 +381,13 @@ endif;
                         </div>
                     </div>
 
-                    <!-- MODAL ABSENSI  -->
+                   <!-- MODAL ABSENSI  -->
                     <div class="modal fade" id="uploadFotoModal" tabindex="-1" aria-labelledby="uploadFotoModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header bg-primary text-white">
                                     <h5 class="modal-title" id="uploadFotoModalLabel">
-                                        <i class="fas fa-camera me-2"></i>Upload Foto Absensi
+                                        <i class="fas fa-camera me-2"></i>Ambil Foto Absensi
                                     </h5>
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
@@ -404,22 +404,39 @@ endif;
                                             </div>
                                         </div>
                                         
-                                        <!-- Input Foto -->
+                                        <!-- Camera Capture -->
                                         <div class="mb-3">
-                                            <label for="absensiFoto" class="form-label fw-bold">Pilih Foto:</label>
-                                            <input class="form-control" type="file" id="absensiFoto" name="absensi_foto" accept="image/*" onchange="previewImage(this)">
-                                            <small class="text-muted">Format: JPG, PNG, JPEG (Maks. 1MB)</small>
-                                            <div id="fileError" class="invalid-feedback" style="display: none; color: red;"></div>
+                                            <label class="form-label fw-bold">Ambil Foto:</label>
+                                            <div class="camera-container border rounded p-1 text-center">
+                                                <video id="video" width="100%" autoplay playsinline style="display: none;"></video>
+                                                <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+                                                <div id="startCamera" class="d-grid gap-2">
+                                                    <button type="button" class="btn btn-primary" onclick="startCamera()">
+                                                        <i class="fas fa-camera me-2"></i>Buka Kamera
+                                                    </button>
+                                                </div>
+                                                <div id="cameraControls" style="display: none;">
+                                                    <button type="button" class="btn btn-success my-2" onclick="captureImage()">
+                                                        <i class="fas fa-camera me-2"></i>Ambil Foto
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" onclick="stopCamera()">
+                                                        <i class="fas fa-times me-2"></i>Tutup Kamera
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="photoData" name="photo_data">
                                         </div>
-                
+
                                         <!-- Image Preview Container -->
                                         <div class="mb-3 text-center" id="imagePreviewContainer" style="display: none;">
                                             <img id="imagePreview" src="#" alt="Preview Gambar" class="img-thumbnail mt-2" style="max-height: 200px;">
+                                            <button type="button" class="btn btn-warning btn-sm mt-2" onclick="retakePhoto()">
+                                                <i class="fas fa-redo me-1"></i>Ambil Ulang
+                                            </button>
                                         </div>  
 
-
                                         <div class="d-grid gap-2">
-                                            <button type="submit" name="input_absen" class="btn btn-primary">
+                                            <button type="submit" name="input_absen" class="btn btn-primary" id="submitBtn" disabled>
                                                 <i class="fas fa-upload me-2"></i>Kirim
                                             </button>
                                         </div>  
@@ -429,6 +446,79 @@ endif;
                         </div>
                     </div>
 
+                    <script>
+                    let videoStream = null;
+
+                    function startCamera() {
+                        document.getElementById('startCamera').style.display = 'none';
+                        document.getElementById('video').style.display = 'block';
+                        document.getElementById('cameraControls').style.display = 'block';
+                        
+                        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+                            .then(function(stream) {
+                                videoStream = stream;
+                                const video = document.getElementById('video');
+                                video.srcObject = stream;
+                                video.play();
+                            })
+                            .catch(function(err) {
+                                console.error("Error accessing camera: ", err);
+                                alert("Tidak dapat mengakses kamera. Pastikan Anda memberikan izin akses kamera.");
+                                stopCamera();
+                            });
+                    }
+
+                    function stopCamera() {
+                        if (videoStream) {
+                            videoStream.getTracks().forEach(track => track.stop());
+                            videoStream = null;
+                        }
+                        document.getElementById('video').style.display = 'none';
+                        document.getElementById('canvas').style.display = 'none';
+                        document.getElementById('cameraControls').style.display = 'none';
+                        document.getElementById('startCamera').style.display = 'block';
+                    }
+
+                    function captureImage() {
+                        const video = document.getElementById('video');
+                        const canvas = document.getElementById('canvas');
+                        const context = canvas.getContext('2d');
+                        
+                        // Set canvas size to match video
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        
+                        // Draw video frame to canvas
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        // Convert to data URL and show preview
+                        const imageDataUrl = canvas.toDataURL('image/jpeg');
+                        document.getElementById('photoData').value = imageDataUrl;
+                        
+                        // Show preview
+                        document.getElementById('imagePreview').src = imageDataUrl;
+                        document.getElementById('imagePreviewContainer').style.display = 'block';
+                        document.getElementById('submitBtn').disabled = false;
+                        
+                        // Hide camera
+                        document.getElementById('video').style.display = 'none';
+                        document.getElementById('cameraControls').style.display = 'none';
+                    }
+
+                    function retakePhoto() {
+                        document.getElementById('imagePreviewContainer').style.display = 'none';
+                        document.getElementById('photoData').value = '';
+                        document.getElementById('submitBtn').disabled = true;
+                        startCamera();
+                    }
+
+                    // Update waktu absensi
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const now = new Date();
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+                        document.getElementById('waktuAbsensi').value = now.toLocaleDateString('id-ID', options);
+                    });
+                    </script>
                     <script>
                         // Fungsi untuk menampilkan waktu dalam format Indonesia
                         function updateWaktuAbsensi() {
