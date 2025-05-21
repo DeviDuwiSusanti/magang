@@ -332,8 +332,15 @@ endif;
 
                 <!-- Card 5 /ABSENSI -->
                 <?php
-                if (ISSET($_POST['input_absen'])){
-                    inputAbsensi($_FILES, $id_pengajuan, $id_user);
+                if (isset($_POST['input_absen'])) {
+                    // Validate that photo_data exists
+                    if (!isset($_POST['photo_data']) || empty($_POST['photo_data'])) {
+                        showAlert('Error!', 'Foto absensi tidak valid', 'error', "dashboard.php");
+                        exit();
+                    }
+                    
+                    // Call the function with the correct parameters
+                    inputAbsensi($_POST, $id_pengajuan, $id_user);
                 }
                 ?>
                 <?php 
