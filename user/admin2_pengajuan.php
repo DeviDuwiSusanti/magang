@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['aksi_verifikasi_dokum
                                     if ($row['status_pengajuan'] == 1 && is_null($row['tanggal_zoom'])) {
                                         $status = 'Belum Ditanggapi';
                                         $badgeClass = 'badge bg-secondary';
-                                    } elseif ($row['status_pengajuan'] == 1 && !is_null($row['tanggal_zoom']) && $row['tanggal_zoom'] > date('Y-m-d')) {
+                                    } elseif ($row['status_pengajuan'] == 1 && !is_null($row['tanggal_zoom']) && $row['tanggal_zoom'] >= date('Y-m-d')) {
                                         $status = 'Wawancara Dikirim';
                                         $badgeClass = 'badge bg-info';
                                     } elseif ($row['status_pengajuan'] == 1 && $row['tanggal_zoom'] < date('Y-m-d')) {
