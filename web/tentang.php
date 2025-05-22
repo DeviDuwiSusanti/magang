@@ -10,8 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="../assets/css/beranda.css" />
-    <link rel="stylesheet" href="../assets/css/style2.css" />
+    <link rel="stylesheet" href="../assets/css/home.css" />
+    <link rel="stylesheet" href="../assets/css/style3.css" />
     <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
     <title>About</title>
     
@@ -26,7 +26,7 @@
         <section class="contact section" id="contact">
             <div class="contact__container container grid">
                 <div class="contact__images">
-                    <img src="../assets/img/home4.jpg" alt="" />
+                    <img src="../assets/img/tentang.png" alt="" />
                 </div>
 
                 <div class="contact__content">
