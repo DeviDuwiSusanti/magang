@@ -69,7 +69,7 @@ if (isset($_SESSION['email'])) {
                 <img 
                     src="<?= $user_image ?>" 
                     alt="User Image" 
-                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;"
+                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; object-position: top;"
                 >
             </a>
         <?php else: ?>

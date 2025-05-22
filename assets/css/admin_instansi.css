@@ -1331,11 +1331,6 @@ body.dark-mode #pembimbingContainer .text-muted {
     border: 8px solid transparent;
 }
 
-.table-responsive-sm {
-    border-radius: 8px;
-    -webkit-overflow-scrolling: touch;
-}
-
 .bi {
     vertical-align: middle;
 }

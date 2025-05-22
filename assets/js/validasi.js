@@ -157,6 +157,26 @@ function validateEditInstansi() {
     }
   }
 
+  // Validasi input link lokasi (opsional, tapi jika diisi harus link Google Maps)
+  const lokasiInstansi = document
+    .getElementById("lokasi_instansi")
+    .value.trim();
+
+  if (lokasiInstansi !== "") {
+    // Regex untuk memvalidasi URL Google Maps (baik goo.gl maupun google.com/maps)
+    const googleMapsRegex =
+      /^(https?:\/\/)?(maps\.app\.goo\.gl|www\.google\.com\/maps)[\/\w\?\&\=\.]+$/i;
+
+    if (!googleMapsRegex.test(lokasiInstansi)) {
+      showError(
+        "lokasi_instansi",
+        "lokasi_instansi_error",
+        "Link lokasi harus berasal dari Google Maps."
+      );
+      isValid = false;
+    }
+  }
+
   // Validasi gambar instansi
   const gambarInput = document.getElementById("gambar_instansi_edit");
   const gambar = gambarInput.files[0];
@@ -304,7 +324,11 @@ function validateEditBidang() {
   // validasi input NIP pejabat
   const nip = document.getElementById("edit_nip").value.trim();
   if (nip !== "" && !/^[0-9]{18}$/.test(nip)) {
-    showError("edit_nip", "edit_nip_error", "NIP harus terdiri dari 18 digit angka.");
+    showError(
+      "edit_nip",
+      "edit_nip_error",
+      "NIP harus terdiri dari 18 digit angka."
+    );
     isValid = false;
   }
 
@@ -334,7 +358,11 @@ function validateEditBidang() {
   const kuota = document.getElementById("edit_kuota").value.trim();
   if (kuota !== "") {
     if (isNaN(kuota) || parseInt(kuota) <= 0) {
-      showError("edit_kuota", "edit_kuota_error", "Kuota harus berupa angka positif.");
+      showError(
+        "edit_kuota",
+        "edit_kuota_error",
+        "Kuota harus berupa angka positif."
+      );
       isValid = false;
     }
   }

@@ -734,51 +734,46 @@ function generate_super_admin($POST)
 // ========================================= ADMIN INSTANSI LEVEL(2) ================================================
 
 // =============================== BIDANG ADMIN INSTANSI =================================
-function to_nullable($value) {
+function to_nullable($value)
+{
     return !empty($value) ? "'" . mysqli_real_escape_string($GLOBALS['conn'], $value) . "'" : 'NULL';
 }
 
 function generateIdBidang($conn, $id_instansi)
 {
-    // Cari bidang terakhir dalam instansi tersebut
     $query_bidang = "SELECT id_bidang FROM tb_bidang WHERE id_bidang LIKE '$id_instansi%' ORDER BY id_bidang DESC LIMIT 1";
     $result_bidang = mysqli_query($conn, $query_bidang);
     $row_bidang = mysqli_fetch_assoc($result_bidang);
 
     if ($row_bidang) {
-        // Ambil 3 digit terakhir dari ID Bidang terakhir
         $last_counter = intval(substr($row_bidang['id_bidang'], -3));
-        $new_counter = $last_counter + 1; // Tambah 1
+        $new_counter = $last_counter + 1;
     } else {
-        $new_counter = 1; // Jika belum ada bidang, mulai dari 01
+        $new_counter = 1;
     }
 
-    // Format nomor urut menjadi dua digit (001, 002, 003, ...)
+    // Format nomor urut menjadi 3 digit (001, 002, 003, ...)
     $nomorUrut = str_pad($new_counter, 3, "0", STR_PAD_LEFT);
 
-    // Gabungkan ID Instansi dengan nomor urut baru
     return $id_instansi . $nomorUrut;
 }
 
 function generateIdPembimbing($conn, $id_bidang)
 {
-    // Cari pembimbing terakhir dalam bidang tersebut
     $query_pembimbing = "SELECT id_user FROM tb_profile_user WHERE id_user LIKE '$id_bidang%' ORDER BY id_user DESC LIMIT 1";
     $result_pembimbing = mysqli_query($conn, $query_pembimbing);
     $row_pembimbing = mysqli_fetch_assoc($result_pembimbing);
 
     if ($row_pembimbing) {
-        // Ambil 2 digit terakhir dari ID Pembimbing terakhir
         $last_counter = intval(substr($row_pembimbing['id_user'], -2));
-        $new_counter = $last_counter + 1; // Tambah 1
+        $new_counter = $last_counter + 1;
     } else {
-        $new_counter = 1; // Jika belum ada pembimbing, mulai dari 01
+        $new_counter = 1;
     }
 
     // Format nomor urut menjadi dua digit (01, 02, 03, ...)
     $nomorUrut = str_pad($new_counter, 2, "0", STR_PAD_LEFT);
 
-    // Gabungkan ID Bidang dengan nomor urut baru
     return $id_bidang . $nomorUrut;
 }
 
@@ -893,59 +888,100 @@ function rekam_ulang_bidang($conn, $postData, $id_user_editor)
     return ['status' => 'success', 'new_id' => $id_bidang_baru];
 }
 
-function edit_profile($POST_edit)
+function uploadGambar($file, $old_img, $directory, $id_instansi)
 {
-    global $conn;
-    $id_user = mysqli_real_escape_string($conn, $POST_edit["id_user"]);
-    $nama_user = mysqli_real_escape_string($conn, $POST_edit["nama_user"]);
-    $tempat_lahir = mysqli_real_escape_string($conn, $POST_edit["tempat_lahir"]);
-    $tanggal_lahir = mysqli_real_escape_string($conn, $POST_edit["tanggal_lahir"]);
-    $telepone = mysqli_real_escape_string($conn, $POST_edit["telepone"]);
-    $alamat_user = mysqli_real_escape_string($conn, $POST_edit["alamat_user"]);
-    $jenis_kelamin = mysqli_real_escape_string($conn, $POST_edit["jenis_kelamin"]);
-    $gambar_lama = mysqli_real_escape_string($conn, $POST_edit["gambar_lama"]);
-    $gambar = uploadImage($_FILES["gambar"], $gambar_lama, "../assets/img/user/");
-
-    $query = "UPDATE tb_profile_user SET 
-                    nama_user = '$nama_user',
-                    tempat_lahir = '$tempat_lahir',
-                    tanggal_lahir = '$tanggal_lahir',
-                    telepone_user = '$telepone',
-                    jenis_kelamin = '$jenis_kelamin',
-                    alamat_user = '$alamat_user',
-                    gambar_user = '$gambar',
-                    change_by = '$id_user'
-                    WHERE id_user = '$id_user'
-            ";
-    mysqli_query($conn, $query);
-    return mysqli_affected_rows($conn);
-}
-
-function cek_edit_profile($conn, $data_baru)
-{
-    $id_user = $data_baru["id_user"];
-
-    // Ambil data lama dari database
-    $query_check = "SELECT * FROM tb_profile_user WHERE id_user = '$id_user'";
-    $result_check = mysqli_query($conn, $query_check);
-    $data_lama = mysqli_fetch_assoc($result_check);
-
-    // Jika data lama tidak ditemukan, anggap perubahan terjadi
-    if (!$data_lama) {
-        return false;
+    // Jika tidak ada file baru diupload
+    if ($file["error"] === 4) {
+        return $old_img;
     }
 
-    // Cek apakah ada gambar baru yang diunggah
-    $gambar_baru = !empty($_FILES["gambar"]["name"]) ? $_FILES["gambar"]["name"] : $data_baru["gambar_lama"];
+    // Validasi ukuran file (max 1 MB)
+    $maxSize = 1 * 1024 * 1024;
+    if ($file['size'] > $maxSize) {
+        throw new Exception("Ukuran file melebihi 1 MB.");
+    }
 
-    // Bandingkan data lama dengan data baru
-    return $data_lama['nama_user'] == $data_baru["nama_user"] &&
-        $data_lama['tempat_lahir'] == $data_baru["tempat_lahir"] &&
-        $data_lama['tanggal_lahir'] == $data_baru["tanggal_lahir"] &&
-        $data_lama['telepone_user'] == $data_baru["telepone"] &&
-        $data_lama['jenis_kelamin'] == $data_baru["jenis_kelamin"] &&
-        $data_lama['alamat_user'] == $data_baru["alamat_user"] &&
-        $data_lama['gambar_user'] == $gambar_baru;
+    // Validasi jenis file
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    if (!in_array($file['type'], $allowedTypes)) {
+        throw new Exception("Hanya file JPEG, JPG, PNG, atau GIF yang diizinkan.");
+    }
+
+    // Ekstrak ekstensi file
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $newFileName = $id_instansi . "_" . uniqid() . "." . $extension;
+    $uploadPath = $directory . $newFileName;
+
+    // Hapus file lama jika bukan default atau kosong
+    if ($old_img && $old_img !== '' && file_exists($directory . $old_img)) {
+        unlink($directory . $old_img);
+    }
+
+    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
+        throw new Exception("Gagal mengupload file.");
+    }
+
+    return "../assets/img/instansi/" . $newFileName;
+}
+
+function edit_instansi_admin_instansi($POST)
+{
+    global $conn;
+
+    $id_user = mysqli_real_escape_string($conn, $POST["id_user"]);
+    $id_instansi = mysqli_real_escape_string($conn, $POST["id_instansi"]);
+    $nama_pendek = mysqli_real_escape_string($conn, $POST["nama_pendek"]);
+    $nama_panjang = mysqli_real_escape_string($conn, $POST["nama_panjang"]);
+    $group_instansi = mysqli_real_escape_string($conn, $POST["group_instansi"]);
+    $alamat_instansi = mysqli_real_escape_string($conn, $POST["alamat_instansi"]);
+    $deskripsi_instansi = mysqli_real_escape_string($conn, $POST["deskripsi_instansi"]);
+    $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
+    $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
+    $gambar_lama = mysqli_real_escape_string($conn, $POST["gambar_instansi_lama"]);
+
+    // Upload gambar baru dengan id_instansi sebagai prefix
+    try {
+        $gambar_instansi = uploadGambar($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/", $id_instansi);
+    } catch (Exception $e) {
+        error_log("Upload Error: " . $e->getMessage());
+        return -1;
+    }
+
+    // Update data instansi
+    $query = "UPDATE tb_instansi SET
+                nama_pendek = ?,
+                nama_panjang = ?,
+                group_instansi = ?,
+                alamat_instansi = ?,
+                lokasi_instansi = ?,
+                deskripsi_instansi = ?,
+                telepone_instansi = ?,
+                gambar_instansi = ?,
+                change_by = ?
+              WHERE id_instansi = ?";
+
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param(
+        $stmt,
+        'sssssssssi',
+        $nama_pendek,
+        $nama_panjang,
+        $group_instansi,
+        $alamat_instansi,
+        $lokasi_instansi,
+        $deskripsi_instansi,
+        $telepone_instansi,
+        $gambar_instansi,
+        $id_user,
+        $id_instansi
+    );
+
+    if (mysqli_stmt_execute($stmt)) {
+        return mysqli_stmt_affected_rows($stmt);
+    } else {
+        error_log("Error updating record: " . mysqli_error($conn));
+        return 0;
+    }
 }
 
 function tambah_bidang($POST)
@@ -965,30 +1001,6 @@ function tambah_bidang($POST)
 
     $query = "INSERT INTO tb_bidang (id_bidang, nama_bidang, nama_pejabat, pangkat_pejabat, nip_pejabat, deskripsi_bidang, kriteria_bidang, kuota_bidang, id_instansi, dokumen_persyaratan, create_by)
             VALUES ('$id_bidang','$nama_bidang', $nama_pejabat, $pangkat, $nip_pejabat, '$deskripsi_bidang', '$kriteria', $kuota, '$id_instansi', '$dokumen_prasyarat', '$id_user')";
-    mysqli_query($conn, $query);
-    return mysqli_affected_rows($conn);
-}
-
-function edit_bidang($POST)
-{
-    global $conn;
-    $id_user = $POST["id_user"];
-    $id_bidang = $POST["id_bidang"];
-    $nama_bidang = $POST["nama_bidang"];
-    $deskripsi = $POST["deskripsi"];
-    $kriteria = $POST["kriteria"];
-    $kuota = to_nullable($POST["kuota"]);
-    $dokumen_prasyarat = $POST["dokumen"];
-
-    $query = "UPDATE tb_bidang SET
-                    id_bidang = '$id_bidang',
-                    nama_bidang = '$nama_bidang',
-                    deskripsi_bidang = '$deskripsi',
-                    kriteria_bidang = '$kriteria',
-                    kuota_bidang = $kuota,
-                    dokumen_persyaratan = '$dokumen_prasyarat',
-                    change_by = '$id_user'
-                    WHERE id_bidang = '$id_bidang'";
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
 }
@@ -1048,17 +1060,14 @@ function edit_pembimbing($POST)
     $row = mysqli_fetch_assoc($result);
     $id_bidang_lama = $row['id_bidang'];
 
-    // Jika input bidang kosong/null, fallback ke bidang lama
     if ($id_bidang_baru === null || $id_bidang_baru === '') {
         $id_bidang_baru = $id_bidang_lama;
     }
 
-    // Inisialisasi variabel untuk mengecek perubahan
     $total_affected = 0;
 
     // Jika bidang berubah, buat ID pembimbing baru
     if ($id_bidang_lama != $id_bidang_baru) {
-        // Cek dulu apakah bidang valid
         $query_check_bidang = "SELECT id_bidang FROM tb_bidang WHERE id_bidang = '$id_bidang_baru'";
         mysqli_query($conn, $query_check_bidang);
 
@@ -1068,7 +1077,6 @@ function edit_pembimbing($POST)
         $row_count = mysqli_fetch_assoc($result_count);
         $counter = str_pad($row_count['jumlah'] + 1, 2, '0', STR_PAD_LEFT);
 
-        // Generate id_user baru: {id_bidang}{counter}
         $id_user_baru = $id_bidang_baru . $counter;
 
         // Update id_user di tb_profile_user
@@ -1097,9 +1105,6 @@ function edit_pembimbing($POST)
         mysqli_query($conn, $query_update_user);
         $total_affected += mysqli_affected_rows($conn);
     } else {
-        // Jika bidang tidak berubah, update data saja tanpa mengganti id_user
-
-        // Query untuk tb_profile_user (DIUTAMAKAN DULUAN)
         $query_update_profile = "UPDATE tb_profile_user
                                 SET nama_user = '$nama_pembimbing',
                                     nik = '$nik_pembimbing',
@@ -1169,30 +1174,41 @@ function cek_edit_pembimbing($conn, $data_baru)
 
 function cek_edit_instansi($conn, $data_baru)
 {
-    $id_instansi = $data_baru["id_instansi"];
+    $id_instansi = mysqli_real_escape_string($conn, $data_baru["id_instansi"]);
 
     // Ambil data lama dari database
     $query_check = "SELECT * FROM tb_instansi WHERE id_instansi = '$id_instansi'";
     $result_check = mysqli_query($conn, $query_check);
-    $data_lama = mysqli_fetch_assoc($result_check);
-
-    // Jika data lama tidak ditemukan, anggap perubahan terjadi
-    if (!$data_lama) {
+    
+    if (!$result_check || mysqli_num_rows($result_check) === 0) {
         return false;
     }
 
-    // Cek apakah ada gambar baru yang diunggah
-    $gambar_baru = !empty($_FILES["gambar_instansi"]["name"]) ? $_FILES["gambar_instansi"]["name"] : $data_baru["gambar_instansi_lama"];
+    $data_lama = mysqli_fetch_assoc($result_check);
 
-    // Bandingkan data lama dengan data baru
-    return $data_lama['nama_pendek'] == $data_baru["nama_pendek"] &&
-        $data_lama['nama_panjang'] == $data_baru["nama_panjang"] &&
-        $data_lama['group_instansi'] == $data_baru["group_instansi"] &&
-        $data_lama['alamat_instansi'] == $data_baru["alamat_instansi"] &&
-        $data_lama['lokasi_instansi'] == $data_baru["lokasi_instansi"] &&
-        $data_lama['deskripsi_instansi'] == $data_baru["deskripsi_instansi"] &&
-        $data_lama['telepone_instansi'] == $data_baru["telepone_instansi"] &&
-        $data_lama['gambar_instansi'] == $gambar_baru;
+    // Cek apakah ada upload gambar baru
+    $ada_upload_gambar_baru = !empty($_FILES["gambar_instansi"]["name"]);
+
+    // Bandingkan semua field kecuali gambar_instansi dulu
+    $is_sama = 
+        $data_lama['nama_pendek'] === $data_baru["nama_pendek"] &&
+        $data_lama['nama_panjang'] === $data_baru["nama_panjang"] &&
+        $data_lama['group_instansi'] === $data_baru["group_instansi"] &&
+        $data_lama['alamat_instansi'] === $data_baru["alamat_instansi"] &&
+        $data_lama['lokasi_instansi'] === $data_baru["lokasi_instansi"] &&
+        $data_lama['deskripsi_instansi'] === $data_baru["deskripsi_instansi"] &&
+        $data_lama['telepone_instansi'] === $data_baru["telepone_instansi"];
+
+    // Jika semua field selain gambar sama...
+    if ($is_sama) {
+        if (!$ada_upload_gambar_baru) {
+            return true; 
+        } else {
+            return false;
+        }
+    }
+
+    return false;
 }
 
 function cek_tambah_pembimbing($conn, $POST)
@@ -1235,6 +1251,78 @@ function cek_tambah_pembimbing($conn, $POST)
     return "OK"; // Tidak ada duplikasi, bisa lanjut menambahkan
 }
 
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// === Fungsi Kirim OTP via Email ===
+function kirimOTP($email_penerima, $otp)
+{
+    $email_pengirim = 'moneyuang25@gmail.com';
+    $nama_pengirim = 'Diskominfo Sidoarjo';
+    $subject = 'OTP Verification';
+
+    $message = '
+    <html>
+    <head>
+        <style>
+            body { font-family: Arial, sans-serif; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+            .otp { font-size: 24px; font-weight: bold; color: #007BFF; }
+            .footer { margin-top: 20px; font-size: 14px; color: #666; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Verifikasi OTP</h2>
+            <p>Halo,</p>
+            <p>Terima kasih telah menggunakan layanan kami. Berikut adalah kode OTP (One Time Password) untuk verifikasi akun Anda:</p>
+            <p class="otp">' . $otp . '</p>
+            <p>Kode ini hanya berlaku selama 2 menit. Jangan bagikan kode ini kepada siapa pun.</p>
+            <div class="footer">
+                Hormat kami,<br><br>
+                <strong>Diskominfo Sidoarjo</strong><br>
+                Kota Sidoarjo, Jawa Timur
+            </div>
+        </div>
+    </body>
+    </html>
+    ';
+
+    $mail = new PHPMailer();
+    $mail->isSMTP();
+
+    $mail->Host = 'smtp.gmail.com';
+    $mail->Username = $email_pengirim;
+    $mail->Password = 'leeufuyyxfovbqtb'; // Gunakan App Password jika Gmail
+    $mail->Port = 465;
+    $mail->SMTPAuth = true;
+    $mail->SMTPSecure = 'ssl';
+
+    $mail->setFrom($email_pengirim, $nama_pengirim);
+    $mail->addAddress($email_penerima);
+    $mail->isHTML(true);
+    $mail->Subject = $subject;
+    $mail->Body = $message;
+
+    return $mail->send(); // Mengembalikan true jika sukses
+}
+
+function show_alert($title, $text, $icon, $redirect = null)
+{
+    echo "
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: '$title',
+                text: '$text',
+                icon: '$icon'"
+        . ($redirect ? ", timer: 2000, showConfirmButton: false}).then(() => { window.location.href = '$redirect'; });" : "});")
+        . "
+        });
+    </script>";
+}
 
 
 // ================================= APPROVE PENILAIAN =================================

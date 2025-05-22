@@ -1,9 +1,6 @@
 <?php
 session_start();
-require 'koneksi.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+require 'functions.php';
 
 include './assets/phpmailer/src/PHPMailer.php';
 include './assets/phpmailer/src/Exception.php';
@@ -28,39 +25,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
             $updateQuery = "UPDATE tb_user SET otp = '$otp', otp_expired = '$otp_expired' WHERE email = '$email' AND status_active = '1'";
             mysqli_query($conn, $updateQuery);
 
-            // Kirim OTP melalui email
-            $email_pengirim = 'moneyuang25@gmail.com';
-            $nama_pengirim = 'Diskominfo Sidoarjo';
-            $email_penerima = $email;
-            $subject = 'OTP Verification';
-            $message = 'Kode OTP Anda adalah: ' . $otp;
-
-            $mail = new PHPMailer();
-            $mail->isSMTP();
-
-            $mail->Host = 'smtp.gmail.com';
-            $mail->Username = $email_pengirim;
-            $mail->Password = 'leeufuyyxfovbqtb';
-            $mail->Port = 465;
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = 'ssl';
-
-            $mail->setFrom($email_pengirim, $nama_pengirim);
-            $mail->addAddress($email_penerima);
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body = $message;
-
-            $send = $mail->send();
-
-            $_SESSION['email'] = $email;
-            header("Location: otp.php");
-            exit();
+            // Panggil fungsi kirim OTP
+            if (kirimOTP($email, $otp)) {
+                $_SESSION['email'] = $email;
+                header("Location: otp.php");
+                exit();
+            } else {
+                show_alert("Gagal!", "Gagal mengirim OTP melalui email.", "error", "login.php");
+                exit();
+            }
         } else {
-            echo "<script>alert('Akun tidak aktif!'); window.location='login.php';</script>";
+            show_alert("Akun Tidak Aktif!", "Silakan hubungi admin.", "warning", "login.php");
+            exit();
         }
     } else {
-        echo "<script>alert('Email tidak ditemukan!'); window.location='login.php';</script>";
+        show_alert("Email Tidak Ditemukan!", "Silakan coba lagi.", "error", "login.php");
+        exit();
     }
 }
 
@@ -76,6 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="css/style.css"> -->
@@ -136,7 +117,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
                 opacity: 1;
             }
         }
-        
     </style>
     <title>Login</title>
 </head>
@@ -146,8 +126,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
         <div class="container main">
             <div class="row">
                 <div class="col-md-6 side-image">
-                <p class="text-muted source-text" style="font-size: 12px; position: absolute; bottom: 10px; left: 10px; margin: 0; font-weight: 500;">
-                Source foto: <a href="https://id.pinterest.com/pin/637540891031509847/" target="_blank" style="font-weight: 600;">Pinterest</a></p>
+                    <p class="text-muted source-text" style="font-size: 12px; position: absolute; bottom: 10px; left: 10px; margin: 0; font-weight: 500;">
+                        Source foto: <a href="https://id.pinterest.com/pin/637540891031509847/" target="_blank" style="font-weight: 600;">Pinterest</a></p>
                     <div class="text">
                         <p>Welcome <i>- Sidoarjo Internship</i></p>
                     </div>
