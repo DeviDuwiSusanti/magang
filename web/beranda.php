@@ -208,7 +208,7 @@ include "functions.php";
                         <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;" >
                             <div class="daftar_instansi" data-name="<?php echo htmlspecialchars(strtolower($row['nama_panjang'])); ?>">
                                 <a href="<?= $row['deskripsi_instansi'] ?>" target="_blank">
-                                    <img src="<?= $row['gambar_instansi'] ?>" alt="" class="popular__img" style="width: 50px; height: 50px;" /><br>
+                                   <img src="<?= !empty($row['gambar_instansi']) ? $row['gambar_instansi'] : '../assets/img/instansi/logo_kab_sidoarjo.png' ?>"  alt="logo_instansi" class="popular__img" style="width: 50px; height: 50px;" /><br>
                                     <h4 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
                                     <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h4>
                                 </a>
