@@ -4,7 +4,7 @@ function getBidangInstansi($conn, $limit = NULL) {
     $sql = "SELECT tb_bidang.*, tb_instansi.*, tb_bidang.create_date AS bidang_create_date, tb_bidang.change_date AS bidang_change_date 
             FROM tb_bidang, tb_instansi 
             WHERE tb_bidang.status_active = '1' AND tb_bidang.kuota_bidang != 0 
-            AND tb_bidang.id_instansi = tb_instansi.id_instansi
+            AND tb_bidang.id_instansi = tb_instansi.id_instansi AND tb_bidang.status_active = '1' AND tb_instansi.status_active = '1'
             ORDER BY tb_bidang.create_date DESC"; // DESC untuk urutan terbaru ke terlama
     
     // Jika parameter limit diberikan, tambahkan LIMIT ke query

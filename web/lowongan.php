@@ -22,7 +22,7 @@ include "functions.php";
     <!-- AOS JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="../assets/css/style2.css" />
+    <link rel="stylesheet" href="../assets/css/style3.css" />
     <link rel="stylesheet" href="../assets/css/low.css" />
     <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
     <title>Home</title>

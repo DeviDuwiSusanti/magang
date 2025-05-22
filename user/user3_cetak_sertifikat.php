@@ -275,7 +275,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= ($sertifikat["jenis_pengajuan"]) ?> pada <?= ($sertifikat["nama_panjang"]) ?> di Bidang <?= ($sertifikat["nama_bidang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
+    <p>Telah melaksanakan <?= ($sertifikat["jenis_pengajuan"]) ?> Pada <?= ($sertifikat["nama_panjang"]) ?>  selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
     <?php if($sertifikat["tanggal_extend"] != "") {  ?>
     , Dan Perpanjangan Waktu Hingga <?= formatTanggal($sertifikat["tanggal_extend"]) ?>
     <?php } else { ?>

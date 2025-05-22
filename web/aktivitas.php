@@ -28,7 +28,7 @@ $no = 1;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Import CSS tambahan buat tampilan halaman -->
-    <link rel="stylesheet" href="../assets/css/style2.css" />
+    <link rel="stylesheet" href="../assets/css/style3.css" />
     <link rel="stylesheet" href="../assets/css/aktif.css" />
     <link rel="stylesheet" href="../assets/css/low.css" />
     
