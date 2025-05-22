@@ -15,7 +15,7 @@ include "functions.php";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="../assets/css/style2.css" />
+    <link rel="stylesheet" href="../assets/css/style3.css" />
     <link rel="stylesheet" href="../assets/css/detail.css" />
     <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
     <title>Detail Lowongan</title>
