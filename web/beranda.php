@@ -25,8 +25,8 @@ include "functions.php";
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 
     <!--=============== CSS ===============-->
-    <link rel="stylesheet" href="../assets/css/beranda.css" />
-    <link rel="stylesheet" href="../assets/css/style2.css" />
+    <link rel="stylesheet" href="../assets/css/home.css" />
+    <link rel="stylesheet" href="../assets/css/style3.css" />
     <link rel="icon" href="../assets/img/logo_kab_sidoarjo.png" type="image/png">
     <title>Home</title>
 </head>
@@ -39,7 +39,6 @@ include "functions.php";
     <!--==================== MAIN ====================-->
     <main class="main">
         <!--==================== HOME ====================-->
-       
         <section class="swiper-wrapper" id="hero">
             <div class="container">
                 <!-- Deskripsi di sebelah kiri -->
@@ -103,12 +102,90 @@ include "functions.php";
                         <a href="lowongan.php" style="text-decoration: none; font-weight: bold; color: #007BFF;">Lihat Selengkapnya →</a>
                     </div>
                 </div>
+
+                <!-- Tambahkan setelah section FAQ dan sebelum footer -->
+                <section class="section" id="steps" style="padding: 60px 0;">
+                    <div class="container">
+                        <h2 class="section__title" style="text-align: center" data-aos="fade-up">Langkah-langkah Pendaftaran</h2>
+                        <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
+                            "Ikuti langkah-langkah berikut untuk mendaftar program magang di Sidoarjo Internship"
+                        </span><br><br>
+
+                        <div class="row align-items-center" >
+                            <!-- Kolom untuk step vertikal -->
+                            <div class="col-md-6" data-aos="fade-right">
+                                <div class="steps-vertical">
+                                    <div class="step">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <h4>Registrasi dan Login</h4>
+                                            <p>Registrasi akun dan login untuk menambah data usulan magang</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <h4>Lengkapi Profil</h4>
+                                            <p>Lengkapi data diri</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <h4>Pilih Lowongan</h4>
+                                            <p>Telusuri lowongan magang yang tersedia dan pilih yang sesuai dengan minat Anda.</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">4</div>
+                                        <div class="step-content">
+                                            <h4>Buat Pengajuan</h4>
+                                            <p>Ajukan lamaran untuk lowongan yang dipilih beserta unggah CV, KTP, dan Proposal sebagai dokumen prasyarat, lalu tunggu konfirmasi dari admin instansi.</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">5</div>
+                                        <div class="step-content">
+                                            <h4>Unggah berkas persyaratan Lainnya</h4>
+                                            <p>Setelah diterima, Anda akan diarahkan untuk melengkapi dokumen persyaratan yang sebelumnya ditentukan oleh instansi</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">6</div>
+                                        <div class="step-content">
+                                            <h4>Mulai Magang</h4>
+                                            <p>Setelah resmi diterima, Anda akan diarahkan untuk memulai program magang</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Kolom untuk gambar -->
+                            <div class="col-md-6" data-aos="fade-left">
+                                <div class="text-center">
+                                    <img src="../assets/img/step.png" alt="Langkah Pendaftaran" class="img-fluid" style="max-height: 500px;">
+                                    <img src="../assets/img/step2.png" alt="Langkah Pendaftaran" class="img-fluid" style="max-height: 500px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <br><br><br>
                 <h2 class="section__title" style="text-align: center" data-aos="fade-up">Gabung Bersama Kami</h2>
                 <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
                 "Sidoarjo Internship telah membantu peserta dalam melaksanakan program magang berkualitas di Sidoarjo. Temukan peluang magang terbaik untuk karier masa depan Anda!"</span><br>
+
+                <!-- Tambahkan search box di sini -->
+                <div class="search-container" style="text-align: center; margin-top: 10px">
+                    <div class="search-wrapper">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Cari Instansi..." />
+                        <i id="searchIcon" class="fas fa-search search-icon"></i>
+                    </div>
+                </div>
+
                 <div class="popular__container swiper">
-                    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper" id="instansiContainer">
                     <?php
                     $instansi = "SELECT * FROM tb_instansi";
                     $query = mysqli_query($conn, $instansi);
@@ -126,20 +203,17 @@ include "functions.php";
                             $query2 = mysqli_query($conn, $sql2);
                             $row2 = mysqli_fetch_assoc($query2);
                             $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
+                            
                     ?>
-                            <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;"
-                            data-deskripsi="<?= htmlspecialchars($row['deskripsi_instansi'] ?? 'Belum ada deskripsi.') ?>">
-                                <img src="../assets/img/instansi/logo_kab_sidoarjo.png" alt="" class="popular__img" style="width: 50px; height: 50px;" />
-                                <div class="popular__data">
-                                    <h2 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
-                                    <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h2>
-                                    <br>
-                                    <p class="popular__description">
-                                        <i class="bx bx-briefcase"></i> <?= $jumlah_lowongan ?> Lowongan <br />
-                                        <i class="bx bxs-group"></i> <?= $pemagang_aktif ?> Pemagang Aktif
-                                    </p>
-                                </div>
-                            </article>
+                        <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;" >
+                            <div class="daftar_instansi" data-name="<?php echo htmlspecialchars(strtolower($row['nama_panjang'])); ?>">
+                                <a href="<?= $row['deskripsi_instansi'] ?>" target="_blank">
+                                    <img src="<?= $row['gambar_instansi'] ?>" alt="" class="popular__img" style="width: 50px; height: 50px;" /><br>
+                                    <h4 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
+                                    <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h4>
+                                </a>
+                            </div>
+                        </article>
                     <?php
                         }
                     }
@@ -153,43 +227,39 @@ include "functions.php";
                         <i class="bx bx-chevron-left"></i>
                     </div>
                 </div>
-
                 <br><br><br>
                 <h2 class="section__title" style="text-align: center" data-aos="fade-up">Pertanyaan yang Sering Ditanyakan</h2><br><br>
                 <?php include "../layout/faqs.php" ?>
             </div>
         </section>
     </main>
-
         <?php include "../layout/footerUser.php" ?>
 </body>
 </html>
 
-<!-- Modal Deskripsi Instansi-->
 <script>
-    document.querySelectorAll('.popular__card').forEach(card => {
-    card.addEventListener('click', function() {
-        const deskripsi = this.dataset.deskripsi;
-        const modalBody = document.getElementById('modalDeskripsiInstansi');
-        modalBody.innerHTML = deskripsi.replace(/\n/g, '<br>');
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("searchInput");
+    const cards = document.querySelectorAll(".popular__card"); // Target seluruh card
+    
+    function filterInstansi() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
         
-        var modal = new bootstrap.Modal(document.getElementById('instansiModal'));
-        modal.show();
-    });
+        cards.forEach(card => {
+            // Cari div daftar_instansi di dalam card
+            const instansiDiv = card.querySelector('.daftar_instansi');
+            const cardText = instansiDiv ? instansiDiv.textContent.toLowerCase() : '';
+            
+            // Toggle display seluruh card, bukan hanya bagian dalamnya
+            if (cardText.includes(searchTerm)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+    
+    searchInput.addEventListener("input", filterInstansi);
+    filterInstansi(); // Inisialisasi awal
 });
 </script>
-
-<div class="modal fade" id="instansiModal" tabindex="-1" aria-labelledby="instansiModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="instansiModalLabel">Deskripsi Instansi</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-      </div>
-      <div class="modal-body" id="modalDeskripsiInstansi">
-        <!-- Deskripsi akan ditampilkan di sini -->
-      </div>
-    </div>
-  </div>
-</div>
-
