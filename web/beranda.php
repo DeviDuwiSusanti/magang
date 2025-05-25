@@ -187,14 +187,14 @@ include "functions.php";
                 <div class="popular__container swiper">
                     <div class="swiper-wrapper" id="instansiContainer">
                     <?php
-                    $instansi = "SELECT * FROM tb_instansi";
+                    $instansi = "SELECT nama_panjang, website_resmi_instansi FROM tb_instansi";
                     $query = mysqli_query($conn, $instansi);
                     while ($row = mysqli_fetch_assoc($query)){  
                     ?>
                         <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;" >
                             <div class="daftar_instansi">
-                                <a href="<?= $row['deskripsi_instansi'] ?>" target="_blank">
-                                   <img src="<?= !empty($row['gambar_instansi']) ? $row['gambar_instansi'] : '../assets/img/instansi/logo_kab_sidoarjo.png' ?>"  alt="logo_instansi" class="popular__img" style="width: 50px; height: 50px;" /><br>
+                                <a href="<?= $row['website_resmi_instansi'] ?>" target="_blank">
+                                   <img src="<?= !empty($row['gambar_instansi']) ? '../assets/img/instansi/'.$row['gambar_instansi'] : '../assets/img/instansi/logo_kab_sidoarjo.png' ?>"  alt="logo_instansi" class="popular__img" style="width: 50px; height: 50px;" /><br>
                                     <h4 class="popular__price"><?= $row['nama_panjang'] ?></h4>
                                 </a>
                             </div>

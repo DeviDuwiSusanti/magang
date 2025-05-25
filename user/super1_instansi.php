@@ -131,7 +131,8 @@
                                     data-deskripsi="<?= $opd['deskripsi_instansi'] ?>" 
                                     data-lokasi="<?= $opd['lokasi_instansi'] ?>" 
                                     data-telepon="<?= $opd['telepone_instansi'] ?>" 
-                                    data-gambar="<?= $opd['gambar_instansi'] ?>">
+                                    data-gambar="<?= $opd['gambar_instansi'] ?>"
+                                    data-website="<?= $opd['website_resmi_instansi'] ?>">
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </td>
@@ -150,7 +151,7 @@
 
 <!-- Modal Tambah Data -->
 <div class="modal fade" id="tambahModal" tabindex="-1" aria-labelledby="tambahModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg"> <!-- Perbesar modal -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="tambahModalLabel">Tambah Instansi</h5>
@@ -159,65 +160,70 @@
             <div class="modal-body">
                 <form id="formTambahInstansi" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_user" id="id_user" value="<?= $id_user ?>">
-                    
-                    <!-- ID Instansi -->
-                    <div class="mb-3">
-                        <label for="id_instansi" class="form-label">ID Instansi</label>
-                        <input type="text" inputmode="numeric" maxlength="10" class="form-control" id="id_instansi" name="id_instansi" placeholder="Masukkan ID instansi" required>
-                        <small id="id_instansi_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
-                    </div>
 
-                    <!-- Nama Pendek -->
-                    <div class="mb-3">
-                        <label for="nama_pendek" class="form-label">Nama Pendek Instansi</label>
-                        <input type="text" maxlength="100" class="form-control" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama Pendek instansi" required>
-                        <small id="nama_pendek_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
-                    </div>
+                    <div class="row">
+                        <!-- KIRI -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="id_instansi" class="form-label">ID Instansi</label>
+                                <input type="text" inputmode="numeric" maxlength="10" class="form-control" id="id_instansi" name="id_instansi" placeholder="Masukkan ID instansi" required>
+                                <small id="id_instansi_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
+                            </div>
 
-                    <!-- Nama Panjang -->
-                    <div class="mb-3">
-                        <label for="nama_panjang" class="form-label">Nama Panjang Instansi</label>
-                        <input type="text" maxlength="255" class="form-control" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama Panjang instansi" required>
-                        <small id="nama_panjang_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
-                    </div>
+                            <div class="mb-3">
+                                <label for="nama_pendek" class="form-label">Nama Pendek Instansi</label>
+                                <input type="text" maxlength="100" class="form-control" id="nama_pendek" name="nama_pendek" placeholder="Masukkan nama Pendek instansi" required>
+                                <small id="nama_pendek_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
+                            </div>
 
-                    <!-- Group -->
-                    <div class="mb-3">
-                        <label for="group_instansi" class="form-label">Group Instansi</label>
-                        <input type="text" maxlength="100" class="form-control" id="group_instansi" name="group_instansi" placeholder="Masukkan Group instansi">
-                    </div>
+                            <div class="mb-3">
+                                <label for="nama_panjang" class="form-label">Nama Panjang Instansi</label>
+                                <input type="text" maxlength="255" class="form-control" id="nama_panjang" name="nama_panjang" placeholder="Masukkan nama Panjang instansi" required>
+                                <small id="nama_panjang_warning" class="text-warning d-block mt-1" style="font-size: 12px;"></small>
+                            </div>
 
-                    <!-- Alamat -->
-                    <div class="mb-3">
-                        <label for="alamat_instansi" class="form-label">Alamat Instansi</label>
-                        <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" placeholder="Masukkan alamat instansi"></textarea>
-                    </div>
+                            <div class="mb-3">
+                                <label for="group_instansi" class="form-label">Group Instansi</label>
+                                <input type="text" maxlength="100" class="form-control" id="group_instansi" name="group_instansi" placeholder="Group instansi (OPD Group)">
+                            </div>
 
-                    <!-- Deskripsi -->
-                    <div class="mb-3">
-                        <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
-                        <textarea class="form-control" id="deskripsi_instansi" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"></textarea>
-                    </div>
+                            <div class="mb-3">
+                                <label for="telepone_instansi" class="form-label">Telepon Instansi</label>
+                                <input type="tel" pattern="[0-9]{8,15}" inputmode="numeric" maxlength="15" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon instansi">
+                            </div>
 
-                    <!-- Lokasi -->
-                    <div class="mb-3">
-                        <label for="lokasi_instansi" class="form-label">Lokasi Instansi</label>
-                        <textarea class="form-control" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan Lokasi Instansi"></textarea>
-                    </div>
-
-                    <!-- Telepon -->
-                    <div class="mb-3">
-                        <label for="telepone_instansi" class="form-label">Telepon Instansi</label>
-                        <input type="tel" pattern="[0-9]{8,15}" inputmode="numeric" maxlength="15" class="form-control" id="telepone_instansi" name="telepone_instansi" placeholder="Masukkan nomor telepon instansi">
-                    </div>
-
-                    <!-- Upload Foto Profil -->
-                    <div class="input-field">
-                        <label for="image">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
-                        <div class="image-preview" id="imagePreview">
-                            <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
+                            <div class="mb-3">
+                                <label for="link_website" class="form-label">Link Website Resmi</label>
+                                <textarea class="form-control" id="website_resmi_instansi" name="website_resmi_instansi" rows="3" placeholder="https://contoh.co.id"></textarea>
+                                <small id="website_error_tambah" class="text-danger d-block mt-1" style="font-size: 12px;"></small>
+                            </div>
                         </div>
-                        <input type="file" class="input" id="image" name="gambar_instansi" accept="image/*" onchange="validateFile()">
+
+                        <!-- KANAN -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="alamat_instansi" class="form-label">Alamat Instansi</label>
+                                <textarea class="form-control" id="alamat_instansi" name="alamat_instansi" rows="3" placeholder="Masukkan alamat instansi"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
+                                <textarea class="form-control" id="deskripsi_instansi" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="lokasi_instansi" class="form-label">Lokasi Instansi</label>
+                                <textarea class="form-control" id="lokasi_instansi" name="lokasi_instansi" rows="3" placeholder="Masukkan lokasi instansi"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="image">Upload Logo / Gambar Instansi (Max 1MB)</label><br>
+                                <div class="image-preview" id="imagePreview">
+                                    <img src="../assets/img/instansi/logo_kab_sidoarjo.png" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
+                                </div>
+                                <input type="file" class="form-control" id="image" name="gambar_instansi" accept="image/*" onchange="validateFile()">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -230,8 +236,13 @@
     </div>
 </div>
 
+
+
+
+
+<!-- Modal Edit Instansi -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg"> <!-- modal diperbesar -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Instansi</h5>
@@ -241,44 +252,66 @@
                 <form id="formEditInstansi" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_user" id="id_user_edit" value="<?= $id_user ?>">
                     <input type="hidden" name="id_instansi" id="id_instansi_edit">
-                    <div class="mb-3">
-                        <label for="nama_pendek_edit" class="form-label">Nama Pendek Instansi</label>
-                        <input type="text" class="form-control" id="nama_pendek_edit" name="nama_pendek">
-                    </div>
-                    <div class="mb-3">
-                        <label for="nama_panjang_edit" class="form-label">Nama Panjang Instansi</label>
-                        <input type="text" class="form-control" id="nama_panjang_edit" name="nama_panjang">
-                    </div>
-                    <div class="mb-3">
-                        <label for="group_instansi_edit" class="form-label">Group Instansi</label>
-                        <input type="text" class="form-control" id="group_instansi_edit" name="group_instansi">
-                    </div>
-                    <div class="mb-3">
-                        <label for="alamat_instansi_edit" class="form-label">Alamat Instansi</label>
-                        <textarea class="form-control" id="alamat_instansi_edit" name="alamat_instansi" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="deskripsi_instansi_edit" class="form-label">Deskripsi Instansi</label>
-                        <textarea class="form-control" id="deskripsi_instansi_edit" name="deskripsi_instansi" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lokasi_instansi_edit" class="form-label">Lokasi Instansi</label>
-                        <textarea class="form-control" id="lokasi_instansi_edit" name="lokasi_instansi" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="telepone_instansi_edit" class="form-label">Telepon Instansi</label>
-                        <input type="tel" class="form-control" id="telepone_instansi_edit" name="telepone_instansi">
-                    </div>
-                        
-                    <div class="input-field">
-                        <label for="gambar_instansi_edit">Upload Logo / Gambar Instansi (Max 1MB)</label><br><br>
-                        <div class="image-preview" id="imagePreviewEdit">
-                            <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
-                            <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $opd["gambar_instansi"] ?>">
-                        </div>
-                        <input type="file" class="input" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="validateFileEdit()">
-                    </div>
 
+                    <div class="row">
+                        <!-- KIRI -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="nama_pendek_edit" class="form-label">Nama Pendek Instansi</label>
+                                <input type="text" class="form-control" id="nama_pendek_edit" name="nama_pendek" placeholder="Masukkan nama pendek instansi">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="nama_panjang_edit" class="form-label">Nama Panjang Instansi</label>
+                                <input type="text" class="form-control" id="nama_panjang_edit" name="nama_panjang" placeholder="Masukkan nama panjang instansi">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="group_instansi_edit" class="form-label">Group Instansi</label>
+                                <input type="text" class="form-control" id="group_instansi_edit" name="group_instansi" placeholder="Masukkan group instansi">
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="telepone_instansi_edit" class="form-label">Telepon Instansi</label>
+                                <input type="tel" class="form-control" id="telepone_instansi_edit" name="telepone_instansi" placeholder="Masukkan nomor telepon">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="link_website_edit" class="form-label">Link Website Resmi</label>
+                                <textarea class="form-control" id="website_resmi_instansi_edit" name="website_resmi_instansi" rows="3" placeholder="https://contoh.co.id"></textarea>
+                                <small id="website_error_edit" class="text-danger d-block mt-1" style="font-size: 12px;"></small>
+                            </div>
+                        </div>
+
+                        <!-- KANAN -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="alamat_instansi_edit" class="form-label">Alamat Instansi</label>
+                                <textarea class="form-control" id="alamat_instansi_edit" name="alamat_instansi" rows="3" placeholder="Masukkan alamat instansi"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="deskripsi_instansi_edit" class="form-label">Deskripsi Instansi</label>
+                                <textarea class="form-control" id="deskripsi_instansi_edit" name="deskripsi_instansi" rows="3" placeholder="Masukkan deskripsi instansi"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="lokasi_instansi_edit" class="form-label">Lokasi Instansi</label>
+                                <textarea class="form-control" id="lokasi_instansi_edit" name="lokasi_instansi" rows="3" placeholder="Masukkan lokasi instansi"></textarea>
+                            </div>
+
+                            
+
+                            <div class="mb-3">
+                                <label for="gambar_instansi_edit" class="form-label">Upload Logo / Gambar Instansi (Max 1MB)</label>
+                                <div class="image-preview" id="imagePreviewEdit">
+                                    <img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" id="previewImageEdit" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
+                                    <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $opd["gambar_instansi"] ?>">
+                                </div>
+                                <input type="file" class="form-control" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="validateFileEdit()">
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -289,7 +322,56 @@
         </div>
     </div>
 </div>
-</div>
+
+
+<script>
+    // Fungsi untuk cek URL valid
+    function isValidURL(url) {
+        const pattern = new RegExp('^(https?:\\/\\/)' +                    
+            '((([a-zA-Z0-9\\-])+\\.)+[a-zA-Z]{2,})' +                      
+            '(\\/[\\w\\-\\.~:\\/?#\\[\\]@!$&\'()*+,;=]*)*' +               
+            '(\\?[;&a-z\\d%_.~+=-]*)?' +                                  
+            '(\\#[-a-z\\d_]*)?$', 'i');                                   
+        return !!pattern.test(url);
+    }
+
+    // Fungsi untuk jalankan validasi berdasarkan ID form dan input
+    function validateURLField(formId, fieldId, errorId) {
+        const form = document.getElementById(formId);
+        const urlField = document.getElementById(fieldId);
+        const errorText = document.getElementById(errorId);
+
+        // Validasi saat submit form
+        form.addEventListener("submit", function (e) {
+            const url = urlField.value.trim();
+            errorText.textContent = "";
+            urlField.classList.remove("is-invalid");
+
+            if (url !== "" && !isValidURL(url)) {
+                e.preventDefault();
+                errorText.textContent = "Masukkan URL yang valid, misalnya: https://contoh.co.id";
+                urlField.classList.add("is-invalid");
+            }
+        });
+
+        // Validasi saat user mengetik
+        urlField.addEventListener("input", function () {
+            const url = urlField.value.trim();
+            errorText.textContent = "";
+            urlField.classList.remove("is-invalid");
+
+            if (url !== "" && !isValidURL(url)) {
+                errorText.textContent = "URL tidak valid";
+                urlField.classList.add("is-invalid");
+            }
+        });
+    }
+
+    // ✅ Jalankan untuk kedua form
+    validateURLField("formTambahInstansi", "website_resmi_instansi", "website_error_tambah");
+    validateURLField("formEditInstansi", "website_resmi_instansi_edit", "website_error_edit");
+</script>
+
 
 
 
@@ -307,6 +389,7 @@
         var lokasi = button.getAttribute('data-lokasi');
         var telepon = button.getAttribute('data-telepon');
         var gambar = button.getAttribute('data-gambar'); // Ambil nilai gambar lama
+        var websiteInstansi = button.getAttribute('data-website');
 
         // Isi nilai ke dalam form modal
         document.getElementById('id_instansi_edit').value = id;
@@ -317,6 +400,7 @@
         document.getElementById('deskripsi_instansi_edit').value = deskripsi;
         document.getElementById('lokasi_instansi_edit').value = lokasi;
         document.getElementById('telepone_instansi_edit').value = telepon;
+        document.getElementById('website_resmi_instansi_edit').value = websiteInstansi;
 
         // Tampilkan gambar lama
         if (gambar) {
