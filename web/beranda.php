@@ -163,8 +163,8 @@ include "functions.php";
                             <!-- Kolom untuk gambar -->
                             <div class="col-md-6" data-aos="fade-left">
                                 <div class="text-center">
-                                    <img src="../assets/img/step.png" alt="Langkah Pendaftaran" class="img-fluid" style="max-height: 500px;">
                                     <img src="../assets/img/step2.png" alt="Langkah Pendaftaran" class="img-fluid" style="max-height: 500px;">
+                                    <img src="../assets/img/step3.png" alt="Langkah Pendaftaran" class="img-fluid" style="max-height: 500px;">
                                 </div>
                             </div>
                         </div>
@@ -172,7 +172,7 @@ include "functions.php";
                 </section>
 
                 <br><br><br>
-                <h2 class="section__title" style="text-align: center" data-aos="fade-up">Gabung Bersama Kami</h2>
+                <h2 class="section__title" style="text-align: center" data-aos="fade-up">Daftar Instansi</h2>
                 <span class="section__subtitle" style="text-align: center" data-aos="fade-up">
                 "Sidoarjo Internship telah membantu peserta dalam melaksanakan program magang berkualitas di Sidoarjo. Temukan peluang magang terbaik untuk karier masa depan Anda!"</span><br>
 
@@ -189,34 +189,18 @@ include "functions.php";
                     <?php
                     $instansi = "SELECT * FROM tb_instansi";
                     $query = mysqli_query($conn, $instansi);
-                    while ($row = mysqli_fetch_assoc($query)){
-                        // Cek jumlah kata dalam nama instansi
-                        $jumlah_kata = str_word_count($row['nama_panjang']);
-                        
-                        // Hanya proses jika nama instansi lebih dari 1 kata
-                        if ($jumlah_kata > 1) {
-                            $pemagang_aktif = getPemagangAktif2($conn, $row['id_instansi']);
-                            $nama_instansi = $row['nama_panjang'];
-                            $kata_pertama = explode(' ', $nama_instansi)[0]; // Pecah string dan ambil kata pertama
-
-                            $sql2 = "SELECT SUM(kuota_bidang) AS jumlah_lowongan FROM tb_bidang WHERE id_instansi = '$row[id_instansi]'";
-                            $query2 = mysqli_query($conn, $sql2);
-                            $row2 = mysqli_fetch_assoc($query2);
-                            $jumlah_lowongan = $row2['jumlah_lowongan'] ?? 0; // Jika tidak ada lowongan, default 0
-                            
+                    while ($row = mysqli_fetch_assoc($query)){  
                     ?>
                         <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;" >
-                            <div class="daftar_instansi" data-name="<?php echo htmlspecialchars(strtolower($row['nama_panjang'])); ?>">
+                            <div class="daftar_instansi">
                                 <a href="<?= $row['deskripsi_instansi'] ?>" target="_blank">
                                    <img src="<?= !empty($row['gambar_instansi']) ? $row['gambar_instansi'] : '../assets/img/instansi/logo_kab_sidoarjo.png' ?>"  alt="logo_instansi" class="popular__img" style="width: 50px; height: 50px;" /><br>
-                                    <h4 class="popular__price"><span><?php echo $kata_pertama; ?> </span> 
-                                    <?php echo str_replace($kata_pertama, '', $nama_instansi); ?></h4>
+                                    <h4 class="popular__price"><?= $row['nama_panjang'] ?></h4>
                                 </a>
                             </div>
                         </article>
                     <?php
                         }
-                    }
                     ?>
                     </div>
 
