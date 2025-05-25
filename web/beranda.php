@@ -194,7 +194,7 @@ include "functions.php";
                         <article class="popular__card swiper-slide" style="text-align: center; cursor:pointer;" >
                             <div class="daftar_instansi">
                                 <a href="<?= $row['website_resmi_instansi'] ?>" target="_blank">
-                                   <img src="<?= !empty($row['gambar_instansi']) ? '../assets/img/instansi/'.$row['gambar_instansi'] : '../assets/img/instansi/logo_kab_sidoarjo.png' ?>"  alt="logo_instansi" class="popular__img" style="width: 50px; height: 50px;" /><br>
+                                    <img src="<?= !empty($row['gambar_instansi']) ? '../assets/img/instansi/'.$row['gambar_instansi'] : '../assets/img/instansi/logo_kab_sidoarjo.png' ?>"  alt="logo_instansi" class="popular__img" style="width: 50px; height: 50px;" /><br>
                                     <h4 class="popular__price"><?= $row['nama_panjang'] ?></h4>
                                 </a>
                             </div>
