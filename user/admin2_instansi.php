@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
             </script>
         ";
     } else {
-        if (edit_instansi_admin_instansi($_POST) > 0) {
+        if (edit_instansi_super_admin($_POST) > 0) {
             echo "
                 <script>
                     edit_instansi_admin_instansi_success();
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                                     <td><?= $instansi["nama_panjang"] ?></td>
                                 </tr>
                                 <tr>
-                                    <td><i class="bi bi-card-text"></i> <strong>Deskripsi</strong></td>
+                                    <td><i class="bi bi-card-text"></i> <strong>Link Website</strong></td>
                                     <td><?= $instansi["deskripsi_instansi"] ?: 'Deskripsi belum diatur' ?></td>
                                 </tr>
                                 <tr>
@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
+                            <label for="deskripsi_instansi" class="form-label">Link Website</label>
                             <textarea class="form-control" data-error-id="deskripsi_instansi_error" id="deskripsi_instansi" name="deskripsi_instansi" rows="5" placeholder="Masukkan deskripsi instansi"><?= $instansi["deskripsi_instansi"] ?></textarea>
                             <small class="text-danger" id="deskripsi_instansi_error"></small>
                         </div>

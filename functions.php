@@ -478,6 +478,39 @@ function edit_pendidikan($POST)
 
 
 // ================================ INSTANSI SUPER ADMIN =================================
+function uploadGambarInstansi($file, $old_img, $directory, $id_instansi)
+{
+    if ($file["error"] === 4) {
+        return $old_img;
+    }
+
+    $maxSize = 1 * 1024 * 1024; // 1 MB
+    if ($file['size'] > $maxSize) {
+        throw new Exception("Ukuran file melebihi 1 MB.");
+    }
+
+    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+    if (!in_array($file['type'], $allowedTypes)) {
+        throw new Exception("Hanya file JPEG, JPG, PNG, atau GIF yang diizinkan.");
+    }
+
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $newFileName = $id_instansi . "_" . uniqid() . "." . $extension;
+
+    $uploadPath = $directory . $newFileName;
+
+    if ($old_img && $old_img !== '' && file_exists($old_img)) {
+        unlink($old_img);
+    }
+
+    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
+        throw new Exception("Gagal mengupload file.");
+    }
+
+    return $uploadPath;
+}
+
+
 function tambah_instansi_super_admin($POST)
 {
     global $conn;
@@ -525,8 +558,6 @@ function hapus_instansi($id_instansi, $id_user)
     }
 }
 
-
-
 function edit_instansi_super_admin($POST)
 {
     global $conn;
@@ -540,7 +571,14 @@ function edit_instansi_super_admin($POST)
     $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
     $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
     $gambar_lama = mysqli_real_escape_string($conn, $POST["gambar_instansi_lama"]);
-    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/");
+
+    // Upload gambar baru dengan id_instansi sebagai prefix
+    try {
+        $gambar_instansi = uploadGambarInstansi($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/", $id_instansi);
+    } catch (Exception $e) {
+        error_log("Upload Error: " . $e->getMessage());
+        return -1;
+    }
 
     $query = "UPDATE tb_instansi SET
                 nama_pendek = ?,
@@ -888,101 +926,65 @@ function rekam_ulang_bidang($conn, $postData, $id_user_editor)
     return ['status' => 'success', 'new_id' => $id_bidang_baru];
 }
 
-function uploadGambar($file, $old_img, $directory, $id_instansi)
-{
-    // Jika tidak ada file baru diupload
-    if ($file["error"] === 4) {
-        return $old_img;
-    }
+// function edit_instansi_admin_instansi($POST)
+// {
+//     global $conn;
 
-    // Validasi ukuran file (max 1 MB)
-    $maxSize = 1 * 1024 * 1024;
-    if ($file['size'] > $maxSize) {
-        throw new Exception("Ukuran file melebihi 1 MB.");
-    }
+//     $id_user = mysqli_real_escape_string($conn, $POST["id_user"]);
+//     $id_instansi = mysqli_real_escape_string($conn, $POST["id_instansi"]);
+//     $nama_pendek = mysqli_real_escape_string($conn, $POST["nama_pendek"]);
+//     $nama_panjang = mysqli_real_escape_string($conn, $POST["nama_panjang"]);
+//     $group_instansi = mysqli_real_escape_string($conn, $POST["group_instansi"]);
+//     $alamat_instansi = mysqli_real_escape_string($conn, $POST["alamat_instansi"]);
+//     $deskripsi_instansi = mysqli_real_escape_string($conn, $POST["deskripsi_instansi"]);
+//     $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
+//     $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
+//     $gambar_lama = mysqli_real_escape_string($conn, $POST["gambar_instansi_lama"]);
 
-    // Validasi jenis file
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-    if (!in_array($file['type'], $allowedTypes)) {
-        throw new Exception("Hanya file JPEG, JPG, PNG, atau GIF yang diizinkan.");
-    }
+//     // Upload gambar baru dengan id_instansi sebagai prefix
+//     try {
+//         $gambar_instansi = uploadGambar($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/", $id_instansi);
+//     } catch (Exception $e) {
+//         error_log("Upload Error: " . $e->getMessage());
+//         return -1;
+//     }
 
-    // Ekstrak ekstensi file
-    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $newFileName = $id_instansi . "_" . uniqid() . "." . $extension;
-    $uploadPath = $directory . $newFileName;
+//     // Update data instansi
+//     $query = "UPDATE tb_instansi SET
+//                 nama_pendek = ?,
+//                 nama_panjang = ?,
+//                 group_instansi = ?,
+//                 alamat_instansi = ?,
+//                 lokasi_instansi = ?,
+//                 deskripsi_instansi = ?,
+//                 telepone_instansi = ?,
+//                 gambar_instansi = ?,
+//                 change_by = ?
+//               WHERE id_instansi = ?";
 
-    // Hapus file lama jika bukan default atau kosong
-    if ($old_img && $old_img !== '' && file_exists($directory . $old_img)) {
-        unlink($directory . $old_img);
-    }
+//     $stmt = mysqli_prepare($conn, $query);
+//     mysqli_stmt_bind_param(
+//         $stmt,
+//         'sssssssssi',
+//         $nama_pendek,
+//         $nama_panjang,
+//         $group_instansi,
+//         $alamat_instansi,
+//         $lokasi_instansi,
+//         $deskripsi_instansi,
+//         $telepone_instansi,
+//         $gambar_instansi,
+//         $id_user,
+//         $id_instansi
+//     );
 
-    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
-        throw new Exception("Gagal mengupload file.");
-    }
-
-    return "../assets/img/instansi/" . $newFileName;
-}
-
-function edit_instansi_admin_instansi($POST)
-{
-    global $conn;
-
-    $id_user = mysqli_real_escape_string($conn, $POST["id_user"]);
-    $id_instansi = mysqli_real_escape_string($conn, $POST["id_instansi"]);
-    $nama_pendek = mysqli_real_escape_string($conn, $POST["nama_pendek"]);
-    $nama_panjang = mysqli_real_escape_string($conn, $POST["nama_panjang"]);
-    $group_instansi = mysqli_real_escape_string($conn, $POST["group_instansi"]);
-    $alamat_instansi = mysqli_real_escape_string($conn, $POST["alamat_instansi"]);
-    $deskripsi_instansi = mysqli_real_escape_string($conn, $POST["deskripsi_instansi"]);
-    $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
-    $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
-    $gambar_lama = mysqli_real_escape_string($conn, $POST["gambar_instansi_lama"]);
-
-    // Upload gambar baru dengan id_instansi sebagai prefix
-    try {
-        $gambar_instansi = uploadGambar($_FILES["gambar_instansi"], $gambar_lama, "../assets/img/instansi/", $id_instansi);
-    } catch (Exception $e) {
-        error_log("Upload Error: " . $e->getMessage());
-        return -1;
-    }
-
-    // Update data instansi
-    $query = "UPDATE tb_instansi SET
-                nama_pendek = ?,
-                nama_panjang = ?,
-                group_instansi = ?,
-                alamat_instansi = ?,
-                lokasi_instansi = ?,
-                deskripsi_instansi = ?,
-                telepone_instansi = ?,
-                gambar_instansi = ?,
-                change_by = ?
-              WHERE id_instansi = ?";
-
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param(
-        $stmt,
-        'sssssssssi',
-        $nama_pendek,
-        $nama_panjang,
-        $group_instansi,
-        $alamat_instansi,
-        $lokasi_instansi,
-        $deskripsi_instansi,
-        $telepone_instansi,
-        $gambar_instansi,
-        $id_user,
-        $id_instansi
-    );
-
-    if (mysqli_stmt_execute($stmt)) {
-        return mysqli_stmt_affected_rows($stmt);
-    } else {
-        error_log("Error updating record: " . mysqli_error($conn));
-        return 0;
-    }
-}
+//     if (mysqli_stmt_execute($stmt)) {
+//         return mysqli_stmt_affected_rows($stmt);
+//     } else {
+//         error_log("Error updating record: " . mysqli_error($conn));
+//         return 0;
+//     }
+// }
 
 function tambah_bidang($POST)
 {
