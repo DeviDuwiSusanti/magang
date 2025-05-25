@@ -30,7 +30,7 @@ $no = 1;
     <!-- Import CSS tambahan buat tampilan halaman -->
     <link rel="stylesheet" href="../assets/css/style3.css" />
     <link rel="stylesheet" href="../assets/css/aktif.css" />
-    <link rel="stylesheet" href="../assets/css/low.css" />
+    <link rel="stylesheet" href="../assets/css/low2.css" />
     
     <!-- Import DataTables CSS biar tabel bisa interaktif -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
