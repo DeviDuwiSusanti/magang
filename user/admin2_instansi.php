@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                                     <td><?= $instansi["nama_panjang"] ?></td>
                                 </tr>
                                 <tr>
-                                    <td><i class="bi bi-card-text"></i> <strong>Link Website</strong></td>
+                                    <td><i class="bi bi-card-text"></i> <strong>Deskripsi Instansi</strong></td>
                                     <td><?= $instansi["deskripsi_instansi"] ?: 'Deskripsi belum diatur' ?></td>
                                 </tr>
                                 <tr>
@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="deskripsi_instansi" class="form-label">Link Website</label>
+                            <label for="deskripsi_instansi" class="form-label">Deskripsi Instansi</label>
                             <textarea class="form-control" data-error-id="deskripsi_instansi_error" id="deskripsi_instansi" name="deskripsi_instansi" rows="5" placeholder="Masukkan deskripsi instansi"><?= $instansi["deskripsi_instansi"] ?></textarea>
                             <small class="text-danger" id="deskripsi_instansi_error"></small>
                         </div>
@@ -152,20 +152,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="lokasi_instansi" class="form-label">Link Lokasi</label>
-                            <textarea class="form-control" data-error-id="lokasi_instansi_error" id="lokasi_instansi" name="lokasi_instansi" rows="7" placeholder="Masukkan link lokasi"><?= $instansi["lokasi_instansi"] ?></textarea>
+                            <textarea class="form-control" data-error-id="lokasi_instansi_error" id="lokasi_instansi" name="lokasi_instansi" rows="5" placeholder="Masukkan link lokasi"><?= $instansi["lokasi_instansi"] ?></textarea>
                             <small class="text-muted">*Link harus berasal dari Google Maps</small> <br>
                             <small class="text-danger" id="lokasi_instansi_error"></small>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="gambar_instansi" class="form-label">Foto Profil</label>
-                            <div class="image-preview">
-                                <img src="<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
-                                <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $instansi["gambar_instansi"] ?>">
-                            </div>
-                            <input type="file" class="form-control" data-error-id="gambar_instansi_error" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="previewFile()">
-                            <small class="text-muted">Kosong Jika tidak ingin di ganti (max. 1MB)</small> <br>
-                            <small class="text-danger" id="gambar_instansi_error"></small>
+                            <label for="link_website" class="form-label">Link Website</label>
+                            <textarea class="form-control" data-error-id="link_website_error" id="link_website" name="link_website" rows="5" placeholder="Masukkan link website instansi"><?= $instansi["website_resmi_instansi"] ?></textarea>
+                            <small class="text-muted">*Link website resmi instansi</small> <br>
+                            <small class="text-danger" id="link_website_error"></small>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gambar_instansi" class="form-label">Foto Profil</label>
+                        <div class="image-preview">
+                            <img src="<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                            <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $instansi["gambar_instansi"] ?>">
+                        </div>
+                        <input type="file" class="form-control" data-error-id="gambar_instansi_error" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="previewFile()">
+                        <small class="text-muted">Kosong Jika tidak ingin di ganti (ukuran max. 1MB)</small> <br>
+                        <small class="text-danger" id="gambar_instansi_error"></small>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

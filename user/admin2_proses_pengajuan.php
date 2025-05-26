@@ -79,31 +79,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($status === 'terima') {
             $tanggal_sekarang = date("Y-m-d");
             $sql_update = "UPDATE tb_pengajuan SET status_pengajuan = '2', id_pembimbing = '$id_pembimbing', tanggal_diterima = '$tanggal_sekarang' WHERE id_pengajuan = '$id_pengajuan'";
-
             if (mysqli_query($conn, $sql_update)) {
+
+                // Path file surat ketersediaan di server
+                $file_lampiran = __DIR__ . '/../assets/files/Surat_Ketersediaan_Magang.docx';
+                $nama_file_lampiran = 'Surat_Ketersediaan_Magang.docx';
+
                 // Kirim email ke semua anggota kelompok
                 foreach ($anggota_kelompok as $anggota) {
                     $nama_pelamar = $anggota['nama'];
                     $email = $anggota['email'];
-
                     if ($email) {
                         $subject = 'Pemberitahuan Penerimaan Magang';
                         $message = "
-                            <p>{$salam} <strong>{$nama_pelamar}</strong>,</p>
-                            <p>Kami dengan senang hati menginformasikan bahwa Anda telah <strong>Diterima</strong> sebagai peserta magang di <strong>{$nama_instansi}</strong> pada bidang <strong>{$bidang_magang}</strong>.</p>
-                            <p>Berikut adalah detail program magang Anda:</p>
-                            <ul>
-                                <li>📍 <strong>Instansi:</strong> {$nama_instansi}</li>
-                                <li>📆 <strong>Periode Magang:</strong> {$periode_mulai} - {$periode_selesai}</li>
-                                <li>🏢 <strong>Lokasi:</strong> {$alamat_instansi}</li>
-                                <li>📑 <strong>Bidang:</strong> {$bidang_magang}</li>
-                            </ul>
-                            <p>Kami mengucapkan <strong>selamat</strong> atas pencapaian Anda dan berharap Anda dapat memperoleh pengalaman yang berharga selama mengikuti program ini.</p>
-                            <p>Untuk informasi lebih lanjut, silakan akses <a href='#'>dashboard Anda</a>.</p>
-                            <br>
-                            <p>Hormat kami,<br><strong>{$nama_pengirim}</strong><br>Diskominfo Sidoarjo</p>
-                        ";
-                        $email_sent = kirimEmail($email_pengirim, $nama_pengirim, $email, $subject, $message, false);
+                    <p>{$salam} <strong>{$nama_pelamar}</strong>,</p>
+                    <p>Kami dengan senang hati menginformasikan bahwa Anda telah <strong>Diterima</strong> sebagai peserta magang di <strong>{$nama_instansi}</strong> pada bidang <strong>{$bidang_magang}</strong>.</p>
+
+                    <p>Berikut adalah detail program magang Anda:</p>
+                    <ul>
+                        <li>📍 <strong>Instansi:</strong> {$nama_instansi}</li>
+                        <li>📆 <strong>Periode Magang:</strong> {$periode_mulai} - {$periode_selesai}</li>
+                        <li>🏢 <strong>Lokasi:</strong> {$alamat_instansi}</li>
+                        <li>📑 <strong>Bidang:</strong> {$bidang_magang}</li>
+                    </ul>
+
+                    <p>Surat Ketersediaan Magang juga telah kami lampirkan dalam email ini sebagai dokumen resmi penerimaan.</p>
+
+                    <p>Untuk informasi lebih lanjut, silakan akses <a href='#'>dashboard Anda</a>.</p>
+                    <br>
+                    <p>Hormat kami,<br><strong>{$nama_pengirim}</strong><br>Diskominfo Sidoarjo</p>
+                ";
+
+                        $email_sent = kirimEmail(
+                            $email_pengirim,
+                            $nama_pengirim,
+                            $email,
+                            $subject,
+                            $message,
+                            false,
+                            $file_lampiran,
+                            $nama_file_lampiran
+                        );
                     }
                 }
 
@@ -189,25 +205,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fungsi kirim email yang dimodifikasi dengan parameter $show_alert
-function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, $message, $show_alert = true)
+function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, $message, $show_alert = true, $attachmentPath = null, $attachmentName = null)
 {
     $mail = new PHPMailer();
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = $email_pengirim;
-    $mail->Password = 'leeufuyyxfovbqtb';
+    $mail->Password = 'leeufuyyxfovbqtb'; // Gunakan App Password jika pakai Gmail
     $mail->Port = 465;
     $mail->SMTPSecure = 'ssl';
-
     $mail->setFrom($email_pengirim, $nama_pengirim);
     $mail->addAddress($email_penerima);
     $mail->isHTML(true);
     $mail->Subject = $subject;
     $mail->Body = $message;
 
-    $result = $mail->send();
+    // Tambahkan lampiran jika ada
+    if ($attachmentPath && file_exists($attachmentPath)) {
+        $mail->addAttachment($attachmentPath, $attachmentName);
+    }
 
+    $result = $mail->send();
     if ($result && $show_alert) {
         echo "<script>
             Swal.fire({
@@ -215,7 +234,7 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
                 text: 'Status pengajuan dan email berhasil dikirim!',
                 icon: 'success'
             }).then(() => {
-                window.location.href = 'pengajuan.php';
+                window.location.href = 'admin2_pengajuan.php';
             });
         </script>";
     } elseif (!$result && $show_alert) {
@@ -225,11 +244,10 @@ function kirimEmail($email_pengirim, $nama_pengirim, $email_penerima, $subject, 
                 text: 'Gagal mengirim email!',
                 icon: 'warning'
             }).then(() => {
-                window.location.href = 'pengajuan.php';
+                window.location.href = 'admin2_pengajuan.php';
             });
         </script>";
     }
-
     return $result;
 }
 

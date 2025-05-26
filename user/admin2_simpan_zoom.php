@@ -9,6 +9,39 @@ include '../assets/phpmailer/src/PHPMailer.php';
 include '../assets/phpmailer/src/Exception.php';
 include '../assets/phpmailer/src/SMTP.php';
 
+// Fungsi untuk mengirim email
+function kirimEmail($email_penerima, $nama_penerima, $subject, $message) {
+    $email_pengirim = 'moneyuang25@gmail.com';
+    $nama_pengirim = 'Diskominfo Sidoarjo';
+    
+    $mail = new PHPMailer(true);
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Username = $email_pengirim;
+        $mail->Password = 'leeufuyyxfovbqtb';
+        $mail->Port = 465;
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'ssl';
+        
+        // Recipients
+        $mail->setFrom($email_pengirim, $nama_pengirim);
+        $mail->addAddress($email_penerima, $nama_penerima);
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $message;
+        
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Gagal mengirim email ke $email_penerima: " . $mail->ErrorInfo);
+        return false;
+    }
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_pengajuan = mysqli_real_escape_string($conn, $_POST["pengajuan_id"]);
     $tanggal_input = mysqli_real_escape_string($conn, $_POST["tanggal_pelaksanaan"]);
@@ -57,13 +90,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email_pelamar = $row_user['email'];
 
             if ($email_pelamar) {
-                // Email settings
-                $email_pengirim = 'moneyuang25@gmail.com';
-                $nama_pengirim = 'Diskominfo Sidoarjo';
-                $subject_pelamar = 'Undangan Wawancara Zoom Magang';
-
                 $salam = salamBerdasarkanWaktu();
-                $message = "
+                
+                // Email untuk pelamar
+                $subject_pelamar = 'Undangan Wawancara Zoom Magang';
+                $message_pelamar = "
                     <p>{$salam} <strong>{$nama_pelamar}</strong>,</p>
                     <p>Kami ingin mengundang Anda dalam sesi wawancara untuk magang di <strong>{$nama_instansi}</strong> pada bidang <strong>{$bidang_magang}</strong>.</p>
                     <p><strong>Detail Zoom:</strong></p>
@@ -75,29 +106,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p>Mohon untuk hadir tepat waktu. Jika ada pertanyaan, silakan hubungi kami melalui email ini.</p>
                     <br>
                     <p>Hormat kami,</p>
-                    <p><strong>{$nama_pengirim}</strong><br>Diskominfo Sidoarjo</p>
+                    <p><strong>Diskominfo Sidoarjo</strong></p>
                 ";
-
+                
                 // Kirim email ke pelamar
-                $mail_pelamar = new PHPMailer();
-                $mail_pelamar->isSMTP();
-                $mail_pelamar->Host = 'smtp.gmail.com';
-                $mail_pelamar->Username = $email_pengirim;
-                $mail_pelamar->Password = 'leeufuyyxfovbqtb';
-                $mail_pelamar->Port = 465;
-                $mail_pelamar->SMTPAuth = true;
-                $mail_pelamar->SMTPSecure = 'ssl';
-
-                $mail_pelamar->setFrom($email_pengirim, $nama_pengirim);
-                $mail_pelamar->addAddress($email_pelamar);
-                $mail_pelamar->isHTML(true);
-                $mail_pelamar->Subject = $subject_pelamar;
-                $mail_pelamar->Body = $message;
-                $mail_pelamar->send();
-
-                // Kirim email ke semua pembimbing
+                $email_pelamar_terkirim = kirimEmail($email_pelamar, $nama_pelamar, $subject_pelamar, $message_pelamar);
+                
+                // Email untuk pembimbing
+                $subject_pembimbing = 'Jadwal Wawancara Magang';
+                $semua_email_terkirim = true;
+                
                 foreach ($list_pembimbing as $pembimbing) {
-                    $subject_pembimbing = 'Jadwal Wawancara Magang';
                     $message_pembimbing = "
                         <p>Yth. <strong>{$pembimbing['nama']}</strong>,</p>
                         <p>Berikut adalah detail jadwal wawancara untuk calon peserta magang:</p>
@@ -112,40 +131,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <p>Mohon kesediaannya untuk menghadiri sesi wawancara sesuai jadwal.</p>
                         <br>
                         <p>Hormat kami,</p>
-                        <p><strong>{$nama_pengirim}</strong><br>Diskominfo Sidoarjo</p>
+                        <p><strong>Diskominfo Sidoarjo</strong></p>
                     ";
-
-                    $mail_pembimbing = new PHPMailer();
-                    $mail_pembimbing->isSMTP();
-                    $mail_pembimbing->Host = 'smtp.gmail.com';
-                    $mail_pembimbing->Username = $email_pengirim;
-                    $mail_pembimbing->Password = 'leeufuyyxfovbqtb';
-                    $mail_pembimbing->Port = 465;
-                    $mail_pembimbing->SMTPAuth = true;
-                    $mail_pembimbing->SMTPSecure = 'ssl';
-
-                    $mail_pembimbing->setFrom($email_pengirim, $nama_pengirim);
-                    $mail_pembimbing->addAddress($pembimbing['email']);
-                    $mail_pembimbing->isHTML(true);
-                    $mail_pembimbing->Subject = $subject_pembimbing;
-                    $mail_pembimbing->Body = $message_pembimbing;
-                    $mail_pembimbing->send();
+                    
+                    if (!kirimEmail($pembimbing['email'], $pembimbing['nama'], $subject_pembimbing, $message_pembimbing)) {
+                        $semua_email_terkirim = false;
+                    }
                 }
-
-                $update_query = "UPDATE tb_pengajuan 
-                    SET tanggal_zoom = '$tanggal' 
-                    WHERE id_pengajuan = '$id_pengajuan'";
-                mysqli_query($conn, $update_query);
-
-                echo "<script>
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: 'Email telah dikirim!',
-                        icon: 'success'
-                    }).then(() => {
-                        window.location.href = 'pengajuan.php';
-                    });
-                </script>";
+                
+                if ($email_pelamar_terkirim && $semua_email_terkirim) {
+                    // Update database jika semua email terkirim
+                    $update_query = "UPDATE tb_pengajuan 
+                        SET tanggal_zoom = '$tanggal' 
+                        WHERE id_pengajuan = '$id_pengajuan'";
+                    mysqli_query($conn, $update_query);
+                    
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Email telah dikirim!',
+                            icon: 'success'
+                        }).then(() => {
+                            window.location.href = 'pengajuan.php';
+                        });
+                    </script>";
+                } else {
+                    echo "<script>
+                        Swal.fire({
+                            title: 'Peringatan!',
+                            text: 'Beberapa email gagal dikirim, silakan coba lagi!',
+                            icon: 'warning'
+                        }).then(() => {
+                            window.history.back();
+                        });
+                    </script>";
+                }
             } else {
                 echo "<script>
                     Swal.fire({
@@ -161,8 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-function salamBerdasarkanWaktu()
-{
+function salamBerdasarkanWaktu() {
     date_default_timezone_set('Asia/Jakarta');
     $jam = date("H");
     if ($jam < 11) return "Selamat pagi";

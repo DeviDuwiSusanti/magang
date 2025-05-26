@@ -207,12 +207,12 @@ if (isset($_SESSION['email'])) {
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#multi"
-                            aria-expanded="false" aria-controls="multi">
+                        <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse" data-bs-target="#multi3"
+                            aria-expanded="false" aria-controls="multi3">
                             <i class="bi bi-check-circle"></i>
                             <span>TTD & Sertifkat</span>
                         </a>
-                        <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <ul id="multi3" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
                                 <a href="admin2_tanda_tangan.php" class="sidebar-link submenu-link">
                                     <i class="bi bi-check"></i> <!-- Icon bulat kecil -->
