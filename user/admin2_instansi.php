@@ -158,9 +158,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="link_website" class="form-label">Link Website</label>
-                            <textarea class="form-control" data-error-id="link_website_error" id="link_website" name="link_website" rows="5" placeholder="Masukkan link website instansi"><?= $instansi["website_resmi_instansi"] ?></textarea>
+                            <textarea class="form-control" data-error-id="website_instansi_error" id="website_resmi_instansi" name="website_resmi_instansi" rows="5" placeholder="Masukkan link website instansi"><?= $instansi["website_resmi_instansi"] ?></textarea>
                             <small class="text-muted">*Link website resmi instansi</small> <br>
-                            <small class="text-danger" id="link_website_error"></small>
+                            <small class="text-danger" id="website_instansi_error"></small>
                         </div>
                     </div>
                     <div class="mb-3">

@@ -17,8 +17,7 @@ $sql = "SELECT
         p.id_pengajuan,
         p.status_pengajuan,
         p.status_active,
-        pembimbing.nama_user AS nama_pembimbing,
-        pu.id_user
+        pembimbing.nama_user AS nama_pembimbing
     FROM tb_pengajuan p
     INNER JOIN tb_profile_user pu ON pu.id_pengajuan = p.id_pengajuan
     INNER JOIN tb_bidang b ON p.id_bidang = b.id_bidang
@@ -31,6 +30,7 @@ $sql = "SELECT
     ORDER BY p.id_pengajuan DESC
 ";
 
+
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -42,7 +42,7 @@ $result = mysqli_query($conn, $sql);
         </ol>
         <div class=" mb-4 dropdown-divider"></div>
         <div class="table-responsive-sm">
-            <div class="datatable-header mb-2"></div>
+            <div class="datatable-header mb-2"></div> <!-- Tempat search dan show entries -->
             <div class="bungkus-2 datatable-scrollable">
                 <table id="myTable" class="table table-striped table-hover">
                     <thead>
@@ -55,18 +55,10 @@ $result = mysqli_query($conn, $sql);
                             <th>Durasi</th>
                             <th>Pembimbing</th>
                             <th>Status</th>
-                            <th>Absensi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = mysqli_fetch_assoc($result)) { 
-                            // Count total absensi for this user and pengajuan
-                            $total_absensi = query("SELECT COUNT(*) as total FROM tb_absensi 
-                                                   WHERE id_user = '" . $row['id_user'] . "' 
-                                                   AND id_pengajuan = '" . $row['id_pengajuan'] . "'
-                                                   AND status_active = '1'");
-                            $absensi_count = $total_absensi[0]['total'];
-                            ?>
+                        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= $row["nama_user"] ?></td>
@@ -106,40 +98,12 @@ $result = mysqli_query($conn, $sql);
                                     }
                                     ?>
                                 </td>
-                                <td>
-                                    <button class="btn btn-info btn-sm viewAbsensi"
-                                        data-id_pengajuan="<?= $row['id_pengajuan'] ?>"
-                                        data-id_user="<?= $row['id_user'] ?>"
-                                        data-nama_user="<?= $row['nama_user'] ?>"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#absensiModal">
-                                        <i class="bi bi-calendar-check"></i> (<?= $absensi_count ?>)
-                                    </button>
-                                </td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
             </div>
-            <div class="datatable-footer mt-2"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal untuk Absensi -->
-<div class="modal fade" id="absensiModal" tabindex="-1" aria-labelledby="absensiModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="absensiModalLabel">Daftar Absensi <span id="namaPeserta"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="absensiContent">
-                <!-- Content akan diisi via AJAX -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
+            <div class="datatable-footer mt-2"></div> <!-- Tempat info dan pagination -->
         </div>
     </div>
 </div>
@@ -175,37 +139,9 @@ $result = mysqli_query($conn, $sql);
                 }
             },
             columnDefs: [{
-                targets: [3, 4, 5, 6, 7, 8],
+                targets: [3, 4, 5, 6, 7],
                 orderable: false
             }]
-        });
-
-        // Absensi Modal
-        $(document).on('click', '.viewAbsensi', function() {
-            const idPengajuan = $(this).data('id_pengajuan');
-            const idUser = $(this).data('id_user');
-            const namaUser = $(this).data('nama_user');
-            
-            $('#namaPeserta').text(namaUser);
-            
-            $.ajax({
-                url: 'pembimbing4_view_absensi.php',
-                type: 'GET',
-                data: {
-                    id_pengajuan: idPengajuan,
-                    id_user: idUser
-                },
-                beforeSend: function() {
-                    $('#absensiContent').html('<div class="text-center my-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p>Memuat data absensi...</p></div>');
-                },
-                success: function(response) {
-                    $('#absensiContent').html(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error loading absensi:", error);
-                    $('#absensiContent').html('<div class="alert alert-danger">Gagal memuat data absensi</div>');
-                }
-            });
         });
     });
 </script>

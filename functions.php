@@ -523,16 +523,17 @@ function tambah_instansi_super_admin($POST)
     $deskripsi_instansi = mysqli_real_escape_string($conn, $POST["deskripsi_instansi"]);
     $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
     $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
+    $website_resmi_instansi = mysqli_real_escape_string($conn, $POST["website_resmi_instansi"]);
     $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
     if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
         return 404;
     }
 
-    $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, create_by) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $query = "INSERT INTO tb_instansi (id_instansi, nama_pendek, nama_panjang, group_instansi, alamat_instansi, lokasi_instansi, telepone_instansi, deskripsi_instansi, gambar_instansi, website_resmi_instansi, create_by) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, 'ssssssssss', $id_instansi, $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $telepone_instansi, $deskripsi_instansi, $gambar_instansi, $id_user);
+    mysqli_stmt_bind_param($stmt, 'sssssssssss', $id_instansi, $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $telepone_instansi, $deskripsi_instansi, $gambar_instansi, $website_resmi_instansi, $id_user);
 
     if (mysqli_stmt_execute($stmt)) {
         return mysqli_stmt_affected_rows($stmt);
@@ -571,6 +572,8 @@ function edit_instansi_super_admin($POST)
     $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
     $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
     $gambar_lama = mysqli_real_escape_string($conn, $POST["gambar_instansi_lama"]);
+    $website_resmi_instansi = mysqli_real_escape_string($conn, $POST["website_resmi_instansi"]);
+
 
     // Upload gambar baru dengan id_instansi sebagai prefix
     try {
@@ -589,10 +592,11 @@ function edit_instansi_super_admin($POST)
                 deskripsi_instansi = ?,
                 telepone_instansi = ?,
                 gambar_instansi = ?,
+                website_resmi_instansi = ?,
                 change_by = ?
                 WHERE id_instansi = ?";
     $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, 'sssssssssi', $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $deskripsi_instansi, $telepone_instansi, $gambar_instansi, $id_user, $id_instansi);
+    mysqli_stmt_bind_param($stmt, 'ssssssssssi', $nama_pendek, $nama_panjang, $group_instansi, $alamat_instansi, $lokasi_instansi, $deskripsi_instansi, $telepone_instansi, $gambar_instansi, $website_resmi_instansi, $id_user, $id_instansi);
 
     if (mysqli_stmt_execute($stmt)) {
         return mysqli_stmt_affected_rows($stmt);

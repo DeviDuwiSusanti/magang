@@ -154,7 +154,13 @@ include "functions.php";
                                     <div class="alert alert-info">
                                         <i class="bx bx-info-circle"></i>
                                         <div>
-                                            <strong>Ketentuan Upload Dokumen:</strong> Saat pendaftaran pengajuan hanya perlu mengunggah KTP, CV, dan Proposal. Dokumen lainnya dapat diunggah setelah pengajuan diterima.
+                                            <strong>Ketentuan:</strong>
+                                            <ol style="margin-bottom: 0; padding-left: 20px;">
+                                                <li><strong>WNI </strong>(Warga Negara Indonesia)</li>
+                                                <li><strong>Mahasiswa/siswa</strong> berstatus aktif</li>
+                                                <li><strong>Dokumen wajib:</strong> KTP, CV, Proposal (unggah saat pendaftaran) (*pdf, max 1MB)</li>
+                                                <li><strong>Dokumen persyaratan lainnya </strong> diunggah setelah pengajuan diterima</li>
+                                            </ol>
                                         </div>
                                     </div>
                                 </div>
