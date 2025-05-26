@@ -54,21 +54,38 @@ include "functions.php";
             </h2></br>
     <!---========== Text and image layout=======-->
     <div class="custom-container" data-aos="fade-up">
-            <!-- Center Text -->
-            <div class="center-text">
-                <div class="text-block">
-                    <p class="large-text">44</p>
-                    <p class="small-text">Instansi</p>
+            
+    <!-- Center Text -->
+                <?php
+                // Query untuk menghitung jumlah instansi dengan status_active = 1
+                $queryInstansi = mysqli_query($conn, "SELECT COUNT(*) as total_instansi FROM tb_instansi WHERE status_active = 1");
+                $totalInstansi = mysqli_fetch_assoc($queryInstansi)['total_instansi'];
+
+                // Query untuk menghitung total kuota lowongan (hitung semua kuota bidang yang tidak NULL dan status_active = 1)
+                $queryLowongan = mysqli_query($conn, "SELECT SUM(kuota_bidang) as total_lowongan FROM tb_bidang 
+                                                    WHERE kuota_bidang IS NOT NULL AND status_active = 1");
+                $totalLowongan = mysqli_fetch_assoc($queryLowongan)['total_lowongan'];
+
+                // Query untuk menghitung pengajuan yang selesai (status_pengajuan = 5 dan status_active = 1)
+                $querySelesai = mysqli_query($conn, "SELECT COUNT(*) as total_selesai FROM tb_pengajuan 
+                                                    WHERE status_pengajuan = 5 AND status_active = 1");
+                $totalSelesai = mysqli_fetch_assoc($querySelesai)['total_selesai'];
+                ?>
+
+                <div class="center-text">
+                    <div class="text-block">
+                        <p class="large-text"><?= $totalInstansi ?></p>
+                        <p class="small-text">Instansi</p>
+                    </div>
+                    <div class="text-block">
+                        <p class="large-text">+<?= $totalLowongan ?></p>
+                        <p class="small-text">Lowongan</p>
+                    </div>
+                    <div class="text-block">
+                        <p class="large-text">+<?= $totalSelesai ?></p>
+                        <p class="small-text">Selesai</p>
+                    </div>
                 </div>
-                <div class="text-block">
-                    <p class="large-text">+100</p>
-                    <p class="small-text">Lowongan</p>
-                </div>
-                <div class="text-block">
-                    <p class="large-text">+100</p>
-                    <p class="small-text">Selesai</p>
-                </div>
-            </div>
     <!-- Image Row -->
         <div class="image-row">
                 <!-- Kiri Gambar -->
