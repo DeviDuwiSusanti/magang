@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $end_date = new DateTime($tanggal_selesai);
                 $interval = $current_date->diff($end_date);
 
-                if ($end_date > $current_date && $interval->days < 14) {
+                if ($end_date > $current_date && $interval->days < 14 && $pengajuan["status_pengajuan"] == '4') {
                     $show_extend_button = true;
                 }
 
@@ -201,7 +201,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                         data-bs-target="#viewNilaiModal">
                                                         <i class="bi bi-eye"></i>
                                                     </button>
-                                                    <?php if (empty($nilai_data["tanda_tangan_admin"])) : ?>
+                                                    <?php if (empty($nilai_data["tanggal_approve"])) : ?>
                                                         <button class="btn btn-warning btn-sm editNilai"
                                                             data-id_nilai="<?= $nilai_data['id_nilai'] ?>"
                                                             data-bs-toggle="modal"

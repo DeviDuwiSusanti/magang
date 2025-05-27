@@ -1,5 +1,6 @@
 <?php 
 include "../functions.php";
+include "functions.php";
 
 $id_user_ini = $_GET["id_user_ini"];
 $id_pengajuan = $_GET["id_pengajuan"];
@@ -91,6 +92,9 @@ function formatTanggal($date) {
 $tanggal_mulai = formatTanggal($sertifikat["tanggal_mulai"]);
 $tanggal_selesai = formatTanggal($sertifikat["tanggal_selesai"]);
 $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
+
+$nomor_sertifikat = $sertifikat["nomor_nilai"];
+$kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
 ?>
 
 <!DOCTYPE html>
@@ -155,10 +159,47 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
       text-align: center;
     }
     .signature {
-      margin-top: 25px;
+      margin-top: 40px;
       float: right; /* Geser elemen ke kanan */
       text-align: left; /* Isi teks tetap rata kiri */
-      width: 200px; /* Atur lebar agar tidak terlalu panjang */
+      width: 300px; /* Atur lebar agar tidak terlalu panjang */
+    }
+
+
+    .signature img {
+      height: 80px;
+      margin-bottom: 5px;
+    }
+
+    .signature p {
+      margin: 5px 0;
+    }
+
+
+    .signature-wrapper {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .qr-code {
+      flex-shrink: 0;
+    }
+
+    .signature-info {
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .signature-info p {
+      margin: 2px 0;
+    }
+    .signature-info .nama {
+      font-size: 15px;
+      text-transform: uppercase;
+      margin-top: 5px;
     }
     .uppercase {
       text-transform: uppercase;
@@ -174,7 +215,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
   <div class="background-text"><?= ($sertifikat["nama_panjang"]) ?></div>
 
   <h2>LEMBAR PENILAIAN PRAKTIK MAGANG</h2>
-  <p class="center uppercase">Nomor: 500.5.7.10/239/438.5.14/2025</p>
+  <p class="center uppercase">Nomor: <?= $kode_surat ?></p>
 
   <table>
     <tr>
@@ -197,6 +238,10 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     <tr>
       <td class="uppercase">Unit / Bagian / Bidang</td>
       <td>: <?= ($sertifikat["nama_bidang"]) ?></td>
+    </tr>
+    <tr>
+      <td class="uppercase">Bidang Keahlian</td>
+      <td>: <?= ($sertifikat["bidang_keahlian"]) ?></td>
     </tr>
     <tr>
       <?php if ($sertifikat["tanggal_extend"] != "") { ?>
@@ -260,15 +305,28 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
   </table>
 
   <div class="signature">
-    <p class="uppercase">Pembimbing Magang</p>
-    <p><?= ($sertifikat["nama_panjang"]) ?></p>
-    <br> 
-    <?php if (!empty($sertifikat["url_qr"])) : ?>
-  <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=150x150" alt="QR Code">
-<?php endif; ?>
+      <p>Kepala <?= $sertifikat["nama_bidang"] ?></p>
+      <p><?= $sertifikat["nama_panjang"] ?></p>
+      
+      <div class="signature-wrapper">
+        <!-- QR Code -->
+        <div class="qr-code">
+          <?php if (!empty($sertifikat["url_qr"])) : ?>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=100x100" alt="QR Code">
+          <?php endif; ?>
+        </div>
+
+        <!-- Info Pejabat -->
+        <div class="signature-info">
+          <p>Ditandatangani Secara Elektronik </p>
+          <p class="nama"><?= htmlspecialchars($sertifikat["nama_pejabat"]) ?></p>
+          <p><?= htmlspecialchars($sertifikat["pangkat_pejabat"]) ?></p>
+        </div>
+        </div>
 
       <p><strong><?= $sertifikat["nama_pejabat"] ?></strong></p>
       <p>NIP. <?= $sertifikat["nip_pejabat"] ?></p>
+    </div>
   </div>
 </body>
 </html>

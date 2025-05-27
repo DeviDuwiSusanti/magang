@@ -179,10 +179,10 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     }
 
     .signature {
-      margin-top: 25px;
+      margin-top: 5px;
       float: right; /* Geser elemen ke kanan */
       text-align: left; /* Isi teks tetap rata kiri */
-      width: 200px; /* Atur lebar agar tidak terlalu panjang */
+      width: 300px; /* Atur lebar agar tidak terlalu panjang */
     }
 
 
@@ -193,6 +193,32 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
 
     .signature p {
       margin: 5px 0;
+    }
+
+
+    .signature-wrapper {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .qr-code {
+      flex-shrink: 0;
+    }
+
+    .signature-info {
+      text-align: left;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .signature-info p {
+      margin: 2px 0;
+    }
+    .signature-info .nama {
+      font-size: 15px;
+      margin-top: 15px;
     }
 
     .content {
@@ -240,8 +266,12 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
         <td><?= empty($pendidikan["fakultas"]) ? $sertifikat["nisn"] : $sertifikat["nim"] ?></td>
       </tr>
       <tr>
-        <td>Bidang Keahlian</td>
+        <td>Bidang Penempatan</td>
         <td><?= ($sertifikat["nama_bidang"]) ?></td>
+      </tr>
+      <tr>
+        <td>Bidang Keahlian</td>
+        <td><?= ($sertifikat["bidang_keahlian"]) ?></td>
       </tr>
     </table>
 
@@ -272,9 +302,22 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     <div class="signature">
       <p>Kepala <?= $sertifikat["nama_bidang"] ?></p>
       <p><?= $sertifikat["nama_panjang"] ?></p>
-      <?php if (!empty($sertifikat["url_qr"])) : ?>
-  <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=150x150" alt="QR Code">
-<?php endif; ?>
+      
+      <div class="signature-wrapper">
+        <!-- QR Code -->
+        <div class="qr-code">
+          <?php if (!empty($sertifikat["url_qr"])) : ?>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=100x100" alt="QR Code">
+          <?php endif; ?>
+        </div>
+
+        <!-- Info Pejabat -->
+        <div class="signature-info">
+          <p>Ditandatangani Secara Elektronik</p>
+          <p class="nama"><?= htmlspecialchars($sertifikat["nama_pejabat"]) ?></p>
+          <p><?= htmlspecialchars($sertifikat["pangkat_pejabat"]) ?></p>
+        </div>
+        </div>
 
       <p><strong><?= $sertifikat["nama_pejabat"] ?></strong></p>
       <p>NIP. <?= $sertifikat["nip_pejabat"] ?></p>
