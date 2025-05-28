@@ -1203,7 +1203,8 @@ function cek_edit_instansi($conn, $data_baru)
         $data_lama['alamat_instansi'] === $data_baru["alamat_instansi"] &&
         $data_lama['lokasi_instansi'] === $data_baru["lokasi_instansi"] &&
         $data_lama['deskripsi_instansi'] === $data_baru["deskripsi_instansi"] &&
-        $data_lama['telepone_instansi'] === $data_baru["telepone_instansi"];
+        $data_lama['telepone_instansi'] === $data_baru["telepone_instansi"] &&
+        $data_lama['website_resmi_instansi'] === $data_baru["website_resmi_instansi"];
 
     // Jika semua field selain gambar sama...
     if ($is_sama) {
