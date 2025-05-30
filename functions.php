@@ -93,70 +93,6 @@ function checking($conn, $table, $column, $value)
 }
 
 
-//     function register($POST){
-//     global $conn;
-//     $id_user = generateUserId($conn);
-//     $nama = $POST["nama_user"];
-//     $email = $POST["email"];
-//     $nik = $POST["nik"];
-//     $nisn = $POST["nisn"];
-//     $pendidikan = $POST["id_pendidikan"];
-//     $jenis_kelamin = $POST["jenis_kelamin"];
-//     $tempat_lahir = $POST["tempat_lahir"];
-//     $tanggal_lahir = $POST["tanggal_lahir"];
-//     $alamat = $POST["alamat_user"];
-//     $telepone = $POST["telepone_user"];
-//     $level = $POST["level"];
-//     $nim = $POST["nim"];
-//     $gambar = uploadImage($_FILES["gambar_user"], "avatar.png", "assets/img/user/");
-
-//     // Cek apakah email sudah ada di database
-//     $query_check_email = mysqli_query($conn, "SELECT id_user FROM tb_user WHERE email = '$email'");
-
-//     if(mysqli_num_rows($query_check_email) > 0) {
-//         $row = mysqli_fetch_assoc($query_check_email);
-//         $existing_id_user = $row['id_user'];
-//         $penanda = substr($existing_id_user, -2); // Ambil 2 digit terakhir (PP)
-
-//         if($penanda == "00") {
-//             header("Location: register.php?error=email_terdaftar");
-//             exit;
-//         } else {
-//             header("Location: register.php?confirm=gunakan_data_lama&id_user_lama=$existing_id_user");
-//             exit;
-//         }
-//     }
-
-//     // Validasi NIK dan NISN kemungkinan di hapus
-//     if (checking($conn, 'tb_profile_user', 'nik', $nik)) {
-//         header("Location: register.php?error=nik_terdaftar");
-//         exit;
-//     }
-//     if (checking($conn, 'tb_profile_user', 'nisn', $nisn)) {
-//         header("Location: register.php?error=nisn_terdaftar");
-//         exit;
-//     }
-//     // if (empty($nik) || strlen($nik) !== 16 || !ctype_digit($nik)) {
-//     //     header("Location: register.php?error=nik_tidak_sesuai");
-//     //     exit;
-//     // }
-//     // if (empty($nisn) || strlen($nisn) !== 10 || !ctype_digit($nisn)) {
-//     //     header("Location: register.php?error=nisn_tidak_sesuai");
-//     //     exit;
-//     // }
-
-//     // Insert data baru
-//     $query1 = "INSERT INTO tb_user (id_user, email, level, create_by) VALUES ('$id_user', '$email', '$level', '$id_user')";
-//     $query2 = "INSERT INTO tb_profile_user (id_user, nama_user, nik, nisn, nim, jenis_kelamin, tempat_lahir, tanggal_lahir, alamat_user, gambar_user, id_pendidikan, create_by, telepone_user)
-//                             VALUES ('$id_user', '$nama', '$nik', '$nisn', '$nim', '$jenis_kelamin', '$tempat_lahir', '$tanggal_lahir', '$alamat', '$gambar', '$pendidikan', '$id_user', '$telepone')";
-//     $query_user = mysqli_query($conn, $query1);
-//     $query_profile = mysqli_query($conn, $query2);
-//     if($query_user && $query_profile) {
-//         return mysqli_affected_rows($conn);
-//     } else {
-//         return 0;
-//     }
-// }
 
 function register($POST)
 {
@@ -507,7 +443,7 @@ function uploadGambarInstansi($file, $old_img, $directory, $id_instansi)
         throw new Exception("Gagal mengupload file.");
     }
 
-    return $uploadPath;
+    return $newFileName;
 }
 
 
@@ -524,7 +460,7 @@ function tambah_instansi_super_admin($POST)
     $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
     $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
     $website_resmi_instansi = mysqli_real_escape_string($conn, $POST["website_resmi_instansi"]);
-    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "../assets/img/instansi/logo_kab_sidoarjo.png", "../assets/img/instansi/");
+    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
     if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
         return 404;
@@ -684,15 +620,22 @@ function tambah_user_by_super_admin($POST)
 function super_admin_edit($POST)
 {
     global $conn;
-    $id_user = $POST["id_user"];
-    $nama_user = $POST["nama_user"];
-    $tanggal_lahir = $POST["tanggal_lahir"];
-    $tempat_lahir = $POST["tempat_lahir"];
-    $telepone_user = $POST["telepone_user"];
-    $alamat_user = $POST["alamat_user"];
-    $jenis_kelamin = $POST["jenis_kelamin"];
-    $gambar_lama = $POST["gambar_lama"];
+
+    $id_user = mysqli_real_escape_string($conn, $POST["id_user"]);
+    $nama_user = mysqli_real_escape_string($conn, $POST["nama_user"]);
+    $tanggal_lahir = mysqli_real_escape_string($conn, $POST["tanggal_lahir"]);
+    $tempat_lahir = mysqli_real_escape_string($conn, $POST["tempat_lahir"]);
+    $telepone_user = mysqli_real_escape_string($conn, $POST["telepone_user"]);
+    $alamat_user = mysqli_real_escape_string($conn, $POST["alamat_user"]);
+    $jenis_kelamin = mysqli_real_escape_string($conn, $POST["jenis_kelamin"]);
+    $gambar_lama = mysqli_real_escape_string($conn, $POST["gambar_lama"]);
+    $nik = mysqli_real_escape_string($conn, $POST["nik"]);
+    $nip = mysqli_real_escape_string($conn, $POST["nip"]);
+
+    // Upload gambar
     $gambar_user = uploadImage($_FILES["gambar_user"], $gambar_lama, "../assets/img/user/");
+
+    // Update data
     $query = mysqli_query($conn, "UPDATE tb_profile_user SET
                             nama_user = '$nama_user',
                             jenis_kelamin = '$jenis_kelamin',
@@ -700,14 +643,18 @@ function super_admin_edit($POST)
                             tanggal_lahir = '$tanggal_lahir',
                             alamat_user = '$alamat_user',
                             telepone_user = '$telepone_user',
+                            nik = '$nik',
+                            nip = '$nip',
                             gambar_user = '$gambar_user'
                             WHERE id_user = '$id_user'");
+
     if ($query) {
         return mysqli_affected_rows($conn);
     } else {
         return 0;
     }
 }
+
 
 
 function hapus_user_super_admin($id_user, $change_by)

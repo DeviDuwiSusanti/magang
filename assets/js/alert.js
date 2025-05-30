@@ -214,7 +214,7 @@ function confirm_hapus_pendidikan_super_admin(id_pendidikan) {
     confirmButtonColor: "#3085d6"
   }).then((result) => {
     if(result.isConfirmed) {
-      window.location.href = "super1_pendidikan.php?id_pendidikan_ini=" + id_pendidikan;
+      window.location.href = "pendidikan_user.php?id_pendidikan_ini=" + id_pendidikan;
     }
   });
 }

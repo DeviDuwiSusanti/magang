@@ -37,11 +37,12 @@ if (isset($_POST["tambah_admin_instansi"])) {
 
 // Handle edit data
 if (isset($_POST["edit_data_user"])) {
-    if (super_admin_edit($_POST)) { ?>
-        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Edit Data User Berhasil", "super1_user.php"); </script>
+    $result = super_admin_edit($_POST);
+    if ($result > 0) { ?>
+        <script> alert_berhasil_gagal_super_admin("success", "Berhasil !!", "Tambah Data User Berhasil", "super1_user.php"); </script>
     <?php } else { ?>
-        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Edit Data User Gagal", "super1_user.php"); </script>
-    <?php }
+        <script> alert_berhasil_gagal_super_admin("error", "Gagal !!", "Tambah Data User Gagal", "super1_user.php"); </script>
+    <?php  }
 }
 ?>
 
@@ -159,18 +160,22 @@ if (isset($_POST["edit_data_user"])) {
                                         <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_user_super_admin(<?= $u['id_user'] ?>)">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"
-                                                data-id="<?= $u['id_user'] ?>"
-                                                data-nama="<?= $u['nama_user'] ?>"
-                                                data-tempat-lahir="<?= $u['tempat_lahir'] ?>"
-                                                data-tanggal-lahir="<?= $u['tanggal_lahir'] ?>"
-                                                data-jenis-kelamin="<?= $u['jenis_kelamin'] ?>"
-                                                data-telepon="<?= $u['telepone_user'] ?>"
-                                                data-alamat="<?= $u['alamat_user'] ?>"
-                                                data-gambar="<?= $u['gambar_user'] ?>"
-                                                data-gambar-lama="<?= $u['gambar_user'] ?>">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
+                                        <button type="button" class="btn btn-warning btn-sm" 
+                                            data-bs-toggle="modal" data-bs-target="#editModal"
+                                            data-id="<?= $u['id_user'] ?>"
+                                            data-nama="<?= htmlspecialchars($u['nama_user']) ?>"
+                                            data-tempat-lahir="<?= htmlspecialchars($u['tempat_lahir']) ?>"
+                                            data-tanggal-lahir="<?= $u['tanggal_lahir'] ?>"
+                                            data-jenis-kelamin="<?= $u['jenis_kelamin'] ?>"
+                                            data-telepon="<?= $u['telepone_user'] ?>"
+                                            data-alamat="<?= htmlspecialchars($u['alamat_user']) ?>"
+                                            data-gambar="<?= $u['gambar_user'] ?>"
+                                            data-gambar-lama="<?= $u['gambar_user'] ?>"
+                                            data-nik="<?= $u['nik'] ?>"
+                                            data-nip="<?= $u['nip'] ?>">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+
                                     <?php } else { ?>
                                         <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_user_super_admin(<?= $u['id_user'] ?>)">
                                             <i class="bi bi-trash"></i>
@@ -204,7 +209,7 @@ if (isset($_POST["edit_data_user"])) {
                         <input type="text" class="form-control" id="nama_lengkap" name="nama_user" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-labNIK</label>
                         <input type="email" class="form-control" id="email" name="email" required>
                     </div>
 
@@ -277,37 +282,63 @@ if (isset($_POST["edit_data_user"])) {
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit User</h5>
+                <h5 class="modal-title" id="editModalLabel">Edit Admin Instansi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="formEdit" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="id_user" id="edit_id_user">
-                    <!-- Form fields for edit data -->
+                    <input type="hidden" name="gambar_lama" id="gambar_lama">
+                    <input type="hidden" name="level" id="edit_level" value="2">
+
                     <div class="mb-3">
-                        <label for="edit_nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="edit_nama" name="nama_user" required>
+                        <label for="edit_nama_lengkap" class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="edit_nama_lengkap" name="nama_user" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="edit_tempat_lahir" class="form-label">Tempat Lahir</label>
-                        <input type="text" class="form-control" id="edit_tempat_lahir" name="tempat_lahir">
+
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label for="edit_nik" class="form-label">NIK</label>
+                            <input type="text" class="form-control" id="edit_nik" name="nik" required maxlength="16">
+                            <small id="edit_nik_error" class="text-danger"></small>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="edit_nip" class="form-label">NIP</label>
+                            <input type="text" class="form-control" id="edit_nip" name="nip" required maxlength="18">
+                            <small id="edit_nip_error" class="text-danger"></small>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="edit_tempat_lahir" class="form-label">Tempat Lahir</label>
+                            <input type="text" class="form-control" id="edit_tempat_lahir" name="tempat_lahir">
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label for="edit_tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                            <input type="date" class="form-control" id="edit_tanggal_lahir" name="tanggal_lahir">
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <div class="form-group">
+                                <label class="form-label">Pilih Jenis Kelamin:</label>
+                                <div class="d-flex">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="radio" id="edit_male" name="jenis_kelamin" value="1" required>
+                                        <label class="form-check-label" for="edit_male">Laki-laki</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="edit_female" name="jenis_kelamin" value="0" required>
+                                        <label class="form-check-label" for="edit_female">Perempuan</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 col-6">
+                            <label for="edit_telepon" class="form-label">Telepon</label>
+                            <input type="tel" class="form-control" id="edit_telepon" name="telepone_user" pattern="[0-9]{8,15}" maxlength="15">
+                            <small id="edit_telepon_error" class="text-danger"></small>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="edit_tanggal_lahir" class="form-label">Tanggal Lahir</label>
-                        <input type="date" class="form-control" id="edit_tanggal_lahir" name="tanggal_lahir">
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select class="form-control" id="edit_jenis_kelamin" name="jenis_kelamin">
-                            <option value="1">Laki-laki</option>
-                            <option value="0">Perempuan</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit_telepon" class="form-label">Telepon</label>
-                        <input type="tel" class="form-control" id="edit_telepon" name="telepone_user">
-                        <small id="edit_telepon_error" class="text-danger"></small>
-                    </div>
+
                     <div class="mb-3">
                         <label for="edit_alamat" class="form-label">Alamat</label>
                         <textarea class="form-control" id="edit_alamat" name="alamat_user" rows="3"></textarea>
@@ -317,7 +348,6 @@ if (isset($_POST["edit_data_user"])) {
                         <div class="image-preview" id="imagePreviewEdit">
                             <img src="../assets/img/avatar1.png" id="previewImageEdit" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;" onclick="openImageModal(this)">
                         </div>
-                        <input type="hidden" name="gambar_lama" id="gambar_lama">
                         <input type="file" class="form-control" id="edit_gambar" name="gambar_user" accept="image/*" onchange="validateFileEdit()">
                     </div>
                     <div class="modal-footer">
@@ -329,6 +359,7 @@ if (isset($_POST["edit_data_user"])) {
         </div>
     </div>
 </div>
+
 
 <?php include "../layout/footerDashboard.php" ?>
 
@@ -446,39 +477,51 @@ if (isset($_POST["edit_data_user"])) {
     });
 
     // Event listener untuk modal edit
-    document.addEventListener('DOMContentLoaded', function () {
-        var editModal = document.getElementById('editModal');
-        editModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget; // Tombol yang memicu modal
-            var id = button.getAttribute('data-id');
-            var nama = button.getAttribute('data-nama');
-            var tempatLahir = button.getAttribute('data-tempat-lahir');
-            var tanggalLahir = button.getAttribute('data-tanggal-lahir');
-            var jenisKelamin = button.getAttribute('data-jenis-kelamin');
-            var telepon = button.getAttribute('data-telepon');
-            var alamat = button.getAttribute('data-alamat');
-            var gambar = button.getAttribute('data-gambar');
-            var gambar_lama = button.getAttribute('data-gambar-lama');
-        
+document.addEventListener('DOMContentLoaded', function () {
+    var editModal = document.getElementById('editModal');
+    editModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Tombol yang memicu modal
 
-            // Isi nilai ke dalam form modal
-            document.getElementById('edit_id_user').value = id;
-            document.getElementById('edit_nama').value = nama;
-            document.getElementById('edit_tempat_lahir').value = tempatLahir;
-            document.getElementById('edit_tanggal_lahir').value = tanggalLahir;
-            document.getElementById('edit_jenis_kelamin').value = jenisKelamin;
-            document.getElementById('edit_telepon').value = telepon;
-            document.getElementById('edit_alamat').value = alamat;
-            document.getElementById('gambar_lama').value = gambar_lama;
+        // Ambil atribut data
+        var id = button.getAttribute('data-id');
+        var nama = button.getAttribute('data-nama');
+        var tempatLahir = button.getAttribute('data-tempat-lahir');
+        var tanggalLahir = button.getAttribute('data-tanggal-lahir');
+        var jenisKelamin = button.getAttribute('data-jenis-kelamin');
+        var telepon = button.getAttribute('data-telepon');
+        var alamat = button.getAttribute('data-alamat');
+        var gambar = button.getAttribute('data-gambar');
+        var gambarLama = button.getAttribute('data-gambar-lama');
+        var nik = button.getAttribute('data-nik');
+        var nip = button.getAttribute('data-nip');
 
-            // Tampilkan gambar lama
-            if (gambar) {
-                document.getElementById('previewImageEdit').src = "../assets/img/user/" + gambar;
-            } else {
-                document.getElementById('previewImageEdit').src = "../assets/img/user/avatar.png";
-            }
-        });
+        // Isi nilai ke dalam form modal
+        document.getElementById('edit_id_user').value = id;
+        document.getElementById('edit_nama_lengkap').value = nama;
+        document.getElementById('edit_tempat_lahir').value = tempatLahir;
+        document.getElementById('edit_tanggal_lahir').value = tanggalLahir;
+        document.getElementById('edit_telepon').value = telepon;
+        document.getElementById('edit_alamat').value = alamat;
+        document.getElementById('gambar_lama').value = gambarLama;
+        document.getElementById('edit_nik').value = nik;
+        document.getElementById('edit_nip').value = nip;
+
+        // Atur radio button jenis kelamin
+        if (jenisKelamin === "1") {
+            document.getElementById('edit_male').checked = true;
+        } else if (jenisKelamin === "0") {
+            document.getElementById('edit_female').checked = true;
+        }
+
+        // Tampilkan gambar lama
+        if (gambar) {
+            document.getElementById('previewImageEdit').src = "../assets/img/user/" + gambar;
+        } else {
+            document.getElementById('previewImageEdit').src = "../assets/img/user/avatar1.png";
+        }
     });
+});
+
 </script>
 
 <script>

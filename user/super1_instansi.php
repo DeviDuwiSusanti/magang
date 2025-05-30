@@ -116,7 +116,7 @@
                         <td><?= $opd["nama_pendek"] ?></td>
                         <td><?= $opd["nama_panjang"] ?></td>
                         <td><?= $opd["group_instansi"] ?></td>
-                        <td><img src="<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi" onclick="openImageModal(this)"></td>
+                        <td><img src="../assets/img/instansi/<?= $opd["gambar_instansi"] ?>" alt="gambar_instansi" onclick="openImageModal(this)"></td>
 
                         <td class="d-flex justify-content-center gap-2">
                             <a href="#" class="btn btn-danger btn-sm" onclick="confirm_hapus_instansi_super_admin(<?= $opd['id_instansi'] ?>)">
