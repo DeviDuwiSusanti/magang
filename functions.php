@@ -524,7 +524,7 @@ function tambah_instansi_super_admin($POST)
     $lokasi_instansi = mysqli_real_escape_string($conn, $POST["lokasi_instansi"]);
     $telepone_instansi = mysqli_real_escape_string($conn, $POST["telepone_instansi"]);
     $website_resmi_instansi = mysqli_real_escape_string($conn, $POST["website_resmi_instansi"]);
-    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "logo_kab_sidoarjo.png", "../assets/img/instansi/");
+    $gambar_instansi = uploadImage($_FILES["gambar_instansi"], "../assets/img/instansi/logo_kab_sidoarjo.png", "../assets/img/instansi/");
 
     if (checking($conn, 'tb_instansi', 'id_instansi', $id_instansi)) {
         return 404;
