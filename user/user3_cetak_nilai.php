@@ -1,4 +1,4 @@
-<?php 
+<?php
 include "../functions.php";
 include "functions.php";
 
@@ -17,29 +17,29 @@ $sertifikat = query("SELECT pu.*, p.*, n.*, i.*, b.*
 // Validasi kelengkapan data diri
 $data_diri_kosong = [];
 $kolom_wajib = [
-    'nama_user', 
-    'tanggal_lahir',
-    'nama_panjang',
-    'nama_bidang',
-    'tanggal_mulai',
-    'tanggal_selesai'
+  'nama_user',
+  'tanggal_lahir',
+  'nama_panjang',
+  'nama_bidang',
+  'tanggal_mulai',
+  'tanggal_selesai'
 ];
 
 // Validasi NIM/NISN (minimal salah satu harus ada)
 if (empty($sertifikat["nim"]) && empty($sertifikat["nisn"])) {
-    $data_diri_kosong[] = "NIM atau NISN";
+  $data_diri_kosong[] = "NIM atau NISN";
 }
 
 foreach ($kolom_wajib as $kolom) {
-    if (empty($sertifikat[$kolom])) {
-        $data_diri_kosong[] = str_replace('_', ' ', $kolom);
-    }
+  if (empty($sertifikat[$kolom])) {
+    $data_diri_kosong[] = str_replace('_', ' ', $kolom);
+  }
 }
 
 // Jika ada data diri yang kosong, tampilkan sweetalert dan hentikan proses
 if (!empty($data_diri_kosong)) {
-    echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-    echo '<script>
+  echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+  echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
             Swal.fire({
                 icon: "error",
@@ -54,7 +54,7 @@ if (!empty($data_diri_kosong)) {
             });
         });
     </script>';
-    exit(); // Hentikan eksekusi script
+  exit(); // Hentikan eksekusi script
 }
 
 // Lanjutkan dengan kode berikutnya jika data lengkap
@@ -64,30 +64,29 @@ $admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_
 
 
 // Fungsi untuk konversi tanggal
-function formatTanggal($date) {
-    $bulan = array(
-        1 => 'Januari',
-        2 => 'Februari',
-        3 => 'Maret',
-        4 => 'April',
-        5 => 'Mei',
-        6 => 'Juni',
-        7 => 'Juli',
-        8 => 'Agustus',
-        9 => 'September',
-        10 => 'Oktober',
-        11 => 'November',
-        12 => 'Desember'
-    );
-    
-    $tanggal = date('j', strtotime($date));
-    $bulan_num = date('n', strtotime($date));
-    $tahun = date('Y', strtotime($date));
-    
-    return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
+function formatTanggal($date)
+{
+  $bulan = array(
+    1 => 'Januari',
+    2 => 'Februari',
+    3 => 'Maret',
+    4 => 'April',
+    5 => 'Mei',
+    6 => 'Juni',
+    7 => 'Juli',
+    8 => 'Agustus',
+    9 => 'September',
+    10 => 'Oktober',
+    11 => 'November',
+    12 => 'Desember'
+  );
+
+  $tanggal = date('j', strtotime($date));
+  $bulan_num = date('n', strtotime($date));
+  $tahun = date('Y', strtotime($date));
+
+  return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
 }
-
-
 
 $tanggal_mulai = formatTanggal($sertifikat["tanggal_mulai"]);
 $tanggal_selesai = formatTanggal($sertifikat["tanggal_selesai"]);
@@ -108,11 +107,22 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
       size: A4 portrait;
       margin: 0;
     }
+
     body {
       font-family: Arial, sans-serif;
       margin: 30px;
       position: relative;
     }
+
+    .logo-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-header img {
+      height: 100px;
+    }
+
     .background {
       position: absolute;
       top: 45%;
@@ -123,6 +133,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
       max-width: 100%;
       max-height: 100%;
     }
+
     .background-text {
       margin-top: 50px;
       position: absolute;
@@ -138,33 +149,41 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
       width: 100%;
       text-transform: capitalize;
     }
-    h1, h2, h3 {
+
+    h1,
+    h2,
+    h3 {
       text-align: center;
       margin-bottom: 0;
       text-transform: uppercase;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
     }
-    th, td {
+
+    th,
+    td {
       padding: 5px;
       text-align: left;
     }
+
     .no-border {
       border: none;
     }
+
     .center {
       text-align: center;
     }
+
     .signature {
       margin-top: 40px;
-      float: right; /* Geser elemen ke kanan */
-      text-align: left; /* Isi teks tetap rata kiri */
-      width: 300px; /* Atur lebar agar tidak terlalu panjang */
+      float: right;
+      text-align: left;
+      width: 300px;
     }
-
 
     .signature img {
       height: 80px;
@@ -174,7 +193,6 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     .signature p {
       margin: 5px 0;
     }
-
 
     .signature-wrapper {
       display: flex;
@@ -196,25 +214,40 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     .signature-info p {
       margin: 2px 0;
     }
+
     .signature-info .nama {
       font-size: 15px;
       text-transform: uppercase;
       margin-top: 5px;
     }
+
     .uppercase {
       text-transform: uppercase;
     }
+
     .capitalize {
       text-transform: capitalize;
     }
   </style>
 </head>
+
 <body>
+  <!-- Logo Header -->
+  <div class="logo-header">
+    <img src="../assets/img/logo_kab_sidoarjo.png" alt="Logo Kabupaten Sidoarjo">
+  </div>
+
   <!-- Background Transparan -->
   <img src="../assets/img/instansi/logo_kab_sidoarjo.png" class="background" alt="Background">
   <div class="background-text"><?= ($sertifikat["nama_panjang"]) ?></div>
 
-  <h2>LEMBAR PENILAIAN PRAKTIK MAGANG</h2>
+  <h2>LEMBAR PENILAIAN <?=
+                        ($sertifikat["jenis_pengajuan"] == 'Praktik Kerja Lapangan')
+                          ? $sertifikat["jenis_pengajuan"]
+                          : 'PRAKTIK ' . $sertifikat["jenis_pengajuan"];
+                        ?>
+  </h2>
+
   <p class="center uppercase">Nomor: <?= $kode_surat ?></p>
 
   <table>
@@ -223,12 +256,12 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
       <td>: <strong><?= ($sertifikat["nama_user"]) ?></strong></td>
     </tr>
     <tr>
-      <?php if($sertifikat["nim"] == "") {?>
+      <?php if ($sertifikat["nim"] == "") { ?>
         <td class="uppercase">Nisn</td>
         <td>: <?= $sertifikat["nisn"] ?></td>
       <?php } else { ?>
-          <td class="uppercase">Nim</td>
-          <td>: <?= $sertifikat["nim"] ?></td>
+        <td class="uppercase">Nim</td>
+        <td>: <?= $sertifikat["nim"] ?></td>
       <?php } ?>
     </tr>
     <tr>
@@ -305,35 +338,36 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
   </table>
 
   <div class="signature">
-      <p>Kepala <?= $sertifikat["nama_bidang"] ?></p>
-      <p><?= $sertifikat["nama_panjang"] ?></p>
-      
-      <div class="signature-wrapper">
-        <!-- QR Code -->
-        <div class="qr-code">
-          <?php if (!empty($sertifikat["url_qr"])) : ?>
-            <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=100x100" alt="QR Code">
-          <?php endif; ?>
-        </div>
+    <p>Kepala <?= $sertifikat["nama_bidang"] ?></p>
+    <p><?= $sertifikat["nama_panjang"] ?></p>
 
-        <!-- Info Pejabat -->
-        <div class="signature-info">
-          <p>Ditandatangani Secara Elektronik </p>
-          <p class="nama"><?= htmlspecialchars($sertifikat["nama_pejabat"]) ?></p>
-          <p><?= htmlspecialchars($sertifikat["pangkat_pejabat"]) ?></p>
-        </div>
-        </div>
+    <div class="signature-wrapper">
+      <!-- QR Code -->
+      <div class="qr-code">
+        <?php if (!empty($sertifikat["url_qr"])) : ?>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=100x100" alt="QR Code">
+        <?php endif; ?>
+      </div>
 
-      <p><strong><?= $sertifikat["nama_pejabat"] ?></strong></p>
-      <p>NIP. <?= $sertifikat["nip_pejabat"] ?></p>
+      <!-- Info Pejabat -->
+      <div class="signature-info">
+        <p>Ditandatangani Secara Elektronik </p>
+        <p class="nama"><?= htmlspecialchars($sertifikat["nama_pejabat"]) ?></p>
+        <p><?= htmlspecialchars($sertifikat["pangkat_pejabat"]) ?></p>
+      </div>
     </div>
+
+    <p><strong><?= $sertifikat["nama_pejabat"] ?></strong></p>
+    <p>NIP. <?= $sertifikat["nip_pejabat"] ?></p>
+  </div>
   </div>
 </body>
+
 </html>
 
 <script src="../assets//js/alert.js"></script>
- <script>
-    window.onload = function() {
-      window.print();
-    };
-  </script>
+<script>
+  window.onload = function() {
+    window.print();
+  };
+</script>

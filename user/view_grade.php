@@ -74,6 +74,15 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
             pointer-events: none;
         }
 
+        .logo-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-header img {
+            height: 100px;
+        }
+
         .background {
             position: absolute;
             top: 45%;
@@ -229,6 +238,10 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
 </head>
 
 <body>
+    <!-- Logo Header -->
+    <div class="logo-header">
+        <img src="../assets/img/logo_kab_sidoarjo.png" alt="Logo Kabupaten Sidoarjo">
+    </div>
     <!-- Protection elements -->
     <div class="anti-screenshot"></div>
     <div class="protection-overlay"></div>
@@ -237,7 +250,12 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     <img src="../assets/img/instansi/logo_kab_sidoarjo.png" class="background" alt="Background">
     <div class="background-text"><?= ($sertifikat["nama_panjang"]) ?></div>
 
-    <h2>LEMBAR PENILAIAN PRAKTIK MAGANG</h2>
+    <h2>LEMBAR PENILAIAN <?=
+                            ($sertifikat["jenis_pengajuan"] == 'Praktik Kerja Lapangan')
+                                ? $sertifikat["jenis_pengajuan"]
+                                : 'PRAKTIK ' . $sertifikat["jenis_pengajuan"];
+                            ?>
+    </h2>
     <p class="center uppercase">Nomor: <?= $kode_surat ?></p>
 
     <table>

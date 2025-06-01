@@ -1,4 +1,4 @@
-<?php 
+<?php
 include "../functions.php";
 include "functions.php";
 
@@ -12,14 +12,16 @@ $profile_check = query("SELECT pu.*, p.nama_pendidikan
                        WHERE pu.id_user = $id_user_ini")[0];
 
 // Cek field yang wajib diisi
-if (empty($profile_check['nama_user']) || 
-    empty($profile_check['tempat_lahir']) || 
-    empty($profile_check['tanggal_lahir']) || 
-    (empty($profile_check['nim']) && empty($profile_check['nisn'])) || 
-    empty($profile_check['nama_pendidikan'])) {
-    
-    echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-    echo '<script>
+if (
+  empty($profile_check['nama_user']) ||
+  empty($profile_check['tempat_lahir']) ||
+  empty($profile_check['tanggal_lahir']) ||
+  (empty($profile_check['nim']) && empty($profile_check['nisn'])) ||
+  empty($profile_check['nama_pendidikan'])
+) {
+
+  echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+  echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
             Swal.fire({
                 icon: "warning",
@@ -33,7 +35,7 @@ if (empty($profile_check['nama_user']) ||
             });
         });
     </script>';
-    exit();
+  exit();
 }
 
 // Ambil data user & pengajuan
@@ -52,8 +54,8 @@ $background = query("SELECT * FROM tb_sertifikat_background
                     WHERE id_instansi = '$id_instansi_ini' AND background_active = '1' AND status_active = '1'")[0];
 
 if (empty($background)) {
-    echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
-    echo '<script>
+  echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+  echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
             Swal.fire({
                 icon: "info",
@@ -67,23 +69,33 @@ if (empty($background)) {
             });
         });
     </script>';
-    exit();
+  exit();
 }
 
 $id_pendidikan = $sertifikat["id_pendidikan"];
 $pendidikan = query("SELECT * FROM tb_pendidikan WHERE id_pendidikan = '$id_pendidikan'")[0];
 $admin_instansi = query("SELECT * FROM tb_profile_user WHERE id_instansi = '$id_instansi_ini'")[0];
 
-function formatTanggal($date) {
-    $bulan = array(
-        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
-        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
-        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
-    );
-    $tanggal = date('j', strtotime($date));
-    $bulan_num = date('n', strtotime($date));
-    $tahun = date('Y', strtotime($date));
-    return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
+function formatTanggal($date)
+{
+  $bulan = array(
+    1 => 'Januari',
+    2 => 'Februari',
+    3 => 'Maret',
+    4 => 'April',
+    5 => 'Mei',
+    6 => 'Juni',
+    7 => 'Juli',
+    8 => 'Agustus',
+    9 => 'September',
+    10 => 'Oktober',
+    11 => 'November',
+    12 => 'Desember'
+  );
+  $tanggal = date('j', strtotime($date));
+  $bulan_num = date('n', strtotime($date));
+  $tahun = date('Y', strtotime($date));
+  return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
 }
 
 $tanggal_mulai = formatTanggal($sertifikat["tanggal_mulai"]);
@@ -92,13 +104,11 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
 $nomor_sertifikat = $sertifikat["nomor_nilai"];
 $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
-
-
-
 ?>
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <title>Sertifikat Magang</title>
@@ -111,16 +121,26 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     body {
       font-family: "Cambria", serif;
       margin: 0;
-      padding: 0; /* Jangan gunakan padding di body */
+      padding: 0;
       background-image: url('<?= $background['path_file'] ?>');
       background-color: white;
       background-size: cover;
       background-position: top center;
       background-repeat: no-repeat;
-      background-attachment: fixed; /* Mencegah background bergeser saat print */
+      background-attachment: fixed;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       min-height: 100vh;
+    }
+
+    .logo-header {
+      text-align: center;
+      margin-bottom: 10px;
+      padding-top: 20px;
+    }
+
+    .logo-header img {
+      height: 100px;
     }
 
     @media print {
@@ -130,15 +150,19 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
+
       .no-print {
         display: none !important;
       }
+
       .content {
         background-color: transparent;
       }
     }
 
-    h1, h2, h3 {
+    h1,
+    h2,
+    h3 {
       text-align: center;
       margin: 10px 0;
     }
@@ -180,11 +204,10 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
 
     .signature {
       margin-top: 5px;
-      float: right; /* Geser elemen ke kanan */
-      text-align: left; /* Isi teks tetap rata kiri */
-      width: 300px; /* Atur lebar agar tidak terlalu panjang */
+      float: right;
+      text-align: left;
+      width: 300px;
     }
-
 
     .signature img {
       height: 80px;
@@ -194,7 +217,6 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     .signature p {
       margin: 5px 0;
     }
-
 
     .signature-wrapper {
       display: flex;
@@ -216,13 +238,14 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     .signature-info p {
       margin: 2px 0;
     }
+
     .signature-info .nama {
       font-size: 15px;
       margin-top: 15px;
     }
 
     .content {
-      padding-top: 50px;
+      padding-top: 20px;
       margin-top: 20px;
       border-radius: 10px;
       max-width: 900px;
@@ -240,13 +263,23 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
 </head>
 
 <body>
+  <!-- Logo Header -->
+  <div class="logo-header">
+    <img src="../assets/img/logo_kab_sidoarjo.png" alt="Logo Kabupaten Sidoarjo">
+  </div>
+
   <div class="content">
     <div class="no-print" style="background: #fff8c4; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px;">
-        <strong>⚠️ Penting:</strong> Saat mencetak, centang opsi <strong>"Background graphics"</strong> agar sertifikat tampil lengkap.
+      <strong>⚠️ Penting:</strong> Saat mencetak, centang opsi <strong>"Background graphics"</strong> agar sertifikat tampil lengkap.
     </div>
 
     <h1>SERTIFIKAT</h1>
-    <h3>HASIL PRAKTIK MAGANG</h3>
+    <h3>HASIL <?=
+              ($sertifikat["jenis_pengajuan"] == 'Praktik Kerja Lapangan')
+                ? $sertifikat["jenis_pengajuan"]
+                : 'PRAKTIK ' . $sertifikat["jenis_pengajuan"];
+              ?>
+    </h3>
     <p class="center">Nomor: <?= $kode_surat ?></p>
 
     <p>Diberikan kepada:</p>
@@ -275,12 +308,12 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
       </tr>
     </table>
 
-    <p>Telah melaksanakan <?= ($sertifikat["jenis_pengajuan"]) ?> Pada <?= ($sertifikat["nama_panjang"]) ?>  selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
-    <?php if($sertifikat["tanggal_extend"] != "") {  ?>
-    , Dan Perpanjangan Waktu Hingga <?= formatTanggal($sertifikat["tanggal_extend"]) ?>
-    <?php } else { ?>
-    .
-    <?php }?></p>
+    <p>Telah melaksanakan <?= ($sertifikat["jenis_pengajuan"]) ?> Pada <?= ($sertifikat["nama_panjang"]) ?> selama 1 periode, dari tanggal <?= $tanggal_mulai ?> hingga <?= $tanggal_selesai ?>
+      <?php if ($sertifikat["tanggal_extend"] != "") {  ?>
+        , Dan Perpanjangan Waktu Hingga <?= formatTanggal($sertifikat["tanggal_extend"]) ?>
+      <?php } else { ?>
+        .
+      <?php } ?></p>
 
     <?php
     $rata = $sertifikat["rata_rata"];
@@ -302,7 +335,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     <div class="signature">
       <p>Kepala <?= $sertifikat["nama_bidang"] ?></p>
       <p><?= $sertifikat["nama_panjang"] ?></p>
-      
+
       <div class="signature-wrapper">
         <!-- QR Code -->
         <div class="qr-code">
@@ -317,7 +350,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
           <p class="nama"><?= htmlspecialchars($sertifikat["nama_pejabat"]) ?></p>
           <p><?= htmlspecialchars($sertifikat["pangkat_pejabat"]) ?></p>
         </div>
-        </div>
+      </div>
 
       <p><strong><?= $sertifikat["nama_pejabat"] ?></strong></p>
       <p>NIP. <?= $sertifikat["nip_pejabat"] ?></p>
@@ -331,4 +364,5 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
   </script>
 
 </body>
+
 </html>
