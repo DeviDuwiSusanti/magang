@@ -242,9 +242,9 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
   <div class="background-text"><?= ($sertifikat["nama_panjang"]) ?></div>
 
   <h2>LEMBAR PENILAIAN <?=
-                        ($sertifikat["jenis_pengajuan"] == 'Praktik Kerja Lapangan')
-                          ? $sertifikat["jenis_pengajuan"]
-                          : 'PRAKTIK ' . $sertifikat["jenis_pengajuan"];
+                        ($sertifikat["jenis_pengajuan"] != 'Praktik Kerja Lapangan')
+                          ? strtoupper($sertifikat["jenis_pengajuan"])
+                          : 'PRAKTIK ' . strtoupper($sertifikat["jenis_pengajuan"]);
                         ?>
   </h2>
 

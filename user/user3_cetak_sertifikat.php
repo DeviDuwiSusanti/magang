@@ -203,7 +203,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     }
 
     .signature {
-      margin-top: 5px;
+      /* margin-top: 5px; */
       float: right;
       text-align: left;
       width: 300px;
@@ -221,7 +221,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     .signature-wrapper {
       display: flex;
       align-items: flex-start;
-      margin-top: 20px;
+      /* margin-top: 20px; */
       gap: 10px;
     }
 
@@ -255,35 +255,33 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     }
 
     .predikat {
-      font-size: 18px;
-      margin: 20px 0;
+      font-size: 16px;
+      /* margin: 20px 0; */
       text-align: center;
     }
   </style>
 </head>
 
 <body>
-  <!-- Logo Header -->
-  <div class="logo-header">
-    <img src="../assets/img/logo_kab_sidoarjo.png" alt="Logo Kabupaten Sidoarjo">
-  </div>
-
+  
   <div class="content">
     <div class="no-print" style="background: #fff8c4; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px;">
       <strong>⚠️ Penting:</strong> Saat mencetak, centang opsi <strong>"Background graphics"</strong> agar sertifikat tampil lengkap.
     </div>
-
-    <h1>SERTIFIKAT</h1>
-    <h3>HASIL <?=
+    <!-- Logo Header -->
+    <div class="logo-header">
+    <img src="../assets/img/logo_kab_sidoarjo.png" alt="Logo Kabupaten Sidoarjo">
+    </div>
+    <h3>SERTIFIKAT HASIL <?=
               ($sertifikat["jenis_pengajuan"] == 'Praktik Kerja Lapangan')
-                ? $sertifikat["jenis_pengajuan"]
-                : 'PRAKTIK ' . $sertifikat["jenis_pengajuan"];
+                ? 'PRAKTIK ' . strtoupper($sertifikat["jenis_pengajuan"])
+                : strtoupper($sertifikat["jenis_pengajuan"]);
               ?>
     </h3>
     <p class="center">Nomor: <?= $kode_surat ?></p>
 
     <p>Diberikan kepada:</p>
-    <h2><?= ($sertifikat["nama_user"]) ?></h2>
+    <h3><?= ($sertifikat["nama_user"]) ?></h3>
 
     <table class="no-border">
       <tr>
@@ -331,6 +329,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
     <div class="predikat">
       <strong>Dengan predikat:<br><?= $predikat ?></strong>
     </div>
+    
 
     <div class="signature">
       <p>Kepala <?= $sertifikat["nama_bidang"] ?></p>
