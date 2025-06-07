@@ -129,7 +129,7 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
         }
 
         .signature {
-            margin-top: 5px;
+            /* margin-top: 5px; */
             float: right;
             text-align: left;
             width: 300px;
@@ -153,6 +153,17 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
 
         .qr-code {
             flex-shrink: 0;
+        }
+
+
+        .logo-header {
+            text-align: center;
+            margin-bottom: 10px;
+            padding-top: 20px;
+        }
+
+        .logo-header img {
+            height: 100px;
         }
 
         .signature-info {
@@ -181,8 +192,8 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
         }
 
         .predikat {
-            font-size: 18px;
-            margin: 20px 0;
+            font-size: 16px;
+            /* margin: 20px 0; */
             text-align: center;
         }
 
@@ -202,14 +213,22 @@ $kode_surat = generateKodeSurat($nomor_sertifikat, $id_instansi_ini);
 <body>
     <!-- Overlay untuk mencegah interaksi -->
     <div class="protection-overlay"></div>
-
+    
     <div class="content">
-        <h1>SERTIFIKAT</h1>
-        <h3>HASIL PRAKTIK MAGANG</h3>
+        <!-- Logo Header -->
+        <div class="logo-header">
+            <img src="../assets/img/logo_kab_sidoarjo.png" alt="Logo Kabupaten Sidoarjo">
+        </div>
+        <h3>SERTIFIKAT HASIL <?=
+                    ($sertifikat["jenis_pengajuan"] == 'Praktik Kerja Lapangan')
+                        ? strtoupper($sertifikat["jenis_pengajuan"])
+                        : strtoupper('PRAKTIK ' . $sertifikat["jenis_pengajuan"]);
+                    ?>
+        </h3>
         <p class="center">Nomor: <?= $kode_surat ?></p>
 
         <p>Diberikan kepada:</p>
-        <h2><?= ($sertifikat["nama_user"]) ?></h2>
+        <h3><?= ($sertifikat["nama_user"]) ?></h3>
 
         <table class="no-border">
             <tr>

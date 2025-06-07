@@ -52,12 +52,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         border: none;
         background-color: #ffffff;
     }
-    
+
     .profile-header {
         background: linear-gradient(135deg, #0d6efd, #4f46e5);
         color: white;
     }
-    
+
     .profile-image-container {
         position: relative;
         width: 200px;
@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         overflow: hidden;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-    
+
     .profile-image {
         width: 100%;
         height: 100%;
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         object-position: center;
         transition: all 0.3s ease;
     }
-    
+
     .image-overlay {
         position: absolute;
         top: 0;
@@ -89,41 +89,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         opacity: 0;
         transition: all 0.3s ease;
     }
-    
+
     .profile-image-container:hover .image-overlay {
         opacity: 1;
     }
-    
+
     .profile-image-container:hover .profile-image {
         transform: scale(1.05);
     }
-    
+
     .profile-name {
         font-weight: 600;
         color: #2c3e50;
         margin-top: 15px;
     }
-    
+
     .profile-badge {
         background-color: #e3f2fd;
         color: #0d6efd;
     }
-    
+
     .website-btn {
         transition: all 0.2s ease;
     }
-    
+
     .website-btn:hover {
         background-color: #0d6efd;
         color: white;
     }
-    
+
     .profile-section {
         margin-bottom: 25px;
         padding-bottom: 15px;
         border-bottom: 1px solid #eee;
     }
-    
+
     .section-title {
         color: #2c3e50;
         font-weight: 600;
@@ -131,31 +131,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         display: flex;
         align-items: center;
     }
-    
+
     .contact-info {
         display: flex;
         align-items: flex-start;
         margin-bottom: 15px;
     }
-    
+
     .contact-icon {
         font-size: 1.2rem;
         color: #0d6efd;
         margin-right: 10px;
         margin-top: 3px;
     }
-    
+
     .contact-label {
         font-weight: 600;
         margin-bottom: 3px;
         color: #2c3e50;
     }
-    
+
     .contact-value {
         margin: 0;
         color: #6c757d;
     }
-    
+
     .map-placeholder {
         background-color: #f8f9fa;
         padding: 20px;
@@ -163,115 +163,115 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         border: 1px solid #dee2e6;
         text-align: center;
     }
-    
+
     .map-preview {
         margin-bottom: 15px;
     }
-    
+
     .map-icon {
         font-size: 2.5rem;
         color: #0d6efd;
     }
-    
+
     .map-text {
         margin-top: 10px;
         color: #6c757d;
     }
-    
+
     .map-btn {
         transition: all 0.2s ease;
     }
-    
+
     .map-btn:hover {
         background-color: #0d6efd;
         color: white;
     }
-    
+
     .empty-alert {
         border: 1px solid #dee2e6;
     }
-    
+
     .profile-footer {
         background-color: #f8f9fa;
         border-top: 1px solid #eee;
     }
-    
+
     /* Dark Mode Styles */
     body.dark-mode .profile-card {
         background-color: #2d3748;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
-    
+
     body.dark-mode .profile-header {
         /* background-color: #1e40af; */
         background: linear-gradient(135deg, #1e40af, #3730a3);
     }
-    
+
     body.dark-mode .profile-name {
         color: #f1f1f1;
     }
-    
+
     body.dark-mode .section-title {
         color: #f1f1f1;
     }
-    
+
     body.dark-mode .contact-label {
         color: #e2e8f0;
     }
-    
+
     body.dark-mode .contact-value {
         color: #a0aec0;
     }
-    
+
     body.dark-mode .profile-section {
         border-bottom-color: #4a5568;
     }
-    
+
     body.dark-mode .map-placeholder {
         background-color: #4a5568;
         border-color: #4a5568;
     }
-    
+
     body.dark-mode .map-text {
         color: #cbd5e0;
     }
-    
+
     body.dark-mode .empty-alert {
         background-color: #4a5568;
         border-color: #4a5568;
         color: #cbd5e0;
     }
-    
+
     body.dark-mode .profile-footer {
         background-color: #2d3748;
         border-top-color: #4a5568;
     }
-    
+
     body.dark-mode .update-text {
         color: #a0aec0 !important;
     }
-    
+
     body.dark-mode .profile-badge {
         background-color: #1e3656;
         color: #93c5fd;
     }
-    
+
     /* Responsive Design */
     @media (max-width: 768px) {
         .profile-image-container {
             width: 150px;
             height: 150px;
         }
-        
+
         .profile-name {
             font-size: 1.5rem;
         }
-        
+
         .profile-section {
             margin-top: 20px;
         }
     }
-    
+
     @media (max-width: 576px) {
         .profile-image-container {
             width: 120px;
@@ -287,40 +287,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
             <li class="breadcrumb-item"><a href="dashboard.php" class="breadcrumb-link">Dashboard</a></li>
             <li class="breadcrumb-item active breadcrumb-link text-muted update-text">Profil Instansi</li>
         </ol>
-        
         <div class="card profile-card">
             <div class="card-header profile-header">
                 <h5 class="mb-0 profile-title"><i class="bi bi-building me-2"></i>Informasi Instansi</h5>
             </div>
-            
+
             <div class="card-body">
                 <div class="row">
                     <!-- Bagian Kiri (Foto Profil dan Info Singkat) -->
                     <div class="col-md-4 text-center">
                         <div class="profile-image-container mb-4">
-                            <img src="<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" 
-                                 class="profile-image" 
-                                 alt="Logo Instansi">
+                            <img src="<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>"
+                                class="profile-image"
+                                alt="Logo Instansi">
                             <div class="image-overlay">
                                 <button class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#editInstansiModal">
                                     <i class="bi bi-camera"></i> Ganti Gambar
                                 </button>
                             </div>
                         </div>
-                        
+
                         <h4 class="profile-name"><?= $instansi["nama_panjang"] ?></h4>
-                        
+
                         <div class="profile-badge mb-4">
                             <span class="badge profile-badge">
                                 <i class="bi bi-house-door me-1"></i> Instansi Pemerintah
                             </span>
                         </div>
-                        
+
                         <div class="profile-website mb-4">
                             <?php if (!empty($instansi["website_resmi_instansi"])): ?>
-                                <a href="<?= htmlspecialchars($instansi["website_resmi_instansi"]) ?>" 
-                                   target="_blank" 
-                                   class="btn btn-secondary website-btn">
+                                <a href="<?= htmlspecialchars($instansi["website_resmi_instansi"]) ?>"
+                                    target="_blank"
+                                    class="btn btn-secondary website-btn">
                                     <i class="bi bi-globe me-1"></i> Kunjungi Website
                                 </a>
                             <?php else: ?>
@@ -329,26 +328,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                                 </button>
                             <?php endif; ?>
                         </div>
-                        
                         <div class="d-grid">
                             <button type="button" class="btn btn-primary edit-btn" data-bs-toggle="modal" data-bs-target="#editInstansiModal">
                                 <i class="bi bi-pencil-square me-1"></i> Edit Profil
                             </button>
                         </div>
                     </div>
-                    
+
                     <!-- Bagian Kanan (Detail Informasi) -->
                     <div class="col-md-8">
                         <div class="profile-section">
                             <h5 class="section-title"><i class="bi bi-info-circle me-2"></i>Deskripsi Instansi</h5>
                             <div class="section-content">
-                                <?= $instansi["deskripsi_instansi"] ?: 
+                                <?= $instansi["deskripsi_instansi"] ?:
                                     '<div class="alert alert-light empty-alert" role="alert">
                                         <i class="bi bi-info-circle me-2"></i> Deskripsi instansi belum diatur.
                                     </div>' ?>
                             </div>
                         </div>
-                        
+
                         <div class="profile-section">
                             <h5 class="section-title"><i class="bi bi-geo-alt me-2"></i>Informasi Kontak</h5>
                             <div class="row">
@@ -372,7 +370,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="profile-section">
                             <h5 class="section-title"><i class="bi bi-map me-2"></i>Lokasi Instansi</h5>
                             <div class="section-content">
@@ -382,10 +380,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                                             <i class="bi bi-map map-icon"></i>
                                             <p class="map-text">Pratinjau lokasi instansi</p>
                                         </div>
-                                        <a href="<?= htmlspecialchars($instansi["lokasi_instansi"]) ?>" 
-                                           target="_blank"
-                                           rel="noopener noreferrer"
-                                           class="btn btn-primary map-btn">
+                                        <a href="<?= htmlspecialchars($instansi["lokasi_instansi"]) ?>"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="btn btn-primary map-btn">
                                             <i class="bi bi-geo-alt"></i> Buka di Google Maps
                                         </a>
                                     </div>
@@ -399,11 +397,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     </div>
                 </div>
             </div>
-            
+
             <div class="card-footer profile-footer">
                 <!-- <small class="text-muted update-text">Terakhir diperbarui: <?= $instansi["change_date"] ?></small> -->
                 <small class="text-muted update-text">Terakhir diperbarui: <?= date("d-m-Y", strtotime($instansi["change_date"])) ?></small>
-                                    
+
             </div>
         </div>
     </div>
@@ -471,7 +469,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     <div class="mb-3">
                         <label for="gambar_instansi" class="form-label">Foto Profil</label>
                         <div class="image-preview">
-                            <img src="<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                            <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
                             <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $instansi["gambar_instansi"] ?>">
                         </div>
                         <input type="file" class="form-control" data-error-id="gambar_instansi_error" id="gambar_instansi_edit" name="gambar_instansi" accept="image/*" onchange="previewFile()">

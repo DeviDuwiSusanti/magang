@@ -716,11 +716,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     "Nomor telepon tidak boleh kosong."
                 );
                 isValid = false;
-            } else if (!/^\d{11,12}$/.test(telepon)) {
+            } else if (!/^\d{11,13}$/.test(telepon)) {
                 showError(
                     "telepon",
                     "error-telepon",
-                    "Telepon harus berisi angka (11-12 digit)."
+                    "Telepon harus berisi angka (11-13 digit)."
                 );
                 isValid = false;
             }
