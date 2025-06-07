@@ -9,8 +9,6 @@ $instansi = "SELECT *
 $query = mysqli_query($conn, $instansi);
 $instansi = mysqli_fetch_assoc($query);
 
-var_dump($instansi['change_date']);
-
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
     // Cek apakah ada perubahan sebelum update
     if (cek_edit_instansi($conn, $_POST)) {
