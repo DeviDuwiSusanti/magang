@@ -433,12 +433,20 @@ if (isset($_SESSION['email'])) {
                     const greetingElement = document.getElementById("greeting");
                     const clockElement = document.getElementById("clock");
 
+                    // Cek apakah layar besar
+                    const isDesktop = window.innerWidth >= 768;
+
+                    if (!isDesktop) {
+                        greetingElement.style.display = "none";
+                        clockElement.style.display = "none";
+                        return;
+                    }
+
                     const now = new Date();
                     const hours = now.getHours();
                     const minutes = now.getMinutes().toString().padStart(2, '0');
                     const seconds = now.getSeconds().toString().padStart(2, '0');
 
-                    // Ganti sesuai nama user dari PHP
                     const namaUser = "<?= $row['nama_user'] ?>";
 
                     let greeting;
@@ -454,11 +462,17 @@ if (isset($_SESSION['email'])) {
 
                     greetingElement.textContent = `${greeting}, ${namaUser}`;
                     clockElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+
+                    greetingElement.style.display = "inline";
+                    clockElement.style.display = "inline";
                 }
 
                 // Update setiap detik
                 setInterval(updateGreetingAndClock, 1000);
                 updateGreetingAndClock();
+
+                // Update saat ukuran layar berubah
+                window.addEventListener('resize', updateGreetingAndClock);
 
                 // Ambil semua link di sidebar
                 const sidebarLinks = document.querySelectorAll('sidebar-link');
