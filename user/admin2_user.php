@@ -14,6 +14,7 @@ $sql = "SELECT
         p.jumlah_pelamar,
         p.tanggal_mulai,
         p.tanggal_selesai,
+        p.tanggal_extend,
         p.id_pengajuan,
         p.status_pengajuan,
         p.status_active,
@@ -59,14 +60,14 @@ $result = mysqli_query($conn, $sql);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php while ($row = mysqli_fetch_assoc($result)) { 
+                        <?php while ($row = mysqli_fetch_assoc($result)) {
                             // Count total absensi for this user and pengajuan
                             $total_absensi = query("SELECT COUNT(*) as total FROM tb_absensi 
                                                    WHERE id_user = '" . $row['id_user'] . "' 
                                                    AND id_pengajuan = '" . $row['id_pengajuan'] . "'
                                                    AND status_active = '1'");
                             $absensi_count = $total_absensi[0]['total'];
-                            ?>
+                        ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= $row["nama_user"] ?></td>
@@ -74,8 +75,11 @@ $result = mysqli_query($conn, $sql);
                                 <td><?= $row["jenis_pengajuan"] ?></td>
                                 <td>
                                     <?php
-                                    if (!empty($row['tanggal_mulai']) && !empty($row['tanggal_selesai'])) {
-                                        echo formatTanggalLengkapIndonesia($row['tanggal_mulai']) . ' - ' . formatTanggalLengkapIndonesia($row['tanggal_selesai']);
+                                    // Tentukan tanggal akhir: gunakan tanggal_extend jika ada, selain itu tanggal_selesai
+                                    $tanggal_akhir = !empty($row['tanggal_extend']) ? $row['tanggal_extend'] : $row['tanggal_selesai'];
+
+                                    if (!empty($row['tanggal_mulai']) && $tanggal_akhir) {
+                                        echo formatTanggalLengkapIndonesia($row['tanggal_mulai']) . ' - ' . formatTanggalLengkapIndonesia($tanggal_akhir);
                                     } else {
                                         echo "Periode Tidak Diketahui";
                                     }
@@ -93,17 +97,11 @@ $result = mysqli_query($conn, $sql);
                                 <td><?= $row["nama_pembimbing"] ?: "Pembimbing Belum Ditentukan" ?></td>
                                 <td>
                                     <?php
-                                    if ($row['status_pengajuan'] == 5) {
-                                        echo '<span class="badge bg-danger">Selesai</span>';
-                                    } elseif ($row['status_pengajuan'] == 4) {
-                                        echo '<span class="badge bg-primary">Berlangsung</span>';
-                                    } elseif ($row['status_pengajuan'] == 3) {
-                                        echo '<span class="badge bg-danger">Ditolak</span>';
-                                    } elseif ($row['status_pengajuan'] == 2) {
-                                        echo '<span class="badge bg-success">Diterima</span>';
-                                    } else {
-                                        echo '<span class="badge bg-secondary">Diajukan</span>';
-                                    }
+                                    echo getStatusBadge(
+                                        $row['status_pengajuan'],
+                                        $row['tanggal_extend'] ?? null,
+                                        $row['tanggal_magang_selesai'] ?? null
+                                    );
                                     ?>
                                 </td>
                                 <td>
@@ -185,9 +183,9 @@ $result = mysqli_query($conn, $sql);
             const idPengajuan = $(this).data('id_pengajuan');
             const idUser = $(this).data('id_user');
             const namaUser = $(this).data('nama_user');
-            
+
             $('#namaPeserta').text(namaUser);
-            
+
             $.ajax({
                 url: 'pembimbing4_view_absensi.php',
                 type: 'GET',

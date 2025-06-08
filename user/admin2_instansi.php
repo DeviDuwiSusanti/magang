@@ -466,7 +466,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     </div>
                     <div class="mb-3">
                         <label for="gambar_instansi" class="form-label">Foto Profil</label>
-                        <div class="image-preview">
+                        <div class="image-preview" id="imagePreview">
                             <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>" id="previewImage" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
                             <input type="hidden" name="gambar_instansi_lama" id="gambar_instansi_lama" value="<?= $instansi["gambar_instansi"] ?>">
                         </div>
@@ -496,12 +496,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
         const file = fileInput.files[0];
 
         if (file) {
+            if (file.size > 1048576) { // 1MB = 1048576 bytes
+                alert("Ukuran file terlalu besar! Maksimal 1MB.");
+                fileInput.value = ""; // Reset file input
+                previewImage.src = "../assets/img/instansi/" + document.getElementById('gambar_instansi_lama').value; // Kembalikan ke gambar lama
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                previewImage.src = e.target.result;
+                previewImage.src = e.target.result; // Tampilkan pratinjau gambar baru
                 previewContainer.style.display = "block";
             };
             reader.readAsDataURL(file);
+        } else {
+            previewImage.src = "../assets/img/instansi/" + document.getElementById('gambar_instansi_lama').value; // Kembalikan ke gambar lama jika tidak ada file baru
         }
     }
 

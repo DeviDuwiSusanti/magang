@@ -1162,6 +1162,7 @@ function getNamaPelamarByPengajuan($conn, $id_instansi)
             FROM tb_pengajuan AS p
             JOIN tb_profile_user AS pu ON p.id_pengajuan = pu.id_pengajuan
             WHERE p.id_instansi = ?
+            AND pu.status_active = '1'
             GROUP BY p.id_pengajuan
             ORDER BY p.id_pengajuan DESC";
 
@@ -1230,6 +1231,33 @@ function getDokumenByInstansi($conn, $id_instansi)
 }
 
 
+function getStatusBadge($status_pengajuan, $tanggal_extend = null, $tanggal_selesai = null) {
+    $today = date('Y-m-d');
+
+    if ($status_pengajuan == 5) {
+        return '<span class="badge bg-danger">Selesai</span>';
+    } elseif ($status_pengajuan == 4) {
+        // Cek apakah ada extend dan belum mencapai tanggal akhir (bisa dari extend atau awal)
+        $tanggal_akhir_magang = !empty($tanggal_extend) ? $tanggal_extend : $tanggal_selesai;
+
+        if ($tanggal_akhir_magang > $today) {
+            if (!empty($tanggal_extend)) {
+                return '<span class="badge bg-primary">Berlangsung - Extend</span>';
+            } else {
+                return '<span class="badge bg-primary">Berlangsung</span>';
+            }
+        } else {
+            // Jika sudah lewat dari tanggal akhir tapi masih status Berlangsung
+            return '<span class="badge bg-warning">Selesai (Belum Update)</span>';
+        }
+    } elseif ($status_pengajuan == 3) {
+        return '<span class="badge bg-danger">Ditolak</span>';
+    } elseif ($status_pengajuan == 2) {
+        return '<span class="badge bg-success">Diterima</span>';
+    } else {
+        return '<span class="badge bg-secondary">Diajukan</span>';
+    }
+}
 
 
 
