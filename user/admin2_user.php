@@ -100,7 +100,7 @@ $result = mysqli_query($conn, $sql);
                                     echo getStatusBadge(
                                         $row['status_pengajuan'],
                                         $row['tanggal_extend'] ?? null,
-                                        $row['tanggal_magang_selesai'] ?? null
+                                        $row['tanggal_selesai'] ?? null
                                     );
                                     ?>
                                 </td>
