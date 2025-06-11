@@ -295,7 +295,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                     <!-- Bagian Kiri (Foto Profil dan Info Singkat) -->
                     <div class="col-md-4 text-center">
                         <div class="profile-image-container mb-4">
-                            <img src="<?= $instansi["gambar_instansi"] ?: 'logo_kab_sidoarjo.png' ?>"
+                            <img src="../assets/img/instansi/<?= $instansi["gambar_instansi"] ?: '../assets/img/instansi/logo_kab_sidoarjo.png' ?>"
                                 class="profile-image"
                                 alt="Logo Instansi">
                             <div class="image-overlay">
