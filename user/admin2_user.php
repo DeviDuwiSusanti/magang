@@ -31,7 +31,7 @@ $sql = "SELECT
         AND pu.status_active = '1'
         AND p.status_pengajuan IN ('4', '5')
         AND pu.status_active = '1'
-    ORDER BY p.id_pengajuan DESC
+    ORDER BY p.id_pengajuan ASC
 ";
 
 $result = mysqli_query($conn, $sql);
