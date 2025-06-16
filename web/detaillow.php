@@ -166,7 +166,7 @@ include "functions.php";
                                 </div>
 
                                 <div class="apply-now">
-                                    <a href="../user/user3_statusPengajuan.php" class="btn btn-primary btn-apply">
+                                    <a href="../olahan/user3_statusPengajuan.php" class="btn btn-primary btn-apply">
                                         <i class="bx bx-send"></i>
                                         Daftar Sekarang
                                     </a>

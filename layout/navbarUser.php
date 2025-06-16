@@ -65,7 +65,7 @@ if (isset($_SESSION['email'])) {
         <!-- Kondisi untuk mengatur jalur gambar atau tombol masuk -->
         <?php if(isset($_SESSION['id_user'])): ?>
             <!-- Tampilkan gambar profil jika user sudah login -->
-            <a class="navbar-brand" href="../user/dashboard.php" data-bs-toggle="tooltip" title="Dashboard">
+            <a class="navbar-brand" href="../olahan/dashboard.php" data-bs-toggle="tooltip" title="Dashboard">
                 <img 
                     src="<?= $user_image ?>" 
                     alt="User Image" 

@@ -59,16 +59,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Redirect sesuai level
         switch ($user['level']) {
             case 1:
-                header("Location: user/dashboard.php");
+                header("Location: olahan/dashboard.php");
                 break;
             case 2:
-                header("Location: user/dashboard.php");
+                header("Location: olahan/dashboard.php");
                 break;
             case 3:
-                header("Location: user/dashboard.php");
+                header("Location: olahan/dashboard.php");
                 break;
             case 4:
-                header("Location: user/dashboard.php");
+                header("Location: olahan/dashboard.php");
                 break;
             default:
                 header("Location: login.php");

@@ -32,13 +32,13 @@ $email_super = mysqli_fetch_assoc(mysqli_query($conn, "SELECT email from tb_user
                             <a href="lowongan.php" class="footer__link text-gray-400 hover:text-white">Cari Lowongan</a>
                             </li>
                             <li>
-                            <a href="../user/user3_statusPengajuan.php" class="footer__link text-gray-400 hover:text-white">Pengajuan</a>
+                            <a href="../olahan/user3_statusPengajuan.php" class="footer__link text-gray-400 hover:text-white">Pengajuan</a>
                             </li>
                             <li>
                             <a href="tentang.php" class="footer__link text-gray-400 hover:text-white">Tentang Kami</a>
                             </li>
                             <li>
-                            <a href="../user/user3_histori.php" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
+                            <a href="../olahan/user3_histori.php" class="footer__link text-gray-400 hover:text-white">Cek Sertifikat</a>
                             </li>
                         </ul>
                     </div>

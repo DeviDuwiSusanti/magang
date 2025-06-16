@@ -1021,7 +1021,7 @@ function pembimbing_input_nilai($data)
 
     // Generate URL untuk QR Code
     $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-    $url_qr = $base_url . "/magang/user/view_link_qr.php?id=" . $id_nilai;
+    $url_qr = $base_url . "/magang/olahan/view_link_qr.php?id=" . $id_nilai;
 
     // Simpan ke database
     $query = "INSERT INTO tb_nilai (
@@ -1071,8 +1071,8 @@ function pembimbing_update_nilai($data)
                 kerjasama = '$kerjasama', 
                 teknologi_informasi = '$teknologi_informasi', 
                 rata_rata = '$rata_rata', 
-                catatan = '$catatan'
                 change_by = '$change_by',
+                catatan = '$catatan'
                 WHERE id_nilai = '$id_nilai'";
 
     return mysqli_query($conn, $query);
