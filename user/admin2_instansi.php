@@ -396,11 +396,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_instansi'])) {
                 </div>
             </div>
 
-            <div class="card-footer profile-footer">
-                <!-- <small class="text-muted update-text">Terakhir diperbarui: <?= $instansi["change_date"] ?></small> -->
+            <!-- <div class="card-footer profile-footer">
+                <small class="text-muted update-text">Terakhir diperbarui: <?= $instansi["change_date"] ?></small>
                 <small class="text-muted update-text">Terakhir diperbarui: <?= date("d-m-Y", strtotime($instansi["change_date"])) ?></small>
-
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

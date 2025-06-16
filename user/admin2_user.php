@@ -28,6 +28,7 @@ $sql = "SELECT
     WHERE p.id_instansi = '$id_instansi'
         AND p.status_active = '1'
         AND b.status_active = '1'
+        AND pu.status_active = '1'
         AND p.status_pengajuan IN ('4', '5')
     ORDER BY p.id_pengajuan DESC
 ";

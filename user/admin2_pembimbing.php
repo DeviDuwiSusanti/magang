@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_pembimbing'])) {
                                     <td><?= ($pembimbing['nama_bidang']) ?></td>
                                     <td><?= ($pembimbing['jabatan'] ?: 'Jabatan belum diisi') ?></td>
                                     <td><?= ($pembimbing['telepone_pembimbing'] ?: 'Telepon belum diisi') ?></td>
-                                    <td>
+                                    <td class="text-center align-middle">
                                         <button type="button" class="btn btn-warning btn-sm editPembimbingBtn me-2"
                                             data-bs-toggle="modal" data-bs-target="#editPembimbingModal"
                                             data-id_pembimbing="<?= $pembimbing['id_pembimbing'] ?>"

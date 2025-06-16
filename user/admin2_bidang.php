@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                             <th>Kriteria</th>
                             <th>Kuota</th>
                             <th>Dokumen Persyaratan</th>
-                            <th>Aksi</th>
+                            <th style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
                                 <td><?= $bd["kriteria_bidang"] ?></td>
                                 <td><?= $bd["kuota_bidang"] ?></td>
                                 <td><?= $bd["dokumen_persyaratan"] ?></td>
-                                <td style="width: 85px;">
+                                <td class="text-center align-middle">
                                     <button type="button" class="btn btn-warning btn-sm editBidangBtn me-2"
                                         data-bs-toggle="modal" data-bs-target="#editBidangModal"
                                         data-id_bidang="<?= $bd['id_bidang'] ?>"
@@ -155,13 +155,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['edit_bidang'])) {
             </div>
             <div class="datatable-footer mt-2"></div>
         </div>
-    </div>
+</div>
 </div>
 
 
 <?php
 // Ambil semua nama bidang instansi yang sedang login dari database
-$bidang_result = mysqli_query($conn, "SELECT nama_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi'");
+$bidang_result = mysqli_query($conn, "SELECT nama_bidang FROM tb_bidang WHERE id_instansi = '$id_instansi' AND status_active = '1'");
 
 $existingBidang = [];
 while ($row = mysqli_fetch_assoc($bidang_result)) {
@@ -361,9 +361,16 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
     });
 
     // Array konfigurasi input fields
-    const inputConfigs = [
-        { id: 'nip', maxLength: 18, allow: /\D/g },
-        { id: 'edit_nip', maxLength: 18, allow: /\D/g },
+    const inputConfigs = [{
+            id: 'nip',
+            maxLength: 18,
+            allow: /\D/g
+        },
+        {
+            id: 'edit_nip',
+            maxLength: 18,
+            allow: /\D/g
+        },
     ];
 
     // Fungsi umum untuk semua input
@@ -411,7 +418,7 @@ while ($row = mysqli_fetch_assoc($bidang_result)) {
                 }
             },
             columnDefs: [{
-                targets: [2, 3, 4, 5, 6],
+                targets: [2, 3, 4, 5, 6, 7],
                 orderable: false
             }]
         });

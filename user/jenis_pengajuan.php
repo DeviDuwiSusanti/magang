@@ -169,7 +169,7 @@ if (!is_array($jenis2_pengajuan)) {
                         <tr>
                             <th class="text-center">No</th>
                             <th class="text-center">Jenis Pengajuan</th>
-                            <th class="text-center">Aksi</th>
+                            <th class="text-center" style="width: 150px;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
