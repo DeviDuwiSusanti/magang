@@ -1,5 +1,6 @@
 <?php 
   include "../functions.php";
+  include "functions.php";
 
  $id_nilai = $_GET["id"];
 
@@ -22,6 +23,10 @@ $id_instansi = $data_instansi["id_instansi"];
 // Ambil data instansi
 $instansi = query("SELECT * FROM tb_instansi 
                    WHERE id_instansi = '$id_instansi'")[0];
+
+
+$nomor_nilai = $info["nomor_nilai"];
+$kode_surat = generateKodeSurat($nomor_nilai, $id_instansi);
 
 ?>
 
@@ -74,7 +79,7 @@ $instansi = query("SELECT * FROM tb_instansi
   <h2>E-Buddy Kab. Sidoarjo</h2>
   <div class="info">
     <p><strong>Jenis:</strong> Surat Keluar</p>
-    <p><strong>No. Surat:</strong> 900/1046/438.5.14/2025</p>
+    <p><strong>No. Surat:</strong> <?= $kode_surat ?></p>
     <p><strong>Tanggal Surat:</strong> <?= $info["tanggal_approve"] ?></p>
     <p><strong>Pembuat:</strong> <?= $instansi["nama_panjang"] ?> - <?= $info["nama_bidang"] ?></p>
     <p><strong>Dibuat Pada:</strong> <?= $info["created_date"] ?></p>

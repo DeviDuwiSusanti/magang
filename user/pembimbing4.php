@@ -3,7 +3,7 @@ include '../layout/sidebarUser.php';
 include "functions.php";
 
 // Get all pengajuan being supervised by this pembimbing
-$pengajuan_list = query("SELECT id_pengajuan, id_bidang, id_user, status_pengajuan, tanggal_selesai, tanggal_extend 
+$pengajuan_list = query("SELECT id_pengajuan, id_instansi, id_bidang, id_user, status_pengajuan, tanggal_selesai, tanggal_extend 
                          FROM tb_pengajuan 
                          WHERE id_pembimbing = '$id_user' 
                          AND (status_pengajuan = '5' OR status_pengajuan = '2' OR status_pengajuan = '4')");
@@ -274,6 +274,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="hidden" name="upload" value="1">
             <input type="hidden" name="create_by" value="<?= $id_user ?>">
             <input type="hidden" name="id_bidang" id="id_bidang" value="<?= $pengajuan_list[0]["id_bidang"] ?>">
+            <input type="hidden" name="id_instansi" id="id_instansi" value=" <?= $pengajuan_list[0]["id_instansi"] ?>">
 
             <div class="modal-content">
                 <div class="modal-header">

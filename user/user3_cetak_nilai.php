@@ -86,10 +86,7 @@ function formatTanggal($date) {
     return $tanggal . ' ' . $bulan[$bulan_num] . ' ' . $tahun;
 }
 
-// Fungsi untuk mengubah ke Title Case
-function toTitleCase($string) {
-    return ucwords(strtolower($string));
-}
+
 
 $tanggal_mulai = formatTanggal($sertifikat["tanggal_mulai"]);
 $tanggal_selesai = formatTanggal($sertifikat["tanggal_selesai"]);
@@ -174,7 +171,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 <body>
   <!-- Background Transparan -->
   <img src="../assets/img/instansi/logo_kab_sidoarjo.png" class="background" alt="Background">
-  <div class="background-text"><?= toTitleCase($sertifikat["nama_panjang"]) ?></div>
+  <div class="background-text"><?= ($sertifikat["nama_panjang"]) ?></div>
 
   <h2>LEMBAR PENILAIAN PRAKTIK MAGANG</h2>
   <p class="center uppercase">Nomor: 500.5.7.10/239/438.5.14/2025</p>
@@ -182,7 +179,7 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
   <table>
     <tr>
       <td class="uppercase">Nama</td>
-      <td>: <strong><?= toTitleCase($sertifikat["nama_user"]) ?></strong></td>
+      <td>: <strong><?= ($sertifikat["nama_user"]) ?></strong></td>
     </tr>
     <tr>
       <?php if($sertifikat["nim"] == "") {?>
@@ -195,11 +192,11 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
     </tr>
     <tr>
       <td class="uppercase">Nama Instansi</td>
-      <td>: <?= toTitleCase($sertifikat["nama_panjang"]) ?></td>
+      <td>: <?= ($sertifikat["nama_panjang"]) ?></td>
     </tr>
     <tr>
       <td class="uppercase">Unit / Bagian / Bidang</td>
-      <td>: <?= toTitleCase($sertifikat["nama_bidang"]) ?></td>
+      <td>: <?= ($sertifikat["nama_bidang"]) ?></td>
     </tr>
     <tr>
       <?php if ($sertifikat["tanggal_extend"] != "") { ?>
@@ -264,14 +261,14 @@ $tanggal_lahir = formatTanggal($sertifikat["tanggal_lahir"]);
 
   <div class="signature">
     <p class="uppercase">Pembimbing Magang</p>
-    <p><?= toTitleCase($sertifikat["nama_panjang"]) ?></p>
+    <p><?= ($sertifikat["nama_panjang"]) ?></p>
     <br> 
-    <?php if(!empty($sertifikat) && $sertifikat["tanda_tangan_admin"] != "") : ?>
-      <img src="<?= $sertifikat['tanda_tangan_admin'] ?>" alt="Ttd" style="width: 150px; height: 100px; background: transparent;">
-    <?php endif; ?>
-    <br>
-    <strong><?= !empty($admin_instansi) ? toTitleCase($admin_instansi["nama_user"]) : '-' ?></strong><br>
-    <span class="uppercase">NIP.</span> <?= !empty($admin_instansi) ? $admin_instansi["nip"] : '-' ?>
+    <?php if (!empty($sertifikat["url_qr"])) : ?>
+  <img src="https://api.qrserver.com/v1/create-qr-code/?data=<?= urlencode($sertifikat['url_qr']) ?>&size=150x150" alt="QR Code">
+<?php endif; ?>
+
+      <p><strong><?= $sertifikat["nama_pejabat"] ?></strong></p>
+      <p>NIP. <?= $sertifikat["nip_pejabat"] ?></p>
   </div>
 </body>
 </html>

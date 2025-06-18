@@ -877,10 +877,12 @@ function generateId_nilai($id_pengajuan) {
 
 function pembimbing_input_nilai($data) {
     global $conn;
+    
     $id_pengajuan = mysqli_real_escape_string($conn, $data['id_pengajuan']);
     $id_user = mysqli_real_escape_string($conn, $data['id_user']);
     $create_by = mysqli_real_escape_string($conn, $data['create_by']);
     $id_bidang = mysqli_real_escape_string($conn, $data['id_bidang']);
+    $id_instansi = mysqli_real_escape_string($conn, $data['id_instansi']);
     $bidang_keahlian = mysqli_real_escape_string($conn, $data['bidang_keahlian']);
     $kehadiran = mysqli_real_escape_string($conn, $data['kehadiran']);
     $disiplin = mysqli_real_escape_string($conn, $data['disiplin']);
@@ -889,27 +891,57 @@ function pembimbing_input_nilai($data) {
     $kerjasama = mysqli_real_escape_string($conn, $data['kerjasama']);
     $teknologi_informasi = mysqli_real_escape_string($conn, $data['teknologi_informasi']);
     $catatan = mysqli_real_escape_string($conn, $data['catatan']);
-    
+
     $id_nilai = generateId_nilai($id_pengajuan);
-    $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
+
+    // Ambil bulan sekarang
+    $bulan = date('m');
     
+    // Ambil nomor urut terakhir dari instansi tersebut di bulan ini
+    $query = "SELECT nomor_nilai FROM tb_nilai 
+              WHERE id_instansi = '$id_instansi' 
+              AND LEFT(nomor_nilai, 2) = '$bulan' 
+              ORDER BY nomor_nilai DESC 
+              LIMIT 1";
+
+    $result = mysqli_query($conn, $query);
+    if ($row = mysqli_fetch_assoc($result)) {
+        // Ambil 3 digit terakhir, konversi ke int, tambah 1
+        $last_number = (int)substr($row['nomor_nilai'], 2, 3);
+        $next_number = $last_number + 1;
+    } else {
+        // Belum ada entri untuk bulan ini dan instansi ini
+        $next_number = 1;
+    }
+
+    // Format nomor nilai: 2 digit bulan + 3 digit counter
+    $nomor_nilai = str_pad($bulan, 2, '0', STR_PAD_LEFT) . str_pad($next_number, 3, '0', STR_PAD_LEFT);
+
+    // Hitung rata-rata
+    $rata_rata = ($kehadiran + $disiplin + $tanggung_jawab + $kreativitas + $kerjasama + $teknologi_informasi) / 6;
+
     // Generate URL untuk QR Code
     $base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
     $url_qr = $base_url . "/magang/user/view_link_qr.php?id=" . $id_nilai;
 
-
+    // Simpan ke database
     $query = "INSERT INTO tb_nilai (
-        id_nilai, id_pengajuan, id_user, id_bidang, bidang_keahlian, kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi, rata_rata, catatan, url_qr, create_by
+        id_nilai, id_pengajuan, id_user, id_bidang, id_instansi, nomor_nilai, bidang_keahlian,
+        kehadiran, disiplin, tanggung_jawab, kreativitas, kerjasama, teknologi_informasi,
+        rata_rata, catatan, url_qr, create_by
     ) VALUES (
-        '$id_nilai', '$id_pengajuan', '$id_user', '$id_bidang', '$bidang_keahlian', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas', '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$url_qr', '$create_by'
+        '$id_nilai', '$id_pengajuan', '$id_user', '$id_bidang', '$id_instansi', '$nomor_nilai',
+        '$bidang_keahlian', '$kehadiran', '$disiplin', '$tanggung_jawab', '$kreativitas',
+        '$kerjasama', '$teknologi_informasi', '$rata_rata', '$catatan', '$url_qr', '$create_by'
     )";
 
-    if(mysqli_query($conn, $query)) {
+    if (mysqli_query($conn, $query)) {
         return mysqli_affected_rows($conn);
     } else {
         return 0;
     }
 }
+
 
 
 
@@ -1090,4 +1122,30 @@ function getDokumenByInstansi($conn, $id_instansi) {
     mysqli_stmt_close($stmt);
     return $daftar_dokumen;
 }
+
+
+
+
+
+
+// pembuatan nomor sertifikat
+function generateKodeSurat($no_urut, $id_instansi) {
+    $tahun = date('Y');
+
+    // Format ID instansi jadi xxx.xx.xx.xx
+    $id_str = str_pad($id_instansi, 9, '0', STR_PAD_LEFT);
+    $id_formatted = substr($id_str, 0, 3) . '.' .
+                    substr($id_str, 3, 2) . '.' .
+                    substr($id_str, 5, 2) . '.' .
+                    substr($id_str, 7, 2);
+    // Gabungkan semuanya ke dalam format akhir
+    $kode = "404.14.5.4/{$no_urut}/{$id_formatted}/{$tahun}";
+    return $kode;
+}
+
+
+
+
+
+
 ?>
